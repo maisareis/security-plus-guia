@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado Domínio 3 - Implementação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+
+        .option:hover {
+            background: #f9fafb;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #eff6ff;
+            font-weight: 600;
+        }
+
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #eff6ff;
+            border-left: 5px solid #667eea;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+            margin: 30px auto;
+            display: block;
+        }
+
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .results-modal.show {
+            display: flex;
+        }
+
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .topic-tag {
+            display: inline-block;
+            background: #e2e8f0;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .question {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ Domínio 3</h1>
+            <h2>Implementação</h2>
+            <p>35 questões | Todas comentadas</p>
+            <div class="stats-bar">
+                <div class="stat-card">📊 35 questões</div>
+                <div class="stat-card">⏱️ 45 minutos</div>
+                <div class="stat-card" id="answered-count">✅ 0 respondidas</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterQuestions('all')">Todas</button>
+            <button class="filter-btn" onclick="filterQuestions('unanswered')">Não respondidas</button>
+            <button class="filter-btn" onclick="filterQuestions('answered')">Respondidas</button>
+        </div>
+
+        <div id="questions"></div>
+
+        <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+    </div>
+
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()" style="margin: 0 auto;">Refazer Simulado</button>
+        </div>
+    </div>
+
+    <script>
+        const quiz = [
+            // Criptografia Simétrica e Assimétrica (1-8)
+            {
+                topic: "Criptografia",
+                q: "Qual tipo de criptografia usa a mesma chave para cifrar e decifrar?",
+                o: ["Assimétrica", "Simétrica", "Hashing", "PKI"],
+                c: 1,
+                e: "Criptografia simétrica usa a mesma chave para criptografar e descriptografar. É rápida, mas o desafio é compartilhar a chave com segurança."
+            },
+            {
+                topic: "Criptografia",
+                q: "Qual é o algoritmo simétrico considerado padrão atual?",
+                o: ["DES", "3DES", "AES", "RC4"],
+                c: 2,
+                e: "AES (Advanced Encryption Standard) é o padrão atual de criptografia simétrica, com chaves de 128, 192 ou 256 bits."
+            },
+            {
+                topic: "Criptografia",
+                q: "Qual algoritmo assimétrico é mais utilizado atualmente?",
+                o: ["AES", "DES", "RSA", "MD5"],
+                c: 2,
+                e: "RSA é o algoritmo assimétrico mais utilizado para criptografia e assinaturas digitais. Recomenda-se chaves de 2048 bits ou mais."
+            },
+            {
+                topic: "Criptografia",
+                q: "O que é ECC (Elliptic Curve Cryptography)?",
+                o: ["Criptografia simétrica", "Criptografia assimétrica com chaves menores que RSA", "Algoritmo de hash", "Protocolo de rede"],
+                c: 1,
+                e: "ECC é criptografia assimétrica baseada em curvas elípticas. Oferece o mesmo nível de segurança que RSA com chaves muito menores (256 bits ECC = 3072 bits RSA)."
+            },
+            {
+                topic: "Criptografia",
+                q: "O que é Diffie-Hellman?",
+                o: ["Algoritmo de criptografia", "Algoritmo de troca de chaves", "Função hash", "Assinatura digital"],
+                c: 1,
+                e: "Diffie-Hellman é um algoritmo de troca de chaves que permite que duas partes estabeleçam uma chave compartilhada através de um canal público."
+            },
+            {
+                topic: "Criptografia",
+                q: "Qual a diferença entre stream cipher e block cipher?",
+                o: ["Stream cifra um bit por vez, block cifra blocos de tamanho fixo", "Stream é mais lento", "Block cifra um bit por vez", "São iguais"],
+                c: 0,
+                e: "Stream cipher: criptografa um bit/byte por vez (ex: RC4, ChaCha20). Block cipher: criptografa blocos de tamanho fixo (ex: AES, DES)."
+            },
+            {
+                topic: "Criptografia",
+                q: "Qual modo de operação de block cipher é considerado INSEGURO porque blocos iguais geram ciphertext igual?",
+                o: ["CBC", "ECB", "GCM", "CTR"],
+                c: 1,
+                e: "ECB (Electronic Codebook) é inseguro porque blocos idênticos de plaintext geram blocos idênticos de ciphertext, revelando padrões nos dados."
+            },
+            {
+                topic: "Criptografia",
+                q: "O que é Perfect Forward Secrecy (PFS)?",
+                o: ["Chaves de sessão únicas: se chave privada comprometida, sessões passadas permanecem seguras", "Criptografia mais forte", "Chaves estáticas", "Protocolo antigo"],
+                c: 0,
+                e: "Perfect Forward Secrecy gera chaves de sessão únicas e efêmeras. Se a chave privada for comprometida, as sessões passadas não podem ser descriptografadas."
+            },
+
+            // Hashing (9-13)
+            {
+                topic: "Hashing",
+                q: "O que é hashing?",
+                o: ["Criptografia reversível", "Função one-way que gera hash de tamanho fixo", "Criptografia assimétrica", "Troca de chaves"],
+                c: 1,
+                e: "Hashing é uma função matemática one-way (não reversível) que gera uma saída de tamanho fixo (hash). Usado para verificar integridade."
+            },
+            {
+                topic: "Hashing",
+                q: "Qual algoritmo de hash é considerado obsoleto e vulnerável a colisões?",
+                o: ["SHA-256", "MD5", "SHA-512", "SHA-3"],
+                c: 1,
+                e: "MD5 (128 bits) e SHA-1 são obsoletos e vulneráveis a colisões. Não devem ser usados para segurança. Prefira SHA-2 (SHA-256) ou SHA-3."
+            },
+            {
+                topic: "Hashing",
+                q: "O que é salt em hashing de senhas?",
+                o: ["Criptografia adicional", "Valor aleatório único adicionado antes do hash", "Chave secreta", "Algoritmo de hash"],
+                c: 1,
+                e: "Salt é um valor aleatório único adicionado à senha antes do hash. Previne ataques de rainbow table, pois cada senha tem um salt diferente."
+            },
+            {
+                topic: "Hashing",
+                q: "O que é key stretching?",
+                o: ["Aumentar o tamanho da chave", "Técnica que aplica múltiplas iterações de hash para dificultar brute force", "Criptografia mais forte", "Compressão de dados"],
+                c: 1,
+                e: "Key stretching aumenta o tempo para calcular o hash aplicando múltiplas iterações. Ex: PBKDF2, bcrypt, Argon2. Dificulta ataques de força bruta."
+            },
+            {
+                topic: "Hashing",
+                q: "O que é HMAC?",
+                o: ["Hash com chave secreta para autenticação e integridade", "Algoritmo de hash simples", "Criptografia assimétrica", "Função hash"],
+                c: 0,
+                e: "HMAC (Hash-based Message Authentication Code) é um hash com chave secreta que garante autenticação e integridade da mensagem."
+            },
+
+            // PKI e Certificados (14-20)
+            {
+                topic: "PKI",
+                q: "O que é PKI (Public Key Infrastructure)?",
+                o: ["Algoritmo de criptografia", "Infraestrutura de chaves públicas com CAs e certificados", "Tipo de hash", "Firewall"],
+                c: 1,
+                e: "PKI é a infraestrutura de chaves públicas que gerencia certificados digitais através de CAs (Certificate Authorities), CRLs e OCSP."
+            },
+            {
+                topic: "PKI",
+                q: "O que é uma CA (Certificate Authority)?",
+                o: ["Entidade que emite certificados digitais", "Protocolo de autenticação", "Tipo de criptografia", "Banco de dados"],
+                c: 0,
+                e: "CA (Autoridade Certificadora) é a entidade que emite e gerencia certificados digitais. Exemplos: Let's Encrypt, DigiCert."
+            },
+            {
+                topic: "PKI",
+                q: "O que é CRL (Certificate Revocation List)?",
+                o: ["Lista de certificados válidos", "Lista de certificados revogados", "Protocolo de verificação", "Certificado root"],
+                c: 1,
+                e: "CRL é uma lista de certificados revogados publicada periodicamente por uma CA. Clientes baixam a lista para verificar se um certificado foi revogado."
+            },
+            {
+                topic: "PKI",
+                q: "Qual protocolo verifica status de certificado em tempo real?",
+                o: ["CRL", "OCSP", "CA", "RA"],
+                c: 1,
+                e: "OCSP (Online Certificate Status Protocol) verifica em tempo real se um certificado foi revogado, consultando o servidor OCSP da CA."
+            },
+            {
+                topic: "PKI",
+                q: "O que é um certificado wildcard?",
+                o: ["Certificado auto-assinado", "Certificado que cobre *.dominio.com (todos subdomínios)", "Certificado de email", "Certificado de code signing"],
+                c: 1,
+                e: "Certificado wildcard cobre um domínio e todos seus subdomínios (ex: *.dominio.com cobre www.dominio.com, mail.dominio.com)."
+            },
+            {
+                topic: "PKI",
+                q: "O que é um certificado SAN (Subject Alternative Name)?",
+                o: ["Certificado com múltiplos domínios diferentes", "Certificado de email", "Certificado auto-assinado", "Certificado wildcard"],
+                c: 0,
+                e: "Certificado SAN permite especificar múltiplos domínios diferentes no mesmo certificado (ex: dominio.com, dominio.net, api.dominio.com)."
+            },
+            {
+                topic: "PKI",
+                q: "O que é OCSP Stapling?",
+                o: ["Servidor anexa resposta OCSP ao handshake TLS", "Protocolo de revogação", "Tipo de certificado", "CA"],
+                c: 0,
+                e: "OCSP Stapling permite que o servidor web anexe a resposta OCSP ao handshake TLS, reduzindo latência e carga na CA."
+            },
+
+            // IAM e Autenticação (21-28)
+            {
+                topic: "IAM",
+                q: "No modelo AAA, o que significa autenticação (Authentication)?",
+                o: ["Definir permissões", "Verificar identidade do usuário", "Registrar ações", "Criptografar dados"],
+                c: 1,
+                e: "Autenticação verifica QUEM é o usuário. Autorização define O QUE pode fazer. Auditoria (accounting) registra O QUE fez."
+            },
+            {
+                topic: "IAM",
+                q: "Qual modelo de controle de acesso é baseado em funções (cargos)?",
+                o: ["DAC", "MAC", "RBAC", "ABAC"],
+                c: 2,
+                e: "RBAC (Role-Based Access Control) baseia permissões em funções/cargos. É o mais comum em empresas (Admin, User, Manager)."
+            },
+            {
+                topic: "IAM",
+                q: "Qual modelo de controle de acesso é baseado em atributos (tempo, local, dispositivo)?",
+                o: ["DAC", "MAC", "RBAC", "ABAC"],
+                c: 3,
+                e: "ABAC (Attribute-Based Access Control) usa atributos como horário, localização, dispositivo e cargo para definir acesso. É mais granular."
+            },
+            {
+                topic: "IAM",
+                q: "Qual é o protocolo de autenticação padrão do Active Directory?",
+                o: ["LDAP", "RADIUS", "Kerberos", "TACACS+"],
+                c: 2,
+                e: "Kerberos é o protocolo padrão do Active Directory. Usa tickets em vez de transmitir senhas e requer sincronização de tempo (tolerância de 5 minutos)."
+            },
+            {
+                topic: "IAM",
+                q: "O que é LDAP?",
+                o: ["Protocolo de autenticação", "Protocolo para acessar diretórios como Active Directory", "Servidor de email", "Firewall"],
+                c: 1,
+                e: "LDAP (Lightweight Directory Access Protocol) é usado para acessar e manter diretórios como Active Directory. Porta 389 (não seguro) e 636 (LDAPS)."
+            },
+            {
+                topic: "IAM",
+                q: "Qual fator de autenticação é classificado como 'algo que você é'?",
+                o: ["Senha", "Token", "Biometria", "Smart card"],
+                c: 2,
+                e: "Biometria (impressão digital, íris, face) é 'algo que você é' (Tipo 3). Senha é 'algo que você sabe' (Tipo 1). Token é 'algo que você tem' (Tipo 2)."
+            },
+            {
+                topic: "IAM",
+                q: "O que é FAR (False Acceptance Rate) em biometria?",
+                o: ["Taxa de rejeitar legítimos", "Taxa de aceitar impostores (MAIS GRAVE)", "Ponto onde FAR = FRR", "Velocidade de autenticação"],
+                c: 1,
+                e: "FAR é a taxa de aceitar um impostor como legítimo. É a métrica MAIS GRAVE em sistemas biométricos."
+            },
+            {
+                topic: "IAM",
+                q: "O que é Single Sign-On (SSO)?",
+                o: ["Autenticar várias vezes", "Autenticar uma vez e acessar múltiplos sistemas", "Usar MFA", "Gerenciar senhas"],
+                c: 1,
+                e: "SSO permite autenticar-se uma única vez e ganhar acesso a múltiplos sistemas. Vantagem: conveniência. Risco: acesso total se comprometido."
+            },
+
+            // Cryptoprocessors e Segurança de Endpoint (29-32)
+            {
+                topic: "Cryptoprocessors",
+                q: "Qual é a diferença entre TPM e HSM?",
+                o: ["São a mesma coisa", "TPM é chip na placa-mãe, HSM é dispositivo dedicado", "TPM é software, HSM é hardware", "TPM é mais seguro"],
+                c: 1,
+                e: "TPM (Trusted Platform Module) é um chip na placa-mãe. HSM (Hardware Security Module) é um dispositivo dedicado para gerenciar chaves, usado em bancos e CAs."
+            },
+            {
+                topic: "Cryptoprocessors",
+                q: "Qual é a função do TPM (Trusted Platform Module)?",
+                o: ["Armazenar senhas em texto claro", "Gerenciar rede", "Armazenar chaves criptográficas, verificar integridade de boot (BitLocker)", "Firewall"],
+                c: 2,
+                e: "TPM armazena chaves criptográficas, gera hashes de boot para verificar integridade (BitLocker), gera números aleatórios e suporta criptografia assimétrica."
+            },
+            {
+                topic: "Segurança de Endpoint",
+                q: "O que é AppLocker?",
+                o: ["Firewall", "Antivírus", "Application whitelisting no Windows (permite apenas apps aprovados)", "Gerenciador de senhas"],
+                c: 2,
+                e: "AppLocker é uma ferramenta do Windows para application whitelisting, permitindo apenas aplicativos aprovados baseado em publisher, caminho ou hash."
+            },
+            {
+                topic: "Segurança de Endpoint",
+                q: "O que é DEP (Data Execution Prevention)?",
+                o: ["Previne execução de código em regiões de memória marcadas como dados", "Antivírus", "Firewall", "Criptografia"],
+                c: 0,
+                e: "DEP previne execução de código em áreas de memória marcadas como dados, dificultando ataques de buffer overflow."
+            },
+
+            // Automação e Desenvolvimento Seguro (33-35)
+            {
+                topic: "Automação",
+                q: "Qual a diferença entre SAST e DAST?",
+                o: ["SAST analisa código (white box), DAST testa app rodando (black box)", "São a mesma coisa", "SAST é mais rápido", "DAST analisa código"],
+                c: 0,
+                e: "SAST (Static Application Security Testing) analisa código fonte sem executar (white box). DAST (Dynamic Analysis) testa aplicação em execução (black box)."
+            },
+            {
+                topic: "Automação",
+                q: "O que é CI/CD?",
+                o: ["Continuous Integration/Continuous Deployment - automação de build, teste e deploy", "Firewall", "Antivírus", "Protocolo de rede"],
+                c: 0,
+                e: "CI/CD automatiza build, teste e deploy de software, permitindo entregas mais rápidas e seguras com integração contínua de código."
+            },
+            {
+                topic: "Automação",
+                q: "O que é Infrastructure as Code (IaC)?",
+                o: ["Gerenciar infraestrutura através de código (Terraform, CloudFormation)", "Código de aplicação", "Script de banco de dados", "Firewall"],
+                c: 0,
+                e: "IaC gerencia e provisiona infraestrutura através de código, permitindo versionamento, reprodutibilidade e automação."
+            }
+        ];
+
+        let answers = {};
+        let checked = false;
+        let filteredQuestions = [...Array(quiz.length).keys()];
+        let currentFilter = 'all';
+
+        function loadQuestions() {
+            const container = document.getElementById('questions');
+            container.innerHTML = '';
+            
+            filteredQuestions.forEach((index, i) => {
+                const q = quiz[index];
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.id = `q-${index}`;
+                
+                // Adiciona tag do tópico
+                const topicTag = `<span class="topic-tag">${q.topic}</span>`;
+                div.innerHTML = `<h3>${i + 1}. ${topicTag} ${q.q}</h3>`;
+                
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(index, oi);
+                    odiv.id = `q${index}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${index}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
+                div.appendChild(exp);
+                
+                container.appendChild(div);
+            });
+            
+            updateProgress();
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            
+            quiz[qi].o.forEach((_, i) => {
+                const el = document.getElementById(`q${qi}o${i}`);
+                if (el) el.classList.remove('selected');
+            });
+            
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(answers).length;
+            document.getElementById('answered-count').textContent = `✅ ${answered} respondidas`;
+            const progress = (answered / quiz.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+
+        function filterQuestions(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') {
+                filteredQuestions = [...Array(quiz.length).keys()];
+            } else if (type === 'answered') {
+                filteredQuestions = Object.keys(answers).map(Number).sort((a,b) => a - b);
+            } else {
+                filteredQuestions = [...Array(quiz.length).keys()].filter(i => answers[i] === undefined);
+            }
+            
+            loadQuestions();
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            
+            quiz.forEach((q, qi) => {
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (el) {
+                        if (oi === q.c) {
+                            el.classList.add('correct');
+                        } else if (answers[qi] === oi) {
+                            el.classList.add('incorrect');
+                        }
+                    }
+                });
+                
+                const exp = document.getElementById(`exp${qi}`);
+                if (exp) exp.style.display = 'block';
+                
+                if (answers[qi] === q.c) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = 
+                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            filteredQuestions = [...Array(quiz.length).keys()];
+            currentFilter = 'all';
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.filter-btn').classList.add('active');
+            loadQuestions();
+            document.getElementById('results-modal').classList.remove('show');
+        }
+
+        loadQuestions();
+    </script>
+</body>
+</html>

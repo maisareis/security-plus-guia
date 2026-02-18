@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Domínio 2 - Arquitetura e Design</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+            color: white;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .flashcard-area { max-width: 900px; margin: 0 auto; }
+        .card-info {
+            background: rgba(255,255,255,0.25);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .flashcard:hover { transform: scale(1.02); }
+        .side-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #0ba360;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .flashcard-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #1f2937;
+        }
+        .flip-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn-nav {
+            background: white;
+            font-size: 1.5rem;
+            width: 55px;
+            height: 55px;
+        }
+        .btn-master {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        .btn-master.mastered {
+            background: #10b981;
+            color: white;
+        }
+        .btn-shuffle {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .filter-btn.active {
+            background: white;
+            color: #0ba360;
+        }
+
+        .summary {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .summary h1 {
+            color: #0ba360;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            border-bottom: 4px solid #0ba360;
+            padding-bottom: 15px;
+        }
+        .summary h2 {
+            color: #3cba92;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        .summary h3 {
+            color: #0ba360;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .summary ul, .summary ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .osi-table {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin: 30px 0;
+        }
+        .osi-row {
+            display: flex;
+            background: #f3f4f6;
+            border-left: 5px solid #0ba360;
+            border-radius: 5px;
+        }
+        .osi-layer {
+            width: 120px;
+            padding: 15px;
+            font-weight: bold;
+            background: #0ba360;
+            color: white;
+            border-radius: 5px 0 0 5px;
+        }
+        .osi-desc {
+            flex: 1;
+            padding: 15px;
+        }
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .model-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #0ba360;
+        }
+        .model-card strong {
+            color: #0ba360;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .cloud-services {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .cloud-card {
+            flex: 1;
+            min-width: 200px;
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 5px solid #0ba360;
+        }
+        .cloud-card strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #0ba360;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Domínio 2</h1>
+            <p>Arquitetura e Design de Segurança</p>
+            <div class="stats-bar">
+                <div class="stat-card">📚 85 Flashcards</div>
+                <div class="stat-card">❓ 40 Questões</div>
+                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="flashcard-area">
+                <div class="card-info">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
+                        <div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 85</div>
+                            <div id="mastered-count">0 dominados</div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="side-indicator" id="side-indicator">FRENTE</div>
+                    <div class="flashcard-text" id="card-text"></div>
+                    <div class="flip-hint">👆 Clique para virar</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
+                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab1" class="content">
+            <div class="summary">
+                <h1>📖 Resumo - Domínio 2: Arquitetura e Design</h1>
+                
+                <div class="info-box">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Defesa em Profundidade:</strong> Múltiplas camadas de segurança</li>
+                        <li><strong>Screened Subnet (DMZ):</strong> 2 firewalls, se externo falha = só DMZ comprometida</li>
+                        <li><strong>VPN = MELHOR para acesso remoto seguro</strong> a recursos privados</li>
+                        <li><strong>NAC = Authentication E Authorization</strong> (zero-trust)</li>
+                        <li><strong>Hypervisor Type 1:</strong> Bare metal (ESXi, Hyper-V) | <strong>Type 2:</strong> Hosted (VirtualBox)</li>
+                    </ul>
+                </div>
+
+                <h2>1️⃣ Arquitetura de Rede e Defesa em Profundidade</h2>
+
+                <h3>Modelo OSI Essencial</h3>
+                <div class="osi-table">
+                    <div class="osi-row">
+                        <div class="osi-layer">Camada 7</div>
+                        <div class="osi-desc"><strong>Aplicação:</strong> HTTP, FTP, SMTP, DNS. Interação com usuário.</div>
+                    </div>
+                    <div class="osi-row">
+                        <div class="osi-layer">Camada 4</div>
+                        <div class="osi-desc"><strong>Transporte:</strong> TCP (confiável), UDP (não confiável), portas.</div>
+                    </div>
+                    <div class="osi-row">
+                        <div class="osi-layer">Camada 3</div>
+                        <div class="osi-desc"><strong>Rede:</strong> Roteadores, IP addresses, roteamento.</div>
+                    </div>
+                    <div class="osi-row">
+                        <div class="osi-layer">Camada 2</div>
+                        <div class="osi-desc"><strong>Enlace:</strong> Switches, APs, endereços MAC.</div>
+                    </div>
+                    <div class="osi-row">
+                        <div class="osi-layer">Camada 1</div>
+                        <div class="osi-desc"><strong>Física:</strong> Cabos, sinais elétricos/ópticos, wireless.</div>
+                    </div>
+                </div>
+
+                <h3>Three-Tier Architecture</h3>
+                <ul>
+                    <li><strong>Core Layer:</strong> Backbone alta velocidade, roteamento entre segmentos</li>
+                    <li><strong>Distribution Layer:</strong> Políticas, ACLs, filtragem, agregação</li>
+                    <li><strong>Access Layer:</strong> Conecta usuários finais, switches de acesso</li>
+                </ul>
+
+                <h3>Tipos de Controles em Profundidade</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#0ba360; color:white;">Controle</th><th style="background:#0ba360; color:white;">Descrição</th></tr>
+                    <tr><td><strong>Preventivo</strong></td><td>Firewall na borda (bloqueia antes de entrar)</td></tr>
+                    <tr><td><strong>Detectivo</strong></td><td>IDS dentro do perímetro (alerta sobre ameaças)</td></tr>
+                    <tr><td><strong>Corretivo</strong></td><td>Load balancer (mitiga DDoS), endpoint protection</td></tr>
+                    <tr><td><strong>Fail-Open</strong></td><td>Mantém acesso → prioriza AVAILABILITY</td></tr>
+                    <tr><td><strong>Fail-Closed</strong></td><td>Bloqueia acesso → prioriza CONFIDENTIALITY</td></tr>
+                </table>
+
+                <h2>2️⃣ Screened Subnet (DMZ) ⭐ CRÍTICO</h2>
+                
+                <div class="golden-rule">
+                    <strong>⚠️ REGRA DE OURO:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Se firewall <strong>EXTERNO</strong> falha → Apenas DMZ comprometida (LAN protegida!)</li>
+                        <li><strong>Web server público → DMZ</strong></li>
+                        <li><strong>Database → LAN privada</strong> (firewall interno permite só tráfego do web)</li>
+                        <li><strong>VPN server → pode ficar na DMZ</strong></li>
+                    </ul>
+                </div>
+
+                <h3>Conceitos Chave</h3>
+                <ul>
+                    <li><strong>Dual-Homed Gateway:</strong> 3 interfaces (internet, DMZ, LAN)</li>
+                    <li><strong>Screening Router:</strong> Router + firewall (ACLs), mais externo</li>
+                    <li><strong>Bastion Host:</strong> Servidor fortificado exposto à internet</li>
+                    <li><strong>Screened-Host Gateway:</strong> Na DMZ, requer autenticação</li>
+                </ul>
+
+                <h2>3️⃣ Firewalls e VPN</h2>
+
+                <h3>Tipos de Firewall</h3>
+                <ul>
+                    <li><strong>Stateless (Packet Filter):</strong> Analisa cada packet independente, IP/porta/protocolo</li>
+                    <li><strong>Stateful:</strong> Rastreia estado de conexões TCP, state table</li>
+                    <li><strong>NGFW:</strong> Firewall + IPS + DPI + TLS inspection + threat intel</li>
+                    <li><strong>WAF:</strong> Web Application Firewall - SQL Injection, XSS, CSRF</li>
+                    <li><strong>UTM:</strong> All-in-one (firewall + antimalware + IPS + spam + VPN)</li>
+                </ul>
+
+                <h3>VPN</h3>
+                <div class="model-grid">
+                    <div class="model-card"><strong>Site-to-Site</strong><p>Conecta redes (matriz-filial), sempre ativa</p></div>
+                    <div class="model-card"><strong>Remote Access</strong><p>Usuários individuais → VPN concentrator</p></div>
+                    <div class="model-card"><strong>Split Tunnel</strong><p>Corporativo via VPN, resto via internet (RISCO)</p></div>
+                    <div class="model-card"><strong>Full Tunnel</strong><p>Todo tráfego via VPN (mais seguro)</p></div>
+                </div>
+
+                <h3>Protocolos VPN</h3>
+                <ul>
+                    <li><strong>IPSec:</strong> Transport mode (host-to-host) vs Tunnel mode (site-to-site)</li>
+                    <li><strong>AH:</strong> Authentication Header, ICV hash, sem criptografia</li>
+                    <li><strong>ESP:</strong> Encapsulating Security Payload, criptografa</li>
+                    <li><strong>L2TP/IPSec:</strong> L2TP tunneling + IPSec encryption</li>
+                    <li><strong>TLS VPN:</strong> Certificados digitais, mutual auth, porta 443</li>
+                </ul>
+
+                <h2>4️⃣ Switch e Router Security</h2>
+
+                <h3>Ataques em Switches</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#0ba360; color:white;">Ataque</th><th style="background:#0ba360; color:white;">Descrição</th><th style="background:#0ba360; color:white;">Proteção</th></tr>
+                    <tr><td><strong>MAC Flooding</strong></td><td>Inunda CAM table → switch vira hub</td><td>Port Security</td></tr>
+                    <tr><td><strong>ARP Spoofing</strong></td><td>Associa MAC atacante ao IP vítima (MitM)</td><td>DAI</td></tr>
+                    <tr><td><strong>VLAN Hopping</strong></td><td>Salta entre VLANs (double tagging)</td><td>Desabilitar DTP</td></tr>
+                    <tr><td><strong>DHCP Spoofing</strong></td><td>DHCP falso fornece gateway malicioso</td><td>DHCP Snooping</td></tr>
+                </table>
+
+                <h3>ACLs em Roteadores</h3>
+                <ul>
+                    <li><strong>Standard (1-99):</strong> Filtra apenas IP origem, perto do DESTINO</li>
+                    <li><strong>Extended (100-199):</strong> IP origem/dest + portas + protocolo, perto da ORIGEM</li>
+                    <li><strong>Wildcard Mask:</strong> Inverso subnet mask (0=match, 255=ignore)</li>
+                    <li><strong>Nova ACL:</strong> Por padrão BLOQUEIA TUDO (implicit deny)</li>
+                </ul>
+
+                <h2>5️⃣ Virtualização e Cloud</h2>
+
+                <h3>Hypervisors</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#0ba360; color:white;">Tipo</th><th style="background:#0ba360; color:white;">Descrição</th><th style="background:#0ba360; color:white;">Exemplos</th></tr>
+                    <tr><td><strong>Type 1 (Bare Metal)</strong></td><td>Executa diretamente no hardware</td><td>VMware ESXi, Hyper-V, Xen</td></tr>
+                    <tr><td><strong>Type 2 (Hosted)</strong></td><td>Executa sobre sistema operacional</td><td>VirtualBox, Workstation</td></tr>
+                </table>
+
+                <h3>Ameaças em Virtualização</h3>
+                <ul>
+                    <li><strong>VM Sprawl:</strong> Proliferação descontrolada de VMs</li>
+                    <li><strong>VM Escape:</strong> Ataque onde VM compromete hypervisor</li>
+                    <li><strong>Container Escape:</strong> Similar, mas em containers</li>
+                </ul>
+
+                <h3>Modelos de Serviço Cloud</h3>
+                <div class="cloud-services">
+                    <div class="cloud-card"><strong>SaaS</strong><p>Software como Serviço<br>Gmail, Office 365</p></div>
+                    <div class="cloud-card"><strong>PaaS</strong><p>Plataforma como Serviço<br>Heroku, Google App Engine</p></div>
+                    <div class="cloud-card"><strong>IaaS</strong><p>Infraestrutura como Serviço<br>AWS EC2, Azure VMs</p></div>
+                </div>
+
+                <h3>Modelos de Implantação</h3>
+                <ul>
+                    <li><strong>Public Cloud:</strong> Recursos compartilhados (multi-tenant). AWS, Azure.</li>
+                    <li><strong>Private Cloud:</strong> Nuvem exclusiva da organização. Mais controle.</li>
+                    <li><strong>Hybrid Cloud:</strong> Combinação de pública e privada.</li>
+                    <li><strong>Community Cloud:</strong> Compartilhada por organizações com interesses comuns.</li>
+                </ul>
+
+                <h2>6️⃣ SDN e Virtual Networking</h2>
+
+                <h3>SDN (Software-Defined Networking)</h3>
+                <ul>
+                    <li><strong>Control Plane:</strong> Tomada de decisão (roteamento). Centralizado.</li>
+                    <li><strong>Data Plane:</strong> Encaminhamento de pacotes. Segue regras do control plane.</li>
+                    <li><strong>Northbound API:</strong> Comunicação control plane → aplicações (REST).</li>
+                    <li><strong>Southbound API:</strong> Comunicação control plane → data plane (OpenFlow).</li>
+                </ul>
+
+                <h3>Virtual Networking</h3>
+                <ul>
+                    <li><strong>vSwitch (Virtual Switch):</strong> Switch virtual que conecta VMs entre si e com rede física.</li>
+                    <li><strong>NIC Teaming (Bonding):</strong> Agregação de múltiplas NICs para balanceamento e failover.</li>
+                    <li><strong>VLAN:</strong> Segmentação lógica de rede.</li>
+                </ul>
+
+                <h2>7️⃣ NAC e Zero Trust</h2>
+
+                <h3>NAC (Network Access Control)</h3>
+                <ul>
+                    <li>Autentica usuários/devices E verifica compliance (antivirus, patches, OS) antes de permitir acesso.</li>
+                    <li><strong>Agent-based:</strong> Software no device, info detalhada, auto-remediation.</li>
+                    <li><strong>Agentless:</strong> Port-based/scan, funciona com guests/IoT.</li>
+                    <li><strong>Dynamic VLAN:</strong> NAC atribui VLAN por compliance, quarantine se necessário.</li>
+                </ul>
+
+                <h3>Zero-Trust Security</h3>
+                <ul>
+                    <li>"Never trust, always verify"</li>
+                    <li><strong>Microsegmentation:</strong> Firewall entre workloads</li>
+                    <li><strong>Least privilege:</strong> Acesso mínimo necessário</li>
+                    <li><strong>MFA everywhere</strong></li>
+                </ul>
+
+                <h2>8️⃣ Wireless Security</h2>
+
+                <h3>Padrões Wi-Fi</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#0ba360; color:white;">Padrão</th><th style="background:#0ba360; color:white;">Segurança</th></tr>
+                    <tr><td><strong>WPA3</strong></td><td>SAE (Simultaneous Authentication of Equals). Mais seguro.</td></tr>
+                    <tr><td><strong>WPA2</strong></td><td>AES-CCMP. Vulnerável a KRACK, mas ainda usado.</td></tr>
+                    <tr><td><strong>WPA</strong></td><td>TKIP (inseguro).</td></tr>
+                    <tr><td><strong>WEP</strong></td><td>Totalmente inseguro, quebrado em minutos.</td></tr>
+                </table>
+
+                <h3>Ataques Wi-Fi</h3>
+                <ul>
+                    <li><strong>Evil Twin:</strong> AP falso com mesmo SSID. MITM.</li>
+                    <li><strong>Rogue AP:</strong> AP não autorizado na rede.</li>
+                    <li><strong>Deauth Attack:</strong> Força desconexão de clientes.</li>
+                    <li><strong>WPS Attack:</strong> PIN de 8 dígitos vulnerável a brute force.</li>
+                </ul>
+
+                <h3>Proteções Wi-Fi</h3>
+                <ul>
+                    <li><strong>WIPS:</strong> Wireless IPS detecta rogue APs e evil twins.</li>
+                    <li><strong>802.1X (Enterprise):</strong> RADIUS + EAP para autenticação corporativa.</li>
+                    <li><strong>Disable WPS:</strong> WPS é vulnerável.</li>
+                </ul>
+
+                <div class="tip-box">
+                    <strong>💡 DICA DE PROVA:</strong> WPA3 é o padrão mais seguro. 802.1X é usado em ambientes corporativos com RADIUS.
+                </div>
+
+                <h2>9️⃣ Hardening de SO</h2>
+
+                <ul>
+                    <li><strong>Remover software desnecessário</strong> - reduz superfície de ataque</li>
+                    <li><strong>Desabilitar serviços não usados</strong> - menos portas abertas</li>
+                    <li><strong>Patches e updates automáticos</strong> - correção de vulnerabilidades</li>
+                    <li><strong>Firewall habilitado</strong> - controle de tráfego</li>
+                    <li><strong>Princípio do menor privilégio</strong> - mínimas permissões necessárias</li>
+                </ul>
+
+                <h3>NTFS Permissions (Windows)</h3>
+                <ul>
+                    <li><strong>Read, Write, Execute, Modify, Full Control</strong></li>
+                    <li><strong>Deny sempre prevalece sobre Allow</strong></li>
+                    <li><strong>Explicit > Inherited</strong> (permissões explícitas têm prioridade sobre herdadas)</li>
+                </ul>
+
+                <h3>Linux Security</h3>
+                <ul>
+                    <li><strong>iptables:</strong> firewall do Linux. Chains: INPUT, OUTPUT, FORWARD</li>
+                    <li><strong>SELinux:</strong> MAC (Mandatory Access Control) no Linux</li>
+                </ul>
+
+                <div class="golden-rule">
+                    <strong>🎯 DICAS FINAIS PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Screened subnet = 2 firewalls SEMPRE na prova</li>
+                        <li>VPN = melhor para acesso remoto seguro</li>
+                        <li>Nova ACL = bloqueia tudo por padrão (implicit deny)</li>
+                        <li>NAC = Authentication E Authorization (ambos)</li>
+                        <li>MAC flooding → Port Security | ARP spoofing → DAI</li>
+                        <li>Hypervisor Type 1: ESXi, Hyper-V | Type 2: VirtualBox</li>
+                        <li>SaaS: cliente não gerencia nada | IaaS: gerencia OS+app+dados</li>
+                        <li>WPA3 > WPA2 > WPA > WEP</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab2" class="content">
+            <div class="quiz-area" style="max-width: 1000px; margin:0 auto;">
+                <div class="quiz-header" style="text-align:center; color:white; margin-bottom:35px;">
+                    <h2>Quiz - 40 Questões</h2>
+                </div>
+                <div id="questions"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()" style="background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%); color:white; padding:15px 40px;">Ver Resultados</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-modal" id="results-modal" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:1000;">
+        <div class="results-content" style="background:white; padding:50px; border-radius:25px; max-width:500px; text-align:center;">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle" style="width:180px; height:180px; border-radius:50%; background:linear-gradient(135deg, #0ba360 0%, #3cba92 100%); color:white; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:bold; margin:30px auto;">0%</div>
+            <p id="score-text" style="font-size:1.2rem; margin-bottom:20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()" style="background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%); color:white; padding:15px 40px;">Refazer Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const cards = [
+            // Arquitetura de Rede e OSI (1-10)
+            {f: "O que é arquitetura de três camadas (Three-Tier Architecture)?", b: "Core Layer (backbone alta velocidade) + Distribution Layer (políticas, ACLs) + Access Layer (usuários finais, switches de acesso)"},
+            {f: "Quais são as camadas do modelo OSI e seus dispositivos principais?", b: "L1 Física: cabos. L2 Enlace: switches/APs + MAC. L3 Rede: roteadores + IP. L4 Transporte: TCP/UDP + portas. L7 Aplicação: HTTP, DNS, FTP"},
+            {f: "O que é Defense in Depth (Defesa em Profundidade)?", b: "Múltiplas camadas de controles preventivos, detectivos e corretivos em diferentes pontos da rede. Se uma camada falhar, as outras protegem."},
+            {f: "Qual a diferença entre Fail-Open e Fail-Closed?", b: "Fail-Open: mantém acesso em caso de falha, prioriza DISPONIBILIDADE. Fail-Closed: bloqueia acesso, prioriza CONFIDENCIALIDADE."},
+            {f: "Qual a diferença entre controle Active e Passive?", b: "Passive: sem configuração no cliente, transparente (TAP, porta espelhada). Active: requer configuração, credenciais (firewall como gateway)."},
+
+            // DMZ (11-18)
+            {f: "Qual a configuração de uma Screened Subnet (DMZ)?", b: "2 firewalls: Externo (internet → DMZ) + Interno (DMZ → LAN). A DMZ contém servidores públicos (web, FTP, email, DNS público)"},
+            {f: "O que acontece se o firewall EXTERNO da DMZ falhar?", b: "Apenas os servidores na DMZ são comprometidos. A LAN permanece protegida pelo firewall interno!"},
+            {f: "O que é um Bastion Host?", b: "Servidor fortificado exposto diretamente à internet, sem proteção de firewall. É hardening contra ataques."},
+            {f: "O que é um Dual-Homed Gateway?", b: "Sistema com 3 interfaces de rede: Internet + DMZ + LAN privada."},
+            {f: "O que é um Screening Router?", b: "Roteador que acumula função de firewall com ACLs. É o dispositivo mais externo da rede."},
+            {f: "Onde colocar um web server público e um database?", b: "Web server na DMZ (público). Database na LAN privada. Firewall interno permite apenas tráfego do web server."},
+            {f: "O que é um honeypot?", b: "Sistema isca configurado para atrair atacantes e estudar suas técnicas."},
+            {f: "O que é DNS Sinkhole?", b: "DNS que redireciona tráfego malicioso para um IP controlado. Fornece informação falsa para consultas DNS."},
+
+            // Firewalls (19-25)
+            {f: "Quais são os tipos de firewall?", b: "Host-based (no endpoint), Network-based (hardware na borda), Stateless (filtro de pacotes), Stateful (rastreia sessões), NGFW, WAF, UTM."},
+            {f: "O que é WAF (Web Application Firewall)?", b: "Protege aplicações web contra SQL Injection, XSS, CSRF. Examina camada 7 HTTP."},
+            {f: "O que é NGFW (Next-Gen Firewall)?", b: "Firewall de próxima geração: filtragem camada 7 + IPS + inspeção TLS + inteligência de ameaças."},
+            {f: "O que é UTM (Unified Threat Management)?", b: "Tudo-em-um: firewall + antimalware + IPS + filtro de spam + filtro de conteúdo + VPN."},
+            {f: "Qual a diferença entre firewall de camada 4 e camada 7?", b: "Camada 4: examina handshake TCP. Camada 7: inspeciona headers + payload, verifica se protocolo corresponde à porta."},
+            {f: "Como funcionam as regras de firewall?", b: "Processadas top-down sequencialmente. Regras específicas ANTES das gerais. Implicit Deny ao final."},
+            {f: "Qual a melhor prática para portas em firewall?", b: "Fechar TODAS as portas, abrir apenas as necessárias para aplicações internas."},
+
+            // VPN (26-32)
+            {f: "Qual a melhor solução para acesso remoto seguro?", b: "VPN é a MELHOR solução para acessar recursos privados da internet. Servidor VPN pode ficar na DMZ."},
+            {f: "O que é VPN Site-to-Site?", b: "Conecta redes inteiras (matriz-filial). Roteadores nas bordas. Sempre ativa. Hosts não sabem que a VPN existe."},
+            {f: "O que é Split Tunnel VPN?", b: "Tráfego corporativo vai pela VPN, o resto vai pela internet local. RISCO: pode bypassar políticas de segurança."},
+            {f: "O que é Full Tunnel VPN?", b: "Todo o tráfego vai pela VPN. Mais seguro, mas pode ser mais lento."},
+            {f: "Qual a diferença entre os modos Transport e Tunnel do IPSec?", b: "Transport: host-to-host, apenas payload criptografado. Tunnel: site-to-site, pacote inteiro criptografado."},
+            {f: "Qual a diferença entre AH e ESP no IPSec?", b: "AH (Authentication Header): autenticação, sem criptografia. ESP (Encapsulating Security Payload): criptografa o payload."},
+            {f: "O que é L2TP/IPSec?", b: "L2TP faz o tunelamento + IPSec faz a criptografia. Recomendado para VPN dial-up."},
+
+            // Switch Security (33-40)
+            {f: "O que é ataque de MAC Flooding?", b: "Inunda a tabela CAM do switch. O switch vira um hub (fail open). Proteção: Port Security."},
+            {f: "O que é ARP Spoofing/Poisoning?", b: "Atacante associa seu MAC com o IP da vítima. Proteção: DAI (Dynamic ARP Inspection)."},
+            {f: "O que é VLAN Hopping?", b: "Atacante salta entre VLANs não autorizadas (double tagging). Proteção: desabilitar DTP."},
+            {f: "O que é DHCP Snooping?", b: "Identifica portas com servidores DHCP legítimos. Previne DHCP spoofing."},
+            {f: "O que é Port Security?", b: "Limita o número de endereços MAC por porta. Previne MAC flooding."},
+            {f: "O que é 802.1X?", b: "Autenticação baseada em porta. EAP + RADIUS. Usado em Wi-Fi Enterprise."},
+            {f: "O que é VLAN?", b: "Rede local virtual: segmentação lógica. Cada porta = 1 VLAN (exceto trunk)."},
+            {f: "O que é Spanning Tree Protocol (STP)?", b: "Previne loops de switching. Mantém apenas 1 caminho ativo."},
+
+            // Router Security (41-45)
+            {f: "O que é ACL Standard (1-99)?", b: "Filtra apenas por IP de origem. Posicionar PERTO DO DESTINO."},
+            {f: "O que é ACL Extended (100-199)?", b: "Filtra por IP origem/destino + portas + protocolo. Posicionar PERTO DA ORIGEM."},
+            {f: "O que é Implicit Deny em ACL?", b: "Por padrão, uma nova ACL BLOQUEIA TODO o tráfego. Precisa criar regras de permissão."},
+            {f: "SSH vs Telnet para gerenciamento?", b: "SSH: criptografa tudo, seguro. Telnet: texto claro, INSEGURO."},
+            {f: "O que é segmentação de rede?", b: "Divide a rede em segmentos/sub-redes separadas. Limita propagação de ataques."},
+
+            // Virtualização (46-55)
+            {f: "O que é um Hypervisor Type 1 (bare metal)?", b: "Hypervisor que executa diretamente no hardware. Exemplos: VMware ESXi, Microsoft Hyper-V, Xen."},
+            {f: "O que é um Hypervisor Type 2 (hosted)?", b: "Hypervisor que executa sobre um sistema operacional. Ex: VirtualBox, VMware Workstation."},
+            {f: "O que é VM Sprawl?", b: "Proliferação descontrolada de VMs sem gerenciamento. Dificulta inventário e patches."},
+            {f: "O que é VM Escape?", b: "Ataque onde um processo dentro da VM compromete o hypervisor."},
+            {f: "O que são Containers?", b: "Compartilham o kernel do host. Mais leves que VMs. Docker, Kubernetes."},
+            {f: "O que é segurança em containers?", b: "Image scanning, menor privilégio, segmentação de rede, runtime protection."},
+            {f: "O que é um vSwitch?", b: "Switch virtual que conecta VMs entre si e com a rede física."},
+            {f: "O que é NIC Teaming?", b: "Agregação de múltiplas NICs para balanceamento de carga e failover."},
+            {f: "O que é SDN Control Plane?", b: "Plano de controle: toma decisões sobre roteamento. Centralizado."},
+            {f: "O que é SDN Data Plane?", b: "Plano de dados: executa o encaminhamento de pacotes."},
+
+            // Cloud (56-65)
+            {f: "O que é SaaS (Software as a Service)?", b: "Software como Serviço. Cliente usa o software sem gerenciar infra. Ex: Gmail, Office 365."},
+            {f: "O que é PaaS (Platform as a Service)?", b: "Plataforma como Serviço. Cliente gerencia apenas aplicação e dados. Ex: Heroku, Google App Engine."},
+            {f: "O que é IaaS (Infrastructure as a Service)?", b: "Infraestrutura como Serviço. Cliente gerencia SO, aplicação e dados. Ex: AWS EC2, Azure VMs."},
+            {f: "O que é Public Cloud?", b: "Recursos compartilhados (multi-tenant). AWS, Azure, Google Cloud."},
+            {f: "O que é Private Cloud?", b: "Nuvem privada da organização. Mais controle, mais cara."},
+            {f: "O que é Hybrid Cloud?", b: "Combinação de nuvem pública e privada."},
+            {f: "O que é Community Cloud?", b: "Compartilhada por organizações com interesses comuns (governo, saúde)."},
+            {f: "O que é MDM (Mobile Device Management)?", b: "Gerenciamento centralizado de dispositivos móveis: políticas, remote wipe."},
+            {f: "O que é BYOD?", b: "Bring Your Own Device. Funcionário usa dispositivo pessoal."},
+            {f: "O que é COPE?", b: "Corporate Owned, Personally Enabled. Dispositivo da empresa com uso pessoal."},
+
+            // NAC e Zero Trust (66-70)
+            {f: "O que é NAC (Network Access Control)?", b: "Autentica usuários/dispositivos E verifica conformidade antes de permitir acesso."},
+            {f: "Qual a diferença entre NAC Agent-based e Agentless?", b: "Agent-based: software no dispositivo. Agentless: baseado em porta/scan."},
+            {f: "O que é Zero-Trust Security?", b: "'Nunca confie, sempre verifique'. Microsegmentação, least privilege, MFA."},
+            {f: "O que é microsegmentação?", b: "Firewall entre workloads individuais, não apenas entre subnets."},
+            {f: "O que é um Jump Server (Bastion Host)?", b: "Servidor fortificado usado como ponto de entrada para acessar recursos internos."},
+
+            // Wireless (71-80)
+            {f: "Qual o padrão Wi-Fi mais seguro?", b: "WPA3 com SAE (Simultaneous Authentication of Equals)."},
+            {f: "O que é WPA2?", b: "AES-CCMP. Vulnerável a KRACK, mas ainda amplamente usado."},
+            {f: "O que é Evil Twin?", b: "Access Point falso com mesmo SSID do legítimo. MITM."},
+            {f: "O que é Rogue AP?", b: "Access Point não autorizado conectado à rede."},
+            {f: "O que é Deauth Attack?", b: "Envia frames de desautenticação, forçando clientes a se desconectarem."},
+            {f: "O que é WPS Attack?", b: "PIN de 8 dígitos vulnerável a brute force. Desabilitar WPS."},
+            {f: "O que é WIPS?", b: "Wireless IPS. Detecta rogue APs e evil twins."},
+            {f: "O que é 802.1X em Wi-Fi?", b: "Autenticação corporativa com RADIUS + EAP."},
+            {f: "O que é MAC filtering?", b: "Lista de MACs autorizados. Fraco (MAC spoofing fácil)."},
+            {f: "Ocultar SSID é seguro?", b: "Não. É security by obscurity, facilmente descoberto."},
+
+            // Hardening (81-85)
+            {f: "O que é OS Hardening?", b: "Remover software desnecessário, desabilitar serviços, patches, firewall, least privilege."},
+            {f: "Quais são as permissões NTFS?", b: "Read, Write, Execute, Modify, Full Control. Deny > Allow."},
+            {f: "O que é iptables?", b: "Firewall do Linux. Chains: INPUT, OUTPUT, FORWARD."},
+            {f: "O que é SELinux?", b: "Security-Enhanced Linux. Implementação de MAC no Linux."},
+            {f: "O que é AppLocker?", b: "Application whitelisting no Windows. Permite apenas apps aprovados."}
+        ];
+
+        const quiz = [
+            // Arquitetura
+            {q: "Modelo de 3 camadas: Core, Distribution e...", o: ["Access", "Edge", "Perimeter", "Border"], c: 0},
+            {q: "Camada OSI de switches e MAC address:", o: ["Física", "Enlace", "Rede", "Transporte"], c: 1},
+            {q: "Em caso de falha, mantém acesso (prioriza disponibilidade):", o: ["Fail-Open", "Fail-Closed", "Fail-Safe", "Fail-Block"], c: 0},
+            
+            // DMZ
+            {q: "Se o firewall EXTERNO da DMZ falhar:", o: ["Tudo comprometido", "Só DMZ comprometida", "Só LAN comprometida", "Nada acontece"], c: 1},
+            {q: "Servidor fortificado exposto à internet:", o: ["Bastion Host", "Jump Server", "Proxy", "Gateway"], c: 0},
+            {q: "Web server público deve ficar:", o: ["LAN", "DMZ", "Internet", "Extranet"], c: 1},
+            
+            // Firewalls
+            {q: "Firewall que rastreia estado de conexões:", o: ["Stateless", "Stateful", "Packet Filter", "Proxy"], c: 1},
+            {q: "WAF protege contra:", o: ["DDoS", "SQL Injection", "ARP Spoofing", "MAC Flooding"], c: 1},
+            {q: "UTM significa:", o: ["Unified Threat Management", "Universal Traffic Monitor", "User Terminal Module", "Unified Testing Method"], c: 0},
+            
+            // VPN
+            {q: "VPN que roteia só tráfego corporativo:", o: ["Full Tunnel", "Split Tunnel", "Site-to-Site", "Remote Access"], c: 1},
+            {q: "Modo IPSec que criptografa pacote inteiro:", o: ["Transport", "Tunnel", "AH", "ESP"], c: 1},
+            {q: "Componente IPSec que criptografa payload:", o: ["AH", "ESP", "IKE", "ISAKMP"], c: 1},
+            
+            // Switch
+            {q: "Proteção contra MAC Flooding:", o: ["DAI", "Port Security", "DHCP Snooping", "BPDU Guard"], c: 1},
+            {q: "Proteção contra ARP Spoofing:", o: ["Port Security", "DAI", "DHCP Snooping", "Root Guard"], c: 1},
+            {q: "802.1X usa qual servidor de autenticação?", o: ["LDAP", "RADIUS", "Kerberos", "TACACS+"], c: 1},
+            
+            // Router
+            {q: "ACL Standard filtra por:", o: ["IP origem", "IP destino", "Porta", "Protocolo"], c: 0},
+            {q: "Por padrão, nova ACL:", o: ["Permite tudo", "Bloqueia tudo", "Permite HTTP", "Bloqueia FTP"], c: 1},
+            {q: "Protocolo seguro para gerenciamento:", o: ["Telnet", "SSH", "FTP", "TFTP"], c: 1},
+            
+            // Virtualização
+            {q: "Hypervisor Type 1 exemplo:", o: ["VirtualBox", "VMware ESXi", "VMware Workstation", "Parallels"], c: 1},
+            {q: "Ataque onde VM compromete hypervisor:", o: ["VM Sprawl", "VM Escape", "Container Escape", "Hyperjacking"], c: 1},
+            
+            // Cloud
+            {q: "Gmail é exemplo de:", o: ["IaaS", "PaaS", "SaaS", "DaaS"], c: 2},
+            {q: "AWS EC2 é exemplo de:", o: ["SaaS", "PaaS", "IaaS", "FaaS"], c: 2},
+            {q: "Nuvem multi-tenant pública:", o: ["Private", "Public", "Hybrid", "Community"], c: 1},
+            
+            // NAC
+            {q: "NAC verifica:", o: ["Só autenticação", "Só autorização", "Autenticação E autorização", "Só compliance"], c: 2},
+            {q: "'Nunca confie, sempre verifique':", o: ["Defense in Depth", "Zero Trust", "Least Privilege", "Need to Know"], c: 1},
+            
+            // Wireless
+            {q: "Padrão Wi-Fi mais seguro:", o: ["WEP", "WPA", "WPA2", "WPA3"], c: 3},
+            {q: "AP falso com mesmo SSID:", o: ["Rogue AP", "Evil Twin", "Deauth AP", "WPS AP"], c: 1},
+            {q: "Sistema que detecta rogue APs:", o: ["IDS", "IPS", "WIPS", "Firewall"], c: 2},
+            
+            // Hardening
+            {q: "Permissão NTFS que sempre prevalece:", o: ["Read", "Write", "Allow", "Deny"], c: 3},
+            {q: "Firewall do Linux:", o: ["UFW", "iptables", "firewalld", "Todas"], c: 3}
+        ];
+
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
+
+        function loadProgress() {
+            const saved = localStorage.getItem('dominio2_mastered');
+            if (saved) mastered = new Set(JSON.parse(saved));
+        }
+        function saveProgress() {
+            localStorage.setItem('dominio2_mastered', JSON.stringify([...mastered]));
+        }
+        loadProgress();
+
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
+            document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+        }
+
+        function updateCard() {
+            if (filteredCards.length === 0) {
+                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                return;
+            }
+            const cardIndex = filteredCards[currentCard];
+            const card = cards[cardIndex];
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            const btn = document.getElementById('master-btn');
+            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+            
+            const progress = (mastered.size / cards.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
+        }
+
+        function flipCard() { flipped = !flipped; updateCard(); }
+        function nextCard() { currentCard = (currentCard + 1) % filteredCards.length; flipped = false; updateCard(); }
+        function prevCard() { currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length; flipped = false; updateCard(); }
+        
+        function toggleMaster() {
+            const cardIndex = filteredCards[currentCard];
+            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
+            else mastered.add(cardIndex);
+            saveProgress();
+            updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = filteredCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+            }
+            currentCard = 0; flipped = false; updateCard();
+        }
+
+        function filterCards(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') filteredCards = [...Array(cards.length).keys()];
+            else if (type === 'mastered') filteredCards = Array.from(mastered);
+            else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            
+            currentCard = 0; flipped = false; updateCard();
+        }
+
+        function loadQuiz() {
+            const container = document.getElementById('questions');
+            quiz.forEach((q, qi) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(qi, oi);
+                    odiv.id = `q${qi}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${qi}`;
+                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                div.appendChild(exp);
+                container.appendChild(div);
+            });
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            quiz[qi].o.forEach((_, i) => document.getElementById(`q${qi}o${i}`).classList.remove('selected'));
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            quiz.forEach((q, qi) => {
+                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (correctAnswer.includes(oi)) el.classList.add('correct');
+                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                });
+                document.getElementById(`exp${qi}`).style.display = 'block';
+                if (correctAnswer.includes(answers[qi])) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').style.display = 'flex';
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('results-modal').style.display = 'none';
+            loadQuiz();
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>

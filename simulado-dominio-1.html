@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado Domínio 1 - Ameaças, Ataques e Vulnerabilidades</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+
+        .option:hover {
+            background: #f9fafb;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #eff6ff;
+            font-weight: 600;
+        }
+
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #eff6ff;
+            border-left: 5px solid #667eea;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+            margin: 30px auto;
+            display: block;
+        }
+
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .results-modal.show {
+            display: flex;
+        }
+
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .topic-tag {
+            display: inline-block;
+            background: #e2e8f0;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .question {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Domínio 1</h1>
+            <h2>Ameaças, Ataques e Vulnerabilidades</h2>
+            <p>35 questões | Todas comentadas</p>
+            <div class="stats-bar">
+                <div class="stat-card">📊 35 questões</div>
+                <div class="stat-card">⏱️ 45 minutos</div>
+                <div class="stat-card" id="answered-count">✅ 0 respondidas</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterQuestions('all')">Todas</button>
+            <button class="filter-btn" onclick="filterQuestions('unanswered')">Não respondidas</button>
+            <button class="filter-btn" onclick="filterQuestions('answered')">Respondidas</button>
+        </div>
+
+        <div id="questions"></div>
+
+        <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+    </div>
+
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()" style="margin: 0 auto;">Refazer Simulado</button>
+        </div>
+    </div>
+
+    <script>
+        const quiz = [
+            // Atores de Ameaça (1-8)
+            {
+                topic: "Atores de Ameaça",
+                q: "Qual ator de ameaça possui recursos ilimitados e realiza ataques sofisticados como APT?",
+                o: ["Script Kiddie", "Hacktivist", "Nation-state", "Insider Threat"],
+                c: 2,
+                e: "Nation-state (estados-nação) possuem recursos ilimitados e realizam APTs (Advanced Persistent Threats) para espionagem e guerra cibernética. Exemplos incluem grupos como APT28 e APT29."
+            },
+            {
+                topic: "Atores de Ameaça",
+                q: "Qual é a principal motivação do crime organizado (Organized Crime)?",
+                o: ["Política", "Financeira", "Diversão", "Ideologia"],
+                c: 1,
+                e: "Crime organizado tem motivação financeira, utilizando ransomware, fraudes bancárias e roubo de dados para obter lucro. Eles operam como negócios criminosos."
+            },
+            {
+                topic: "Atores de Ameaça",
+                q: "Um funcionário que compromete a segurança da empresa por vingança se enquadra em qual categoria?",
+                o: ["Nation-state", "Hacktivist", "Insider Threat", "APT"],
+                c: 2,
+                e: "Insider Threat (ameaça interna) é quando um funcionário, contratado ou parceiro com acesso legítimo causa danos intencionalmente ou por negligência."
+            },
+            {
+                topic: "Atores de Ameaça",
+                q: "O que são Script Kiddies?",
+                o: ["Hackers profissionais", "Atacantes com baixa habilidade que usam ferramentas prontas", "Ativistas políticos", "Criminosos organizados"],
+                c: 1,
+                e: "Script Kiddies são atacantes com baixa habilidade técnica que usam ferramentas prontas criadas por outros. Sua motivação geralmente é diversão ou reconhecimento."
+            },
+            {
+                topic: "Atores de Ameaça",
+                q: "O que significa APT (Advanced Persistent Threat)?",
+                o: ["Ataque rápido e isolado", "Ameaça avançada e persistente com objetivos de longo prazo", "Vírus comum", "Ataque de negação de serviço"],
+                c: 1,
+                e: "APT são ataques sofisticados e prolongados, geralmente patrocinados por governos, com objetivos de espionagem ou sabotagem. São difíceis de detectar e remover."
+            },
+            {
+                topic: "Atores de Ameaça",
+                q: "Qual a diferença entre ameaça interna (insider) e externa?",
+                o: ["Insider já tem acesso legítimo, externo precisa infiltrar", "Insider é mais fácil de detectar", "Externo tem mais privilégios", "Não há diferença"],
+                c: 0,
+                e: "Insider já possui acesso legítimo ao sistema, tornando a detecção mais difícil. Externo precisa primeiro ganhar acesso através de exploração de vulnerabilidades."
+            },
+            {
+                topic: "Atores de Ameaça",
+                q: "Qual ator de ameaça tem motivação política ou social?",
+                o: ["Crime organizado", "Nation-state", "Hacktivist", "Script Kiddie"],
+                c: 2,
+                e: "Hacktivists têm motivação política ou social. Realizam ataques como DDoS, desfiguração de sites (defacement) e vazamentos para promover suas causas."
+            },
+            {
+                topic: "Atores de Ameaça",
+                q: "O que é um ataque de bandeira falsa (false flag)?",
+                o: ["Ataque com bandeiras vermelhas", "Atacante disfarça origem para culpar outro grupo", "Ataque de phishing", "Ataque físico"],
+                c: 1,
+                e: "False flag é quando um atacante (geralmente nation-state) executa ataques de forma a parecer que outro grupo é o responsável, para criar confusão ou justificar retaliações."
+            },
+
+            // Engenharia Social (9-16)
+            {
+                topic: "Engenharia Social",
+                q: "O que é phishing?",
+                o: ["Ataque físico à rede", "Email malicioso fingindo ser legítimo", "Varredura de portas", "Ataque de força bruta"],
+                c: 1,
+                e: "Phishing é um golpe onde o atacante envia emails falsos fingindo ser entidade legítima (bancos, empresas) para roubar credenciais ou instalar malware."
+            },
+            {
+                topic: "Engenharia Social",
+                q: "Qual a diferença entre phishing e spear phishing?",
+                o: ["Phishing é mais perigoso", "Spear phishing é direcionado a pessoa/organização específica", "Phishing usa telefone", "São a mesma coisa"],
+                c: 1,
+                e: "Spear phishing é direcionado a uma pessoa ou organização específica, com informações personalizadas (nome, cargo) para aumentar a credibilidade."
+            },
+            {
+                topic: "Engenharia Social",
+                q: "O que é whaling?",
+                o: ["Pesca de baleias", "Phishing focado em executivos e VIPs", "Ataque de rede", "Engenharia social por telefone"],
+                c: 1,
+                e: "Whaling é spear phishing focado em executivos, CEOs e VIPs. O alvo é considerado uma 'baleia' pelo seu alto valor e acesso a informações críticas."
+            },
+            {
+                topic: "Engenharia Social",
+                q: "O que é vishing?",
+                o: ["Phishing por email", "Phishing por telefone", "Phishing por SMS", "Phishing em redes sociais"],
+                c: 1,
+                e: "Vishing (voice phishing) é engenharia social realizada por telefone. O atacante se passa por suporte técnico, banco ou autoridade para obter informações."
+            },
+            {
+                topic: "Engenharia Social",
+                q: "O que é smishing?",
+                o: ["Phishing por email", "Phishing por telefone", "Phishing por SMS", "Phishing em redes sociais"],
+                c: 2,
+                e: "Smishing (SMS phishing) é golpe realizado via mensagens de texto (SMS), com links maliciosos ou pedidos de informação."
+            },
+            {
+                topic: "Engenharia Social",
+                q: "O que é tailgating?",
+                o: ["Seguir pessoa autorizada por porta segura", "Olhar por cima do ombro", "Procurar informações no lixo", "Enviar emails falsos"],
+                c: 0,
+                e: "Tailgating é seguir uma pessoa autorizada para entrar em área restrita, aproveitando a porta aberta antes que ela feche."
+            },
+            {
+                topic: "Engenharia Social",
+                q: "O que é shoulder surfing?",
+                o: ["Seguir pessoa", "Olhar por cima do ombro para ver tela/teclado", "Vasculhar lixo", "Engenharia social por telefone"],
+                c: 1,
+                e: "Shoulder surfing é observar por cima do ombro da vítima para capturar senhas, códigos ou informações na tela enquanto ela digita."
+            },
+            {
+                topic: "Engenharia Social",
+                q: "O que é pretexting?",
+                o: ["Criar cenário ou história falsa para obter informações", "Enviar email falso", "Ataque de rede", "Força bruta"],
+                c: 0,
+                e: "Pretexting é a criação de um cenário ou história falsa (um pretexto) para enganar a vítima e obter informações confidenciais."
+            },
+            {
+                topic: "Engenharia Social",
+                q: "O que é baiting?",
+                o: ["Oferecer algo atraente (USB infectada, download gratuito)", "Seguir pessoa", "Ligar para vítima", "Enviar SMS"],
+                c: 0,
+                e: "Baiting oferece algo atraente (USB infectada, download gratuito) para que a vítima comprometa a segurança. Ex: deixar pendrives infectados em estacionamentos."
+            },
+            {
+                topic: "Engenharia Social",
+                q: "O que é dumpster diving?",
+                o: ["Mergulho em piscinas", "Procurar informações confidenciais no lixo", "Ataque de rede", "Engenharia social por email"],
+                c: 1,
+                e: "Dumpster diving é procurar informações confidenciais no lixo da organização: papéis descartados, discos, anotações, recibos, etc."
+            },
+            {
+                topic: "Engenharia Social",
+                q: "O que é pharming?",
+                o: ["Phishing por telefone", "Redirecionar DNS para site falso", "Engenharia social presencial", "Ataque de força bruta"],
+                c: 1,
+                e: "Pharming redireciona o tráfego de um site legítimo para um site falso, geralmente manipulando DNS (envenenamento de cache DNS)."
+            },
+            {
+                topic: "Engenharia Social",
+                q: "O que é typosquatting?",
+                o: ["Registrar domínios com erros de digitação (ex: gooogle.com)", "Ataque de digitação", "Engenharia social", "Phishing"],
+                c: 0,
+                e: "Typosquatting (ou URL hijacking) é registrar domínios com erros de digitação comuns para capturar tráfego de usuários que digitam errado."
+            },
+
+            // Malware (17-24)
+            {
+                topic: "Malware",
+                q: "O que é ransomware?",
+                o: ["Malware que monitora atividades", "Malware que criptografa dados e exige pagamento", "Malware que se auto-replica", "Malware que esconde presença"],
+                c: 1,
+                e: "Ransomware criptografa os dados da vítima e exige pagamento (resgate) para liberar o acesso. BACKUP é a melhor defesa!"
+            },
+            {
+                topic: "Malware",
+                q: "Qual a diferença entre vírus e worm?",
+                o: ["Vírus precisa ser executado, worm se auto-replica", "Worm precisa ser executado, vírus se auto-replica", "São a mesma coisa", "Vírus é mais perigoso"],
+                c: 0,
+                e: "Vírus infecta arquivos e precisa ser executado para se replicar. Worm é auto-replicante e se espalha pela rede sem precisar de arquivo hospedeiro."
+            },
+            {
+                topic: "Malware",
+                q: "O que é um Trojan (cavalo de troia)?",
+                o: ["Malware que se replica", "Malware que parece legítimo mas é malicioso", "Malware que criptografa dados", "Malware que espiona"],
+                c: 1,
+                e: "Trojan é um malware que parece legítimo (jogo, utilitário) mas é malicioso. Não se replica sozinho, depende do usuário instalar."
+            },
+            {
+                topic: "Malware",
+                q: "O que é spyware?",
+                o: ["Malware que espiona atividades do usuário", "Malware que criptografa dados", "Malware que se replica", "Malware que esconde outros malwares"],
+                c: 0,
+                e: "Spyware monitora atividades do usuário, coleta informações e rouba dados como hábitos de navegação, senhas e informações pessoais."
+            },
+            {
+                topic: "Malware",
+                q: "O que é keylogger?",
+                o: ["Malware que registra teclas digitadas", "Malware que espiona tela", "Malware que criptografa", "Malware de rede"],
+                c: 0,
+                e: "Keylogger registra todas as teclas digitadas pela vítima para capturar senhas, números de cartão e outras informações sensíveis."
+            },
+            {
+                topic: "Malware",
+                q: "O que é rootkit?",
+                o: ["Malware que se replica", "Malware que esconde sua presença no sistema", "Malware que criptografa dados", "Malware que rouba senhas"],
+                c: 1,
+                e: "Rootkit é um malware que se esconde no sistema, muitas vezes em nível de kernel, para evitar detecção e manter acesso privilegiado."
+            },
+            {
+                topic: "Malware",
+                q: "O que é botnet?",
+                o: ["Rede de computadores infectados controlados remotamente", "Um tipo de vírus", "Firewall", "Antivírus"],
+                c: 0,
+                e: "Botnet é uma rede de computadores infectados (zumbis/bots) controlados remotamente por um atacante para ataques DDoS, spam ou mineração."
+            },
+            {
+                topic: "Malware",
+                q: "O que é fileless malware?",
+                o: ["Malware sem arquivos, executa na memória", "Vírus de arquivo", "Malware de rede", "Trojan"],
+                c: 0,
+                e: "Fileless malware executa diretamente na memória, sem gravar arquivos em disco, dificultando detecção por antivírus tradicionais baseados em assinatura."
+            },
+            {
+                topic: "Malware",
+                q: "O que é um RAT (Remote Access Trojan)?",
+                o: ["Trojan que permite acesso remoto ao sistema", "Rato eletrônico", "Antivírus", "Firewall"],
+                c: 0,
+                e: "RAT é um Trojan que permite acesso e controle remoto completo do sistema infectado, como se o atacante estivesse sentado na máquina."
+            },
+
+            // Cyber Kill Chain (25-27)
+            {
+                topic: "Cyber Kill Chain",
+                q: "Qual é a primeira fase da Cyber Kill Chain?",
+                o: ["Exploitation", "Delivery", "Reconnaissance", "Installation"],
+                c: 2,
+                e: "Reconnaissance (reconhecimento) é a primeira fase, onde o atacante coleta informações sobre o alvo (OSINT, varreduras, engenharia social)."
+            },
+            {
+                topic: "Cyber Kill Chain",
+                q: "Em qual fase da Cyber Kill Chain o atacante estabelece comunicação com o servidor de comando e controle (C2)?",
+                o: ["Reconnaissance", "Weaponization", "C2", "Actions on Objectives"],
+                c: 2,
+                e: "C2 (Command & Control) é a sexta fase, onde o malware estabelece comunicação com o servidor do atacante para receber instruções."
+            },
+            {
+                topic: "Cyber Kill Chain",
+                q: "O que acontece na fase de 'Actions on Objectives' da Cyber Kill Chain?",
+                o: ["Coletar informações", "Preparar exploit", "Executar ações finais: roubar dados, destruir, espionar", "Instalar backdoor"],
+                c: 2,
+                e: "Actions on Objectives é a sétima e última fase, onde o atacante executa os objetivos finais: exfiltrar dados, destruir sistemas, criptografar (ransomware)."
+            },
+
+            // Ataques de Rede (28-32)
+            {
+                topic: "Ataques de Rede",
+                q: "O que é um ataque DDoS?",
+                o: ["Ataque de uma única fonte", "Ataque distribuído de múltiplas fontes", "Ataque de phishing", "Ataque físico"],
+                c: 1,
+                e: "DDoS (Distributed Denial of Service) é um ataque de múltiplas fontes (geralmente botnet) para tornar um serviço indisponível, consumindo recursos."
+            },
+            {
+                topic: "Ataques de Rede",
+                q: "O que é ARP spoofing?",
+                o: ["Atacante associa seu MAC ao IP da vítima (MitM)", "Falsificar DNS", "Ataque de força bruta", "Inundar tabela CAM"],
+                c: 0,
+                e: "ARP spoofing ocorre quando o atacante envia mensagens ARP falsas associando seu MAC ao IP da vítima ou gateway, permitindo interceptar tráfego (MitM)."
+            },
+            {
+                topic: "Ataques de Rede",
+                q: "O que é um ataque de replay?",
+                o: ["Repetir um ataque", "Capturar e retransmitir tráfego legítimo", "Ataque de força bruta", "Inundar rede"],
+                c: 1,
+                e: "Replay attack captura tráfego legítimo (como uma autenticação) e retransmite posteriormente para obter acesso não autorizado."
+            },
+            {
+                topic: "Ataques de Rede",
+                q: "O que é DNS poisoning?",
+                o: ["Envenenar comida", "Corromper cache DNS com entradas falsas", "Ataque de rede", "Phishing"],
+                c: 1,
+                e: "DNS poisoning (envenenamento de cache DNS) corrompe o cache de um servidor DNS com entradas falsas, redirecionando usuários para sites maliciosos."
+            },
+            {
+                topic: "Ataques de Rede",
+                q: "O que é um ataque de SYN flood?",
+                o: ["Enviar muitos SYN sem completar handshake (DoS)", "Inundar com SYN ACK", "Ataque de phishing", "Força bruta"],
+                c: 0,
+                e: "SYN flood envia muitos pacotes SYN (início de conexão TCP) sem completar o handshake, esgotando recursos do servidor (half-open connections)."
+            },
+
+            // Ataques de Senha (33-35)
+            {
+                topic: "Ataques de Senha",
+                q: "Qual a diferença entre ataque online e offline de senha?",
+                o: ["Online interage com serviço (lento/detectável), offline contra hash (rápido/indetectável)", "Online é mais rápido", "Offline é detectável", "São iguais"],
+                c: 0,
+                e: "Online: contra serviço ativo, lento, detectável, limitado por lockout. Offline: contra o hash da senha, rápido, indetectável, ilimitado."
+            },
+            {
+                topic: "Ataques de Senha",
+                q: "O que é password spraying?",
+                o: ["Testar todas combinações em uma conta", "Testar senha comum em muitas contas (evita lockout)", "Força bruta", "Ataque de dicionário"],
+                c: 1,
+                e: "Password spraying testa uma senha comum (ex: 'Password123') contra muitas contas de usuário, evitando mecanismos de lockout por conta."
+            },
+            {
+                topic: "Ataques de Senha",
+                q: "O que é credential stuffing?",
+                o: ["Testar senhas comuns", "Usar credenciais vazadas de outros sites (reuso de senhas)", "Força bruta", "Ataque de dicionário"],
+                c: 1,
+                e: "Credential stuffing usa pares de usuário/senha vazados de outros serviços (obtidos em data breaches) para tentar acessar contas em outros sites."
+            }
+        ];
+
+        let answers = {};
+        let checked = false;
+        let filteredQuestions = [...Array(quiz.length).keys()];
+        let currentFilter = 'all';
+
+        function loadQuestions() {
+            const container = document.getElementById('questions');
+            container.innerHTML = '';
+            
+            filteredQuestions.forEach((index, i) => {
+                const q = quiz[index];
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.id = `q-${index}`;
+                
+                // Adiciona tag do tópico
+                const topicTag = `<span class="topic-tag">${q.topic}</span>`;
+                div.innerHTML = `<h3>${i + 1}. ${topicTag} ${q.q}</h3>`;
+                
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(index, oi);
+                    odiv.id = `q${index}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${index}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
+                div.appendChild(exp);
+                
+                container.appendChild(div);
+            });
+            
+            updateProgress();
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            
+            quiz[qi].o.forEach((_, i) => {
+                const el = document.getElementById(`q${qi}o${i}`);
+                if (el) el.classList.remove('selected');
+            });
+            
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(answers).length;
+            document.getElementById('answered-count').textContent = `✅ ${answered} respondidas`;
+            const progress = (answered / quiz.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+
+        function filterQuestions(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') {
+                filteredQuestions = [...Array(quiz.length).keys()];
+            } else if (type === 'answered') {
+                filteredQuestions = Object.keys(answers).map(Number).sort((a,b) => a - b);
+            } else {
+                filteredQuestions = [...Array(quiz.length).keys()].filter(i => answers[i] === undefined);
+            }
+            
+            loadQuestions();
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            
+            quiz.forEach((q, qi) => {
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (el) {
+                        if (oi === q.c) {
+                            el.classList.add('correct');
+                        } else if (answers[qi] === oi) {
+                            el.classList.add('incorrect');
+                        }
+                    }
+                });
+                
+                const exp = document.getElementById(`exp${qi}`);
+                if (exp) exp.style.display = 'block';
+                
+                if (answers[qi] === q.c) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = 
+                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            filteredQuestions = [...Array(quiz.length).keys()];
+            currentFilter = 'all';
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.filter-btn').classList.add('active');
+            loadQuestions();
+            document.getElementById('results-modal').classList.remove('show');
+        }
+
+        loadQuestions();
+    </script>
+</body>
+</html>

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado Domínio 5 - Governança, Risco e Conformidade</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+
+        .option:hover {
+            background: #f9fafb;
+            border-color: #2c3e50;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #2c3e50;
+            background: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e2e8f0;
+            border-left: 5px solid #2c3e50;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+            margin: 30px auto;
+            display: block;
+        }
+
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .results-modal.show {
+            display: flex;
+        }
+
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-btn.active {
+            background: white;
+            color: #2c3e50;
+        }
+
+        .topic-tag {
+            display: inline-block;
+            background: #e2e8f0;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .question {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚖️ Domínio 5</h1>
+            <h2>Governança, Risco e Conformidade</h2>
+            <p>35 questões | Todas comentadas</p>
+            <div class="stats-bar">
+                <div class="stat-card">📊 35 questões</div>
+                <div class="stat-card">⏱️ 45 minutos</div>
+                <div class="stat-card" id="answered-count">✅ 0 respondidas</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterQuestions('all')">Todas</button>
+            <button class="filter-btn" onclick="filterQuestions('unanswered')">Não respondidas</button>
+            <button class="filter-btn" onclick="filterQuestions('answered')">Respondidas</button>
+        </div>
+
+        <div id="questions"></div>
+
+        <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+    </div>
+
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()" style="margin: 0 auto;">Refazer Simulado</button>
+        </div>
+    </div>
+
+    <script>
+        const quiz = [
+            // Governança e Documentos (1-6)
+            {
+                topic: "Governança",
+                q: "Qual a diferença entre Policy, Standard e Procedure?",
+                o: ["São a mesma coisa", "Policy (alto nível - POR QUE), Standard (requisitos - O QUE), Procedure (passo a passo - COMO)", "Standard é mais importante", "Procedure é opcional"],
+                c: 1,
+                e: "Policy: documento de alto nível, estratégico (POR QUE). Standard: requisitos obrigatórios (O QUE). Procedure: instruções passo a passo (COMO)."
+            },
+            {
+                topic: "Governança",
+                q: "O que é uma AUP (Acceptable Use Policy)?",
+                o: ["Política de backup", "Política de uso aceitável de recursos corporativos", "Política de senhas", "Política de criptografia"],
+                c: 1,
+                e: "AUP define o uso aceitável dos recursos corporativos (email, internet, dispositivos), incluindo comportamentos proibidos e consequências."
+            },
+            {
+                topic: "Governança",
+                q: "O que é um guideline?",
+                o: ["Documento obrigatório", "Recomendação e melhores práticas (não obrigatório)", "Requisito técnico", "Lei"],
+                c: 1,
+                e: "Guideline é uma diretriz ou recomendação, não obrigatória. Oferece melhores práticas, mas permite discrição na implementação."
+            },
+            {
+                topic: "Governança",
+                q: "O que é ISO 27001?",
+                o: ["Padrão de criptografia", "Framework de ISMS (Information Security Management System)", "Lei de privacidade", "Firewall"],
+                c: 1,
+                e: "ISO 27001 é um padrão internacional que estabelece requisitos para implementar e manter um Sistema de Gestão de Segurança da Informação (ISMS)."
+            },
+            {
+                topic: "Governança",
+                q: "O que é PCI DSS?",
+                o: ["Lei de saúde", "Padrão de segurança para dados de cartões de crédito", "Lei de privacidade da UE", "Framework de governança"],
+                c: 1,
+                e: "PCI DSS (Payment Card Industry Data Security Standard) é um padrão de segurança para organizações que processam, armazenam ou transmitem dados de cartões de crédito."
+            },
+            {
+                topic: "Governança",
+                q: "O que é um playbook em segurança?",
+                o: ["Documento estilo checklist para resposta a incidentes", "Firewall", "Antivírus", "Backup"],
+                c: 0,
+                e: "Playbook é um documento estilo checklist que especifica como responder a uma ameaça ou incidente, com passos listados em ordem."
+            },
+
+            // Gestão de Riscos (7-15)
+            {
+                topic: "Risco",
+                q: "O que é risco inerente?",
+                o: ["Risco após controles", "Risco natural sem controles implementados", "Risco aceito", "Risco transferido"],
+                c: 1,
+                e: "Risco inerente é o risco natural de uma atividade sem nenhum controle implementado. É o baseline antes de qualquer mitigação."
+            },
+            {
+                topic: "Risco",
+                q: "O que é risco residual?",
+                o: ["Risco natural", "Risco que permanece após a implementação de controles", "Risco aceito", "Risco transferido"],
+                c: 1,
+                e: "Risco residual é o risco que permanece após a implementação de controles de segurança. Fórmula: Inherent Risk - Controles = Residual Risk."
+            },
+            {
+                topic: "Risco",
+                q: "Qual a fórmula da ALE (Annual Loss Expectancy)?",
+                o: ["AV × EF", "SLE × ARO", "SLE + ARO", "AV × ARO"],
+                c: 1,
+                e: "ALE = SLE × ARO (perda anual esperada). SLE = AV × EF (perda por ocorrência)."
+            },
+            {
+                topic: "Risco",
+                q: "O que significa SLE (Single Loss Expectancy)?",
+                o: ["Perda anual esperada", "Perda por uma única ocorrência (AV × EF)", "Frequência anual", "Tempo de recuperação"],
+                c: 1,
+                e: "SLE é a perda esperada para uma única ocorrência de um risco. Calculada como SLE = AV (Asset Value) × EF (Exposure Factor)."
+            },
+            {
+                topic: "Risco",
+                q: "O que significa ARO (Annual Rate of Occurrence)?",
+                o: ["Valor do ativo", "Frequência anual esperada do risco", "Perda por ocorrência", "Fator de exposição"],
+                c: 1,
+                e: "ARO é a frequência anual esperada de um risco. Ex: ARO = 0.5 significa que o risco ocorre uma vez a cada 2 anos."
+            },
+            {
+                topic: "Risco",
+                q: "O que é um mapa de calor (heat map) em gestão de riscos?",
+                o: ["Gráfico de temperatura", "Matriz de impacto × probabilidade com cores (vermelho, amarelo, verde)", "Relatório financeiro", "Auditoria"],
+                c: 1,
+                e: "Heat map é uma matriz que visualiza riscos baseado em impacto e probabilidade, usando cores para indicar severidade e prioridade."
+            },
+            {
+                topic: "Risco",
+                q: "Qual estratégia de risco envolve contratar um seguro?",
+                o: ["Mitigação", "Transferência", "Aceitação", "Evitação"],
+                c: 1,
+                e: "Transferência atribui o risco a terceiros, como seguros cibernéticos. Riscos à reputação geralmente não podem ser transferidos."
+            },
+            {
+                topic: "Risco",
+                q: "O que é uma exceção de risco?",
+                o: ["Risco aceito permanentemente", "Situação temporária com controles alternativos", "Risco transferido", "Risco mitigado"],
+                c: 1,
+                e: "Exceção de risco é uma situação temporária onde o risco é aceito com controles alternativos, até que a correção definitiva seja aplicada."
+            },
+            {
+                topic: "Risco",
+                q: "O que é um KRI (Key Risk Indicator)?",
+                o: ["Indicador de desempenho", "Indicador preditivo que monitora riscos potenciais", "Métrica financeira", "Log de auditoria"],
+                c: 1,
+                e: "KRI são indicadores preditivos que monitoram e preveem riscos potenciais, fornecendo alerta precoce de exposições crescentes."
+            },
+
+            // Continuidade de Negócios (16-20)
+            {
+                topic: "Continuidade",
+                q: "O que significa RTO (Recovery Time Objective)?",
+                o: ["Quantidade de dados perdidos", "Tempo máximo que um sistema pode ficar offline após desastre", "Frequência de backup", "Tempo entre falhas"],
+                c: 1,
+                e: "RTO é o tempo máximo que um processo pode ficar offline após um desastre. Define a velocidade de recuperação necessária."
+            },
+            {
+                topic: "Continuidade",
+                q: "O que significa RPO (Recovery Point Objective)?",
+                o: ["Tempo máximo de recuperação", "Quantidade máxima de dados que pode ser perdida (define frequência de backup)", "Tempo entre falhas", "Tempo de reparo"],
+                c: 1,
+                e: "RPO define quanto dado pode ser perdido, medido em tempo. Ex: RPO 4h significa backup a cada 4 horas."
+            },
+            {
+                topic: "Continuidade",
+                q: "O que significa MTD (Maximum Tolerable Downtime)?",
+                o: ["Tempo máximo que organização pode operar sem processo crítico", "Tempo de recuperação", "Tempo entre falhas", "Tempo de reparo"],
+                c: 0,
+                e: "MTD é o período máximo de interrupção sem causar falha irrecuperável no negócio. Define o limite superior para RTO."
+            },
+            {
+                topic: "Continuidade",
+                q: "Qual a relação entre RTO, WRT e MTD?",
+                o: ["RTO × WRT = MTD", "RTO + WRT ≤ MTD", "RTO - WRT = MTD", "Não há relação"],
+                c: 1,
+                e: "RTO (recuperação) + WRT (work recovery, reintegração) deve ser menor ou igual ao MTD (tempo máximo tolerável)."
+            },
+            {
+                topic: "Continuidade",
+                q: "O que significa BIA (Business Impact Analysis)?",
+                o: ["Análise de impacto nos negócios, identifica processos críticos, RTO, RPO", "Auditoria financeira", "Análise de riscos", "Teste de penetração"],
+                c: 0,
+                e: "BIA identifica processos críticos, define RTO, RPO e MTD. É a base para o DRP (Disaster Recovery Plan) e BCP (Business Continuity Plan)."
+            },
+
+            // Auditoria e Compliance (21-25)
+            {
+                topic: "Auditoria",
+                q: "Qual a diferença entre auditoria interna e externa?",
+                o: ["Interna é por funcionários, externa por terceiros independentes", "Interna é mais cara", "Externa é menos confiável", "São iguais"],
+                c: 0,
+                e: "Auditoria interna: realizada por equipe interna independente. Auditoria externa: realizada por firma externa independente, mais credibilidade."
+            },
+            {
+                topic: "Auditoria",
+                q: "O que é uma auditoria de conformidade?",
+                o: ["Avalia eficiência de processos", "Verifica aderência a leis e regulamentações", "Avalia desempenho financeiro", "Testa controles técnicos"],
+                c: 1,
+                e: "Auditoria de conformidade verifica se a organização está aderindo a leis, regulamentações e políticas aplicáveis (ex: GDPR, HIPAA)."
+            },
+            {
+                topic: "Compliance",
+                q: "Qual é o prazo de notificação de violação de dados no GDPR?",
+                o: ["24 horas", "72 horas", "7 dias", "30 dias"],
+                c: 1,
+                e: "GDPR exige notificação da violação à autoridade de proteção de dados dentro de 72 horas após tomar conhecimento."
+            },
+            {
+                topic: "Compliance",
+                q: "O que é a LGPD?",
+                o: ["Lei de proteção de dados do Brasil", "Padrão de cartões de crédito", "Lei de saúde dos EUA", "Framework de governança"],
+                c: 0,
+                e: "LGPD (Lei Geral de Proteção de Dados) é a lei brasileira de proteção de dados, baseada no GDPR. Multas de até 2% do faturamento."
+            },
+            {
+                topic: "Compliance",
+                q: "O que é HIPAA?",
+                o: ["Lei de proteção de dados de saúde nos EUA", "Lei de privacidade da UE", "Padrão de cartões", "Framework de segurança"],
+                c: 0,
+                e: "HIPAA (Health Insurance Portability and Accountability Act) é uma lei dos EUA que estabelece requisitos de privacidade e segurança para informações de saúde."
+            },
+
+            // Gestão de Terceiros (26-29)
+            {
+                topic: "Terceiros",
+                q: "O que é due diligence em gestão de fornecedores?",
+                o: ["Avaliação pré-contrato do fornecedor", "Monitoramento contínuo pós-contrato", "Rescisão de contrato", "Auditoria anual"],
+                c: 0,
+                e: "Due diligence é a avaliação pré-contrato do fornecedor: background check, controles de segurança, saúde financeira."
+            },
+            {
+                topic: "Terceiros",
+                q: "O que é due care em gestão de fornecedores?",
+                o: ["Avaliação pré-contrato", "Ações contínuas após o contrato (monitoramento, auditorias)", "Contrato inicial", "Pagamento"],
+                c: 1,
+                e: "Due care são as ações contínuas após a assinatura do contrato: monitoramento, auditorias periódicas e verificação de conformidade."
+            },
+            {
+                topic: "Terceiros",
+                q: "O que é um SLA (Service Level Agreement)?",
+                o: ["Acordo de nível de serviço (uptime, tempo de resposta)", "Contrato de confidencialidade", "Escopo de trabalho", "Parceria"],
+                c: 0,
+                e: "SLA define os níveis de serviço esperados do fornecedor: uptime, tempo de resposta, suporte e penalidades por descumprimento."
+            },
+            {
+                topic: "Terceiros",
+                q: "O que é right-to-audit?",
+                o: ["Direito de auditar o fornecedor", "Direito de rescindir contrato", "Direito de pagar menos", "Direito de acesso"],
+                c: 0,
+                e: "Right-to-audit é uma cláusula contratual que permite à organização auditar o fornecedor para verificar conformidade com requisitos de segurança."
+            },
+
+            // Proteção de Dados (30-35)
+            {
+                topic: "Proteção de Dados",
+                q: "Qual a diferença entre dados confidenciais e dados de privacidade?",
+                o: ["Confidenciais: qualquer informação da organização. Privacidade: especificamente dados pessoais", "São a mesma coisa", "Privacidade é mais importante", "Confidenciais são pessoais"],
+                c: 0,
+                e: "Dados confidenciais: qualquer informação sensível da organização (PI, segredos). Dados de privacidade: especificamente informações pessoais (PII)."
+            },
+            {
+                topic: "Proteção de Dados",
+                q: "O que é um controlador de dados (data controller)?",
+                o: ["Processa dados em nome de outro", "Determina propósitos e meios de processar dados", "Armazena dados", "Audita dados"],
+                c: 1,
+                e: "Controlador determina os propósitos e meios de processar dados pessoais. É responsável por conformidade, consentimento e avisos de privacidade."
+            },
+            {
+                topic: "Proteção de Dados",
+                q: "O que é um processador de dados (data processor)?",
+                o: ["Determina propósitos", "Processa dados em nome do controlador", "É o titular dos dados", "Audita dados"],
+                c: 1,
+                e: "Processador processa dados pessoais em nome do controlador, seguindo suas instruções. Ex: provedores de nuvem, empresas de folha de pagamento."
+            },
+            {
+                topic: "Proteção de Dados",
+                q: "O que é o direito ao esquecimento (right to be forgotten)?",
+                o: ["Direito de acessar dados", "Direito de solicitar apagamento de dados pessoais", "Direito de corrigir dados", "Direito de portar dados"],
+                c: 1,
+                e: "Direito ao esquecimento (GDPR) permite que o titular solicite a exclusão de seus dados pessoais quando não mais necessários ou consentimento retirado."
+            },
+            {
+                topic: "Proteção de Dados",
+                q: "O que é soberania de dados (data sovereignty)?",
+                o: ["Dados criptografados", "Dados devem residir fisicamente dentro de uma jurisdição específica", "Backup de dados", "Propriedade dos dados"],
+                c: 1,
+                e: "Soberania de dados significa que os dados devem ser armazenados fisicamente dentro dos limites legais/geográficos de uma jurisdição."
+            },
+            {
+                topic: "Proteção de Dados",
+                q: "Quais são os mecanismos de remediação de DLP?",
+                o: ["Alert, Block, Quarantine, Tombstone", "Backup, Restore, Archive, Delete", "Encrypt, Decrypt, Hash, Salt", "Firewall, IDS, IPS, VPN"],
+                c: 0,
+                e: "DLP: Alert (alerta apenas), Block (bloquear), Quarantine (isolar arquivo), Tombstone (substituir por descrição da violação)."
+            }
+        ];
+
+        let answers = {};
+        let checked = false;
+        let filteredQuestions = [...Array(quiz.length).keys()];
+        let currentFilter = 'all';
+
+        function loadQuestions() {
+            const container = document.getElementById('questions');
+            container.innerHTML = '';
+            
+            filteredQuestions.forEach((index, i) => {
+                const q = quiz[index];
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.id = `q-${index}`;
+                
+                // Adiciona tag do tópico
+                const topicTag = `<span class="topic-tag">${q.topic}</span>`;
+                div.innerHTML = `<h3>${i + 1}. ${topicTag} ${q.q}</h3>`;
+                
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(index, oi);
+                    odiv.id = `q${index}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${index}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
+                div.appendChild(exp);
+                
+                container.appendChild(div);
+            });
+            
+            updateProgress();
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            
+            quiz[qi].o.forEach((_, i) => {
+                const el = document.getElementById(`q${qi}o${i}`);
+                if (el) el.classList.remove('selected');
+            });
+            
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(answers).length;
+            document.getElementById('answered-count').textContent = `✅ ${answered} respondidas`;
+            const progress = (answered / quiz.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+
+        function filterQuestions(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') {
+                filteredQuestions = [...Array(quiz.length).keys()];
+            } else if (type === 'answered') {
+                filteredQuestions = Object.keys(answers).map(Number).sort((a,b) => a - b);
+            } else {
+                filteredQuestions = [...Array(quiz.length).keys()].filter(i => answers[i] === undefined);
+            }
+            
+            loadQuestions();
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            
+            quiz.forEach((q, qi) => {
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (el) {
+                        if (oi === q.c) {
+                            el.classList.add('correct');
+                        } else if (answers[qi] === oi) {
+                            el.classList.add('incorrect');
+                        }
+                    }
+                });
+                
+                const exp = document.getElementById(`exp${qi}`);
+                if (exp) exp.style.display = 'block';
+                
+                if (answers[qi] === q.c) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = 
+                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            filteredQuestions = [...Array(quiz.length).keys()];
+            currentFilter = 'all';
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.filter-btn').classList.add('active');
+            loadQuestions();
+            document.getElementById('results-modal').classList.remove('show');
+        }
+
+        loadQuestions();
+    </script>
+</body>
+</html>

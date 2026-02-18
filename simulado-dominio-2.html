@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado Domínio 2 - Arquitetura e Design</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+
+        .option:hover {
+            background: #f9fafb;
+            border-color: #0ba360;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #0ba360;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #d1fae5;
+            border-left: 5px solid #0ba360;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+            margin: 30px auto;
+            display: block;
+        }
+
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .results-modal.show {
+            display: flex;
+        }
+
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-btn.active {
+            background: white;
+            color: #0ba360;
+        }
+
+        .topic-tag {
+            display: inline-block;
+            background: #e2e8f0;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .question {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Domínio 2</h1>
+            <h2>Arquitetura e Design</h2>
+            <p>35 questões | Todas comentadas</p>
+            <div class="stats-bar">
+                <div class="stat-card">📊 35 questões</div>
+                <div class="stat-card">⏱️ 45 minutos</div>
+                <div class="stat-card" id="answered-count">✅ 0 respondidas</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterQuestions('all')">Todas</button>
+            <button class="filter-btn" onclick="filterQuestions('unanswered')">Não respondidas</button>
+            <button class="filter-btn" onclick="filterQuestions('answered')">Respondidas</button>
+        </div>
+
+        <div id="questions"></div>
+
+        <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+    </div>
+
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()" style="margin: 0 auto;">Refazer Simulado</button>
+        </div>
+    </div>
+
+    <script>
+        const quiz = [
+            // Arquitetura de Rede e DMZ (1-8)
+            {
+                topic: "Arquitetura de Rede",
+                q: "Qual é a configuração de uma Screened Subnet (DMZ)?",
+                o: ["Um firewall entre internet e LAN", "Dois firewalls: Externo (internet→DMZ) e Interno (DMZ→LAN)", "Apenas um roteador", "Sem firewalls"],
+                c: 1,
+                e: "Uma DMZ (screened subnet) utiliza dois firewalls: o externo controla tráfego internet→DMZ, e o interno controla DMZ→LAN. Se o firewall externo falhar, apenas a DMZ é comprometida."
+            },
+            {
+                topic: "Arquitetura de Rede",
+                q: "O que acontece se o firewall EXTERNO de uma DMZ falhar?",
+                o: ["Toda a rede é comprometida", "Apenas a DMZ é comprometida, a LAN permanece protegida", "Apenas a LAN é comprometida", "Nada acontece"],
+                c: 1,
+                e: "Se o firewall EXTERNO falhar, apenas os servidores na DMZ são comprometidos. A LAN permanece protegida pelo firewall interno."
+            },
+            {
+                topic: "Arquitetura de Rede",
+                q: "O que é um bastion host?",
+                o: ["Servidor interno sem proteção", "Servidor fortificado exposto à internet", "Firewall de perímetro", "Roteador"],
+                c: 1,
+                e: "Bastion host é um servidor fortificado exposto diretamente à internet, com hardening contra ataques. Pode ser um servidor web público ou honeypot."
+            },
+            {
+                topic: "Arquitetura de Rede",
+                q: "O que é um dual-homed gateway?",
+                o: ["Gateway com duas interfaces", "Firewall com três interfaces (Internet, DMZ, LAN)", "Roteador com uma interface", "Switch"],
+                c: 1,
+                e: "Dual-homed gateway tem três interfaces: internet, DMZ e LAN privada. IP forwarding deve estar desabilitado."
+            },
+            {
+                topic: "Arquitetura de Rede",
+                q: "O que é um screening router?",
+                o: ["Roteador que filtra pacotes com ACLs", "Firewall stateful", "Switch camada 3", "Proxy"],
+                c: 0,
+                e: "Screening router é um roteador que usa ACLs para filtrar pacotes. É o dispositivo mais externo da rede, próximo à internet."
+            },
+            {
+                topic: "Arquitetura de Rede",
+                q: "Onde deve ficar um web server público?",
+                o: ["Na LAN interna", "Na DMZ", "Na internet direta", "No mesmo segmento dos funcionários"],
+                c: 1,
+                e: "Web servers públicos devem ficar na DMZ. O database deve ficar na LAN privada, com firewall interno permitindo apenas tráfego do web server."
+            },
+            {
+                topic: "Arquitetura de Rede",
+                q: "O que é um honeypot?",
+                o: ["Servidor de produção", "Sistema isca para atrair e estudar atacantes", "Firewall", "Roteador"],
+                c: 1,
+                e: "Honeypot é um sistema isca configurado para atrair atacantes e estudar suas técnicas, desviando sua atenção dos sistemas reais."
+            },
+            {
+                topic: "Arquitetura de Rede",
+                q: "O que é um DNS sinkhole?",
+                o: ["Servidor DNS público", "DNS que redireciona tráfego malicioso para IP controlado", "Cache DNS", "Protocolo DNS"],
+                c: 1,
+                e: "DNS sinkhole redireciona consultas a domínios maliciosos para um IP controlado, bloqueando acesso a sites de malware e C2."
+            },
+
+            // Firewalls (9-13)
+            {
+                topic: "Firewalls",
+                q: "Qual a diferença entre firewall stateless e stateful?",
+                o: ["Stateless rastreia sessões, stateful não", "Stateful rastreia sessões (state table), stateless analisa pacotes independentes", "São a mesma coisa", "Stateless é mais seguro"],
+                c: 1,
+                e: "Stateful firewall rastreia o estado das conexões em uma state table. Stateless analisa cada pacote independentemente, sem contexto da conexão."
+            },
+            {
+                topic: "Firewalls",
+                q: "O que é WAF (Web Application Firewall)?",
+                o: ["Firewall de rede tradicional", "Protege aplicações web contra SQLi, XSS e CSRF", "Firewall de perímetro", "IDS"],
+                c: 1,
+                e: "WAF protege aplicações web contra ataques como SQL Injection, Cross-Site Scripting (XSS) e CSRF, examinando tráfego na camada 7 HTTP."
+            },
+            {
+                topic: "Firewalls",
+                q: "O que é NGFW (Next-Generation Firewall)?",
+                o: ["Firewall com inspeção de pacotes", "Firewall tradicional", "Firewall com IPS, inspeção TLS e integração com diretórios", "Apenas um roteador"],
+                c: 2,
+                e: "NGFW combina firewall tradicional com IPS, inspeção profunda de pacotes (DPI), inspeção TLS, inteligência de ameaças e integração com diretórios."
+            },
+            {
+                topic: "Firewalls",
+                q: "O que é UTM (Unified Threat Management)?",
+                o: ["Firewall simples", "Dispositivo tudo-em-um: firewall, antimalware, IPS, spam filter, VPN", "Apenas antivírus", "Sistema de detecção"],
+                c: 1,
+                e: "UTM é um appliance all-in-one que combina múltiplas funções: firewall, IPS, antimalware, filtro de spam, filtro de conteúdo e VPN."
+            },
+            {
+                topic: "Firewalls",
+                q: "Qual a melhor prática para portas em firewall?",
+                o: ["Abrir todas e fechar as ruins", "Fechar TODAS as portas e abrir apenas as necessárias", "Manter padrão", "Não configurar"],
+                c: 1,
+                e: "A melhor prática é fechar TODAS as portas e abrir apenas as estritamente necessárias para as aplicações internas (default-deny)."
+            },
+
+            // VPN (14-19)
+            {
+                topic: "VPN",
+                q: "Qual é a melhor solução para acesso remoto seguro a recursos privados?",
+                o: ["FTP", "Telnet", "VPN", "HTTP"],
+                c: 2,
+                e: "VPN é a MELHOR solução para acessar recursos privados da internet. O servidor VPN pode ficar na DMZ e o tráfego atravessa o firewall interno."
+            },
+            {
+                topic: "VPN",
+                q: "Qual a diferença entre split tunnel e full tunnel VPN?",
+                o: ["Split tunnel roteia todo tráfego", "Split tunnel roteia apenas tráfego corporativo via VPN, full tunnel roteia TODO tráfego", "São iguais", "Full tunnel é menos seguro"],
+                c: 1,
+                e: "Split tunnel: apenas tráfego corporativo vai pela VPN, resto pela internet (risco de bypass). Full tunnel: todo tráfego vai pela VPN (mais seguro)."
+            },
+            {
+                topic: "VPN",
+                q: "Qual a diferença entre os modos Transport e Tunnel do IPSec?",
+                o: ["Transport criptografa pacote inteiro, Tunnel apenas payload", "Transport: apenas payload criptografado, Tunnel: pacote inteiro criptografado", "São iguais", "Tunnel é host-to-host"],
+                c: 1,
+                e: "Transport mode: apenas payload criptografado (host-to-host). Tunnel mode: pacote inteiro criptografado e encapsulado com novo header (site-to-site)."
+            },
+            {
+                topic: "VPN",
+                q: "Qual a diferença entre AH e ESP no IPSec?",
+                o: ["AH criptografa, ESP autentica", "AH: autenticação (sem criptografia), ESP: criptografia do payload", "São iguais", "ESP é mais antigo"],
+                c: 1,
+                e: "AH (Authentication Header) fornece autenticação e integridade, mas não criptografia. ESP (Encapsulating Security Payload) criptografa o payload."
+            },
+            {
+                topic: "VPN",
+                q: "O que é IKE (Internet Key Exchange)?",
+                o: ["Protocolo de roteamento", "Estabelece chaves e autenticação para IPSec", "Firewall", "VPN client"],
+                c: 1,
+                e: "IKE negocia autenticação, seleciona cifras e realiza troca de chaves Diffie-Hellman para estabelecer Security Associations (SA) para IPSec."
+            },
+            {
+                topic: "VPN",
+                q: "Quais são as fases do IKE?",
+                o: ["Fase 1: canal seguro, Fase 2: negocia ciphers", "Fase 1: negocia ciphers, Fase 2: canal seguro", "Apenas uma fase", "Três fases"],
+                c: 0,
+                e: "Fase 1: estabelece identidade, Diffie-Hellman e canal seguro. Fase 2: usa o canal seguro para negociar ciphers e chaves para AH/ESP."
+            },
+
+            // NAC (20-23)
+            {
+                topic: "NAC",
+                q: "O que é NAC (Network Access Control)?",
+                o: ["Firewall de rede", "Controla acesso baseado em identidade e conformidade do dispositivo", "Roteador", "Switch"],
+                c: 1,
+                e: "NAC autentica usuários/dispositivos E verifica conformidade (antivírus, patches, SO) antes de permitir acesso à rede (zero-trust)."
+            },
+            {
+                topic: "NAC",
+                q: "Qual a diferença entre NAC agent-based e agentless?",
+                o: ["Agent-based: software no dispositivo. Agentless: baseado em porta/scan", "Agent-based é mais fraco", "São iguais", "Agentless é melhor"],
+                c: 0,
+                e: "Agent-based: software instalado, info detalhada, auto-remediation. Agentless: baseado em porta/scan, funciona com guests/IoT sem configuração prévia."
+            },
+            {
+                topic: "NAC",
+                q: "O que é Dynamic VLAN em NAC?",
+                o: ["VLAN estática", "NAC atribui VLAN baseado em identidade/conformidade", "VLAN padrão", "VLAN de gerência"],
+                c: 1,
+                e: "Dynamic VLAN: NAC atribui VLAN baseado em identidade, tipo de dispositivo e conformidade. Dispositivo não conforme → VLAN de quarentena."
+            },
+            {
+                topic: "NAC",
+                q: "O que é zero-trust security?",
+                o: ["Confiar em tudo", "Never trust, always verify", "Apenas firewalls", "Rede aberta"],
+                c: 1,
+                e: "Zero-trust significa 'nunca confie, sempre verifique'. NAC implementa isso com autenticação E autorização. Se qualquer falhar, acesso negado."
+            },
+
+            // Switch Security (24-28)
+            {
+                topic: "Switch Security",
+                q: "O que é VLAN?",
+                o: ["Rede local virtual para segmentação lógica", "Protocolo de roteamento", "Firewall", "Antivírus"],
+                c: 0,
+                e: "VLAN (Virtual LAN) segmenta a rede logicamente. Dispositivos em VLANs diferentes NÃO comunicam sem um roteador ou switch Layer 3."
+            },
+            {
+                topic: "Switch Security",
+                q: "O que é uma porta trunk?",
+                o: ["Porta de acesso comum", "Membro de TODAS as VLANs, usada entre switches", "Porta de usuário", "Porta desabilitada"],
+                c: 1,
+                e: "Trunk port é membro de todas as VLANs e carrega tráfego entre switches usando tagging 802.1Q com VLAN ID."
+            },
+            {
+                topic: "Switch Security",
+                q: "Qual ataque inunda a tabela CAM do switch fazendo-o funcionar como hub?",
+                o: ["ARP Spoofing", "MAC Flooding", "VLAN Hopping", "DHCP Spoofing"],
+                c: 1,
+                e: "MAC Flooding inunda a tabela CAM. O switch entra em modo fail open e age como hub, permitindo que o atacante sniffe todo tráfego."
+            },
+            {
+                topic: "Switch Security",
+                q: "Qual recurso previne MAC Flooding?",
+                o: ["DAI", "Port Security", "DHCP Snooping", "BPDU Guard"],
+                c: 1,
+                e: "Port Security limita o número de endereços MAC por porta, prevenindo MAC flooding e dispositivos não autorizados."
+            },
+            {
+                topic: "Switch Security",
+                q: "Qual recurso previne ARP Spoofing?",
+                o: ["Port Security", "DAI (Dynamic ARP Inspection)", "DHCP Snooping", "BPDU Guard"],
+                c: 1,
+                e: "DAI valida pacotes ARP contra a tabela do DHCP snooping, descartando ARP falsos e prevenindo ARP spoofing."
+            },
+            {
+                topic: "Switch Security",
+                q: "O que é DHCP Snooping?",
+                o: ["Monitora tráfego DHCP", "Identifica portas com servidores DHCP legítimos", "Bloqueia DHCP", "Firewall"],
+                c: 1,
+                e: "DHCP Snooping identifica portas com servidores DHCP confiáveis, prevenindo ataques de DHCP spoofing (servidores falsos)."
+            },
+
+            // Wireless Security (29-32)
+            {
+                topic: "Wireless Security",
+                q: "Qual é o padrão Wi-Fi mais seguro atualmente?",
+                o: ["WEP", "WPA", "WPA2", "WPA3"],
+                c: 3,
+                e: "WPA3 é o padrão mais seguro, com SAE (Simultaneous Authentication of Equals) substituindo PSK, Enhanced Open e Perfect Forward Secrecy."
+            },
+            {
+                topic: "Wireless Security",
+                q: "O que é um evil twin?",
+                o: ["Dois roteadores iguais", "AP falso com mesmo SSID do legítimo para capturar credenciais", "Ataque de força bruta", "Vulnerabilidade WPA2"],
+                c: 1,
+                e: "Evil twin é um AP falso configurado com o mesmo SSID de um AP legítimo. Usa jamming/deauth para forçar conexão e capturar credenciais."
+            },
+            {
+                topic: "Wireless Security",
+                q: "O que é WIPS (Wireless IPS)?",
+                o: ["Firewall wireless", "Sistema que detecta e mitiga rogue APs e evil twins", "Padrão Wi-Fi", "Antena"],
+                c: 1,
+                e: "WIPS monitora o espectro Wi-Fi, detecta e bloqueia rogue APs, evil twins e ataques de deauthentication."
+            },
+            {
+                topic: "Wireless Security",
+                q: "O que é 802.1X em redes Wi-Fi?",
+                o: ["Criptografia", "Autenticação corporativa com RADIUS + EAP", "Padrão de velocidade", "Antena"],
+                c: 1,
+                e: "802.1X é usado em Wi-Fi Enterprise, com autenticação via RADIUS e EAP. Cada usuário tem credenciais próprias, diferente de PSK compartilhado."
+            },
+
+            // Hardening e Virtualização (33-35)
+            {
+                topic: "Hardening",
+                q: "O que é OS Hardening?",
+                o: ["Instalar mais software", "Processo de tornar SO mais seguro: remover serviços, patches, firewall", "Apenas atualizar", "Formatar disco"],
+                c: 1,
+                e: "Hardening é o processo de modificar o SO para operar de forma segura: remover software desnecessário, desabilitar serviços, aplicar patches, habilitar firewall."
+            },
+            {
+                topic: "Virtualização",
+                q: "Qual a diferença entre hypervisor Type 1 e Type 2?",
+                o: ["Type 1 é mais lento", "Type 1 roda direto no hardware (bare metal), Type 2 roda sobre SO", "São a mesma coisa", "Type 2 é mais seguro"],
+                c: 1,
+                e: "Type 1 (bare metal): roda diretamente no hardware (ESXi, Hyper-V). Type 2 (hosted): roda sobre um SO existente (VirtualBox, Workstation)."
+            },
+            {
+                topic: "Virtualização",
+                q: "O que é VM Escape?",
+                o: ["Máquina virtual escapa do hypervisor e compromete o host", "Desligar VM", "Criar VM", "Backup de VM"],
+                c: 0,
+                e: "VM Escape é um ataque onde o atacante dentro de uma VM consegue 'escapar' e comprometer o hypervisor ou o host. É crítico e raro."
+            }
+        ];
+
+        let answers = {};
+        let checked = false;
+        let filteredQuestions = [...Array(quiz.length).keys()];
+        let currentFilter = 'all';
+
+        function loadQuestions() {
+            const container = document.getElementById('questions');
+            container.innerHTML = '';
+            
+            filteredQuestions.forEach((index, i) => {
+                const q = quiz[index];
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.id = `q-${index}`;
+                
+                // Adiciona tag do tópico
+                const topicTag = `<span class="topic-tag">${q.topic}</span>`;
+                div.innerHTML = `<h3>${i + 1}. ${topicTag} ${q.q}</h3>`;
+                
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(index, oi);
+                    odiv.id = `q${index}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${index}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
+                div.appendChild(exp);
+                
+                container.appendChild(div);
+            });
+            
+            updateProgress();
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            
+            quiz[qi].o.forEach((_, i) => {
+                const el = document.getElementById(`q${qi}o${i}`);
+                if (el) el.classList.remove('selected');
+            });
+            
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(answers).length;
+            document.getElementById('answered-count').textContent = `✅ ${answered} respondidas`;
+            const progress = (answered / quiz.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+
+        function filterQuestions(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') {
+                filteredQuestions = [...Array(quiz.length).keys()];
+            } else if (type === 'answered') {
+                filteredQuestions = Object.keys(answers).map(Number).sort((a,b) => a - b);
+            } else {
+                filteredQuestions = [...Array(quiz.length).keys()].filter(i => answers[i] === undefined);
+            }
+            
+            loadQuestions();
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            
+            quiz.forEach((q, qi) => {
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (el) {
+                        if (oi === q.c) {
+                            el.classList.add('correct');
+                        } else if (answers[qi] === oi) {
+                            el.classList.add('incorrect');
+                        }
+                    }
+                });
+                
+                const exp = document.getElementById(`exp${qi}`);
+                if (exp) exp.style.display = 'block';
+                
+                if (answers[qi] === q.c) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = 
+                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            filteredQuestions = [...Array(quiz.length).keys()];
+            currentFilter = 'all';
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.filter-btn').classList.add('active');
+            loadQuestions();
+            document.getElementById('results-modal').classList.remove('show');
+        }
+
+        loadQuestions();
+    </script>
+</body>
+</html>

@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo Security+ Capítulo 10 - Virtualização e Dispositivos Móveis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
+            padding: 50px;
+            border: 1px solid #e2e8f0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #764ba2;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .badge {
+            background: #764ba2;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box strong {
+            color: #ec4899;
+            font-size: 1.1rem;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule strong {
+            color: #f59e0b;
+            font-size: 1.1rem;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            font-size: 1.8rem;
+            color: #0f172a;
+            margin-bottom: 20px;
+            border-left: 5px solid #764ba2;
+            padding-left: 15px;
+        }
+        .section h3 {
+            font-size: 1.3rem;
+            color: #334155;
+            margin: 20px 0 10px;
+        }
+        .section h4 {
+            font-size: 1.1rem;
+            color: #764ba2;
+            margin: 15px 0 5px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .card h4 {
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .card ul {
+            list-style: none;
+        }
+        .card li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .card li:before {
+            content: "•";
+            color: #764ba2;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th {
+            background: #764ba2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        tr:hover {
+            background: #f1f5f9;
+        }
+        .vm-types {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .vm-type {
+            flex: 1;
+            min-width: 250px;
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #764ba2;
+        }
+        .vm-type strong {
+            color: #764ba2;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .cloud-models {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .cloud-model {
+            flex: 1;
+            min-width: 200px;
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 5px solid #764ba2;
+        }
+        .cloud-model strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #764ba2;
+            font-size: 1.2rem;
+        }
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px dashed #e2e8f0;
+            text-align: center;
+            color: #64748b;
+        }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📘 Capítulo 10: Virtualização e Dispositivos Móveis</h1>
+            <span class="badge">Resumo Completo</span>
+        </div>
+
+        <div class="info-box">
+            <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>Hypervisor Type 1 (Bare Metal):</strong> ESXi, Hyper-V, Xen - executa direto no hardware</li>
+                <li><strong>Hypervisor Type 2 (Hosted):</strong> VirtualBox, Workstation - executa sobre SO</li>
+                <li><strong>VM Escape:</strong> ataque onde VM compromete o hypervisor</li>
+                <li><strong>SaaS vs PaaS vs IaaS:</strong> SaaS (software), PaaS (plataforma), IaaS (infraestrutura)</li>
+                <li><strong>MDM vs MAM:</strong> MDM gerencia dispositivo, MAM gerencia aplicações</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣ Virtualização - Conceitos Fundamentais</h2>
+
+            <h3>Definição</h3>
+            <p>Instalar e executar múltiplos sistemas operacionais concorrentemente em uma única máquina física.</p>
+
+            <h3>Componentes de Virtualização</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>🖥️ Physical Machine (Host OS)</h4>
+                    <p>Máquina física com hardware: HDD, RAM, motherboard</p>
+                </div>
+                <div class="card">
+                    <h4>💿 Virtual Machine (Guest OS)</h4>
+                    <p>Implementação de software de um computador, aparece como sistema autônomo</p>
+                </div>
+                <div class="card">
+                    <h4>💾 Virtual Hard Disk (VHD)</h4>
+                    <p>Arquivo dentro do host OS que simula hard disk para VM</p>
+                </div>
+                <div class="card">
+                    <h4>🧠 Hypervisor</h4>
+                    <p>Camada fina de software entre guest OS e hardware</p>
+                </div>
+            </div>
+
+            <h3>Tipos de Hypervisors</h3>
+            <div class="vm-types">
+                <div class="vm-type">
+                    <strong>Type I (Bare Metal)</strong>
+                    <ul>
+                        <li>Interface diretamente com hardware</li>
+                        <li>Melhor performance e segurança</li>
+                        <li>Exemplos: VMware ESXi, Hyper-V, KVM, Xen</li>
+                    </ul>
+                </div>
+                <div class="vm-type">
+                    <strong>Type II (Hosted)</strong>
+                    <ul>
+                        <li>Roda como aplicação em SO convencional</li>
+                        <li>Usado para development sandbox</li>
+                        <li>Exemplos: VirtualBox, VMware Workstation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Containerization</h3>
+            <ul>
+                <li>Alternativa ao hypervisor - reforça separação no nível do SO</li>
+                <li>OS define "células" isoladas para cada instância</li>
+                <li>Containers rodam distribuições ligeiramente diferentes, não tipos diferentes de SO</li>
+                <li><strong>Docker:</strong> produto mais conhecido</li>
+                <li>Suporta microservices e serverless architecture</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>2️⃣ Vantagens e Desvantagens da Virtualização</h2>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h4>✅ Vantagens</h4>
+                    <ul>
+                        <li><strong>Flexibilidade:</strong> VMs podem ser facilmente movidas entre hosts</li>
+                        <li><strong>Segurança:</strong> honeypots e honeynets para análise de ataques</li>
+                        <li><strong>Testes:</strong> ambiente lab que espelha produção</li>
+                        <li><strong>Server Consolidation:</strong> P2V Migration, reduz consumo de energia</li>
+                        <li><strong>Isolamento:</strong> sandboxing para executar malware com risco mínimo</li>
+                        <li><strong>Application Virtualization:</strong> navegadores virtualizados protegem SO físico</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>❌ Desvantagens</h4>
+                    <ul>
+                        <li><strong>Ataques:</strong> ataque no host compromete todos guests</li>
+                        <li><strong>Bottleneck:</strong> falha em hardware compartilhado afeta múltiplas VMs</li>
+                        <li><strong>Complexidade:</strong> requer novas habilidades de administração</li>
+                        <li><strong>Server Sprawl:</strong> muitas VMs dificultam gerenciamento de patches</li>
+                        <li><strong>VM Escape:</strong> atacante escapa da VM para host (ex: Cloudburst CVE-2009-1244)</li>
+                        <li><strong>Resource Reuse:</strong> dados sensíveis podem vazar entre VMs se não sanitizados</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="golden-rule">
+                <strong>⚠️ VM Escape:</strong> Vulnerabilidade crítica onde malware dentro da VM interage diretamente com hypervisor. Mitigação: patches regulares, apenas recursos necessários instalados.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3️⃣ Virtual Networking</h2>
+
+            <h3>Conceitos</h3>
+            <ul>
+                <li>Rede virtual composta de uma ou mais VMs configuradas para acessar recursos de rede</li>
+                <li>VMs suportam número ilimitado de redes virtuais</li>
+                <li>Múltiplas redes virtuais podem ser associadas a único adaptador físico</li>
+            </ul>
+
+            <h3>Tipos de Virtualização de Rede</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>🏠 Internal Network Virtualization</h4>
+                    <ul>
+                        <li>Configura sistema único com containers ou pseudo-interfaces</li>
+                        <li>Emula rede física com software</li>
+                        <li>Melhora eficiência de sistema único</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🌐 External Network Virtualization</h4>
+                    <ul>
+                        <li>Combina uma ou mais LANs em redes virtuais</li>
+                        <li>VLANs separadas em mesma LAN física</li>
+                        <li>LANs separadas combinadas em VLAN única</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Dispositivos de Virtual Networking</h3>
+            <table>
+                <tr>
+                    <th>Dispositivo</th>
+                    <th>Função</th>
+                </tr>
+                <tr>
+                    <td><strong>Virtual Switch (vSwitch)</strong></td>
+                    <td>Facilita comunicação entre VMs e redes físicas (camada 2)</td>
+                </tr>
+                <tr>
+                    <td><strong>Virtual Router (vRouter)</strong></td>
+                    <td>Replica funcionalidade de roteador físico em software</td>
+                </tr>
+                <tr>
+                    <td><strong>Virtual Firewall Appliance (VFA)</strong></td>
+                    <td>Software que funciona como firewall de rede</td>
+                </tr>
+                <tr>
+                    <td><strong>VMM/Hypervisor</strong></td>
+                    <td>Cria e roda VMs, gerencia execução dos guest OSes</td>
+                </tr>
+            </table>
+
+            <h3>SDN (Software-Defined Networking)</h3>
+            <ul>
+                <li>Usa software para configurar e controlar rede, não arquivos de configuração estática</li>
+                <li><strong>Controller:</strong> gerencia dispositivos, inventaria hardware, coleta estatísticas</li>
+            </ul>
+
+            <h4>Arquitetura SDN (3 Camadas)</h4>
+            <ol>
+                <li><strong>Application Layer:</strong> comunicação via northbound APIs</li>
+                <li><strong>Control Layer:</strong> recebe requisições, fornece instruções</li>
+                <li><strong>Physical Layer:</strong> dispositivos de rede, comunicação via southbound APIs</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>4️⃣ Cloud Computing</h2>
+
+            <h3>Tipos de Clouds</h3>
+            <div class="cloud-models">
+                <div class="cloud-model">
+                    <strong>☁️ Public Cloud</strong>
+                    <p>Acessível por qualquer pessoa. Ex: Google (Gmail, Docs)</p>
+                </div>
+                <div class="cloud-model">
+                    <strong>🏢 Private Cloud</strong>
+                    <p>Recursos para organização única, acesso restrito</p>
+                </div>
+                <div class="cloud-model">
+                    <strong>👥 Community Cloud</strong>
+                    <p>Compartilhada por várias organizações, custo dividido</p>
+                </div>
+                <div class="cloud-model">
+                    <strong>🔄 Hybrid Cloud</strong>
+                    <p>Combina recursos de clouds públicas, privadas e community</p>
+                </div>
+            </div>
+
+            <h3>Modelos de Serviço Cloud</h3>
+            <table>
+                <tr>
+                    <th>Modelo</th>
+                    <th>Descrição</th>
+                    <th>Exemplos</th>
+                </tr>
+                <tr>
+                    <td><strong>IaaS</strong></td>
+                    <td>Infraestrutura como Serviço: processamento, armazenamento, redes</td>
+                    <td>AWS EC2, Azure VMs</td>
+                </tr>
+                <tr>
+                    <td><strong>PaaS</strong></td>
+                    <td>Plataforma como Serviço: tudo que desenvolvedor precisa</td>
+                    <td>Heroku, Google App Engine</td>
+                </tr>
+                <tr>
+                    <td><strong>SaaS</strong></td>
+                    <td>Software como Serviço: aplicações entregues via internet</td>
+                    <td>Office 365, Salesforce</td>
+                </tr>
+                <tr>
+                    <td><strong>SECaaS</strong></td>
+                    <td>Security as a Service: autenticação, antivírus, anti-malware</td>
+                    <td>Serviços de segurança em nuvem</td>
+                </tr>
+            </table>
+
+            <h3>CASB (Cloud Access Security Broker)</h3>
+            <ul>
+                <li>Ferramenta de software entre organização e cloud service provider</li>
+                <li>Garante que comunicação e acesso cumprem políticas de segurança</li>
+                <li>Atua como gatekeeper para cloud storage</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>5️⃣ Threat Actors e Attack Surfaces</h2>
+
+            <h3>Attack Surface</h3>
+            <ul>
+                <li>Todos pontos onde threat actor pode tentar explorar vulnerabilidade</li>
+                <li>Qualquer localização onde pode interagir com porta de rede, app, computador ou usuário</li>
+            </ul>
+
+            <h3>Supply Chain</h3>
+            <ul>
+                <li>Processo end-to-end de design, fabricação, distribuição</li>
+                <li>Serviços cloud são link na supply chain</li>
+                <li>Ao invés de atacar alvo diretamente, atacante infiltra via companhias na supply chain</li>
+                <li><strong>Complexidade:</strong> fornecedores, desenvolvedores, revendedores, entregadores</li>
+            </ul>
+
+            <h3>MSP (Managed Services Provider)</h3>
+            <ul>
+                <li>Provisiona e suporta recursos de TI (redes, segurança, infraestrutura web)</li>
+                <li>Difícil monitorar MSP, funcionários são fontes potenciais de insider threat</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>6️⃣ VDI (Virtual Desktop Infrastructure)</h2>
+
+            <h3>Definição</h3>
+            <ul>
+                <li>Desktops de usuário virtualizadas, rodam em hardware high-end no data center</li>
+                <li>Workstation física meramente estabelece conexão remota</li>
+                <li><strong>Thin client deployment:</strong> maior parte do poder de computação nos servidores</li>
+            </ul>
+
+            <h3>Vantagens</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>💰 Custos Reduzidos</h4>
+                    <p>Apenas hardware mínimo de workstation requerido</p>
+                </div>
+                <div class="card">
+                    <h4>🔒 Proteção Centralizada</h4>
+                    <p>Dados protegidos centralmente, backup dos hypervisors</p>
+                </div>
+                <div class="card">
+                    <h4>🔄 Recuperação de Falhas</h4>
+                    <p>Se workstation física falha, nenhum dado é perdido</p>
+                </div>
+                <div class="card">
+                    <h4>⚡ Re-imaging Rápido</h4>
+                    <p>Infecção de malware pode ser rapidamente re-imaged no hypervisor</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>7️⃣ Cloud Storage</h2>
+
+            <h3>Características</h3>
+            <ul>
+                <li>Modelo de armazenamento fornecido por terceiro</li>
+                <li><strong>Providers:</strong> Google Cloud, AWS, Microsoft Azure</li>
+                <li>Acesso via web service API</li>
+            </ul>
+
+            <h3>Vantagens</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>💰 Custo</h4>
+                    <p>Paga apenas por armazenamento usado (OpEx)</p>
+                </div>
+                <div class="card">
+                    <h4>⚡ Flexibilidade</h4>
+                    <p>Opções off-premises e on-premises</p>
+                </div>
+                <div class="card">
+                    <h4>🔋 Eficiência Energética</h4>
+                    <p>Redução de até 70% no consumo</p>
+                </div>
+                <div class="card">
+                    <h4>🛡️ Disponibilidade</h4>
+                    <p>Fault tolerance por redundância e distribuição</p>
+                </div>
+                <div class="card">
+                    <h4>📋 Manutenção</h4>
+                    <p>Responsabilidade do service provider</p>
+                </div>
+                <div class="card">
+                    <h4>💾 Backup e DR</h4>
+                    <p>Backup de VM para cloud, disaster recovery</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>8️⃣ Mobile Device Management (MDM)</h2>
+
+            <h3>Desafios</h3>
+            <ul>
+                <li>Dispositivos móveis não podem ser unidos a domínio Windows</li>
+                <li>Group Policy não pode ser usado para empurrar configurações</li>
+            </ul>
+
+            <h3>Opções de Gerenciamento</h3>
+            <table>
+                <tr>
+                    <th>Opção</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Configuração Manual</strong></td>
+                    <td>Não recomendado, consome tempo</td>
+                </tr>
+                <tr>
+                    <td><strong>Configuration Profile (iOS)</strong></td>
+                    <td>Profile distribuído para usuários instalarem, não dinâmico</td>
+                </tr>
+                <tr>
+                    <td><strong>MDM Solution</strong></td>
+                    <td>Empurra políticas via rede, enforcement remoto</td>
+                </tr>
+            </table>
+
+            <h3>Windows Intune</h3>
+            <ul>
+                <li>Solução MDM baseada em cloud</li>
+                <li>Gerencia dispositivos móveis e desktops (Windows 7+)</li>
+                <li>Não gerencia Windows Server</li>
+            </ul>
+
+            <h4>SOs Suportados</h4>
+            <ul>
+                <li><strong>Apple:</strong> iOS 8.0+, macOS 10.9+</li>
+                <li><strong>Windows:</strong> Windows 10, 10 Mobile, 8.1, Phone 8.1, RT</li>
+                <li><strong>Google:</strong> Android 4.0+, Android for Work</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>9️⃣ MDM vs MAM vs EMM vs UEM</h2>
+
+            <table>
+                <tr>
+                    <th>Solução</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>MDM</strong></td>
+                    <td>Gerencia dispositivo: rastrear, push apps, configurações de segurança, remote wipe</td>
+                </tr>
+                <tr>
+                    <td><strong>MAM</strong></td>
+                    <td>Gerencia aplicações: instalar/desinstalar remotamente, atualizar, limitar funcionalidade</td>
+                </tr>
+                <tr>
+                    <td><strong>EMM</strong></td>
+                    <td>Combina MDM + MAM. Ex: Microsoft Intune</td>
+                </tr>
+                <tr>
+                    <td><strong>UEM</strong></td>
+                    <td>Unifica gerenciamento: workstations, printers, mobile, IoT, wearables</td>
+                </tr>
+            </table>
+
+            <h3>Intune Application Life Cycle</h3>
+            <ol>
+                <li><strong>Add:</strong> adicionar apps (Windows Store, LOB, web, built-in)</li>
+                <li><strong>Deploy:</strong> atribuir a usuários/dispositivos, monitorar</li>
+                <li><strong>Configure:</strong> atualizar apps com novas versões</li>
+                <li><strong>Protect:</strong> conditional access, app protection policies</li>
+                <li><strong>Retire:</strong> remover apps desatualizados</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>🔟 BYOD Security</h2>
+
+            <h3>Problemas de Segurança</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>🦠 Malware Propagation</h4>
+                    <p>Dispositivo infectado pode espalhar na rede</p>
+                    <p><em>Remédio:</em> NAC, guest wireless isolada</p>
+                </div>
+                <div class="card">
+                    <h4>🔓 Loss of Sensitive Data Control</h4>
+                    <p>Dados copiados para dispositivo pessoal</p>
+                    <p><em>Remédio:</em> AUP, MDM, criptografia</p>
+                </div>
+                <div class="card">
+                    <h4>👤 Malicious Insider Attacks</h4>
+                    <p>Câmera, microfone, transferência de dados</p>
+                    <p><em>Remédio:</em> AUP, proibir em áreas seguras</p>
+                </div>
+                <div class="card">
+                    <h4>📱 Device Management</h4>
+                    <p>Quem gerencia updates, antivírus?</p>
+                    <p><em>Remédio:</em> NAC, políticas claras</p>
+                </div>
+                <div class="card">
+                    <h4>🛠️ Support</h4>
+                    <p>Quem fornece suporte?</p>
+                    <p><em>Remédio:</em> AUP define responsabilidades</p>
+                </div>
+            </div>
+
+            <h3>Estratégias de Dispositivo</h3>
+            <table>
+                <tr>
+                    <th>Estratégia</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Corporate-Owned</strong></td>
+                    <td>Empresa possui, monitora, controla. Pode restringir uso ao trabalho</td>
+                </tr>
+                <tr>
+                    <td><strong>COPE</strong></td>
+                    <td>Corporate-Owned, Personally Enabled - controle significativo, uso pessoal permitido</td>
+                </tr>
+                <tr>
+                    <td><strong>CYOD</strong></td>
+                    <td>Choose Your Own Device - funcionário escolhe de lista limitada</td>
+                </tr>
+                <tr>
+                    <td><strong>VDI</strong></td>
+                    <td>Usado com qualquer modelo, desktop virtualizado, segurança aprimorada</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣1️⃣ Embedded and Specialized Systems</h2>
+
+            <h3>Tipos de Dispositivos Embutidos</h3>
+            <div class="grid-3">
+                <div class="card">📺 Appliances (eletrodomésticos smart)</div>
+                <div class="card">🌡️ Environment Controls (HVAC, Nest)</div>
+                <div class="card">🏢 Building Automation (luzes, fechaduras)</div>
+                <div class="card">⌚ Wearable Devices (relógios, fitness)</div>
+                <div class="card">🚗 Automobiles (sistemas in-vehicle)</div>
+                <div class="card">🏭 Industrial Equipment (SCADA, ICS)</div>
+                <div class="card">💻 Mainframe Computer</div>
+                <div class="card">⏱️ RTOS (Real-Time OS)</div>
+                <div class="card">📱 SoC (System on a Chip - Raspberry Pi)</div>
+                <div class="card">🖥️ MFD (Multi-Function Display)</div>
+                <div class="card">🏥 Medical Devices</div>
+                <div class="card">✈️ UAV (Drones)</div>
+                <div class="card">📷 Digital Cameras</div>
+                <div class="card">🎮 Media Gateways</div>
+                <div class="card">🖱️ Wireless Keyboards and Mice</div>
+                <div class="card">🖨️ Multifunction Printers (MFPs)</div>
+                <div class="card">💾 External Storage Devices</div>
+                <div class="card">🔌 Arduino</div>
+                <div class="card">⚙️ FPGA (Field Programmable Gate Array)</div>
+                <div class="card">📞 VoIP</div>
+            </div>
+
+            <h3>Security Risks (Embedded Systems)</h3>
+            <ul>
+                <li>Pouco ou nenhum controle sobre tecnologia smart</li>
+                <li>Vendors lentos para proteger produtos</li>
+                <li>Dispositivos são atrativos para hackers</li>
+            </ul>
+
+            <h4>Medidas de Segurança</h4>
+            <ul>
+                <li><strong>Dispositivos com updates manuais:</strong> manter firmware atualizado</li>
+                <li><strong>Dispositivos que não podem ser atualizados:</strong> segmentar rede (VLANs), criptografar comunicações</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣2️⃣ Email Security</h2>
+
+            <h3>Ameaças</h3>
+            <ul>
+                <li><strong>Virus:</strong> malware distribuído via attachments</li>
+                <li>Usuários ativam clicando no attachment</li>
+            </ul>
+
+            <h3>Mitigação</h3>
+            <ul>
+                <li>Instalar software antivírus em todo sistema</li>
+                <li>Instalar software antivírus no servidor de email</li>
+                <li>Best practice: detectar antes da entrega</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <strong>💡 DICAS FINAIS PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>Hypervisor Type 1:</strong> bare metal (ESXi, Hyper-V) | <strong>Type 2:</strong> hosted (VirtualBox)</li>
+                <li><strong>VM Escape</strong> = VM compromete hypervisor (crítico!)</li>
+                <li><strong>SaaS:</strong> cliente não gerencia nada | <strong>PaaS:</strong> gerencia app+dados | <strong>IaaS:</strong> gerencia OS+app+dados</li>
+                <li><strong>Public Cloud</strong> (multi-tenant) vs <strong>Private Cloud</strong> (single-tenant)</li>
+                <li><strong>CASB:</strong> Cloud Access Security Broker (gatekeeper)</li>
+                <li><strong>MDM:</strong> gerencia dispositivo | <strong>MAM:</strong> gerencia apps</li>
+                <li><strong>EMM:</strong> MDM + MAM | <strong>UEM:</strong> unifica todos dispositivos</li>
+                <li><strong>BYOD:</strong> traga seu dispositivo - riscos de malware, perda de dados</li>
+                <li><strong>COPE:</strong> dispositivo da empresa com uso pessoal</li>
+                <li><strong>VDI:</strong> desktop virtualizado, dados centralizados</li>
+                <li><strong>SCADA/ICS:</strong> sistemas industriais, segmentação é crítica</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>📚 Resumo autoral para certificação CompTIA Security+ • Capítulo 10</p>
+        </div>
+    </div>
+</body>
+</html>

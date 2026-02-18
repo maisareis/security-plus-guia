@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado Domínio 4 - Operações e Resposta a Incidentes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+
+        .option:hover {
+            background: #f9fafb;
+            border-color: #ff6b6b;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #ff6b6b;
+            background: #fff5f5;
+            font-weight: 600;
+        }
+
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff5f5;
+            border-left: 5px solid #ff6b6b;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+            margin: 30px auto;
+            display: block;
+        }
+
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .results-modal.show {
+            display: flex;
+        }
+
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-btn.active {
+            background: white;
+            color: #ff6b6b;
+        }
+
+        .topic-tag {
+            display: inline-block;
+            background: #e2e8f0;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .question {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Domínio 4</h1>
+            <h2>Operações e Resposta a Incidentes</h2>
+            <p>35 questões | Todas comentadas</p>
+            <div class="stats-bar">
+                <div class="stat-card">📊 35 questões</div>
+                <div class="stat-card">⏱️ 45 minutos</div>
+                <div class="stat-card" id="answered-count">✅ 0 respondidas</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterQuestions('all')">Todas</button>
+            <button class="filter-btn" onclick="filterQuestions('unanswered')">Não respondidas</button>
+            <button class="filter-btn" onclick="filterQuestions('answered')">Respondidas</button>
+        </div>
+
+        <div id="questions"></div>
+
+        <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+    </div>
+
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()" style="margin: 0 auto;">Refazer Simulado</button>
+        </div>
+    </div>
+
+    <script>
+        const quiz = [
+            // Incident Response - Fases (1-7)
+            {
+                topic: "Incident Response",
+                q: "Quais são as 6 fases do processo de resposta a incidentes?",
+                o: ["Detecção, Análise, Conteção, Erradicação, Recuperação, Lições", "Preparation, Identification, Containment, Eradication, Recovery, Lessons Learned", "Planejamento, Execução, Controle, Encerramento", "Não há fases definidas"],
+                c: 1,
+                e: "As 6 fases são: Preparation (preparação), Identification (identificação), Containment (contenção), Eradication (erradicação), Recovery (recuperação), Lessons Learned (lições aprendidas)."
+            },
+            {
+                topic: "Incident Response",
+                q: "O que acontece na fase de Containment?",
+                o: ["Remover a causa do incidente", "Isolar a ameaça para evitar propagação", "Restaurar sistemas", "Documentar lições"],
+                c: 1,
+                e: "Containment isola a ameaça para evitar propagação. Pode ser short-term (desconectar da rede) ou long-term (solução permanente)."
+            },
+            {
+                topic: "Incident Response",
+                q: "O que acontece na fase de Eradication?",
+                o: ["Isolar a ameaça", "Remover a causa raiz (deletar malware, fechar vulnerabilidade)", "Restaurar backups", "Notificar stakeholders"],
+                c: 1,
+                e: "Eradication remove a causa raiz do incidente: deletar malware, fechar vulnerabilidades exploradas, revogar credenciais comprometidas."
+            },
+            {
+                topic: "Incident Response",
+                q: "O que acontece na fase de Recovery?",
+                o: ["Remover causa raiz", "Restaurar sistemas à operação normal (backups, rebuild)", "Isolar ameaça", "Detectar incidente"],
+                c: 1,
+                e: "Recovery restaura sistemas à operação normal: restore de backup, rebuild de servidores, aplicar patches, monitorar para garantir que não há resquícios."
+            },
+            {
+                topic: "Incident Response",
+                q: "O que acontece na fase de Lessons Learned?",
+                o: ["Post-mortem do incidente, documentar melhorias", "Isolar sistemas", "Aplicar patches", "Fazer backup"],
+                c: 0,
+                e: "Lessons Learned é o post-mortem do incidente. Documenta o que funcionou, o que falhou e propõe melhorias no plano de resposta."
+            },
+            {
+                topic: "Incident Response",
+                q: "Qual a diferença entre runbooks e playbooks?",
+                o: ["Runbooks são processos automatizados, playbooks são checklists", "São a mesma coisa", "Playbooks são automatizados", "Runbooks são manuais"],
+                c: 0,
+                e: "Runbooks: processos automatizados baseados em condições. Playbooks: documentos estilo checklist que especificam como responder a ameaças."
+            },
+            {
+                topic: "Incident Response",
+                q: "O que é SOAR (Security Orchestration, Automation and Response)?",
+                o: ["Firewall", "Plataforma que automatiza resposta a incidentes com playbooks", "Antivírus", "Scanner de vulnerabilidades"],
+                c: 1,
+                e: "SOAR automatiza resposta a incidentes com playbooks, orquestrando ferramentas e automatizando ações como isolamento, notificação e documentação."
+            },
+
+            // IDS/IPS e Monitoramento (8-12)
+            {
+                topic: "IDS/IPS",
+                q: "Qual a diferença entre IDS e IPS?",
+                o: ["IDS detecta e bloqueia, IPS só detecta", "IDS detecta e alerta (passivo), IPS detecta e bloqueia (ativo)", "São a mesma coisa", "IDS é hardware, IPS é software"],
+                c: 1,
+                e: "IDS (passivo) detecta e alerta. IPS (ativo) detecta e bloqueia automaticamente em modo inline."
+            },
+            {
+                topic: "IDS/IPS",
+                q: "O que é um falso negativo (false negative) em detecção?",
+                o: ["Alerta incorreto para tráfego legítimo", "Vulnerabilidade real NÃO detectada (MAIS GRAVE)", "Tráfego legítimo bloqueado", "Detecção correta"],
+                c: 1,
+                e: "False negative é quando o sistema deixa de detectar um ataque real. É a situação MAIS GRAVE, pois o sistema fica vulnerável sem alerta."
+            },
+            {
+                topic: "IDS/IPS",
+                q: "Qual a diferença entre detecção baseada em assinatura e baseada em anomalia?",
+                o: ["Assinatura: padrões conhecidos (baixo falso positivo). Anomalia: desvios do normal (detecta novos ataques)", "Assinatura detecta novos ataques", "Anomalia só detecta conhecidos", "São iguais"],
+                c: 0,
+                e: "Assinatura: compara com padrões conhecidos, rápido, baixo falso positivo, só detecta conhecido. Anomalia: baseline, detecta novos ataques, mais falsos positivos."
+            },
+            {
+                topic: "IDS/IPS",
+                q: "O que é HIDS (Host-based IDS)?",
+                o: ["Monitora tráfego de rede", "Instalado no host, monitora atividades locais e tráfego criptografado", "Firewall", "Roteador"],
+                c: 1,
+                e: "HIDS é instalado no host individual, monitora logs, integridade de arquivos, processos e tráfego criptografado (que NIDS não vê)."
+            },
+            {
+                topic: "Monitoramento",
+                q: "O que é SIEM (Security Information and Event Management)?",
+                o: ["Firewall", "Sistema que coleta e correlaciona logs de múltiplas fontes", "Antivírus", "Scanner de vulnerabilidades"],
+                c: 1,
+                e: "SIEM coleta, agrega, normaliza e correlaciona logs de firewalls, servidores, aplicações, gerando alertas e dashboards. Ex: Splunk, QRadar."
+            },
+
+            // Forense Digital (13-18)
+            {
+                topic: "Forense",
+                q: "O que é ordem de volatilidade em forense?",
+                o: ["Ordem de importância dos dados", "Coletar do mais volátil para o menos volátil (CPU/RAM → Disco → Backups)", "Ordem de aquisição", "Tempo de retenção"],
+                c: 1,
+                e: "Ordem de volatilidade: coletar primeiro os dados mais voláteis: 1) CPU/RAM, 2) Disco, 3) Logs remotos, 4) Backups."
+            },
+            {
+                topic: "Forense",
+                q: "O que é chain of custody (cadeia de custódia)?",
+                o: ["Corrente usada para prender equipamentos", "Documentação de quem acessou a evidência, quando e por quê", "Armazenamento seguro", "Backup"],
+                c: 1,
+                e: "Chain of custody documenta quem teve acesso à evidência, quando, onde e por quê. Essencial para admissibilidade em tribunal."
+            },
+            {
+                topic: "Forense",
+                q: "O que é um write blocker?",
+                o: ["Dispositivo que previne modificação da evidência durante análise", "Software de backup", "Firewall", "Antivírus"],
+                c: 0,
+                e: "Write blocker previne qualquer alteração na evidência durante a coleta ou análise forense, garantindo a integridade dos dados."
+            },
+            {
+                topic: "Forense",
+                q: "Qual ferramenta é usada para análise de memória RAM (memory forensics)?",
+                o: ["FTK Imager", "Volatility", "Autopsy", "dd"],
+                c: 1,
+                e: "Volatility é um framework para análise de memória RAM (memory forensics). Analisa dumps de memória para encontrar processos, conexões e malware."
+            },
+            {
+                topic: "Forense",
+                q: "O que é um hash de evidência e por que é importante?",
+                o: ["Criptografar a evidência", "Valor único que prova integridade (calculado antes e depois da análise)", "Nome do arquivo", "Tamanho do arquivo"],
+                c: 1,
+                e: "Hash (MD5/SHA-256) da evidência é calculado antes e depois da análise. Se os hashes coincidirem, a evidência não foi alterada."
+            },
+            {
+                topic: "Forense",
+                q: "Qual a diferença entre live acquisition e dead acquisition?",
+                o: ["Live: sistema ligado (RAM). Dead: sistema desligado (disco)", "Live é mais fácil", "Dead é mais rápido", "São iguais"],
+                c: 0,
+                e: "Live acquisition: captura dados voláteis (RAM) com sistema ligado. Dead acquisition: imagem do disco com sistema desligado."
+            },
+
+            // Backup e RAID (19-24)
+            {
+                topic: "Backup",
+                q: "Qual a diferença entre backup full, incremental e differential?",
+                o: ["Full: tudo. Incremental: desde último backup. Differential: desde último full", "Incremental é mais lento", "Full é mais rápido", "São iguais"],
+                c: 0,
+                e: "Full: cópia completa (lento backup, rápido restore). Incremental: mudanças desde último backup (rápido backup, lento restore). Differential: mudanças desde último full (meio termo)."
+            },
+            {
+                topic: "Backup",
+                q: "O que é a regra 3-2-1 de backup?",
+                o: ["3 cópias, 2 mídias, 1 offsite", "2 cópias, 3 mídias, 1 local", "3 cópias, 1 mídia, 2 locais", "1 cópia, 2 mídias, 3 locais"],
+                c: 0,
+                e: "3-2-1: 3 cópias dos dados (original + 2 backups), em 2 tipos de mídia diferentes, com 1 cópia offsite (fora do local) ou offline (air gap)."
+            },
+            {
+                topic: "Backup",
+                q: "O que significa RPO (Recovery Point Objective)?",
+                o: ["Tempo máximo de recuperação", "Quantidade máxima de dados que pode ser perdida (define frequência de backup)", "Tempo entre falhas", "Tempo de reparo"],
+                c: 1,
+                e: "RPO define quanto dado pode ser perdido, medido em tempo. Ex: RPO 4h significa backup a cada 4 horas."
+            },
+            {
+                topic: "Backup",
+                q: "O que significa RTO (Recovery Time Objective)?",
+                o: ["Quantidade de dados perdidos", "Tempo máximo que um sistema pode ficar offline após desastre", "Frequência de backup", "Tempo entre falhas"],
+                c: 1,
+                e: "RTO é o tempo máximo que um processo pode ficar offline após um desastre. Define a velocidade de recuperação necessária."
+            },
+            {
+                topic: "RAID",
+                q: "Qual nível RAID oferece apenas performance, SEM REDUNDÂNCIA?",
+                o: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"],
+                c: 0,
+                e: "RAID 0 (striping) distribui dados entre discos para performance, mas não tem redundância: se um disco falhar, todos dados são perdidos."
+            },
+            {
+                topic: "RAID",
+                q: "Qual nível RAID usa mirroring (espelhamento) e tolera 1 falha?",
+                o: ["RAID 0", "RAID 1", "RAID 5", "RAID 6"],
+                c: 1,
+                e: "RAID 1 (mirroring) usa espelhamento de discos. 50% da capacidade útil, tolera 1 falha."
+            },
+
+            // DR Sites (25-27)
+            {
+                topic: "DR Sites",
+                q: "O que é um hot site?",
+                o: ["Site totalmente equipado com failover imediato (RTO minutos)", "Site com equipamento mas sem dados atuais", "Apenas espaço físico", "Backup em fita"],
+                c: 0,
+                e: "Hot site: totalmente equipado, dados sincronizados, failover imediato (RTO minutos). É a opção mais cara."
+            },
+            {
+                topic: "DR Sites",
+                q: "O que é um cold site?",
+                o: ["Failover imediato", "Apenas espaço físico (RTO dias/semanas)", "Equipado sem dados", "Backup em nuvem"],
+                c: 1,
+                e: "Cold site: apenas espaço físico (energia, refrigeração). Todo equipamento precisa ser instalado. RTO de dias/semanas. Opção mais barata."
+            },
+            {
+                topic: "DR Sites",
+                q: "O que é um warm site?",
+                o: ["Failover imediato", "Equipado mas requer carregamento dos dados mais recentes (RTO horas)", "Apenas espaço físico", "Backup"],
+                c: 1,
+                e: "Warm site: tem equipamentos mas não dados atuais. Requer carregamento do último backup. RTO horas, custo médio."
+            },
+
+            // Ferramentas e Logs (28-32)
+            {
+                topic: "Ferramentas",
+                q: "O que é NetFlow?",
+                o: ["Captura payload dos pacotes", "Coleta metadados de tráfego (IPs, portas, bytes)", "Firewall", "Antivírus"],
+                c: 1,
+                e: "NetFlow coleta metadados de tráfego (5-tuple: IPs, portas, protocolo, bytes). NÃO captura payload. Usado para análise de padrões."
+            },
+            {
+                topic: "Ferramentas",
+                q: "O que é syslog?",
+                o: ["Protocolo para envio centralizado de logs (UDP 514)", "Firewall", "Antivírus", "Scanner"],
+                c: 0,
+                e: "Syslog é um protocolo para envio centralizado de logs. Usa UDP 514 e possui níveis de severidade (0-emergency a 7-debug)."
+            },
+            {
+                topic: "Ferramentas",
+                q: "Quais são os três principais logs do Windows?",
+                o: ["Application, Security, System", "App, Network, Firewall", "System, User, Admin", "Debug, Info, Error"],
+                c: 0,
+                e: "Application: eventos de aplicações. Security: auditoria (login, acesso). System: eventos do kernel e serviços do SO."
+            },
+            {
+                topic: "Ferramentas",
+                q: "O que é um sensor de IDS/IPS?",
+                o: ["Firewall", "Packet sniffer que captura tráfego para análise", "Roteador", "Switch"],
+                c: 1,
+                e: "Sensor é um packet sniffer configurado em pontos estratégicos da rede (atrás do firewall, perto de servidores) para capturar tráfego para IDS."
+            },
+            {
+                topic: "Ferramentas",
+                q: "O que é um honeyfile?",
+                o: ["Arquivo isca que dispara alarme quando acessado", "Backup", "Log", "Firewall"],
+                c: 0,
+                e: "Honeyfile é um arquivo isca (ex: passwords.txt) configurado para disparar um alarme quando acessado, indicando possível intrusão."
+            },
+
+            // Ajuste de Alertas e Operações (33-35)
+            {
+                topic: "Operações",
+                q: "O que é alert fatigue (fadiga de alertas)?",
+                o: ["Excesso de alertas faz analistas ignorarem ou perderem alertas reais", "Sistema sem alertas", "Alertas muito sensíveis", "Falta de alertas"],
+                c: 0,
+                e: "Alert fatigue ocorre quando analistas são bombardeados por muitos alertas (especialmente falsos positivos), levando a alertas críticos serem perdidos."
+            },
+            {
+                topic: "Operações",
+                q: "O que é tuning de alertas?",
+                o: ["Desligar todos alertas", "Ajustar regras de correlação para reduzir falsos positivos", "Aumentar sensibilidade", "Ignorar alertas"],
+                c: 1,
+                e: "Tuning é o processo de ajustar regras de correlação e níveis de alerta para reduzir falsos positivos sem aumentar falsos negativos."
+            },
+            {
+                topic: "Operações",
+                q: "O que é um playbook em resposta a incidentes?",
+                o: ["Documento estilo checklist com passos para responder a ameaças", "Processo automatizado", "Firewall", "Antivírus"],
+                c: 0,
+                e: "Playbook é um documento estilo checklist que especifica como responder a uma ameaça ou incidente, com passos listados em ordem."
+            }
+        ];
+
+        let answers = {};
+        let checked = false;
+        let filteredQuestions = [...Array(quiz.length).keys()];
+        let currentFilter = 'all';
+
+        function loadQuestions() {
+            const container = document.getElementById('questions');
+            container.innerHTML = '';
+            
+            filteredQuestions.forEach((index, i) => {
+                const q = quiz[index];
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.id = `q-${index}`;
+                
+                // Adiciona tag do tópico
+                const topicTag = `<span class="topic-tag">${q.topic}</span>`;
+                div.innerHTML = `<h3>${i + 1}. ${topicTag} ${q.q}</h3>`;
+                
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(index, oi);
+                    odiv.id = `q${index}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${index}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
+                div.appendChild(exp);
+                
+                container.appendChild(div);
+            });
+            
+            updateProgress();
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            
+            quiz[qi].o.forEach((_, i) => {
+                const el = document.getElementById(`q${qi}o${i}`);
+                if (el) el.classList.remove('selected');
+            });
+            
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(answers).length;
+            document.getElementById('answered-count').textContent = `✅ ${answered} respondidas`;
+            const progress = (answered / quiz.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+
+        function filterQuestions(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') {
+                filteredQuestions = [...Array(quiz.length).keys()];
+            } else if (type === 'answered') {
+                filteredQuestions = Object.keys(answers).map(Number).sort((a,b) => a - b);
+            } else {
+                filteredQuestions = [...Array(quiz.length).keys()].filter(i => answers[i] === undefined);
+            }
+            
+            loadQuestions();
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            
+            quiz.forEach((q, qi) => {
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (el) {
+                        if (oi === q.c) {
+                            el.classList.add('correct');
+                        } else if (answers[qi] === oi) {
+                            el.classList.add('incorrect');
+                        }
+                    }
+                });
+                
+                const exp = document.getElementById(`exp${qi}`);
+                if (exp) exp.style.display = 'block';
+                
+                if (answers[qi] === q.c) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = 
+                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            filteredQuestions = [...Array(quiz.length).keys()];
+            currentFilter = 'all';
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.filter-btn').classList.add('active');
+            loadQuestions();
+            document.getElementById('results-modal').classList.remove('show');
+        }
+
+        loadQuestions();
+    </script>
+</body>
+</html>

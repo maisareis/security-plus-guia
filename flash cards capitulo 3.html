@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Cap 3 - Soluções Criptográficas</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; color: white; margin-bottom: 30px; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .tab-btn.active { background: #0072ff; color: white; }
+        .content { display: none; }
+        .content.active { display: block; }
+        
+        .flashcard-area { max-width: 800px; margin: 0 auto; }
+        .card-info {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .flashcard:hover { transform: translateY(-5px); transition: 0.3s; }
+        .flashcard-text { font-size: 1.3rem; line-height: 1.8; text-align: center; }
+        .controls { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-nav { background: white; font-size: 1.5rem; width: 50px; height: 50px; }
+        
+        .summary {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+        }
+        .summary h2 { color: #0072ff; margin-top: 30px; margin-bottom: 15px; }
+        .summary h3 { margin-top: 20px; margin-bottom: 10px; color: #333; }
+        .summary ul { margin-left: 20px; margin-bottom: 15px; }
+        .summary li { margin-bottom: 8px; line-height: 1.6; }
+        
+        .quiz-area { max-width: 900px; margin: 0 auto; }
+        .quiz-header { text-align: center; color: white; margin-bottom: 30px; }
+        .question { background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; }
+        .option {
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .option:hover { background: #dbeafe; }
+        .option.selected { border-color: #0072ff; background: #dbeafe; }
+        .option.correct { border-color: #10b981; background: #d1fae5; }
+        .option.incorrect { border-color: #ef4444; background: #fee2e2; }
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background: #dbeafe;
+            border-left: 4px solid #0072ff;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Security+ Capítulo 3</h1>
+            <p>Soluções Criptográficas - 65 Cards | 30 Questões</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+            <button class="tab-btn" onclick="showTab(1)">📝 Resumo</button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="flashcard-area">
+                <div class="card-info">
+                    <div id="card-counter">Card 1 de 65</div>
+                    <div id="mastered-count">0 dominados</div>
+                </div>
+                
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="flashcard-text" id="card-text"></div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
+                    <button class="btn" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab1" class="content">
+            <div class="summary">
+                <h1>Capítulo 3: Soluções Criptográficas</h1>
+                
+                <h2>3.1 Criptografia</h2>
+                
+                <h3>Conceitos Fundamentais</h3>
+                <ul>
+                    <li><strong>Criptografia:</strong> Ciência de proteger informações através de codificação</li>
+                    <li><strong>Plaintext (Texto claro):</strong> Dados não criptografados</li>
+                    <li><strong>Ciphertext (Texto cifrado):</strong> Dados criptografados</li>
+                    <li><strong>Encryption (Criptografar):</strong> Converter plaintext em ciphertext</li>
+                    <li><strong>Decryption (Descriptografar):</strong> Converter ciphertext em plaintext</li>
+                    <li><strong>Key (Chave):</strong> Informação usada para criptografar/descriptografar</li>
+                    <li><strong>Algorithm (Algoritmo):</strong> Processo matemático usado</li>
+                </ul>
+
+                <h3>Objetivos da Criptografia</h3>
+                <ul>
+                    <li><strong>Confidencialidade:</strong> Apenas autorizados leem</li>
+                    <li><strong>Integridade:</strong> Dados não foram alterados</li>
+                    <li><strong>Autenticação:</strong> Verificar identidade</li>
+                    <li><strong>Não-repúdio:</strong> Não pode negar autoria</li>
+                </ul>
+
+                <h3>Criptografia Simétrica</h3>
+                <ul>
+                    <li><strong>Mesma chave</strong> para criptografar e descriptografar</li>
+                    <li><strong>Rápida</strong> e eficiente para grandes volumes</li>
+                    <li><strong>Problema:</strong> Como compartilhar chave com segurança?</li>
+                    <li><strong>Algoritmos:</strong> AES, DES, 3DES, Blowfish, RC4</li>
+                    <li><strong>Uso:</strong> Criptografia de disco, VPN, Wi-Fi (WPA2/WPA3)</li>
+                </ul>
+
+                <h3>Criptografia Assimétrica</h3>
+                <ul>
+                    <li><strong>Par de chaves:</strong> pública + privada</li>
+                    <li><strong>Chave pública:</strong> Pode ser compartilhada</li>
+                    <li><strong>Chave privada:</strong> Mantida em segredo</li>
+                    <li><strong>Lenta</strong> comparada à simétrica</li>
+                    <li><strong>Algoritmos:</strong> RSA, ECC, Diffie-Hellman, DSA</li>
+                    <li><strong>Uso:</strong> Assinaturas digitais, troca de chaves, SSL/TLS</li>
+                </ul>
+
+                <h3>Algoritmos Simétricos</h3>
+                <ul>
+                    <li><strong>AES (Advanced Encryption Standard):</strong> Padrão atual, 128/192/256 bits</li>
+                    <li><strong>DES (Data Encryption Standard):</strong> 56 bits, obsoleto, inseguro</li>
+                    <li><strong>3DES (Triple DES):</strong> Aplica DES 3 vezes, sendo substituído por AES</li>
+                    <li><strong>Blowfish:</strong> Rápido, até 448 bits</li>
+                    <li><strong>Twofish:</strong> Sucessor do Blowfish</li>
+                    <li><strong>RC4:</strong> Stream cipher, obsoleto (WEP)</li>
+                </ul>
+
+                <h3>Algoritmos Assimétricos</h3>
+                <ul>
+                    <li><strong>RSA:</strong> Mais usado, assinaturas e criptografia, 2048+ bits</li>
+                    <li><strong>ECC (Elliptic Curve):</strong> Mesma segurança com chaves menores</li>
+                    <li><strong>Diffie-Hellman:</strong> Troca de chaves, base do HTTPS</li>
+                    <li><strong>DSA (Digital Signature Algorithm):</strong> Apenas assinaturas</li>
+                    <li><strong>ElGamal:</strong> Criptografia e assinaturas</li>
+                </ul>
+
+                <h3>Modos de Operação</h3>
+                <ul>
+                    <li><strong>ECB (Electronic Codebook):</strong> Inseguro, padrões visíveis</li>
+                    <li><strong>CBC (Cipher Block Chaining):</strong> Blocos encadeados, precisa IV</li>
+                    <li><strong>CTR (Counter):</strong> Modo stream, paralelizável</li>
+                    <li><strong>GCM (Galois/Counter Mode):</strong> Criptografia + autenticação</li>
+                </ul>
+
+                <h3>Blockchain</h3>
+                <ul>
+                    <li><strong>Ledger distribuído</strong> imutável</li>
+                    <li>Cada bloco contém hash do anterior</li>
+                    <li>Consenso distribuído (Proof of Work, Proof of Stake)</li>
+                    <li><strong>Usos:</strong> Criptomoedas, contratos inteligentes, supply chain</li>
+                </ul>
+
+                <h3>Esteganografia</h3>
+                <ul>
+                    <li>Esconder mensagens dentro de arquivos (imagens, áudio, vídeo)</li>
+                    <li>Diferente de criptografia (oculta existência vs oculta conteúdo)</li>
+                    <li><strong>Ferramenta:</strong> OpenStego</li>
+                </ul>
+
+                <h3>Ataques Criptográficos</h3>
+                <ul>
+                    <li><strong>Brute Force:</strong> Testar todas combinações de chaves</li>
+                    <li><strong>Dictionary Attack:</strong> Testar palavras comuns</li>
+                    <li><strong>Rainbow Table:</strong> Tabela pré-computada de hashes</li>
+                    <li><strong>Birthday Attack:</strong> Explorar colisões de hash</li>
+                    <li><strong>Collision Attack:</strong> Encontrar dois inputs com mesmo hash</li>
+                    <li><strong>Downgrade Attack:</strong> Forçar uso de criptografia fraca</li>
+                    <li><strong>Known Plaintext:</strong> Atacante tem plaintext e ciphertext</li>
+                    <li><strong>Chosen Plaintext:</strong> Atacante escolhe plaintext para criptografar</li>
+                </ul>
+
+                <h2>3.2 Implementações Criptográficas</h2>
+
+                <h3>Combinando Métodos</h3>
+                <ul>
+                    <li><strong>Hybrid Cryptography:</strong> Assimétrica para trocar chave simétrica</li>
+                    <li><strong>SSL/TLS:</strong> Usa assimétrica (handshake) + simétrica (dados)</li>
+                    <li><strong>PGP/GPG:</strong> Assimétrica + simétrica para email</li>
+                </ul>
+
+                <h3>Dispositivos de Hardware</h3>
+                <ul>
+                    <li><strong>TPM (Trusted Platform Module):</strong> Chip de segurança na placa-mãe
+                        <ul>
+                            <li>Armazena chaves criptográficas</li>
+                            <li>Usado por BitLocker</li>
+                            <li>Boot seguro</li>
+                        </ul>
+                    </li>
+                    <li><strong>HSM (Hardware Security Module):</strong> Dispositivo dedicado para chaves
+                        <ul>
+                            <li>Alta performance</li>
+                            <li>Tamper-resistant</li>
+                            <li>Usado em bancos, CAs</li>
+                        </ul>
+                    </li>
+                    <li><strong>Smart Card:</strong> Cartão com chip, armazena certificados</li>
+                    <li><strong>USB Security Token:</strong> Dispositivo USB para autenticação</li>
+                </ul>
+
+                <h2>3.3 Hashing</h2>
+
+                <h3>Conceito</h3>
+                <ul>
+                    <li><strong>Função one-way:</strong> Não pode ser revertida</li>
+                    <li><strong>Sempre mesmo tamanho</strong> de output (digest/hash)</li>
+                    <li><strong>Mesmo input = mesmo hash</strong></li>
+                    <li><strong>Pequena mudança = hash completamente diferente</strong></li>
+                </ul>
+
+                <h3>Usos de Hash</h3>
+                <ul>
+                    <li>Verificar integridade de arquivos</li>
+                    <li>Armazenar senhas (com salt)</li>
+                    <li>Assinaturas digitais</li>
+                    <li>Blockchain</li>
+                    <li>Certificados digitais</li>
+                </ul>
+
+                <h3>Algoritmos de Hash</h3>
+                <ul>
+                    <li><strong>MD5:</strong> 128 bits, obsoleto, vulnerável a colisões</li>
+                    <li><strong>SHA-1:</strong> 160 bits, obsoleto, vulnerável</li>
+                    <li><strong>SHA-2 (SHA-256, SHA-512):</strong> Padrão atual, seguro</li>
+                    <li><strong>SHA-3:</strong> Mais recente, alternativa ao SHA-2</li>
+                    <li><strong>RIPEMD:</strong> 160 bits</li>
+                    <li><strong>HMAC:</strong> Hash com chave secreta (MAC)</li>
+                </ul>
+
+                <h3>Salt</h3>
+                <ul>
+                    <li>Valor aleatório adicionado antes do hash</li>
+                    <li>Previne rainbow table attacks</li>
+                    <li>Único para cada senha</li>
+                </ul>
+
+                <h2>3.4 Criptografia de Arquivos</h2>
+
+                <h3>EFS (Encrypting File System)</h3>
+                <ul>
+                    <li>Windows, nível de arquivo/pasta</li>
+                    <li>Transparente para usuário</li>
+                    <li>Usa certificados do usuário</li>
+                </ul>
+
+                <h3>BitLocker</h3>
+                <ul>
+                    <li>Criptografia de disco completo (FDE)</li>
+                    <li>Requer TPM (ou USB key)</li>
+                    <li>Protege contra theft de disco</li>
+                    <li>BitLocker To Go para USB</li>
+                </ul>
+
+                <h3>PGP/GPG</h3>
+                <ul>
+                    <li><strong>PGP:</strong> Pretty Good Privacy (comercial)</li>
+                    <li><strong>GPG:</strong> GNU Privacy Guard (open source)</li>
+                    <li>Criptografia de email e arquivos</li>
+                    <li>Usa chaves públicas/privadas</li>
+                    <li>Web of Trust</li>
+                </ul>
+
+                <h2>3.5 Public Key Infrastructure (PKI)</h2>
+
+                <h3>Componentes</h3>
+                <ul>
+                    <li><strong>CA (Certificate Authority):</strong> Emite certificados</li>
+                    <li><strong>RA (Registration Authority):</strong> Verifica identidade</li>
+                    <li><strong>CRL (Certificate Revocation List):</strong> Lista de revogados</li>
+                    <li><strong>OCSP (Online Certificate Status Protocol):</strong> Verifica status em tempo real</li>
+                    <li><strong>Certificate:</strong> Liga chave pública a identidade</li>
+                </ul>
+
+                <h3>Tipos de Certificados</h3>
+                <ul>
+                    <li><strong>Root Certificate:</strong> Auto-assinado, topo da hierarquia</li>
+                    <li><strong>Intermediate Certificate:</strong> Emitido por root, emite end-entity</li>
+                    <li><strong>Server Certificate:</strong> Para servidores web (HTTPS)</li>
+                    <li><strong>Client Certificate:</strong> Para autenticação de usuários</li>
+                    <li><strong>Code Signing:</strong> Para assinar software</li>
+                    <li><strong>Email Certificate:</strong> Para S/MIME</li>
+                    <li><strong>Wildcard:</strong> *.dominio.com</li>
+                    <li><strong>SAN (Subject Alternative Name):</strong> Múltiplos domínios</li>
+                    <li><strong>Self-signed:</strong> Não emitido por CA confiável</li>
+                </ul>
+
+                <h3>Conceitos</h3>
+                <ul>
+                    <li><strong>Certificate Chain:</strong> Hierarquia até root CA</li>
+                    <li><strong>Trust Model:</strong> Quem confia em quem</li>
+                    <li><strong>Key Escrow:</strong> Terceiro guarda cópia da chave</li>
+                    <li><strong>Certificate Pinning:</strong> App aceita apenas certificado específico</li>
+                    <li><strong>OCSP Stapling:</strong> Servidor anexa resposta OCSP</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="tab2" class="content">
+            <div class="quiz-area">
+                <div class="quiz-header">
+                    <h2>Quiz - 30 Questões</h2>
+                </div>
+                <div id="questions"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn" onclick="checkAnswers()" style="background: #0072ff; color: white; padding: 15px 40px;">Ver Resultados</button>
+                </div>
+                <div id="results" style="display: none; text-align: center; margin-top: 20px;">
+                    <div style="background: white; padding: 30px; border-radius: 15px;">
+                        <h2 id="score"></h2>
+                        <button class="btn" onclick="resetQuiz()" style="margin-top: 15px;">Refazer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cards = [
+            {f: "O que é criptografia simétrica?", b: "Utiliza a mesma chave para criptografar e descriptografar. É rápida e adequada para grandes volumes. Exemplos: AES, DES, 3DES."},
+            {f: "O que é criptografia assimétrica?", b: "Utiliza um par de chaves: uma pública (compartilhável) e uma privada (secreta). É mais lenta que a simétrica. Exemplos: RSA, ECC."},
+            {f: "O que é AES (Advanced Encryption Standard)?", b: "Padrão de criptografia simétrica atual. Suporta chaves de 128, 192 e 256 bits. É rápido, seguro e amplamente utilizado."},
+            {f: "O que é DES (Data Encryption Standard)?", b: "Algoritmo simétrico antigo com chave de 56 bits. Hoje é considerado obsoleto e vulnerável a ataques de força bruta."},
+            {f: "O que é 3DES (Triple DES)?", b: "Versão melhorada do DES que aplica o algoritmo três vezes. Mais seguro que o DES original, mas está sendo substituído pelo AES."},
+            {f: "O que é RSA?", b: "Algoritmo assimétrico mais utilizado para criptografia e assinaturas digitais. Recomenda-se chaves de 2048 bits ou mais."},
+            {f: "O que é ECC (Elliptic Curve Cryptography)?", b: "Criptografia assimétrica baseada em curvas elípticas. Oferece o mesmo nível de segurança que o RSA com chaves muito menores."},
+            {f: "O que é Diffie-Hellman?", b: "Algoritmo de troca de chaves que permite que duas partes estabeleçam uma chave compartilhada sem transmiti-la diretamente."},
+            {f: "O que é hashing?", b: "Função matemática one-way (não reversível) que gera uma saída de tamanho fixo (hash). Usada para verificar integridade."},
+            {f: "O que é MD5?", b: "Algoritmo de hash que produz saída de 128 bits. Está obsoleto e vulnerável a colisões, portanto não deve ser usado para segurança."},
+            {f: "O que é SHA-1?", b: "Algoritmo de hash que produz saída de 160 bits. Está obsoleto e vulnerável a colisões. Deve ser substituído por SHA-2."},
+            {f: "O que é SHA-256?", b: "Algoritmo da família SHA-2 que produz hash de 256 bits. É o padrão atual e seguro, usado em SSL/TLS e Bitcoin."},
+            {f: "O que é SHA-512?", b: "Algoritmo da família SHA-2 que produz hash de 512 bits. Oferece maior segurança que SHA-256, mas é mais lento."},
+            {f: "O que é HMAC?", b: "Hash-based Message Authentication Code. É um hash com chave secreta que garante autenticação e integridade."},
+            {f: "O que é salt em hashing de senhas?", b: "Valor aleatório adicionado à senha antes do hash para prevenir ataques de rainbow table. Deve ser único para cada senha."},
+            {f: "O que é um ataque de rainbow table?", b: "Técnica que usa tabelas pré-computadas de hashes para quebrar senhas sem salt. A contramedida é usar salt."},
+            {f: "O que é um ataque de colisão (collision attack)?", b: "Quando um atacante encontra duas entradas diferentes que produzem o mesmo hash. MD5 e SHA-1 são vulneráveis."},
+            {f: "O que é um ataque de aniversário (birthday attack)?", b: "Explora a probabilidade de colisões em hashes. Requer menos tentativas que um ataque de força bruta."},
+            {f: "O que é blockchain?", b: "Ledger (registro) distribuído e imutável onde cada bloco contém o hash do bloco anterior. Usado em criptomoedas e contratos inteligentes."},
+            {f: "O que é esteganografia?", b: "Técnica de esconder mensagens dentro de arquivos como imagens, áudio ou vídeo. Diferente da criptografia, oculta a existência da mensagem."},
+            {f: "O que é TPM (Trusted Platform Module)?", b: "Chip de segurança presente na placa-mãe que armazena chaves criptográficas. Usado pelo BitLocker e para boot seguro."},
+            {f: "O que é HSM (Hardware Security Module)?", b: "Dispositivo físico dedicado a gerenciar e proteger chaves criptográficas. É tamper-resistant (resistente a violação) e usado em bancos."},
+            {f: "O que é BitLocker?", b: "Ferramenta de criptografia de disco completo (FDE) do Windows. Requer TPM e protege contra acesso não autorizado em caso de roubo."},
+            {f: "O que é EFS (Encrypting File System)?", b: "Sistema de criptografia em nível de arquivo/pasta do Windows. Transparente para o usuário e usa certificados."},
+            {f: "O que é PGP/GPG?", b: "PGP (Pretty Good Privacy) e GPG (GNU Privacy Guard) são ferramentas para criptografia de email e arquivos usando chaves públicas."},
+            {f: "O que é PKI (Public Key Infrastructure)?", b: "Infraestrutura de chaves públicas que gerencia certificados digitais através de CAs, CRLs e OCSP."},
+            {f: "O que é uma CA (Certificate Authority)?", b: "Autoridade Certificadora: entidade que emite e gerencia certificados digitais. Exemplos: Let's Encrypt, DigiCert."},
+            {f: "O que é um certificado digital?", b: "Documento eletrônico que liga uma chave pública a uma identidade, seguindo o padrão X.509."},
+            {f: "O que é CRL (Certificate Revocation List)?", b: "Lista de certificados revogados publicada periodicamente por uma CA."},
+            {f: "O que é OCSP (Online Certificate Status Protocol)?", b: "Protocolo que permite verificar em tempo real se um certificado foi revogado, substituindo o CRL."},
+            {f: "O que é um certificado root (raiz)?", b: "Certificado auto-assinado no topo da hierarquia PKI. É confiável por estar pré-instalado em sistemas operacionais."},
+            {f: "O que é um certificado auto-assinado (self-signed)?", b: "Certificado não emitido por uma CA confiável. Navegadores exibem avisos de segurança. Usado para testes."},
+            {f: "O que é um certificado wildcard?", b: "Certificado que cobre um domínio e todos seus subdomínios (ex: *.dominio.com). Prático, mas mais arriscado se comprometido."},
+            {f: "O que é um certificado SAN (Subject Alternative Name)?", b: "Certificado que permite especificar múltiplos domínios diferentes em um único certificado."},
+            {f: "O que é um certificado de code signing?", b: "Certificado usado para assinar digitalmente software, garantindo autenticidade e integridade do código."},
+            {f: "O que é certificate pinning?", b: "Técnica onde um aplicativo aceita apenas um certificado específico, prevenindo ataques MITM mesmo com CAs comprometidas."},
+            {f: "O que é OCSP Stapling?", b: "Mecanismo onde o servidor web anexa a resposta OCSP ao handshake TLS, reduzindo latência e carga na CA."},
+            {f: "O que é key escrow?", b: "Prática de armazenar uma cópia das chaves criptográficas com um terceiro confiável para recuperação em caso de perda."},
+            {f: "O que é criptografia híbrida (hybrid cryptography)?", b: "Combinação de criptografia assimétrica para trocar chaves e simétrica para criptografar dados. Usada em SSL/TLS e PGP."},
+            {f: "O que é o modo ECB (Electronic Codebook)?", b: "Modo de operação inseguro onde blocos idênticos geram ciphertext idêntico, revelando padrões nos dados."},
+            {f: "O que é o modo CBC (Cipher Block Chaining)?", b: "Modo onde cada bloco de plaintext é combinado com o ciphertext anterior. Requer um IV (vetor de inicialização)."},
+            {f: "O que é o modo GCM (Galois/Counter Mode)?", b: "Modo que combina criptografia com autenticação, usado em TLS 1.3. Oferece confidencialidade e integridade."},
+            {f: "O que é IV (Initialization Vector)?", b: "Vetor de inicialização: valor aleatório usado em modos como CBC para garantir que mensagens iguais gerem ciphertext diferentes."},
+            {f: "O que é nonce?", b: "Número usado uma única vez (number used once) para garantir que operações criptográficas sejam únicas."},
+            {f: "O que é Perfect Forward Secrecy (PFS)?", b: "Propriedade onde cada sessão usa chaves únicas. Se a chave privada for comprometida, sessões passadas permanecem seguras."},
+            {f: "O que é um ataque de downgrade?", b: "Forçar o uso de versões antigas e inseguras de protocolos. Exemplo: ataque POODLE contra SSL 3.0."},
+            {f: "O que é um ataque de known plaintext?", b: "Quando o atacante possui pares de plaintext e ciphertext correspondentes e tenta descobrir a chave."},
+            {f: "O que é um ataque de chosen plaintext?", b: "Quando o atacante pode escolher plaintexts e obter os ciphertexts correspondentes, mais poderoso que known plaintext."},
+            {f: "O que é um ataque de força bruta (brute force)?", b: "Testar todas as combinações possíveis de chaves até encontrar a correta. O tempo cresce exponencialmente com o tamanho da chave."},
+            {f: "O que é um ataque de dicionário (dictionary attack)?", b: "Testar palavras comuns e senhas prováveis contra hashes. Contramedida: exigir complexidade de senha."},
+            {f: "O que é key stretching?", b: "Técnica que aumenta o tempo necessário para derivar uma chave, dificultando ataques de força bruta. Ex: PBKDF2, bcrypt."},
+            {f: "O que é PBKDF2?", b: "Password-Based Key Derivation Function 2: função que aplica hash múltiplas vezes para aumentar o custo de ataques."},
+            {f: "O que é bcrypt?", b: "Função de hash de senha com key stretching, baseada no Blowfish. Permite configurar o custo computacional."},
+            {f: "O que é Argon2?", b: "Vencedor do Password Hashing Competition. Projetado para resistir a ataques com GPU e ASIC."},
+            {f: "O que é stream cipher?", b: "Cifra que criptografa dados bit a bit ou byte a byte, como um fluxo. Exemplos: RC4 (inseguro), ChaCha20."},
+            {f: "O que é block cipher?", b: "Cifra que criptografa blocos de tamanho fixo. Exemplos: AES (128 bits), DES (64 bits)."},
+            {f: "O que é ChaCha20?", b: "Stream cipher moderna, alternativa ao AES. Frequentemente usada com Poly1305 para autenticação."},
+            {f: "O que é Poly1305?", b: "MAC (Message Authentication Code) rápido, frequentemente usado com ChaCha20."},
+            {f: "O que é uma assinatura digital (digital signature)?", b: "Assina o hash de uma mensagem com a chave privada. Verifica-se com a chave pública, garantindo autenticação e não-repúdio."},
+            {f: "O que é MAC (Message Authentication Code)?", b: "Código de autenticação de mensagem que garante integridade e autenticidade usando uma chave simétrica."},
+            {f: "O que é certificate chain (cadeia de certificados)?", b: "Hierarquia de certificados que vai do certificado do servidor (end-entity) até o certificado root."},
+            {f: "O que é Web of Trust?", b: "Modelo de confiança usado pelo PGP, onde usuários assinam as chaves uns dos outros, descentralizado."},
+            {f: "O que é X.509?", b: "Padrão que define o formato de certificados digitais, usado em SSL/TLS, S/MIME e IPSec."},
+            {f: "O que é S/MIME?", b: "Secure/Multipurpose Internet Mail Extensions: padrão para criptografia e assinatura digital de emails."},
+            {f: "O que é criptografia de banco de dados?", b: "Técnicas como TDE (Transparent Data Encryption) para criptografar dados em repouso no banco."}
+        ];
+
+        const quiz = [
+            {q: "Qual tipo de criptografia usa a mesma chave para criptografar e descriptografar?", o: ["Assimétrica", "Simétrica", "Hash", "PKI"], c: 1},
+            {q: "Qual tipo de criptografia usa um par de chaves (pública e privada)?", o: ["Simétrica", "Assimétrica", "Hash", "Salt"], c: 1},
+            {q: "Qual é o algoritmo simétrico considerado padrão atual?", o: ["DES", "3DES", "AES", "RC4"], c: 2},
+            {q: "Qual é o algoritmo assimétrico mais amplamente utilizado?", o: ["AES", "DES", "RSA", "MD5"], c: 2},
+            {q: "Qual técnica criptográfica é uma função one-way (não reversível)?", o: ["Criptografia simétrica", "Criptografia assimétrica", "Hash", "PKI"], c: 2},
+            {q: "Qual algoritmo de hash de 128 bits está obsoleto e vulnerável a colisões?", o: ["SHA-256", "MD5", "SHA-512", "SHA-3"], c: 1},
+            {q: "Qual é o algoritmo de hash padrão atual com saída de 256 bits?", o: ["MD5", "SHA-1", "SHA-256", "DES"], c: 2},
+            {q: "O que é adicionado a uma senha antes do hash para prevenir ataques de rainbow table?", o: ["Criptografia", "IV", "Salt", "Nonce"], c: 2},
+            {q: "Qual chip de segurança na placa-mãe armazena chaves e é usado pelo BitLocker?", o: ["HSM", "TPM", "Smart Card", "USB Token"], c: 1},
+            {q: "Qual ferramenta do Windows faz criptografia de disco completo?", o: ["EFS", "PGP", "BitLocker", "GPG"], c: 2},
+            {q: "Qual entidade emite certificados digitais em uma PKI?", o: ["RA", "CRL", "OCSP", "CA"], c: 3},
+            {q: "Qual protocolo verifica status de certificado em tempo real?", o: ["CRL", "OCSP", "CA", "RA"], c: 1},
+            {q: "Como é chamado o certificado auto-assinado no topo da hierarquia PKI?", o: ["Intermediate", "Root", "Server", "Client"], c: 1},
+            {q: "Qual tipo de certificado cobre um domínio e todos seus subdomínios (ex: *.exemplo.com)?", o: ["Root", "Self-signed", "Wildcard", "SAN"], c: 2},
+            {q: "Qual ferramenta é usada para criptografia de email com chaves públicas?", o: ["EFS", "BitLocker", "PGP/GPG", "AES"], c: 2},
+            {q: "Qual tecnologia usa um ledger distribuído imutável com blocos encadeados por hashes?", o: ["PKI", "Blockchain", "Hash", "Salt"], c: 1},
+            {q: "Qual técnica esconde mensagens dentro de imagens ou áudio?", o: ["Criptografia", "Hash", "Esteganografia", "Salt"], c: 2},
+            {q: "Qual ataque usa tabelas pré-computadas de hashes para quebrar senhas?", o: ["Força bruta", "Dicionário", "Rainbow Table", "Aniversário"], c: 2},
+            {q: "Qual ataque explora a probabilidade de colisões em funções hash?", o: ["Força bruta", "Ataque de aniversário", "Dicionário", "Phishing"], c: 1},
+            {q: "Como é chamada a combinação de criptografia assimétrica para troca de chaves e simétrica para dados?", o: ["Hash", "Salt", "Criptografia híbrida", "PKI"], c: 2},
+            {q: "Qual modo de operação de block cipher é inseguro porque blocos iguais geram ciphertext igual?", o: ["CBC", "GCM", "ECB", "CTR"], c: 2},
+            {q: "O que é HMAC?", o: ["Algoritmo de hash", "Criptografia assimétrica", "Hash com chave secreta (MAC)", "Salt"], c: 2},
+            {q: "Qual algoritmo permite troca segura de chaves sem transmitir a chave em si?", o: ["RSA", "AES", "Diffie-Hellman", "DES"], c: 2},
+            {q: "Qual ataque força o uso de versões antigas e inseguras de protocolos?", o: ["Força bruta", "Ataque de downgrade", "Phishing", "Rainbow"], c: 1},
+            {q: "Qual função de hash de senha utiliza key stretching e é recomendada atualmente?", o: ["MD5", "SHA-1", "bcrypt", "DES"], c: 2},
+            {q: "Qual tipo de cifra criptografa dados bit a bit (como um fluxo)?", o: ["Block cipher", "Stream cipher", "Hash", "Salt"], c: 1},
+            {q: "O que garante autenticação e não-repúdio através de chave privada?", o: ["Hash", "MAC", "Assinatura digital", "Salt"], c: 2},
+            {q: "Qual tipo de certificado permite especificar múltiplos domínios diferentes?", o: ["Wildcard", "SAN (Subject Alternative Name)", "Root", "Self-signed"], c: 1},
+            {q: "Qual técnica faz um aplicativo aceitar apenas um certificado específico?", o: ["Pinning", "Stapling", "Escrow", "CRL"], c: 0},
+            {q: "Qual é o padrão de formato de certificados digitais?", o: ["PGP", "GPG", "X.509", "S/MIME"], c: 2}
+        ];
+
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+
+        // Carregar progresso salvo
+        function loadProgress() {
+            const saved = localStorage.getItem('security_plus_cap3_mastered');
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
+        }
+
+        // Salvar progresso
+        function saveProgress() {
+            localStorage.setItem('security_plus_cap3_mastered', JSON.stringify([...mastered]));
+        }
+
+        // Chamar loadProgress assim que o script carregar
+        loadProgress();
+
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+        }
+
+        function updateCard() {
+            const card = cards[currentCard];
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${cards.length}`;
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            const btn = document.getElementById('master-btn');
+            btn.textContent = mastered.has(currentCard) ? '✓ Dominado' : 'Marcar Dominado';
+            btn.style.background = mastered.has(currentCard) ? '#10b981' : '#e5e7eb';
+            btn.style.color = mastered.has(currentCard) ? 'white' : 'black';
+        }
+
+        function flipCard() {
+            flipped = !flipped;
+            updateCard();
+        }
+
+        function nextCard() {
+            currentCard = (currentCard + 1) % cards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function prevCard() {
+            currentCard = (currentCard - 1 + cards.length) % cards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function toggleMaster() {
+            if (mastered.has(currentCard)) mastered.delete(currentCard);
+            else mastered.add(currentCard);
+            
+            // Salvar sempre que mudar
+            saveProgress();
+            
+            updateCard();
+        }
+
+        function loadQuiz() {
+            const container = document.getElementById('questions');
+            quiz.forEach((q, qi) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(qi, oi);
+                    odiv.id = `q${qi}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${qi}`;
+                exp.innerHTML = `<strong>Resposta correta:</strong> ${q.o[q.c]}`;
+                div.appendChild(exp);
+                container.appendChild(div);
+            });
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            quiz[qi].o.forEach((_, i) => {
+                document.getElementById(`q${qi}o${i}`).classList.remove('selected');
+            });
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            quiz.forEach((q, qi) => {
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (oi === q.c) el.classList.add('correct');
+                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                });
+                document.getElementById(`exp${qi}`).style.display = 'block';
+                if (answers[qi] === q.c) correct++;
+            });
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score').textContent = `${correct}/${quiz.length} (${pct}%)`;
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('results').style.display = 'none';
+            loadQuiz();
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>

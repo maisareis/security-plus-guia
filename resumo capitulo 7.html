@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo Security+ Capítulo 7 - Gerenciamento de Vulnerabilidades</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
+            padding: 50px;
+            border: 1px solid #e2e8f0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #11998e;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .badge {
+            background: #11998e;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box strong {
+            color: #ec4899;
+            font-size: 1.1rem;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule strong {
+            color: #f59e0b;
+            font-size: 1.1rem;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            font-size: 1.8rem;
+            color: #0f172a;
+            margin-bottom: 20px;
+            border-left: 5px solid #11998e;
+            padding-left: 15px;
+        }
+        .section h3 {
+            font-size: 1.3rem;
+            color: #334155;
+            margin: 20px 0 10px;
+        }
+        .section h4 {
+            font-size: 1.1rem;
+            color: #11998e;
+            margin: 15px 0 5px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .card h4 {
+            color: #11998e;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .card ul {
+            list-style: none;
+        }
+        .card li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .card li:before {
+            content: "•";
+            color: #11998e;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th {
+            background: #11998e;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        tr:hover {
+            background: #f1f5f9;
+        }
+        .vuln-cycle {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0;
+        }
+        .cycle-item {
+            flex: 1;
+            min-width: 150px;
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 5px solid #11998e;
+        }
+        .cycle-item strong {
+            display: block;
+            color: #11998e;
+            margin-bottom: 5px;
+        }
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px dashed #e2e8f0;
+            text-align: center;
+            color: #64748b;
+        }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📘 Capítulo 7: Gerenciamento de Vulnerabilidades</h1>
+            <span class="badge">Resumo Completo</span>
+        </div>
+
+        <div class="info-box">
+            <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>Ciclo de VM:</strong> Identificação → Avaliação → Priorização → Remediação → Verificação → Monitoramento</li>
+                <li><strong>EOL (End of Life):</strong> Sem suporte/vendor, sem patches - ALTAMENTE VULNERÁVEL</li>
+                <li><strong>CVSS:</strong> Score 0-10 (Critical 9-10, High 7-8.9, Medium 4-6.9, Low 0.1-3.9)</li>
+                <li><strong>False Negative:</strong> vulnerabilidade real não detectada (GRAVE)</li>
+                <li><strong>Threat Feeds:</strong> informações em tempo real sobre ameaças (OTX, IBM X-Force)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣ Tipos de Vulnerabilidades</h2>
+
+            <h3>Gerenciamento de Vulnerabilidades (VM)</h3>
+            <p>Processo crítico que abrange identificação, avaliação, tratamento e relato de vulnerabilidades em SOs, aplicações e componentes de TI.</p>
+
+            <h4>Atividades Principais:</h4>
+            <ul>
+                <li>Aplicação de patches em sistemas desatualizados</li>
+                <li>Endurecimento de configurações</li>
+                <li>Atualização para versões mais seguras de SOs</li>
+                <li>Revisões de código e testes de segurança</li>
+                <li>Atualização de bibliotecas de terceiros</li>
+            </ul>
+
+            <h3>Vulnerabilidades por Sistema Operacional</h3>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Windows</h4>
+                    <ul>
+                        <li>Buffer overflows, problemas de validação, falhas de privilégio</li>
+                        <li><strong>MS08-067:</strong> worm Conficker (2008) - milhões infectados</li>
+                        <li><strong>MS17-010 (EternalBlue):</strong> WannaCry (2017) - execução remota</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>macOS</h4>
+                    <ul>
+                        <li>Base UNIX, controles de acesso, boot seguro</li>
+                        <li>Percepção de "mais seguro" causa complacência</li>
+                        <li><strong>Shellshock (2014):</strong> falha no Bash</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Linux</h4>
+                    <ul>
+                        <li>Open-source = desenvolvimento rápido</li>
+                        <li>Vulnerabilidades no kernel, configurações incorretas</li>
+                        <li><strong>Heartbleed (2014):</strong> OpenSSL - ler memória do sistema</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Mobile (Android/iOS)</h4>
+                    <ul>
+                        <li><strong>Android:</strong> fragmentação, suporte inconsistente, Stagefright (MMS)</li>
+                        <li><strong>iOS:</strong> não open-source, watering hole attacks (2019)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Sistemas Embarcados e IoT</h3>
+            <ul>
+                <li>Introduzem vulnerabilidades e caminhos para infraestruturas corporativas</li>
+                <li>Executam sistemas operacionais especializados</li>
+            </ul>
+
+            <h3>Sistemas Legados e EOL</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>End-of-Life (EOL)</h4>
+                    <ul>
+                        <li>Não mais suportados pelo fabricante</li>
+                        <li>Sem patches de segurança críticos</li>
+                        <li>Ex: Windows 7, Server 2008 (EOL jan/2020)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Sistemas Legados</h4>
+                    <ul>
+                        <li>Desatualizados mas ainda em uso</li>
+                        <li>Substituição cara ou arriscada</li>
+                        <li>Incompatíveis com métodos mais novos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Vulnerabilidades de Firmware</h3>
+            <ul>
+                <li><strong>Meltdown e Spectre (2018):</strong> processadores, roubo de dados</li>
+                <li><strong>LoJax (2018):</strong> firmware UEFI, persistência após reinstalação</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>2️⃣ Ciclo de Gerenciamento de Vulnerabilidades</h2>
+
+            <div class="vuln-cycle">
+                <div class="cycle-item"><strong>1. Identificação</strong>Encontrar vulnerabilidades</div>
+                <div class="cycle-item"><strong>2. Avaliação</strong>Analisar severidade</div>
+                <div class="cycle-item"><strong>3. Priorização</strong>Por risco/impacto</div>
+                <div class="cycle-item"><strong>4. Remediação</strong>Corrigir</div>
+                <div class="cycle-item"><strong>5. Verificação</strong>Confirmar correção</div>
+                <div class="cycle-item"><strong>6. Monitoramento</strong>Contínuo</div>
+            </div>
+
+            <h3>Fatores de Priorização</h3>
+            <ul>
+                <li><strong>Severidade:</strong> CVSS score</li>
+                <li><strong>Facilidade de exploração</strong></li>
+                <li><strong>Impacto potencial:</strong> perda financeira, dano reputacional</li>
+                <li><strong>Exposição:</strong> acessibilidade do sistema</li>
+                <li><strong>Fatores ambientais:</strong> infraestrutura, cenário de ameaças, compliance</li>
+                <li><strong>Tolerância a risco</strong> da organização</li>
+            </ul>
+
+            <h3>Exposure Factor (EF)</h3>
+            <p>Extensão na qual ativo é suscetível a comprometimento. Fatores: autenticação fraca, segmentação inadequada, controle de acesso insuficiente.</p>
+        </div>
+
+        <div class="section">
+            <h2>3️⃣ Métodos de Identificação de Vulnerabilidades</h2>
+
+            <h3>Escaneamento de Vulnerabilidades</h3>
+            <p>Processo automatizado que detecta:</p>
+            <ul>
+                <li>Portas abertas e IPs ativos</li>
+                <li>Aplicações/serviços em execução</li>
+                <li>Patches críticos faltantes</li>
+                <li>Contas padrão não desabilitadas</li>
+                <li>Configurações incorretas</li>
+            </ul>
+
+            <h4>Ferramentas Populares</h4>
+            <div class="grid-3">
+                <div class="card">openVAS</div>
+                <div class="card">Nessus</div>
+                <div class="card">Qualys</div>
+            </div>
+
+            <h3>Threat Feeds</h3>
+            <p>Fontes de informação em tempo real sobre ameaças emergentes.</p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Open-Source</h4>
+                    <ul>
+                        <li>Cyber Threat Alliance</li>
+                        <li>MISP threat-sharing</li>
+                        <li>AlienVault OTX</li>
+                        <li>Gratuitos, mas menos profundos</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Proprietários</h4>
+                    <ul>
+                        <li>IBM X-Force Exchange</li>
+                        <li>Recorded Future</li>
+                        <li>Mandiant FireEye</li>
+                        <li>Informações mais abrangentes</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>OSINT (Open-Source Intelligence)</h3>
+            <p>Coleta de informações publicamente disponíveis.</p>
+            <div class="grid-4">
+                <div class="card"><strong>Shodan</strong> dispositivos IoT</div>
+                <div class="card"><strong>Maltego</strong> visualização</div>
+                <div class="card"><strong>Recon-ng</strong> reconhecimento</div>
+                <div class="card"><strong>theHarvester</strong> emails</div>
+            </div>
+
+            <h3>Outros Métodos</h3>
+            <ul>
+                <li><strong>Pen Testing:</strong> hackers éticos tentam violar segurança</li>
+                <li><strong>Bug Bounty:</strong> recompensa para pesquisadores externos</li>
+                <li><strong>Auditoria:</strong> conformidade (GDPR, HIPAA), baseada em risco, técnica</li>
+                <li><strong>Deep/Dark Web:</strong> contrainteligência, infiltração</li>
+            </ul>
+
+            <h4>Comparação: Pen Testing vs Bug Bounty</h4>
+            <table>
+                <tr>
+                    <th>Pen Testing</th>
+                    <th>Bug Bounty</th>
+                </tr>
+                <tr>
+                    <td>Equipe contratada profissional</td>
+                    <td>Comunidade global</td>
+                </tr>
+                <tr>
+                    <td>Prazo confinado</td>
+                    <td>Contínuo</td>
+                </tr>
+                <tr>
+                    <td>Abordagem estruturada</td>
+                    <td>Habilidades diversas</td>
+                </tr>
+                <tr>
+                    <td>Custo previsível</td>
+                    <td>Pago por descoberta</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>4️⃣ Análise e Correção</h2>
+
+            <h3>Opções de Scan</h3>
+            <table>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Intrusivo</strong></td>
+                    <td>Tenta explorar vulnerabilidade (mais preciso, não em sistemas vivos)</td>
+                </tr>
+                <tr>
+                    <td><strong>Não-Intrusivo</strong></td>
+                    <td>Lista vulnerabilidades potenciais (mais comum, sistemas vivos)</td>
+                </tr>
+                <tr>
+                    <td><strong>Credenciado</strong></td>
+                    <td>Com login, análise profunda (simula ataque interno)</td>
+                </tr>
+                <tr>
+                    <td><strong>Não-Credenciado</strong></td>
+                    <td>Sem login, visão de atacante externo</td>
+                </tr>
+            </table>
+
+            <h3>Escaneamento de Aplicações</h3>
+            <ul>
+                <li><strong>Análise Estática:</strong> revisa código sem executar</li>
+                <li><strong>Análise Dinâmica:</strong> testa aplicações em execução</li>
+                <li>Identifica: XSS, SQL injection, referências inseguras</li>
+            </ul>
+
+            <h3>Monitoramento de Pacotes</h3>
+            <p>Rastreia segurança de pacotes de terceiros, bibliotecas e dependências.</p>
+            <ul>
+                <li><strong>SCA (Software Composition Analysis):</strong> identifica pacotes desatualizados/vulneráveis</li>
+                <li>Compara com NVD e avisos de vendors</li>
+                <li>Políticas de governança: auditorias regulares, aprovação de novos pacotes</li>
+            </ul>
+
+            <h3>Validação de Remediação</h3>
+            <ul>
+                <li><strong>Re-scanning:</strong> escaneia novamente após correção</li>
+                <li><strong>Auditoria:</strong> revisa passos e documentação</li>
+                <li><strong>Verificação:</strong> checagens manuais, logs, testes</li>
+            </ul>
+
+            <h3>Relato de Vulnerabilidades</h3>
+            <ul>
+                <li><strong>CVSS:</strong> score 0-10, métricas de explorabilidade e impacto</li>
+                <li><strong>Elementos do relatório:</strong> impacto potencial, recomendações, relato oportuno, formato claro</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>5️⃣ Alerta e Monitoramento</h2>
+
+            <h3>Ferramentas de Monitoramento</h3>
+            
+            <h4>1. Monitores de Rede</h4>
+            <ul>
+                <li><strong>SNMP:</strong> coleta dados de switches, roteadores, firewalls (CPU, memória, temperatura)</li>
+                <li>SNMP traps: eventos notáveis (falha de porta, superaquecimento)</li>
+            </ul>
+
+            <h4>2. NetFlow (Flow Collector)</h4>
+            <ul>
+                <li>Metadados de tráfego (5-tuple: IPs, portas, protocolo)</li>
+                <li>Identifica padrões, malware, C2, tunelamento</li>
+                <li><strong>IPFIX:</strong> padrão IETF baseado no NetFlow da Cisco</li>
+            </ul>
+
+            <h4>3. Monitores de Sistema e Logs</h4>
+            <ul>
+                <li>Logs de sistema (disponibilidade) e segurança (autorizações)</li>
+                <li>Revisão regular é crítica - não apenas após incidentes</li>
+            </ul>
+
+            <h4>4. Monitores de Aplicação e Cloud</h4>
+            <ul>
+                <li>Heartbeat, sessões, largura de banda, CPU/memória, condições de erro</li>
+                <li>Cloud: largura de rede, status de VM, saúde de aplicação</li>
+            </ul>
+
+            <h4>5. Scanners de Vulnerabilidades</h4>
+            <p>Reportam total de vulnerabilidades não mitigadas por host.</p>
+
+            <h4>6. Antivírus (EPP)</h4>
+            <ul>
+                <li>Detectam malware por assinatura, integração com UEBA e IA</li>
+                <li>Configurados para bloquear automaticamente e gerar alertas</li>
+            </ul>
+
+            <h4>7. DLP (Data Loss Prevention)</h4>
+            <p>Medeia cópia de dados marcados, restringe mídias/serviços não autorizados.</p>
+        </div>
+
+        <div class="section">
+            <h2>6️⃣ SIEM e SOAR</h2>
+
+            <h3>SIEM (Security Information and Event Management)</h3>
+            <p>Software que coleta e correlaciona dados de segurança.</p>
+
+            <h4>Coleta de Dados - 3 Tipos:</h4>
+            <ol>
+                <li><strong>Baseado em Agente:</strong> instalado no host, filtra e normaliza dados</li>
+                <li><strong>Listener/Collector:</strong> hosts empurram logs via syslog</li>
+                <li><strong>Sensor:</strong> capturas de pacotes e flow de tráfego</li>
+            </ol>
+
+            <h4>Agregação e Normalização</h4>
+            <ul>
+                <li>Parsers para diferentes fontes (Windows, Linux, switches, firewalls)</li>
+                <li>Normaliza datas para timeline única</li>
+            </ul>
+
+            <h4>Atividades do SIEM</h4>
+            <ul>
+                <li><strong>Correlação:</strong> regras lógicas (AND, OR) para detectar incidentes</li>
+                <li><strong>Threat Intelligence Feeds:</strong> associa dados observados a indicadores conhecidos</li>
+                <li><strong>Alertas:</strong> Log only, Alert, Alarm (crítico)</li>
+                <li><strong>Dashboards e Relatórios:</strong> executivo, gerencial, conformidade</li>
+                <li><strong>Arquivamento:</strong> retenção para forense e compliance</li>
+            </ul>
+
+            <h3>SOAR (Security Orchestration, Automation and Response)</h3>
+            <ul>
+                <li>Automatiza validação e remediação de alertas</li>
+                <li><strong>Playbooks:</strong> guiam resposta a incidentes</li>
+                <li>Integração com firewalls e produtos de endpoint</li>
+                <li>Ações como quarentena com um clique</li>
+            </ul>
+
+            <h3>Ajuste de Alertas (Alert Tuning)</h3>
+            <div class="golden-rule">
+                <strong>⚠️ ALERT FATIGUE:</strong> Falsos positivos consomem tempo de analistas e podem fazer perder alertas reais!
+            </div>
+            <ul>
+                <li>Refinar regras de correlação</li>
+                <li>Silenciar alertas para log-only</li>
+                <li>Redirecionar floods para grupos dedicados</li>
+                <li>Monitorar volume e feedback de analistas</li>
+                <li>Machine Learning para ajuste automático</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>7️⃣ DLP (Data Loss Prevention)</h2>
+
+            <h3>Componentes</h3>
+            <ul>
+                <li><strong>Servidor de Política:</strong> configura regras, registra incidentes, relatórios</li>
+                <li><strong>Agentes de Endpoint:</strong> aplicam política em clientes (mesmo offline)</li>
+                <li><strong>Agentes de Rede:</strong> escaneiam comunicações na fronteira</li>
+            </ul>
+
+            <h3>Funcionamento</h3>
+            <ul>
+                <li>Escaneiam conteúdo estruturado (bancos) e não estruturado (emails, documentos)</li>
+                <li>Bloqueiam transferências para USB, email, IM, mídia social</li>
+                <li>Extensão para cloud via proxy ou API</li>
+            </ul>
+
+            <h3>Remediação em DLP</h3>
+            <table>
+                <tr>
+                    <th>Ação</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Alert Only</strong></td>
+                    <td>Cópia permitida, incidente registrado</td>
+                </tr>
+                <tr>
+                    <td><strong>Block</strong></td>
+                    <td>Usuário impedido de copiar</td>
+                </tr>
+                <tr>
+                    <td><strong>Quarantine</strong></td>
+                    <td>Acesso negado (arquivo criptografado/movido)</td>
+                </tr>
+                <tr>
+                    <td><strong>Tombstone</strong></td>
+                    <td>Arquivo substituído por descrição da violação</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>8️⃣ Testes de Penetração (Pentest)</h2>
+
+            <h3>Tipos de Conhecimento</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>⚫ Black Box</h4>
+                    <p>Sem informação (simula atacante externo)</p>
+                </div>
+                <div class="card">
+                    <h4>⚪ White Box</h4>
+                    <p>Conhecimento completo (código, arquitetura)</p>
+                </div>
+                <div class="card">
+                    <h4>🔘 Gray Box</h4>
+                    <p>Informação parcial (simula ameaça interna)</p>
+                </div>
+            </div>
+
+            <h3>Equipes de Segurança</h3>
+            <ul>
+                <li><strong>Red Team:</strong> hackers éticos (ataque)</li>
+                <li><strong>Blue Team:</strong> defesa do sistema</li>
+                <li><strong>Purple Team:</strong> combinação ofensiva e defensiva</li>
+                <li><strong>White Team:</strong> árbitros/gerentes do engajamento</li>
+            </ul>
+
+            <h3>Documentação Pré-Teste</h3>
+            <ul>
+                <li><strong>Scope of Work (SOW):</strong> quem, o quê, quando, onde, por quê, pagamento</li>
+                <li><strong>Rules of Engagement (ROE):</strong> tipo de teste, manipulação de dados, notificações</li>
+            </ul>
+
+            <h3>Ciclo de Vida do Pentest</h3>
+            <div class="vuln-cycle">
+                <div class="cycle-item"><strong>1. Reconhecimento</strong>Footprinting, OSINT</div>
+                <div class="cycle-item"><strong>2. Scanning</strong>Enumeração, portas</div>
+                <div class="cycle-item"><strong>3. Ganhar Acesso</strong>Exploração, pivoting</div>
+                <div class="cycle-item"><strong>4. Manter Acesso</strong>Backdoors, rootkits</div>
+                <div class="cycle-item"><strong>5. Reportar</strong>Documentação</div>
+            </div>
+
+            <h3>Tipos de Testes de Penetração</h3>
+            <ul>
+                <li><strong>Physical:</strong> tailgating, lock picking, bypass de alarmes</li>
+                <li><strong>Integrated:</strong> holístico (redes, apps, físico) - ofensivo + defensivo</li>
+                <li><strong>Continuous:</strong> automação em ambientes CI/CD</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <strong>💡 DICAS FINAIS PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>Ciclo VM:</strong> Identificação → Avaliação → Priorização → Remediação → Verificação → Monitoramento</li>
+                <li><strong>EOL</strong> = sem patches, altamente vulnerável</li>
+                <li><strong>False Negative</strong> (não detectar) é MAIS GRAVE que False Positive</li>
+                <li><strong>Credentialed scan</strong> é mais profundo que non-credentialed</li>
+                <li><strong>Threat feeds</strong>: OTX (open), IBM X-Force (proprietário)</li>
+                <li><strong>Pen Test vs Bug Bounty:</strong> estruturado vs comunidade global</li>
+                <li><strong>SIEM:</strong> correlação | <strong>SOAR:</strong> automação de resposta</li>
+                <li><strong>DLP:</strong> Alert, Block, Quarantine, Tombstone</li>
+                <li><strong>Black Box:</strong> sem info | <strong>White Box:</strong> completo | <strong>Gray Box:</strong> parcial</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>📚 Resumo autoral para certificação CompTIA Security+ • Capítulo 7</p>
+        </div>
+    </div>
+</body>
+</html>

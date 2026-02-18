@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Cap 3 - Criptografia e PKI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            color: white;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .summary {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .summary h1 {
+            color: #0072ff;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            border-bottom: 4px solid #0072ff;
+            padding-bottom: 15px;
+        }
+        .summary h2 {
+            color: #0072ff;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        .summary h3 {
+            color: #00c6ff;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        .summary ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        .summary li {
+            margin-bottom: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #0072ff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .info-box {
+            background: #e6f7ff;
+            border-left: 5px solid #0072ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box strong {
+            color: #0072ff;
+            font-size: 1.1rem;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule strong {
+            color: #f59e0b;
+            font-size: 1.1rem;
+        }
+        .tip-box {
+            background: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .comparison {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .comparison-item {
+            flex: 1;
+            min-width: 250px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .symmetric {
+            background: #dbeafe;
+            border-left: 5px solid #3b82f6;
+        }
+        .asymmetric {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+        }
+        .hash {
+            background: #d1fae5;
+            border-left: 5px solid #10b981;
+        }
+        .cipher-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .cipher-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #0072ff;
+        }
+        .cipher-card strong {
+            color: #0072ff;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .pki-chain {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin: 30px 0;
+            align-items: center;
+        }
+        .chain-level {
+            padding: 15px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            width: 80%;
+            text-align: center;
+            position: relative;
+        }
+        .chain-level.root {
+            background: #fecaca;
+            border: 2px solid #ef4444;
+        }
+        .chain-level.intermediate {
+            background: #fed7aa;
+            border: 2px solid #f97316;
+        }
+        .chain-level.leaf {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Security+ Capítulo 3</h1>
+            <p>Criptografia e Infraestrutura de Chave Pública (PKI)</p>
+            <div class="stats-bar">
+                <div class="stat-card">🔑 Simétrica</div>
+                <div class="stat-card">🔓 Assimétrica</div>
+                <div class="stat-card">🔒 Hashing</div>
+                <div class="stat-card">📜 PKI</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">📖 Resumo</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="summary">
+                <h1>📖 Resumo - Capítulo 3: Criptografia e PKI</h1>
+                
+                <div class="info-box">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Simétrica (AES):</strong> Mesma chave, rápida, problema: compartilhamento da chave</li>
+                        <li><strong>Assimétrica (RSA/ECC):</strong> Par de chaves (pública/privada), lenta, resolve compartilhamento</li>
+                        <li><strong>Hashing:</strong> One-way, integridade, MD5/SHA-1 obsoletos, SHA-2/3 atuais</li>
+                        <li><strong>PKI:</strong> CA emite certificados, CRL/OCSP para revogação</li>
+                    </ul>
+                </div>
+
+                <h2>1️⃣ Fundamentos de Criptografia</h2>
+
+                <h3>Terminologia Básica</h3>
+                <table>
+                    <tr>
+                        <th>Termo</th>
+                        <th>Definição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Plaintext/Cleartext</strong></td>
+                        <td>Mensagem não criptografada</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ciphertext</strong></td>
+                        <td>Mensagem criptografada</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Algorithm (Algoritmo)</strong></td>
+                        <td>Processo usado para criptografar/descriptografar</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cryptanalysis (Criptoanálise)</strong></td>
+                        <td>Arte de quebrar sistemas criptográficos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Key (Chave)</strong></td>
+                        <td>String de bits gerada aleatoriamente</td>
+                    </tr>
+                </table>
+
+                <h3>Objetivos da Criptografia</h3>
+                <ul>
+                    <li><strong>Confidencialidade:</strong> Apenas autorizados leem</li>
+                    <li><strong>Integridade:</strong> Dados não foram alterados</li>
+                    <li><strong>Autenticação:</strong> Verificar identidade</li>
+                    <li><strong>Não-repúdio:</strong> Não pode negar autoria</li>
+                </ul>
+
+                <div class="golden-rule">
+                    <strong>⚠️ DICA CRÍTICA:</strong> Criptografia NÃO é o mesmo que codificação! Criptografia requer chave, codificação é reversível sem chave (ex: Base64).
+                </div>
+
+                <h2>2️⃣ Criptografia Simétrica vs Assimétrica</h2>
+
+                <div class="comparison">
+                    <div class="comparison-item symmetric">
+                        <h3 style="color:#3b82f6; margin-top:0;">🔑 Simétrica</h3>
+                        <ul>
+                            <li><strong>Mesma chave</strong> para cifrar/decifrar</li>
+                            <li><strong>Rápida</strong> - ideal para grandes volumes</li>
+                            <li><strong>Problema:</strong> Como compartilhar chave?</li>
+                            <li><strong>AES</strong> (128/192/256 bits) - padrão atual</li>
+                            <li><strong>DES</strong> (56 bits) - obsoleto</li>
+                            <li><strong>3DES</strong> - sendo substituído por AES</li>
+                            <li><strong>Blowfish/Twofish</strong></li>
+                            <li><strong>RC4</strong> - stream cipher, obsoleto</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-item asymmetric">
+                        <h3 style="color:#ec4899; margin-top:0;">🔓 Assimétrica</h3>
+                        <ul>
+                            <li><strong>Par de chaves:</strong> pública + privada</li>
+                            <li><strong>Lenta</strong> - ineficiente para grandes dados</li>
+                            <li><strong>Resolve compartilhamento</strong> de chaves</li>
+                            <li><strong>RSA</strong> (2048+ bits) - mais usado</li>
+                            <li><strong>ECC</strong> - chaves menores, mesma segurança</li>
+                            <li><strong>Diffie-Hellman</strong> - troca de chaves</li>
+                            <li><strong>DSA</strong> - apenas assinaturas</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-item hash">
+                        <h3 style="color:#10b981; margin-top:0;">🔒 Hashing</h3>
+                        <ul>
+                            <li><strong>One-way:</strong> não reversível</li>
+                            <li><strong>Tamanho fixo</strong> de saída (digest)</li>
+                            <li><strong>Integridade:</strong> verifica alterações</li>
+                            <li><strong>MD5</strong> (128 bits) - obsoleto</li>
+                            <li><strong>SHA-1</strong> (160 bits) - obsoleto</li>
+                            <li><strong>SHA-2</strong> (256/512) - padrão atual</li>
+                            <li><strong>SHA-3</strong> - mais recente</li>
+                            <li><strong>HMAC</strong> - hash com chave</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 SEGURANÇA DE CHAVES:</strong>
+                    <ul>
+                        <li>AES-128: keyspace 2^128 (já é enorme)</li>
+                        <li>AES-256: NÃO é 2x maior, é <strong>trilhões de vezes maior</strong></li>
+                        <li>RSA: mínimo 2048 bits recomendado</li>
+                        <li>ECC: 256 bits = segurança equivalente a RSA 3072 bits</li>
+                    </ul>
+                </div>
+
+                <h2>3️⃣ Algoritmos e Modos de Operação</h2>
+
+                <h3>Stream Cipher vs Block Cipher</h3>
+                <table>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Exemplos</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Stream Cipher</strong></td>
+                        <td>Criptografa um bit por vez (como OTP)</td>
+                        <td>RC4 (inseguro), ChaCha20</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Block Cipher</strong></td>
+                        <td>Criptografa blocos (64/128/256 bits)</td>
+                        <td>AES, DES, 3DES, Blowfish</td>
+                    </tr>
+                </table>
+
+                <h3>Modos de Operação de Block Cipher</h3>
+                <div class="cipher-grid">
+                    <div class="cipher-card">
+                        <strong>ECB (Electronic Codebook)</strong>
+                        <p>Mais simples, blocos iguais → ciphertext igual. <span style="color:#ef4444;">INSEGURO!</span></p>
+                    </div>
+                    <div class="cipher-card">
+                        <strong>CBC (Cipher Block Chaining)</strong>
+                        <p>Usa IV, blocos encadeados. Mais seguro que ECB, mais lento.</p>
+                    </div>
+                    <div class="cipher-card">
+                        <strong>CFB (Cipher Feedback)</strong>
+                        <p>Transforma block cipher em stream cipher. Usa IV.</p>
+                    </div>
+                    <div class="cipher-card">
+                        <strong>OFB (Output Feedback)</strong>
+                        <p>Similar a CFB, mas IV usado após primeira rodada.</p>
+                    </div>
+                    <div class="cipher-card">
+                        <strong>CTR (Counter)</strong>
+                        <p>Usa nonce + contador, paralelizável.</p>
+                    </div>
+                    <div class="cipher-card">
+                        <strong>GCM (Galois/Counter Mode)</strong>
+                        <p>Criptografia + autenticação (MAC). Usado em TLS 1.3.</p>
+                    </div>
+                </div>
+
+                <h2>4️⃣ Hashing e Aplicações</h2>
+
+                <h3>Características do Hash</h3>
+                <ul>
+                    <li><strong>Determinístico:</strong> Mesmo input = mesmo hash</li>
+                    <li><strong>Rápido de calcular</strong></li>
+                    <li><strong>Efeito avalanche:</strong> Pequena mudança = hash completamente diferente</li>
+                    <li><strong>Resistente a colisões:</strong> Difícil encontrar dois inputs com mesmo hash</li>
+                </ul>
+
+                <h3>Usos do Hash</h3>
+                <ul>
+                    <li><strong>Integridade de arquivos:</strong> Verificar se arquivo foi alterado</li>
+                    <li><strong>Armazenamento de senhas:</strong> Com salt (nunca em texto claro!)</li>
+                    <li><strong>Assinaturas digitais:</strong> Hash é assinado, não o documento inteiro</li>
+                    <li><strong>Blockchain:</strong> Cada bloco contém hash do anterior</li>
+                </ul>
+
+                <div class="info-box">
+                    <strong>🧂 SALT E KEY STRETCHING:</strong>
+                    <ul>
+                        <li><strong>Salt:</strong> Valor aleatório adicionado à senha antes do hash. <span style="font-weight:bold;">PREVINE RAINBOW TABLES!</span></li>
+                        <li><strong>Key Stretching:</strong> Múltiplas rodadas de hashing (PBKDF2, bcrypt, Argon2) - dificulta brute force</li>
+                    </ul>
+                </div>
+
+                <h3>Ataques a Hash</h3>
+                <table>
+                    <tr>
+                        <th>Ataque</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Rainbow Table</strong></td>
+                        <td>Tabela pré-computada de hashes. Contramedida: salt</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Colisão (Collision)</strong></td>
+                        <td>Encontrar dois inputs com mesmo hash. MD5 e SHA-1 são vulneráveis</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Aniversário (Birthday)</strong></td>
+                        <td>Explora probabilidade de colisões. Requer menos tentativas que brute force</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Força Bruta</strong></td>
+                        <td>Testar todas combinações possíveis</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dicionário</strong></td>
+                        <td>Testar palavras comuns e senhas prováveis</td>
+                    </tr>
+                </table>
+
+                <h2>5️⃣ Criptografia Híbrida e Sistemas</h2>
+
+                <h3>Sistemas Híbridos</h3>
+                <ul>
+                    <li>Combina <strong>eficiência da simétrica</strong> com <strong>segurança da assimétrica</strong></li>
+                    <li><strong>Processo:</strong>
+                        <ol>
+                            <li>Gera chave simétrica (session key)</li>
+                            <li>Criptografa dados com chave simétrica</li>
+                            <li>Criptografa chave simétrica com chave pública do destinatário</li>
+                            <li>Envia ambos</li>
+                        </ol>
+                    </li>
+                    <li>Usado em: <strong>TLS/SSL, PGP/GPG, EFS</strong></li>
+                </ul>
+
+                <h3>PGP/GPG</h3>
+                <ul>
+                    <li><strong>PGP:</strong> Pretty Good Privacy (comercial)</li>
+                    <li><strong>GPG:</strong> GNU Privacy Guard (open source)</li>
+                    <li>Criptografia de email e arquivos</li>
+                    <li>Usa <strong>Web of Trust</strong> (não PKI hierárquica)</li>
+                </ul>
+
+                <h3>EFS (Encrypting File System) - Windows</h3>
+                <ul>
+                    <li>Criptografia em nível de arquivo/pasta (NTFS)</li>
+                    <li>Usa <strong>FEK (File Encryption Key)</strong> simétrica para arquivo</li>
+                    <li>FEK criptografada com chave pública do usuário</li>
+                    <li><strong>DRA (Data Recovery Agent)</strong> pode recuperar se necessário</li>
+                </ul>
+
+                <h3>BitLocker</h3>
+                <ul>
+                    <li>Criptografia de disco completo (FDE)</li>
+                    <li>Requer <strong>TPM</strong> (Trusted Platform Module) ou USB</li>
+                    <li>Protege contra roubo de disco</li>
+                </ul>
+
+                <h2>6️⃣ Cryptoprocessors</h2>
+
+                <table>
+                    <tr>
+                        <th></th>
+                        <th><strong>TPM</strong></th>
+                        <th><strong>HSM</strong></th>
+                    </tr>
+                    <tr>
+                        <td><strong>O que é</strong></td>
+                        <td>Chip na placa-mãe</td>
+                        <td>Dispositivo dedicado (rack, PCIe, USB)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Funções</strong></td>
+                        <td>Gera hash de boot, armazena chaves (BitLocker)</td>
+                        <td>Gera/armazena chaves, assinaturas digitais, alta performance</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Uso</strong></td>
+                        <td>Computadores pessoais</td>
+                        <td>Bancos, CAs, grandes empresas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Segurança</strong></td>
+                        <td>Protege contra acesso físico</td>
+                        <td>Tamper-resistant, certificação FIPS 140-2</td>
+                    </tr>
+                </table>
+
+                <h2>7️⃣ PKI (Public Key Infrastructure)</h2>
+
+                <h3>Componentes da PKI</h3>
+                <ul>
+                    <li><strong>CA (Certificate Authority):</strong> Emite certificados (ex: Let's Encrypt, DigiCert)</li>
+                    <li><strong>RA (Registration Authority):</strong> Verifica identidade antes da emissão</li>
+                    <li><strong>Certificado Digital:</strong> Liga chave pública a uma identidade (padrão X.509)</li>
+                    <li><strong>CRL (Certificate Revocation List):</strong> Lista de certificados revogados</li>
+                    <li><strong>OCSP (Online Certificate Status Protocol):</strong> Verifica status em tempo real</li>
+                </ul>
+
+                <h3>Cadeia de Confiança (Chain of Trust)</h3>
+                <div class="pki-chain">
+                    <div class="chain-level root">
+                        <strong>🔒 Root CA</strong> (auto-assinado)
+                    </div>
+                    <div>⬇️ assina</div>
+                    <div class="chain-level intermediate">
+                        <strong>🔐 Intermediate CA</strong>
+                    </div>
+                    <div>⬇️ assina</div>
+                    <div class="chain-level leaf">
+                        <strong>📜 Certificate (Leaf)</strong>
+                    </div>
+                </div>
+
+                <h3>Tipos de Certificados</h3>
+                <table>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Root Certificate</strong></td>
+                        <td>Auto-assinado, topo da hierarquia, pré-instalado no SO/navegador</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Wildcard</strong></td>
+                        <td>*.dominio.com - cobre subdomínios</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SAN (Subject Alternative Name)</strong></td>
+                        <td>Múltiplos domínios no mesmo certificado</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Code Signing</strong></td>
+                        <td>Assina software, prova autenticidade</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Self-Signed</strong></td>
+                        <td>Não emitido por CA confiável, navegador mostra aviso</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email Certificate</strong></td>
+                        <td>Para S/MIME - criptografia de email</td>
+                    </tr>
+                </table>
+
+                <h3>Revogação de Certificados</h3>
+                <ul>
+                    <li><strong>CRL (Certificate Revocation List):</strong> Lista publicada pela CA. Cliente baixa periodicamente.</li>
+                    <li><strong>OCSP (Online Certificate Status Protocol):</strong> Verifica status em tempo real (mais eficiente)</li>
+                    <li><strong>OCSP Stapling:</strong> Servidor anexa resposta OCSP ao handshake TLS</li>
+                </ul>
+
+                <div class="golden-rule">
+                    <strong>⚠️ RAZÕES PARA REVOGAÇÃO:</strong>
+                    <ul>
+                        <li>Chave privada comprometida</li>
+                        <li>Negócio fechou</li>
+                        <li>Usuário deixou empresa</li>
+                        <li>Domínio mudou</li>
+                        <li>Certificado foi mal usado</li>
+                    </ul>
+                </div>
+
+                <h2>8️⃣ Gerenciamento de Chaves</h2>
+
+                <h3>Lifecycle da Chave</h3>
+                <ol>
+                    <li><strong>Geração:</strong> Deve ser aleatória (TRNG > PRNG)</li>
+                    <li><strong>Armazenamento:</strong> TPM/HSM > arquivo</li>
+                    <li><strong>Distribuição:</strong> Através de PKI</li>
+                    <li><strong>Uso</strong></li>
+                    <li><strong>Rotação/Expiração</strong></li>
+                    <li><strong>Revogação</strong></li>
+                    <li><strong>Destruição</strong></li>
+                </ol>
+
+                <h3>Key Escrow e M of N</h3>
+                <ul>
+                    <li><strong>Key Escrow:</strong> Cópia da chave guardada por terceiro (recuperação)</li>
+                    <li><strong>M of N:</strong> Requer M pessoas de N para autorizar operação (ex: 3 de 5)</li>
+                </ul>
+
+                <h2>9️⃣ Blockchain</h2>
+
+                <ul>
+                    <li><strong>Ledger distribuído</strong> imutável</li>
+                    <li>Cada bloco contém <strong>hash do bloco anterior</strong></li>
+                    <li><strong>Descentralizado:</strong> não há ponto único de falha</li>
+                    <li><strong>Mining (mineração):</strong> processo de adicionar blocos (Proof of Work)</li>
+                    <li><strong>Usos:</strong> Criptomoedas (Bitcoin), contratos inteligentes, rastreamento</li>
+                </ul>
+
+                <h2>🔟 Ataques Criptográficos</h2>
+
+                <table>
+                    <tr>
+                        <th>Ataque</th>
+                        <th>Descrição</th>
+                        <th>Defesa</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Downgrade Attack</strong></td>
+                        <td>Forçar uso de protocolo antigo/inseguro (ex: SSL)</td>
+                        <td>Desabilitar protocolos antigos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Known Plaintext</strong></td>
+                        <td>Atacante tem pares de plaintext/ciphertext</td>
+                        <td>Chaves fortes, algoritmos seguros</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Chosen Plaintext</strong></td>
+                        <td>Atacante escolhe plaintext para criptografar</td>
+                        <td>Algoritmos resistentes (ex: AES)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Brute Force</strong></td>
+                        <td>Testar todas combinações de chaves</td>
+                        <td>Chaves longas (AES-256)</td>
+                    </tr>
+                </table>
+
+                <div class="info-box">
+                    <strong>⚛️ FUTURO - COMPUTAÇÃO QUÂNTICA:</strong>
+                    <p>Computadores quânticos podem quebrar RSA e ECC facilmente. Pesquisadores já trabalham em <strong>Post-Quantum Cryptography</strong>.</p>
+                </div>
+
+                <div class="golden-rule">
+                    <strong>🎯 DICAS FINAIS PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>AES</strong> é o padrão atual de criptografia simétrica</li>
+                        <li><strong>RSA 2048+</strong> ou <strong>ECC</strong> para assimétrica</li>
+                        <li><strong>MD5 e SHA-1</strong> são obsoletos - NÃO USAR!</li>
+                        <li><strong>Salt</strong> previne rainbow tables</li>
+                        <li><strong>TPM</strong> é chip na placa-mãe, <strong>HSM</strong> é dispositivo dedicado</li>
+                        <li><strong>CRL</strong> vs <strong>OCSP</strong>: OCSP é em tempo real</li>
+                        <li><strong>Wildcard</strong> = *.dominio.com, <strong>SAN</strong> = múltiplos domínios</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+        }
+    </script>
+</body>
+</html>

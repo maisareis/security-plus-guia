@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Cap 8 - Network & Endpoint Security</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
+            color: white;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* FLASHCARDS */
+        .flashcard-area { max-width: 900px; margin: 0 auto; }
+        .card-info {
+            background: rgba(255,255,255,0.25);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .flashcard:hover { transform: scale(1.02); }
+        .side-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #ee9ca7;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .flashcard-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #1f2937;
+        }
+        .flip-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn-nav {
+            background: white;
+            font-size: 1.5rem;
+            width: 55px;
+            height: 55px;
+        }
+        .btn-master {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        .btn-master.mastered {
+            background: #10b981;
+            color: white;
+        }
+        .btn-shuffle {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        /* QUIZ */
+        .quiz-area { max-width: 1000px; margin: 0 auto; }
+        .quiz-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+        }
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+        .option:hover {
+            background: #ffeef0;
+            border-color: #ee9ca7;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            border-color: #ee9ca7;
+            background: #ffeef0;
+            font-weight: 600;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #ffeef0;
+            border-left: 5px solid #ee9ca7;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .results-modal.show { display: flex; }
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .filter-btn.active {
+            background: white;
+            color: #ee9ca7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 Security+ Capítulo 8</h1>
+            <p>Network & Endpoint Security - 80 Cards | 40 Questões</p>
+            <div class="stats-bar">
+                <div class="stat-card">📚 80 Flashcards</div>
+                <div class="stat-card">❓ 40 Questões</div>
+                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="flashcard-area">
+                <div class="card-info">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
+                        <div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 80</div>
+                            <div id="mastered-count">0 dominados</div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="side-indicator" id="side-indicator">FRENTE</div>
+                    <div class="flashcard-text" id="card-text"></div>
+                    <div class="flip-hint">👆 Clique para virar</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
+                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab1" class="content">
+            <div class="summary" style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <h1 style="color: #ee9ca7; margin-bottom: 30px; font-size: 2.5rem; border-bottom: 4px solid #ee9ca7; padding-bottom: 15px;">📖 Resumo - Capítulo 8</h1>
+                
+                <div style="background: #ffeef0; border-left: 5px solid #ee9ca7; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>NTFS:</strong> Deny > Allow | Explicit > Inherited</li>
+                        <li><strong>Wi-Fi:</strong> WPA3 (SAE) > WPA2 (AES-CCMP) > WPA > WEP</li>
+                        <li><strong>WIPS</strong> detecta rogue APs e evil twins</li>
+                        <li><strong>SFTP</strong> (SSH) vs <strong>FTPS</strong> (TLS)</li>
+                        <li><strong>WAF</strong> protege web apps (SQLi, XSS)</li>
+                        <li><strong>SAST</strong> (código) vs <strong>DAST</strong> (aplicação rodando)</li>
+                        <li><strong>AppLocker</strong> = whitelisting no Windows</li>
+                        <li><strong>DEP</strong> + <strong>ASLR</strong> = proteção contra buffer overflow</li>
+                    </ul>
+                </div>
+
+                <h2 style="color: #ffdde1; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">1️⃣ Hardening de SO</h2>
+                
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Remover software desnecessário</strong> - reduz superfície de ataque</li>
+                    <li><strong>Desabilitar serviços não usados</strong> - menos portas abertas</li>
+                    <li><strong>Patches e updates automáticos</strong> - correção de vulnerabilidades</li>
+                    <li><strong>Firewall habilitado</strong> - controle de tráfego</li>
+                    <li><strong>Antivírus atualizado</strong> - proteção contra malware</li>
+                    <li><strong>Políticas de senha fortes</strong> - complexidade, comprimento</li>
+                    <li><strong>UAC habilitado (Windows)</strong> - User Account Control</li>
+                    <li><strong>Least privilege</strong> - mínimas permissões necessárias</li>
+                </ul>
+
+                <h2 style="color: #ffdde1; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ NTFS Permissions (Windows)</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#ee9ca7; color:white;">Permissão</th><th style="background:#ee9ca7; color:white;">Descrição</th></tr>
+                    <tr><td><strong>Read</strong></td><td>Ler arquivos/pastas</td></tr>
+                    <tr><td><strong>Write</strong></td><td>Escrever/modificar</td></tr>
+                    <tr><td><strong>Execute</strong></td><td>Executar programas</td></tr>
+                    <tr><td><strong>Modify</strong></td><td>Read + Write + Execute + Delete</td></tr>
+                    <tr><td><strong>Full Control</strong></td><td>Modify + alterar permissões + tomar posse</td></tr>
+                </table>
+
+                <div style="background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>⚠️ REGRAS DE OURO NTFS:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Deny sempre prevalece sobre Allow</strong> (negação tem prioridade máxima)</li>
+                        <li><strong>Explicit > Inherited</strong> (permissões definidas diretamente no objeto têm prioridade sobre as herdadas)</li>
+                    </ul>
+                </div>
+
+                <h3 style="color: #ee9ca7; margin-top: 20px; margin-bottom: 10px;">Linux Host Security</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>iptables:</strong> firewall do Linux. Chains: INPUT (pacotes para o host), OUTPUT (pacotes do host), FORWARD (roteamento)</li>
+                    <li><strong>Desabilitar serviços:</strong> <code>systemctl disable nome-do-serviço</code></li>
+                    <li><strong>SSH hardening:</strong> desabilitar login root, usar autenticação por chaves, porta não padrão (opcional)</li>
+                </ul>
+
+                <h2 style="color: #ffdde1; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Wireless Security</h2>
+
+                <h3 style="color: #ee9ca7; margin-top: 20px; margin-bottom: 10px;">Ataques Wi-Fi</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Evil Twin:</strong> Access Point falso com o mesmo SSID do legítimo. Faz MITM, captura credenciais.</li>
+                    <li><strong>Rogue AP:</strong> Access Point não autorizado conectado à rede. Bypass de segurança.</li>
+                    <li><strong>Deauth Attack:</strong> Envia frames de desautenticação, forçando clientes a se desconectarem. DoS e preparação para evil twin.</li>
+                    <li><strong>WPS Attack:</strong> PIN de 8 dígitos vulnerável a brute force. Desabilitar WPS.</li>
+                    <li><strong>War Driving:</strong> Mapear redes Wi-Fi (SSID, localização, criptografia).</li>
+                </ul>
+
+                <h3 style="color: #ee9ca7; margin-top: 20px; margin-bottom: 10px;">Proteções Wi-Fi</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#ee9ca7; color:white;">Padrão</th><th style="background:#ee9ca7; color:white;">Segurança</th></tr>
+                    <tr><td><strong>WPA3</strong></td><td>SAE (Simultaneous Authentication of Equals). Mais seguro, protege contra ataques offline de dicionário.</td></tr>
+                    <tr><td><strong>WPA2</strong></td><td>AES-CCMP. Vulnerável a KRACK, mas ainda seguro se configurado corretamente.</td></tr>
+                    <tr><td><strong>WPA</strong></td><td>TKIP (inseguro, substituir).</td></tr>
+                    <tr><td><strong>WEP</strong></td><td>Totalmente inseguro, quebrado em minutos.</td></tr>
+                </table>
+
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>802.1X (Enterprise):</strong> RADIUS + EAP para autenticação corporativa. Cada usuário tem credenciais próprias.</li>
+                    <li><strong>Disable WPS:</strong> WPS é vulnerável a brute force.</li>
+                    <li><strong>MAC filtering:</strong> fraco (MAC spoofing fácil). Não confiar sozinho.</li>
+                    <li><strong>Hide SSID:</strong> security by obscurity (não é segurança real, fácil de descobrir).</li>
+                    <li><strong>WIPS (Wireless IPS):</strong> Detecta e mitiga rogue APs, evil twins, ataques de deauth.</li>
+                </ul>
+
+                <h2 style="color: #ffdde1; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">4️⃣ Protocolos Seguros</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#ee9ca7; color:white;">Protocolo</th><th style="background:#ee9ca7; color:white;">Porta</th><th style="background:#ee9ca7; color:white;">Descrição</th></tr>
+                    <tr><td><strong>HTTPS</strong></td><td>443</td><td>HTTP + TLS. Criptografa comunicação web.</td></tr>
+                    <tr><td><strong>FTPS</strong></td><td>990</td><td>FTP + TLS explícito (também usa porta 21 para implícito).</td></tr>
+                    <tr><td><strong>SFTP</strong></td><td>22</td><td>FTP sobre SSH (não confundir com FTPS). Mais seguro.</td></tr>
+                    <tr><td><strong>SSH</strong></td><td>22</td><td>Secure Shell. Acesso remoto seguro, tunelamento.</td></tr>
+                    <tr><td><strong>IPSec</strong></td><td>-</td><td>VPN Layer 3. AH (autenticação) + ESP (criptografia). Modos Transport e Tunnel.</td></tr>
+                    <tr><td><strong>TLS 1.3</strong></td><td>-</td><td>Mais rápido (1-RTT), remove ciphers fracos, forward secrecy obrigatório.</td></tr>
+                </table>
+
+                <h2 style="color: #ffdde1; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">5️⃣ Web Application Attacks</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#ee9ca7; color:white;">Ataque</th><th style="background:#ee9ca7; color:white;">Descrição</th><th style="background:#ee9ca7; color:white;">Contramedida</th></tr>
+                    <tr><td><strong>SQL Injection (SQLi)</strong></td><td>Injetar código SQL malicioso em inputs. Pode extrair/modificar/deletar dados.</td><td>Prepared statements, parameterized queries, input validation.</td></tr>
+                    <tr><td><strong>XSS (Cross-Site Scripting)</strong></td><td>Injetar JavaScript malicioso. Tipos: Stored, Reflected, DOM-based.</td><td>Output encoding, input validation, HttpOnly cookies.</td></tr>
+                    <tr><td><strong>CSRF (Cross-Site Request Forgery)</strong></td><td>Forçar vítima autenticada a executar ação indesejada.</td><td>CSRF tokens, SameSite cookies, reautenticação.</td></tr>
+                    <tr><td><strong>Command Injection</strong></td><td>Executar comandos no sistema operacional via aplicação.</td><td>Input validation, whitelist, evitar chamadas de sistema.</td></tr>
+                    <tr><td><strong>Directory Traversal</strong></td><td>Acessar arquivos fora do diretório web root (../).</td><td>Validar caminhos, usar chroot/jail.</td></tr>
+                </table>
+
+                <div style="background: #ffeef0; border-left: 5px solid #ee9ca7; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>💡 DICAS DE PROTEÇÃO:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>HttpOnly cookies:</strong> previnem acesso via JavaScript (XSS)</li>
+                        <li><strong>SameSite cookies:</strong> previnem CSRF</li>
+                        <li><strong>Secure cookies:</strong> só enviados via HTTPS</li>
+                        <li><strong>WAF (Web Application Firewall):</strong> protege contra SQLi, XSS, etc (camada 7)</li>
+                    </ul>
+                </div>
+
+                <h2 style="color: #ffdde1; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">6️⃣ Desenvolvimento Seguro</h2>
+
+                <h3 style="color: #ee9ca7; margin-top: 20px; margin-bottom: 10px;">SDLC (Software Development Life Cycle)</h3>
+                <ol style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Requirements</strong> - requisitos de segurança</li>
+                    <li><strong>Design</strong> - threat modeling, arquitetura segura</li>
+                    <li><strong>Development</strong> - codificação segura, code review</li>
+                    <li><strong>Testing</strong> - SAST, DAST, testes de penetração</li>
+                    <li><strong>Deployment</strong> - hardening, configuração segura</li>
+                    <li><strong>Maintenance</strong> - patches, monitoramento</li>
+                </ol>
+
+                <h3 style="color: #ee9ca7; margin-top: 20px; margin-bottom: 10px;">Conceitos Importantes</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>DevSecOps:</strong> Integrar segurança no pipeline DevOps (shift left).</li>
+                    <li><strong>CI/CD:</strong> Continuous Integration/Continuous Delivery. Commits frequentes, testes automatizados.</li>
+                    <li><strong>SAST (Static Application Security Testing):</strong> Análise de código fonte sem executar. White box.</li>
+                    <li><strong>DAST (Dynamic Application Security Testing):</strong> Testa aplicação em execução. Black box.</li>
+                    <li><strong>Code Review:</strong> Revisão de código por pares. Manual ou automatizado.</li>
+                    <li><strong>Version Control:</strong> Git, SVN. Rastreia mudanças, rollback.</li>
+                </ul>
+
+                <h3 style="color: #ee9ca7; margin-top: 20px; margin-bottom: 10px;">Proteções do Sistema</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>AppLocker:</strong> Windows application whitelisting. Permite apenas apps aprovados (por publisher, path, hash).</li>
+                    <li><strong>DEP (Data Execution Prevention):</strong> Previne execução de código em regiões de memória marcadas como dados. Anti-buffer overflow.</li>
+                    <li><strong>ASLR (Address Space Layout Randomization):</strong> Randomiza endereços de memória. Dificulta exploits.</li>
+                    <li><strong>Code Signing:</strong> Assinar código com certificado. Prova autenticidade e integridade.</li>
+                </ul>
+
+                <h2 style="color: #ffdde1; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">7️⃣ Arquiteturas Modernas</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#ee9ca7; color:white;">Conceito</th><th style="background:#ee9ca7; color:white;">Descrição</th></tr>
+                    <tr><td><strong>Microservices</strong></td><td>Arquitetura com serviços pequenos e independentes. Container-based. Escalável.</td></tr>
+                    <tr><td><strong>Containerização</strong></td><td>Docker, Kubernetes. Isola aplicações, mais leve que VMs. Imagens imutáveis.</td></tr>
+                    <tr><td><strong>Serverless (FaaS)</strong></td><td>Funções como serviço (AWS Lambda, Azure Functions). Event-driven, pay per execution.</td></tr>
+                    <tr><td><strong>Infrastructure as Code (IaC)</strong></td><td>Terraform, CloudFormation. Define infra em código. Version control, reprodutível.</td></tr>
+                    <tr><td><strong>API Gateway</strong></td><td>Proxy para APIs. Autenticação, rate limiting, caching.</td></tr>
+                </table>
+
+                <h2 style="color: #ffdde1; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">8️⃣ Network Security</h2>
+
+                <h3 style="color: #ee9ca7; margin-top: 20px; margin-bottom: 10px;">Switch Security Features</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Port Security:</strong> Limita número de MACs por porta. Previne MAC flooding.</li>
+                    <li><strong>DHCP Snooping:</strong> Valida servidores DHCP. Previne DHCP spoofing. Base para DAI.</li>
+                    <li><strong>DAI (Dynamic ARP Inspection):</strong> Valida ARPs contra DHCP snooping table. Previne ARP poisoning.</li>
+                    <li><strong>BPDU Guard:</strong> Desabilita porta se receber BPDU. Previne spanning tree attacks/loops.</li>
+                    <li><strong>Root Guard:</strong> Previne porta de se tornar root port. Protege spanning tree topology.</li>
+                    <li><strong>Flood Guard / Storm Control:</strong> Limita rate de broadcasts/multicasts. Previne tempestades.</li>
+                </ul>
+
+                <h3 style="color: #ee9ca7; margin-top: 20px; margin-bottom: 10px;">Segmentação e Isolamento</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Network Segmentation:</strong> Dividir rede em segmentos (VLANs, subnets). Limita movimento lateral.</li>
+                    <li><strong>Microsegmentation:</strong> Segmentação extrema. Firewall entre workloads. Zero trust.</li>
+                    <li><strong>Private VLANs:</strong> Isola portas na mesma VLAN. Hosts não comunicam entre si.</li>
+                    <li><strong>Screened Subnet (DMZ):</strong> Zona desmilitarizada entre dois firewalls.</li>
+                    <li><strong>Jump Server (Bastion Host):</strong> Servidor intermediário para acessar recursos internos. Hardened, MFA.</li>
+                </ul>
+
+                <h2 style="color: #ffdde1; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">9️⃣ Autenticação e Controle de Acesso</h2>
+
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Geofencing:</strong> Restringir acesso por localização geográfica (GPS, IP).</li>
+                    <li><strong>Time-based Access:</strong> Permitir acesso apenas em horários específicos (logon hours).</li>
+                    <li><strong>Screen Locks:</strong> Timeout automático, senha/biometria para unlock.</li>
+                    <li><strong>Remote Wipe:</strong> Deletar dados remotamente se dispositivo perdido/roubado (MDM).</li>
+                    <li><strong>GPS Tracking:</strong> Localizar dispositivo perdido (Find My, MDM).</li>
+                    <li><strong>Push Notifications:</strong> MFA via push no celular (mais seguro que SMS).</li>
+                    <li><strong>Biometric Authentication:</strong> Impressão digital, face ID, íris.</li>
+                    <li><strong>Context-aware Auth:</strong> Decisão baseada em contexto (device, location, time, behavior). Adaptive authentication.</li>
+                    <li><strong>Step-up Auth:</strong> Autenticação adicional para ações sensíveis (ex: MFA para transferência alta).</li>
+                    <li><strong>Continuous Auth:</strong> Verificar usuário continuamente (biometria comportamental).</li>
+                    <li><strong>Passwordless Auth:</strong> FIDO2, Windows Hello. Biometria + hardware token. Sem senha tradicional.</li>
+                </ul>
+
+                <div style="background: #ffeef0; border-left: 5px solid #ee9ca7; padding: 20px; margin: 30px 0; border-radius: 8px;">
+                    <h3 style="color: #ee9ca7; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Deny > Allow</strong> (NTFS)</li>
+                        <li><strong>WPA3</strong> é o padrão mais seguro (SAE)</li>
+                        <li><strong>WIPS</strong> detecta rogue APs e evil twins</li>
+                        <li><strong>SFTP</strong> (SSH) vs <strong>FTPS</strong> (TLS)</li>
+                        <li><strong>WAF</strong> protege web apps na camada 7</li>
+                        <li><strong>SAST</strong> analisa código (estático), <strong>DAST</strong> testa app rodando (dinâmico)</li>
+                        <li><strong>DEP + ASLR</strong> protegem contra buffer overflow</li>
+                        <li><strong>AppLocker</strong> = whitelisting de aplicações</li>
+                        <li><strong>HttpOnly</strong> cookies = protege XSS, <strong>SameSite</strong> = protege CSRF</li>
+                        <li><strong>Port Security</strong> = MAC flooding, <strong>DAI</strong> = ARP poisoning, <strong>DHCP Snooping</strong> = DHCP spoofing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab2" class="content">
+            <div class="quiz-area">
+                <div class="quiz-header">
+                    <h2>Quiz - 40 Questões</h2>
+                </div>
+                <div id="questions"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== CARDS TRADUZIDOS PARA PORTUGUÊS ==========
+        const cards = [
+            // Hardening (1-5)
+            {f: "O que é OS Hardening?", b: "Processo de tornar um sistema operacional mais seguro: remover software desnecessário, desabilitar serviços não usados, aplicar patches, habilitar firewall, antivírus, políticas de senha fortes, UAC (Windows) e princípio do menor privilégio."},
+            {f: "Quais são as permissões NTFS no Windows?", b: "Read (ler), Write (escrever), Execute (executar), Modify (Read + Write + Execute + Delete), Full Control (Modify + alterar permissões + tomar posse). Regras: Deny > Allow, Explicit > Inherited."},
+            {f: "O que é iptables?", b: "Firewall do Linux. Trabalha com chains (cadeias): INPUT (pacotes para o host), OUTPUT (pacotes do host), FORWARD (roteamento). Ações: ACCEPT (permitir), DROP (descartar silenciosamente), REJECT (descartar e notificar)."},
+            {f: "O que é WPA3?", b: "Wi-Fi Protected Access 3. Usa SAE (Simultaneous Authentication of Equals), mais seguro que WPA2. Protege contra ataques offline de dicionário. É o padrão mais seguro atualmente."},
+            {f: "O que é WPA2?", b: "Padrão Wi-Fi com AES-CCMP. Vulnerável a ataques KRACK, mas ainda seguro se configurado corretamente. Tem duas modalidades: Personal (PSK - senha compartilhada) e Enterprise (802.1X + RADIUS)."},
+
+            // Wi-Fi Attacks (6-10)
+            {f: "O que é Evil Twin?", b: "Access Point falso configurado com o mesmo SSID de um AP legítimo. O atacante faz um ataque Man-in-the-Middle, capturando tráfego e credenciais dos usuários que se conectam."},
+            {f: "O que é Rogue AP?", b: "Access Point não autorizado conectado à rede. Pode ser instalado por um funcionário bem-intencionado mas inseguro, ou por um atacante para bypassar controles de segurança. WIPS detecta."},
+            {f: "O que é Deauth Attack (ataque de desautenticação)?", b: "Ataque que envia frames de desautenticação falsos, forçando clientes Wi-Fi a se desconectarem do AP. Usado como DoS ou como preparação para um evil twin."},
+            {f: "O que é WPS Attack?", b: "Ataque contra o Wi-Fi Protected Setup (WPS). O PIN de 8 dígitos é vulnerável a brute force (na verdade são dois blocos de 4 dígitos). Pode ser quebrado em horas. A recomendação é desabilitar WPS."},
+            {f: "O que é War Driving?", b: "Ato de circular por uma área mapeando redes Wi-Fi, coletando informações como SSID, BSSID (MAC), tipo de criptografia e localização GPS. Não é um ataque em si, mas precede um."},
+
+            // Wi-Fi Protection (11-15)
+            {f: "O que é 802.1X?", b: "Padrão para autenticação baseada em porta. Usado em Wi-Fi Enterprise. Componentes: Supplicant (cliente), Authenticator (switch/AP), Authentication Server (RADIUS). Usa protocolos EAP."},
+            {f: "O que é WIPS (Wireless Intrusion Prevention System)?", b: "Sistema que monitora o espectro Wi-Fi, detecta e mitiga ameaças como rogue APs, evil twins, ataques de deauthentication. Pode desautorizar atacantes automaticamente."},
+            {f: "Qual a diferença entre WPA2 Personal e Enterprise?", b: "Personal (PSK): usa uma senha compartilhada para todos os usuários. Enterprise (802.1X): cada usuário tem credenciais próprias (RADIUS), mais seguro para ambientes corporativos."},
+            {f: "O que é MAC filtering em Wi-Fi?", b: "Lista de permissão (whitelist) de endereços MAC autorizados a se conectar. É uma medida fraca de segurança, pois MAC spoofing é fácil de realizar."},
+            {f: "Ocultar o SSID (hide SSID) é uma medida eficaz de segurança?", b: "Não. É security by obscurity. O SSID pode ser facilmente descoberto com ferramentas de sniffing, mesmo quando oculto."},
+
+            // Protocolos Seguros (16-20)
+            {f: "Qual a diferença entre FTPS e SFTP?", b: "FTPS (FTP over TLS) usa TLS para criptografar o FTP tradicional, portas 990 (controle) e dados dinâmicos. SFTP (SSH File Transfer Protocol) opera sobre SSH (porta 22), é mais seguro e recomendado."},
+            {f: "O que é HTTPS e qual porta utiliza?", b: "HTTP + TLS. Porta padrão 443. Criptografa toda a comunicação entre cliente e servidor web, prevenindo interceptação e adulteração."},
+            {f: "O que é IPSec?", b: "Protocolo para VPN em camada 3 (rede). Tem dois componentes principais: AH (Authentication Header) para autenticação e integridade, e ESP (Encapsulating Security Payload) para criptografia. Modos: Transport (host-to-host) e Tunnel (site-to-site)."},
+            {f: "O que é TLS 1.3 e quais suas vantagens?", b: "Versão mais recente do TLS. Mais rápido (1-RTT handshake), remove ciphers fracos (como SHA-1, RC4), exige forward secrecy (chaves efêmeras) e simplifica o protocolo."},
+            {f: "O que é SSH e qual porta utiliza?", b: "Secure Shell. Protocolo para acesso remoto seguro, com criptografia. Porta padrão 22. Substitui o inseguro Telnet."},
+
+            // Web App Attacks (21-25)
+            {f: "O que é SQL Injection (SQLi)?", b: "Ataque onde o atacante insere código SQL malicioso em campos de input (forms, URL). Pode extrair, modificar ou deletar dados do banco. Contramedida: prepared statements, parameterized queries."},
+            {f: "O que é XSS (Cross-Site Scripting)?", b: "Injeção de código JavaScript malicioso em páginas web. Tipos: Stored (armazenado no servidor), Reflected (refletido na resposta), DOM-based (manipulação do DOM). Contramedida: output encoding, input validation, HttpOnly cookies."},
+            {f: "O que é CSRF (Cross-Site Request Forgery)?", b: "Ataque que força um usuário autenticado a executar ações indesejadas em um site onde está logado. Contramedida: tokens CSRF (anti-forgery tokens), SameSite cookies."},
+            {f: "O que é Command Injection?", b: "Injeção de comandos do sistema operacional através de inputs vulneráveis. Exemplo: ; ls, && whoami. Contramedida: input validation, whitelist, evitar chamadas de sistema."},
+            {f: "O que é Directory Traversal (Path Traversal)?", b: "Ataque que usa sequências como ../ para acessar arquivos fora do diretório web root. Contramedida: validar caminhos, usar chroot/jail."},
+
+            // Desenvolvimento Seguro (26-30)
+            {f: "O que é SDLC (Software Development Life Cycle)?", b: "Ciclo de vida de desenvolvimento de software: Requirements → Design → Development → Testing → Deployment → Maintenance. Segurança deve ser integrada em cada fase."},
+            {f: "O que é DevSecOps?", b: "Prática de integrar segurança no processo DevOps. Shift left (segurança mais cedo no desenvolvimento). Automação de testes de segurança, pipelines CI/CD seguros."},
+            {f: "O que é CI/CD?", b: "Continuous Integration/Continuous Delivery. Commits frequentes, testes automatizados, build e deploy automatizados. Permite entregas mais rápidas e seguras."},
+            {f: "O que é SAST (Static Application Security Testing)?", b: "Análise estática de segurança. Testa o código fonte sem executá-lo (white box). Encontra vulnerabilidades no código (ex: SQLi, XSS) durante o desenvolvimento."},
+            {f: "O que é DAST (Dynamic Application Security Testing)?", b: "Análise dinâmica de segurança. Testa a aplicação em execução (black box). Simula ataques para encontrar vulnerabilidades em tempo real."},
+
+            // Proteções do Sistema (31-35)
+            {f: "O que é AppLocker?", b: "Recurso do Windows para application whitelisting (lista de permissões). Permite apenas aplicativos aprovados baseado em publisher, caminho ou hash. Bloqueia software não autorizado."},
+            {f: "O que é DEP (Data Execution Prevention)?", b: "Prevenção de Execução de Dados. Marca regiões da memória como não executáveis. Impede que código malicioso seja executado em áreas de dados (buffer overflow)."},
+            {f: "O que é ASLR (Address Space Layout Randomization)?", b: "Randomização do layout do espaço de endereços. Dificulta exploits que dependem de endereços de memória conhecidos."},
+            {f: "O que é Code Signing?", b: "Assinatura digital de código com um certificado. Garante a autenticidade (quem publicou) e integridade (não foi modificado) do software."},
+            {f: "O que são HttpOnly e SameSite cookies?", b: "HttpOnly: previne acesso ao cookie via JavaScript (protege contra XSS). SameSite: previne envio do cookie em requisições cross-site (protege contra CSRF)."},
+
+            // Arquiteturas Modernas (36-40)
+            {f: "O que são microserviços (microservices)?", b: "Arquitetura onde uma aplicação é composta por serviços pequenos, independentes e fracamente acoplados. Cada serviço tem sua própria base de código, podendo ser desenvolvido e implantado separadamente."},
+            {f: "O que é containerização?", b: "Tecnologia que empacota uma aplicação e suas dependências em um container isolado (Docker). Mais leve que VMs, portável. Orquestração com Kubernetes."},
+            {f: "O que é serverless (FaaS)?", b: "Function as a Service. O provedor gerencia a infraestrutura, você só escreve funções que executam em resposta a eventos. Ex: AWS Lambda, Azure Functions. Pay per execution."},
+            {f: "O que é Infrastructure as Code (IaC)?", b: "Gerenciar e provisionar infraestrutura através de código (Terraform, CloudFormation). Version control, reprodutível, automatizado."},
+            {f: "O que é API Gateway?", b: "Proxy que atua como ponto único de entrada para APIs. Gerencia autenticação, rate limiting, caching, monitoramento e roteamento."},
+
+            // Network Security (41-50)
+            {f: "O que é Port Security em switches?", b: "Recurso que limita o número de endereços MAC permitidos em uma porta. Previne ataques de MAC flooding e dispositivos não autorizados."},
+            {f: "O que é DHCP Snooping?", b: "Recurso de switch que valida mensagens DHCP. Portas confiáveis (trunk, uplink) podem enviar ofertas DHCP; portas não confiáveis (acesso) são bloqueadas para respostas DHCP. Previne DHCP spoofing."},
+            {f: "O que é DAI (Dynamic ARP Inspection)?", b: "Valida pacotes ARP contra a tabela do DHCP snooping. Pacotes ARP inválidos são descartados. Previne ARP poisoning/spoofing."},
+            {f: "O que é BPDU Guard?", b: "Recurso que desabilita uma porta se ela receber BPDU (Bridge Protocol Data Unit). Previne ataques de spanning tree e loops."},
+            {f: "O que é Root Guard?", b: "Protege a topologia spanning tree prevenindo que uma porta se torne root port. Garante que switches não autorizados não assumam o papel de root."},
+            {f: "O que é Flood Guard / Storm Control?", b: "Limita a taxa de tráfego broadcast, multicast e unknown unicast. Previne tempestades de rede (broadcast storms)."},
+            {f: "O que é Microsegmentação (Microsegmentation)?", b: "Segmentação extrema onde firewalls são aplicados entre cargas de trabalho individuais (workloads), não apenas entre subnets. Fundamental em Zero Trust."},
+            {f: "O que é Jump Server (Bastion Host)?", b: "Servidor fortificado usado como ponto de entrada para acessar recursos internos de uma rede. Toda administração passa por ele, com logging e MFA obrigatórios."},
+            {f: "O que é Screened Subnet (DMZ)?", b: "Zona desmilitarizada entre dois firewalls. Hospeda servidores públicos (web, email, DNS). Se o firewall externo falhar, apenas a DMZ é comprometida, a LAN permanece protegida."},
+            {f: "O que são Private VLANs?", b: "VLANs que isolam portas dentro da mesma VLAN. Hosts não podem se comunicar diretamente, apenas com o gateway. Útil em ambientes de hosting."},
+
+            // Autenticação (51-60)
+            {f: "O que é Geofencing?", b: "Restrição de acesso baseada na localização geográfica do usuário (GPS, endereço IP). Pode bloquear acessos de países não autorizados."},
+            {f: "O que é Time-based Access?", b: "Restrição de acesso baseada em horário (logon hours). Usuários só podem acessar sistemas em determinados períodos (ex: 8h-18h)."},
+            {f: "O que é Remote Wipe?", b: "Funcionalidade de MDM (Mobile Device Management) que apaga remotamente todos os dados de um dispositivo perdido ou roubado."},
+            {f: "O que é autenticação biométrica?", b: "Autenticação baseada em características físicas únicas: impressão digital, reconhecimento facial (Face ID), íris, voz."},
+            {f: "O que é autenticação sem senha (passwordless)?", b: "Métodos de autenticação que não usam senha tradicional. Ex: FIDO2, Windows Hello (biometria + hardware token). São mais resistentes a phishing."},
+            {f: "O que é autenticação context-aware (adaptativa)?", b: "Decisão de autenticação baseada em contexto: localização, dispositivo, horário, comportamento. Se o contexto for de risco, exige step-up authentication."},
+            {f: "O que é step-up authentication?", b: "Exigir autenticação adicional (ex: MFA) para ações sensíveis, como transferências de alto valor ou mudanças de configuração."},
+            {f: "O que é autenticação contínua (continuous authentication)?", b: "Verificar a identidade do usuário continuamente durante a sessão, não apenas no login. Baseado em biometria comportamental (movimentos do mouse, padrões de digitação)."},
+            {f: "O que são push notifications para MFA?", b: "Método de autenticação onde um prompt é enviado para o celular do usuário, que aprova ou nega a tentativa de login. Mais seguro que SMS."},
+            {f: "O que é Zero Trust Architecture?", b: "Modelo de segurança 'nunca confie, sempre verifique'. Microsegmentação, least privilege, MFA em tudo, assume que a rede já está comprometida."}
+        ];
+
+        const quiz = [
+            {q: "Permissão NTFS que sempre prevalece sobre Allow:", o: ["Read", "Write", "Deny", "Full Control"], c: 2},
+            {q: "Firewall do Linux:", o: ["UFW", "iptables", "firewalld", "Todas as opções"], c: 3},
+            {q: "Padrão Wi-Fi mais seguro atualmente:", o: ["WEP", "WPA", "WPA2", "WPA3"], c: 3},
+            {q: "Access Point falso com mesmo SSID do legítimo:", o: ["Rogue AP", "Evil Twin", "Deauth AP", "WPS AP"], c: 1},
+            {q: "Sistema que detecta rogue APs e evil twins:", o: ["IDS", "IPS", "WIDS/WIPS", "Firewall"], c: 2},
+            {q: "Autenticação corporativa Wi-Fi usa:", o: ["WPA-PSK", "WPA2-Personal", "802.1X", "WPS"], c: 2},
+            {q: "FTP sobre SSH (porta 22):", o: ["FTPS", "SFTP", "HTTPS", "SCP"], c: 1},
+            {q: "Porta padrão do HTTPS:", o: ["80", "443", "22", "990"], c: 1},
+            {q: "Ataque que injeta SQL malicioso:", o: ["XSS", "CSRF", "SQL Injection", "Command Injection"], c: 2},
+            {q: "Ataque que injeta JavaScript malicioso:", o: ["SQLi", "XSS", "CSRF", "LFI"], c: 1},
+            {q: "Ataque que força ações em site autenticado:", o: ["XSS", "SQLi", "CSRF", "Session Hijack"], c: 2},
+            {q: "Principal contramedida para SQL Injection:", o: ["Input validation", "Prepared statements", "Stored procedures", "Todas ajudam"], c: 3},
+            {q: "Análise de segurança do código fonte (estática):", o: ["DAST", "SAST", "Pentest", "Fuzzing"], c: 1},
+            {q: "Teste de segurança em aplicação em execução:", o: ["SAST", "DAST", "Code Review", "Static Analysis"], c: 1},
+            {q: "Application whitelisting no Windows:", o: ["UAC", "AppLocker", "DEP", "ASLR"], c: 1},
+            {q: "Previne execução de código em áreas de dados:", o: ["ASLR", "AppLocker", "DEP", "Code Signing"], c: 2},
+            {q: "Randomiza endereços de memória:", o: ["DEP", "ASLR", "AppLocker", "Obfuscation"], c: 1},
+            {q: "Cookie com flag HttpOnly previne:", o: ["CSRF", "SQLi", "XSS", "MITM"], c: 2},
+            {q: "Cookie com flag SameSite previne:", o: ["XSS", "CSRF", "SQLi", "Injection"], c: 1},
+            {q: "Firewall de aplicação web (camada 7):", o: ["Firewall de rede", "IPS", "WAF", "Proxy"], c: 2},
+            {q: "Docker e Kubernetes são tecnologias de:", o: ["VMs", "Containers", "Serverless", "PaaS"], c: 1},
+            {q: "AWS Lambda é um exemplo de:", o: ["IaaS", "PaaS", "Serverless/FaaS", "SaaS"], c: 2},
+            {q: "Modelo 'nunca confie, sempre verifique':", o: ["Defense in depth", "Zero Trust", "Least privilege", "Need to know"], c: 1},
+            {q: "Recurso que limita MACs por porta no switch:", o: ["DHCP Snooping", "Port Security", "DAI", "802.1X"], c: 1},
+            {q: "Recurso que valida pacotes ARP contra DHCP snooping:", o: ["Port Security", "DHCP Snooping", "DAI", "BPDU Guard"], c: 2},
+            {q: "Recurso que desabilita porta se receber BPDU:", o: ["Root Guard", "BPDU Guard", "Port Security", "DAI"], c: 1},
+            {q: "Funcionalidade que apaga dados remotamente:", o: ["GPS Tracking", "Remote Wipe", "Screen Lock", "Geofencing"], c: 1},
+            {q: "Localizar dispositivo perdido:", o: ["Remote Wipe", "GPS Tracking", "MDM", "Geofencing"], c: 1},
+            {q: "MFA via notificação no celular:", o: ["SMS", "Push Notification", "TOTP", "Email"], c: 1},
+            {q: "Autenticação sem senha tradicional:", o: ["MFA", "2FA", "Passwordless", "Biometric"], c: 2},
+            {q: "Restrição de acesso por horário:", o: ["Geofencing", "Time-based Access", "Screen Lock", "MFA"], c: 1},
+            {q: "Servidor intermediário para acesso interno:", o: ["Proxy", "DMZ", "Jump Server", "Gateway"], c: 2},
+            {q: "Segmentação extrema entre workloads:", o: ["VLAN", "Microsegmentation", "Subnet", "DMZ"], c: 1},
+            {q: "Terraform e CloudFormation são:", o: ["IaC", "DevOps", "CI/CD", "Automation"], c: 0},
+            {q: "Gerenciamento de segredos (API keys, senhas):", o: ["Password manager", "Secrets Management", "Key management", "Certificate authority"], c: 1},
+            {q: "Processo formal de mudanças: Request → Approve → Test → Implement → Verify:", o: ["Patch Management", "Change Management", "Config Management", "Asset Management"], c: 1},
+            {q: "Arquitetura com serviços pequenos e independentes:", o: ["Monolito", "Microservices", "Serverless", "Containers"], c: 1},
+            {q: "Limita taxa de broadcasts no switch:", o: ["Port Security", "Flood Guard", "Storm Control", "B e C"], c: 3},
+            {q: "VLAN que isola portas na mesma VLAN:", o: ["Private VLAN", "Isolated VLAN", "Community VLAN", "Promiscuous"], c: 0},
+            {q: "Autenticação baseada em contexto (local, horário, dispositivo):", o: ["MFA", "Adaptive Auth", "Step-up Auth", "Continuous Auth"], c: 1}
+        ];
+
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
+
+        // ========== LOCALSTORAGE ==========
+        // Carregar progresso salvo
+        function loadProgress() {
+            const saved = localStorage.getItem('security_plus_cap8_mastered');
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
+        }
+
+        // Salvar progresso
+        function saveProgress() {
+            localStorage.setItem('security_plus_cap8_mastered', JSON.stringify([...mastered]));
+        }
+
+        // Chamar loadProgress assim que o script carregar
+        loadProgress();
+
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+        }
+
+        function updateCard() {
+            if (filteredCards.length === 0) {
+                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                return;
+            }
+            const cardIndex = filteredCards[currentCard];
+            const card = cards[cardIndex];
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            const btn = document.getElementById('master-btn');
+            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+            
+            const progress = (mastered.size / cards.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
+        }
+
+        function flipCard() {
+            flipped = !flipped;
+            updateCard();
+        }
+
+        function nextCard() {
+            currentCard = (currentCard + 1) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function prevCard() {
+            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function toggleMaster() {
+            const cardIndex = filteredCards[currentCard];
+            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
+            else mastered.add(cardIndex);
+            
+            // ========== SALVAR PROGRESSO ==========
+            saveProgress();
+            
+            updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = filteredCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+            }
+            currentCard = 0;
+            flipped = false;
+            updateCard();
+        }
+
+        function filterCards(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') {
+                filteredCards = [...Array(cards.length).keys()];
+            } else if (type === 'mastered') {
+                filteredCards = Array.from(mastered);
+            } else {
+                filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            }
+            
+            currentCard = 0;
+            flipped = false;
+            updateCard();
+        }
+
+        function loadQuiz() {
+            const container = document.getElementById('questions');
+            quiz.forEach((q, qi) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(qi, oi);
+                    odiv.id = `q${qi}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${qi}`;
+                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                div.appendChild(exp);
+                container.appendChild(div);
+            });
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            quiz[qi].o.forEach((_, i) => {
+                const el = document.getElementById(`q${qi}o${i}`);
+                el.classList.remove('selected');
+            });
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            quiz.forEach((q, qi) => {
+                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
+                });
+                document.getElementById(`exp${qi}`).style.display = 'block';
+                if (correctAnswer.includes(answers[qi])) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('results-modal').classList.remove('show');
+            loadQuiz();
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>

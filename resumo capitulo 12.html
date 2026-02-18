@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo Security+ Capítulo 12 - Gestão de Riscos e Continuidade</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
+            padding: 50px;
+            border: 1px solid #e2e8f0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #ff7e5f;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .badge {
+            background: #ff7e5f;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box strong {
+            color: #ec4899;
+            font-size: 1.1rem;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule strong {
+            color: #f59e0b;
+            font-size: 1.1rem;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            font-size: 1.8rem;
+            color: #0f172a;
+            margin-bottom: 20px;
+            border-left: 5px solid #ff7e5f;
+            padding-left: 15px;
+        }
+        .section h3 {
+            font-size: 1.3rem;
+            color: #334155;
+            margin: 20px 0 10px;
+        }
+        .section h4 {
+            font-size: 1.1rem;
+            color: #ff7e5f;
+            margin: 15px 0 5px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .card h4 {
+            color: #ff7e5f;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .card ul {
+            list-style: none;
+        }
+        .card li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .card li:before {
+            content: "•";
+            color: #ff7e5f;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th {
+            background: #ff7e5f;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        tr:hover {
+            background: #f1f5f9;
+        }
+        .risk-phases {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0;
+        }
+        .risk-phase {
+            flex: 1;
+            min-width: 150px;
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 5px solid #ff7e5f;
+        }
+        .risk-phase strong {
+            display: block;
+            color: #ff7e5f;
+            margin-bottom: 5px;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .metric-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ff7e5f;
+        }
+        .metric-card strong {
+            color: #ff7e5f;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .site-types {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .site-type {
+            flex: 1;
+            min-width: 200px;
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 5px solid #ff7e5f;
+        }
+        .site-type strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #ff7e5f;
+            font-size: 1.2rem;
+        }
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px dashed #e2e8f0;
+            text-align: center;
+            color: #64748b;
+        }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📘 Capítulo 12: Gestão de Riscos e Continuidade</h1>
+            <span class="badge">Resumo Completo</span>
+        </div>
+
+        <div class="info-box">
+            <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>RTO + WRT ≤ MTD:</strong> Tempo de recuperação + trabalho ≤ tempo máximo tolerável</li>
+                <li><strong>ALE = SLE × ARO:</strong> Perda anual esperada</li>
+                <li><strong>SLE = AV × EF:</strong> Perda por ocorrência</li>
+                <li><strong>Risco Inerente vs Residual:</strong> Antes vs depois dos controles</li>
+                <li><strong>Hot Site vs Warm Site vs Cold Site:</strong> Imediato, médio, lento (custo decrescente)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣ Gestão de Riscos - Conceitos Fundamentais</h2>
+
+            <h3>Conceitos-Chave</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>🎯 Apetite ao Risco</h4>
+                    <p>Nível de risco que uma organização está disposta a aceitar</p>
+                </div>
+                <div class="card">
+                    <h4>📊 Tolerância ao Risco</h4>
+                    <p>Variação específica aceitável nos níveis de risco medidos</p>
+                </div>
+            </div>
+
+            <h3>Níveis de Apetite ao Risco</h3>
+            <table>
+                <tr>
+                    <th>Nível</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Expansionista</strong></td>
+                    <td>Disposto a assumir riscos elevados para crescimento agressivo</td>
+                </tr>
+                <tr>
+                    <td><strong>Conservador</strong></td>
+                    <td>Prioriza evitar riscos, foca em preservação e conformidade</td>
+                </tr>
+                <tr>
+                    <td><strong>Neutro</strong></td>
+                    <td>Equilibra abordagens expansionista e conservadora</td>
+                </tr>
+            </table>
+
+            <h3>Processos de Gestão de Riscos (5 Fases)</h3>
+            <div class="risk-phases">
+                <div class="risk-phase"><strong>1. Identificar MEF</strong>Funções essenciais da missão</div>
+                <div class="risk-phase"><strong>2. Identificar Vulnerabilidades</strong>Fraquezas em sistemas</div>
+                <div class="risk-phase"><strong>3. Identificar Ameaças</strong>Atores e fontes</div>
+                <div class="risk-phase"><strong>4. Analisar Impactos</strong>Probabilidade × impacto</div>
+                <div class="risk-phase"><strong>5. Identificar Resposta</strong>Contramedidas apropriadas</div>
+            </div>
+
+            <h3>Tipos de Risco</h3>
+            <ul>
+                <li><strong>Risco Inerente:</strong> nível antes de qualquer mitigação</li>
+                <li><strong>Risco Residual:</strong> probabilidade e impacto após medidas de mitigação</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>2️⃣ Métricas Críticas de Recuperação</h2>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <strong>⏱️ MTD (Maximum Tolerable Downtime)</strong>
+                    <p>Período máximo de interrupção sem causar falha irrecuperável. Define limite superior para tempo de recuperação.</p>
+                </div>
+                <div class="metric-card">
+                    <strong>🔄 RTO (Recovery Time Objective)</strong>
+                    <p>Tempo para identificar problema e restaurar sistema. Período que um sistema pode ficar offline após desastre.</p>
+                </div>
+                <div class="metric-card">
+                    <strong>🔧 WRT (Work Recovery Time)</strong>
+                    <p>Tempo adicional para reintegrar sistemas após recuperação (testes, briefing de usuários). <strong>RTO + WRT ≤ MTD</strong></p>
+                </div>
+                <div class="metric-card">
+                    <strong>💾 RPO (Recovery Point Objective)</strong>
+                    <p>Quantidade de perda de dados tolerável (medida em tempo). Determina frequência de backups necessária.</p>
+                </div>
+                <div class="metric-card">
+                    <strong>📊 MTBF (Mean Time Between Failures)</strong>
+                    <p>Tempo médio esperado entre falhas. Cálculo: (tempo operacional total) / (número de falhas)</p>
+                </div>
+                <div class="metric-card">
+                    <strong>🔨 MTTR (Mean Time To Repair)</strong>
+                    <p>Tempo médio para corrigir uma falha. Cálculo: (horas de manutenção não planejada) / (número de incidentes)</p>
+                </div>
+            </div>
+
+            <div class="golden-rule">
+                <strong>⚠️ REGRA DE OURO:</strong> RTO + WRT ≤ MTD (o tempo total de recuperação não pode ultrapassar o tempo máximo tolerável)
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3️⃣ Estratégias de Gestão de Riscos</h2>
+
+            <table>
+                <tr>
+                    <th>Estratégia</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Mitigação/Remediação</strong></td>
+                    <td>Reduzir exposição ou efeitos de fatores de risco. Implementar controles de segurança.</td>
+                </tr>
+                <tr>
+                    <td><strong>Transferência</strong></td>
+                    <td>Atribuir risco a terceiros (ex: seguro cibernético). Riscos à reputação geralmente não podem ser transferidos.</td>
+                </tr>
+                <tr>
+                    <td><strong>Aceitação</strong></td>
+                    <td>Nenhuma contramedida implementada. Usado quando o nível de risco não justifica o custo.</td>
+                </tr>
+                <tr>
+                    <td><strong>Evitação</strong></td>
+                    <td>Parar a atividade que causa o risco. Raramente é uma opção viável.</td>
+                </tr>
+            </table>
+
+            <h4>Exceção vs Isenção de Risco</h4>
+            <ul>
+                <li><strong>Exceção de Risco:</strong> situação temporária com controles alternativos</li>
+                <li><strong>Isenção de Risco:</strong> condição permanente devido a decisão estratégica</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>4️⃣ Análise de Riscos</h2>
+
+            <h3>Variáveis Principais</h3>
+            <ul>
+                <li><strong>Probabilidade (Likelihood):</strong> chance subjetiva de um evento de risco acontecer (baixa/média/alta ou escala 1-5)</li>
+                <li><strong>Impacto:</strong> severidade do risco se realizado, determinado por valor do ativo ou custo de interrupção</li>
+            </ul>
+
+            <h3>Métodos de Avaliação de Risco</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>📋 Avaliações Ad Hoc</h4>
+                    <p>Conduzidas conforme necessário (resposta a incidentes ou mudanças)</p>
+                </div>
+                <div class="card">
+                    <h4>📅 Avaliações Recorrentes</h4>
+                    <p>Agendadas em intervalos regulares (anual, trimestral, mensal)</p>
+                </div>
+                <div class="card">
+                    <h4>🎯 Avaliações Únicas</h4>
+                    <p>Abrangentes em momento específico (novos sistemas)</p>
+                </div>
+                <div class="card">
+                    <h4>📈 Avaliações Contínuas</h4>
+                    <p>Monitoramento constante de riscos em tempo real</p>
+                </div>
+            </div>
+
+            <h3>Análise Quantitativa</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>💰 SLE (Single Loss Expectancy)</h4>
+                    <p>Valor perdido em uma única ocorrência</p>
+                    <p><strong>SLE = AV × EF</strong></p>
+                    <p>Ex: Edifício $200.000 × 40% = $80.000</p>
+                </div>
+                <div class="card">
+                    <h4>📉 ALE (Annualized Loss Expectancy)</h4>
+                    <p>Valor perdido ao longo de um ano</p>
+                    <p><strong>ALE = SLE × ARO</strong></p>
+                    <p>Ex: $80.000 × 2 = $160.000/ano</p>
+                </div>
+            </div>
+
+            <h4>Vantagens e Desvantagens</h4>
+            <table>
+                <tr>
+                    <th>Vantagens</th>
+                    <th>Desvantagens</th>
+                </tr>
+                <tr>
+                    <td>Números tangíveis em dinheiro real</td>
+                    <td>Processo complexo e demorado</td>
+                </tr>
+                <tr>
+                    <td>Ajuda a justificar custos de controles</td>
+                    <td>Difícil determinar valores sem dados históricos</td>
+                </tr>
+            </table>
+
+            <h3>Análise Qualitativa</h3>
+            <ul>
+                <li>Avaliação baseada em julgamento subjetivo (palavras, não números)</li>
+                <li><strong>Vantagens:</strong> simplicidade, avaliação inicial rápida, não requer cálculos</li>
+                <li><strong>Limitações:</strong> subjetiva, pode introduzir vieses, difícil comunicação com stakeholders quantitativos</li>
+            </ul>
+
+            <h3>Ferramentas de Visualização</h3>
+            <ul>
+                <li><strong>Mapa de Calor (Heat Map):</strong> matriz impacto × probabilidade com cores (vermelho, amarelo, verde)</li>
+                <li><strong>Registro de Riscos (Risk Register):</strong> resultados de avaliações, severidade, proprietário, estratégias de mitigação, status</li>
+                <li><strong>Indicadores-Chave de Risco (KRI):</strong> indicadores preditivos, alerta precoce de exposições crescentes</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>5️⃣ Planejamento de Continuidade de Negócios (BCP)</h2>
+
+            <h3>Objetivo</h3>
+            <ul>
+                <li>Identificar respostas apropriadas a desastres</li>
+                <li>Manter operações durante capacidades reduzidas</li>
+                <li>Restaurar negócio à operação normal</li>
+            </ul>
+
+            <h3>Processo de Resposta</h3>
+            <ol>
+                <li>Identificar desastre e garantir segurança do pessoal</li>
+                <li>Implementar mecanismos de recuperação de curto prazo</li>
+                <li>Estabilizar operações restaurando departamentos de suporte</li>
+                <li>Restaurar todas as funções ao normal</li>
+            </ol>
+
+            <h3>Elementos Adicionais</h3>
+            <ul>
+                <li>Processos de implementação, teste e treinamento</li>
+                <li>Exercícios regulares e revisões do plano</li>
+                <li>Coleta e destruição de cópias desatualizadas</li>
+                <li>Planejamento de sucessão para posições-chave</li>
+            </ul>
+
+            <h3>Continuidade de Operações (COOP)</h3>
+            <ul>
+                <li>Garantir manutenção ou retomada rápida de funções críticas</li>
+                <li>Minimizar tempo de inatividade</li>
+                <li>Proteger recursos essenciais</li>
+            </ul>
+
+            <h4>Estratégias COOP</h4>
+            <ul>
+                <li>Redundância para sistemas de TI e dados</li>
+                <li>Backups off-site</li>
+                <li>Sistemas de failover</li>
+                <li>Arranjos alternativos de trabalho (trabalho remoto)</li>
+                <li>Protocolos claros de comunicação</li>
+            </ul>
+
+            <h4>Testes</h4>
+            <ul>
+                <li>Exercícios de mesa (tabletop)</li>
+                <li>Testes funcionais isolados</li>
+                <li>Simulações em escala completa</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>6️⃣ Backups e Planejamento de Capacidade</h2>
+
+            <h3>Importância dos Backups</h3>
+            <ul>
+                <li>Proteção contra perda de dados</li>
+                <li>Restauração de sistemas após interrupções</li>
+                <li>Redução de tempo de inatividade</li>
+            </ul>
+
+            <h4>Testes Necessários</h4>
+            <ul>
+                <li>Verificar integridade e eficácia</li>
+                <li>Simular vários cenários</li>
+                <li>Validar recuperabilidade</li>
+                <li>Avaliar velocidade de recuperação</li>
+                <li>Garantir conformidade regulatória</li>
+            </ul>
+
+            <h3>Planejamento de Capacidade</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>👥 Pessoas</h4>
+                    <ul>
+                        <li>Número de funcionários</li>
+                        <li>Habilidades</li>
+                        <li>Necessidade de treinamento</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>💻 Tecnologia</h4>
+                    <ul>
+                        <li>Hardware, software</li>
+                        <li>Recursos de rede</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🏢 Infraestrutura</h4>
+                    <ul>
+                        <li>Datacenters, escritórios</li>
+                        <li>Energia, refrigeração</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h4>Métodos de Avaliação</h4>
+            <ul>
+                <li><strong>Análise de Tendências:</strong> examina dados históricos para identificar padrões</li>
+                <li><strong>Modelagem de Simulação:</strong> simula cenários do mundo real</li>
+                <li><strong>Benchmarking:</strong> compara métricas com padrões da indústria</li>
+            </ul>
+
+            <h4>Tecnologias para Trabalho Remoto</h4>
+            <div class="grid-3">
+                <div class="card">VPN</div>
+                <div class="card">Desktop remoto</div>
+                <div class="card">Ferramentas cloud</div>
+                <div class="card">Videoconferência</div>
+                <div class="card">Mensagens instantâneas</div>
+                <div class="card">Telefonia virtual</div>
+                <div class="card">Gerenciamento de projetos</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>7️⃣ Considerações de Sites de Recuperação</h2>
+
+            <div class="site-types">
+                <div class="site-type">
+                    <strong>🔥 Hot Site</strong>
+                    <p>Failover quase imediato</p>
+                    <p>Equipamento operacional com dados ao vivo</p>
+                    <p>💰💰💰 Opção mais cara</p>
+                </div>
+                <div class="site-type">
+                    <strong>☀️ Warm Site</strong>
+                    <p>Similar ao hot site</p>
+                    <p>Requer carregamento do conjunto de dados mais recente</p>
+                    <p>💰💰 Custo médio</p>
+                </div>
+                <div class="site-type">
+                    <strong>❄️ Cold Site</strong>
+                    <p>Demora mais para configurar</p>
+                    <p>Pode ser edifício vazio com acordo de locação</p>
+                    <p>💰 Opção mais barata</p>
+                </div>
+            </div>
+
+            <h3>Dispersão Geográfica</h3>
+            <ul>
+                <li>Distribuição de sites em diferentes locais</li>
+                <li>Minimiza impacto de desastres regionais</li>
+                <li>Reduz risco de evento catastrófico único</li>
+            </ul>
+
+            <h3>Nuvem como Recuperação de Desastres (DR)</h3>
+            <ul>
+                <li><strong>Vantagens:</strong> eficiência de custos, escalabilidade, diversidade geográfica, implantação rápida, gerenciamento simplificado, segurança e conformidade aprimoradas</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>8️⃣ Testes de Resiliência</h2>
+
+            <table>
+                <tr>
+                    <th>Tipo de Teste</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Exercícios de Mesa (Tabletop)</strong></td>
+                    <td>Discussão de cenários hipotéticos, avalia planos de resposta, identifica lacunas em conhecimento</td>
+                </tr>
+                <tr>
+                    <td><strong>Testes de Failover</strong></td>
+                    <td>Causa falha intencional do sistema primário, avalia transferência automática para secundário</td>
+                </tr>
+                <tr>
+                    <td><strong>Simulações</strong></td>
+                    <td>Experimentos controlados que replicam cenários reais, revelam gargalos e vulnerabilidades</td>
+                </tr>
+                <tr>
+                    <td><strong>Testes de Processamento Paralelo</strong></td>
+                    <td>Executa sistemas primário e backup simultaneamente, valida funcionalidade sem interromper operações</td>
+                </tr>
+            </table>
+
+            <div class="golden-rule">
+                <strong>⚠️ Consequências de Não Testar:</strong>
+                <ul>
+                    <li>Vulnerabilidades não reconhecidas</li>
+                    <li>Sistemas não testados podem falhar em desastre real</li>
+                    <li>Tempo de inatividade estendido</li>
+                    <li>Perda de dados</li>
+                    <li>Danos à reputação</li>
+                    <li>Custos aumentados</li>
+                    <li>Penalidades regulatórias</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>9️⃣ Gestão de Terceiros (Vendor Management)</h2>
+
+            <h3>Tipos de Relacionamentos</h3>
+            <ul>
+                <li><strong>Fornecedor (Vendor):</strong> vende produtos ou fornece suprimentos</li>
+                <li><strong>Cadeia de Suprimentos:</strong> relacionamentos colaborativos</li>
+                <li><strong>Parceiro de Negócios:</strong> acordo para operar negócio juntos</li>
+            </ul>
+
+            <h3>Estatísticas Importantes</h3>
+            <ul>
+                <li>89 fornecedores acessam redes semanalmente</li>
+                <li>69% sofreram violação devido a falhas de fornecedores</li>
+                <li>65% acham difícil gerenciar riscos cibernéticos de fornecedores</li>
+                <li>64% focam mais em custo do que segurança ao terceirizar</li>
+            </ul>
+
+            <h3>Métodos de Avaliação de Fornecedores</h3>
+            <table>
+                <tr>
+                    <th>Método</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Teste de Penetração</strong></td>
+                    <td>Avalia postura de segurança, identifica vulnerabilidades</td>
+                </tr>
+                <tr>
+                    <td><strong>Cláusula de Direito de Auditoria</strong></td>
+                    <td>Permite auditorias de práticas operacionais</td>
+                </tr>
+                <tr>
+                    <td><strong>Evidência de Auditorias Internas</strong></td>
+                    <td>Demonstra compromisso com governança e conformidade</td>
+                </tr>
+                <tr>
+                    <td><strong>Questionários</strong></td>
+                    <td>Políticas, controles, conformidade, treinamento, resposta a incidentes</td>
+                </tr>
+            </table>
+
+            <h3>Acordos Legais</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>📄 Acordos Iniciais</h4>
+                    <ul>
+                        <li><strong>MOU:</strong> Memorando de Entendimento (não vinculativo)</li>
+                        <li><strong>NDA:</strong> Acordo de Confidencialidade</li>
+                        <li><strong>MOA:</strong> Acordo formal vinculativo</li>
+                        <li><strong>BPA:</strong> Parceria estratégica de longo prazo</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>📋 Acordos Detalhados</h4>
+                    <ul>
+                        <li><strong>MSA:</strong> Contrato mestre de serviços</li>
+                        <li><strong>SLA:</strong> Acordo de Nível de Serviço (métricas, performance)</li>
+                        <li><strong>SOW:</strong> Escopo de trabalho, entregas, cronogramas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔟 Auditorias e Avaliações</h2>
+
+            <h3>Avaliações Internas vs Externas</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>🏢 Internas</h4>
+                    <ul>
+                        <li>Conduzidas por funcionários</li>
+                        <li>Avaliação aprofundada de processos</li>
+                        <li>Monitoramento contínuo</li>
+                        <li>Melhoria de controles internos</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🌐 Externas</h4>
+                    <ul>
+                        <li>Conduzidas por terceiros independentes</li>
+                        <li>Conhecimento especializado</li>
+                        <li>Avaliação imparcial</li>
+                        <li>Medição contra padrões da indústria</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Métodos de Avaliação</h3>
+            <table>
+                <tr>
+                    <th>Método</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Avaliação de Conformidade</strong></td>
+                    <td>Garante alinhamento com leis e regulamentações</td>
+                </tr>
+                <tr>
+                    <td><strong>Comitê de Auditoria</strong></td>
+                    <td>Supervisão independente, membros do conselho</td>
+                </tr>
+                <tr>
+                    <td><strong>Autoavaliação</strong></td>
+                    <td>Indivíduos avaliam próprio desempenho</td>
+                </tr>
+                <tr>
+                    <td><strong>Regulatória</strong></td>
+                    <td>Realizada por autoridades regulatórias</td>
+                </tr>
+                <tr>
+                    <td><strong>Exame</strong></td>
+                    <td>Avaliação formal por auditores externos</td>
+                </tr>
+                <tr>
+                    <td><strong>Avaliação</strong></td>
+                    <td>Exame amplo de desempenho e práticas</td>
+                </tr>
+                <tr>
+                    <td><strong>Auditoria de Terceiros Independente</strong></td>
+                    <td>Avaliações objetivas e imparciais</td>
+                </tr>
+            </table>
+
+            <h3>Atestação</h3>
+            <ul>
+                <li>Verificação da precisão e confiabilidade de controles de segurança</li>
+                <li>Exame independente por entidade qualificada</li>
+                <li>Declaração formal de conformidade com padrões</li>
+                <li>Fornece garantia aos stakeholders</li>
+            </ul>
+
+            <h3>Benefícios da Combinação Interna + Externa</h3>
+            <ul>
+                <li>Visão equilibrada e abrangente</li>
+                <li>Capacidades aprimoradas de gestão de riscos</li>
+                <li>Transparência e responsabilidade</li>
+                <li>Compartilhamento de conhecimento</li>
+                <li>Desenvolvimento profissional</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <strong>💡 DICAS FINAIS PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>Fórmulas:</strong> ALE = SLE × ARO | SLE = AV × EF</li>
+                <li><strong>MTD</strong> ≥ RTO + WRT</li>
+                <li><strong>RPO</strong> define frequência de backup</li>
+                <li><strong>Risco Inerente:</strong> sem controles | <strong>Risco Residual:</strong> após controles</li>
+                <li><strong>Hot Site:</strong> imediato (caro) | <strong>Warm Site:</strong> médio | <strong>Cold Site:</strong> lento (barato)</li>
+                <li><strong>Estratégias:</strong> Mitigar, Transferir (seguro), Aceitar (exceção), Evitar</li>
+                <li><strong>Heat Map:</strong> visualização impacto × probabilidade</li>
+                <li><strong>Testes:</strong> Tabletop (discussão), Failover (falha intencional), Simulação, Paralelo</li>
+                <li><strong>Acordos:</strong> NDA (confidencialidade), SLA (nível de serviço), SOW (escopo)</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>📚 Resumo autoral para certificação CompTIA Security+ • Capítulo 12</p>
+        </div>
+    </div>
+</body>
+</html>

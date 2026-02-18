@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo Security+ Capítulo 13 - Conformidade e Proteção de Dados</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
+            padding: 50px;
+            border: 1px solid #e2e8f0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #2c3e50;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .badge {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box strong {
+            color: #ec4899;
+            font-size: 1.1rem;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule strong {
+            color: #f59e0b;
+            font-size: 1.1rem;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            font-size: 1.8rem;
+            color: #0f172a;
+            margin-bottom: 20px;
+            border-left: 5px solid #2c3e50;
+            padding-left: 15px;
+        }
+        .section h3 {
+            font-size: 1.3rem;
+            color: #334155;
+            margin: 20px 0 10px;
+        }
+        .section h4 {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin: 15px 0 5px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .card ul {
+            list-style: none;
+        }
+        .card li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .card li:before {
+            content: "•";
+            color: #2c3e50;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th {
+            background: #2c3e50;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        tr:hover {
+            background: #f1f5f9;
+        }
+        .data-states {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .data-state {
+            flex: 1;
+            min-width: 250px;
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #2c3e50;
+        }
+        .data-state strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px dashed #e2e8f0;
+            text-align: center;
+            color: #64748b;
+        }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📘 Capítulo 13: Conformidade e Proteção de Dados</h1>
+            <span class="badge">Resumo Completo</span>
+        </div>
+
+        <div class="info-box">
+            <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>GDPR:</strong> notificação de violação em até 72 horas</li>
+                <li><strong>Direitos dos Titulares:</strong> acesso, retificação, apagamento, portabilidade</li>
+                <li><strong>Controlador vs Processador:</strong> quem decide vs quem executa</li>
+                <li><strong>Dados em Repouso vs Trânsito vs Uso:</strong> diferentes controles de segurança</li>
+                <li><strong>DLP:</strong> Alert, Block, Quarantine, Tombstone</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣ Conformidade e Consequências de Violações</h2>
+
+            <h3>Conformidade de Segurança</h3>
+            <p>Adesão a padrões, regulamentações e melhores práticas de segurança. Proteção de informações sensíveis e mitigação de riscos.</p>
+
+            <h3>Impactos da Não Conformidade</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>💰 Sanções e Penalidades</h4>
+                    <ul>
+                        <li>Multas financeiras (milhões ou bilhões)</li>
+                        <li>Ações legais de indivíduos afetados</li>
+                        <li>Litígios e acordos custosos</li>
+                        <li>Escrutínio regulatório aumentado</li>
+                        <li>Auditorias e investigações obrigatórias</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🏢 Consequências Organizacionais</h4>
+                    <ul>
+                        <li><strong>Dano à Reputação:</strong> publicidade negativa, perda de confiança</li>
+                        <li><strong>Roubo de Identidade:</strong> dados explorados, processos judiciais</li>
+                        <li><strong>Roubo de PI:</strong> perda de patentes e segredos comerciais</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Violacão de Dados vs Violação de Privacidade</h3>
+            <table>
+                <tr>
+                    <th>Violacão de Dados</th>
+                    <th>Violacão de Privacidade</th>
+                </tr>
+                <tr>
+                    <td>Leitura, modificação ou exclusão não autorizada</td>
+                    <td>Perda ou divulgação de dados pessoais e sensíveis (PII)</td>
+                </tr>
+                <tr>
+                    <td>Perda de dados corporativos e PI</td>
+                    <td>Relacionada a informações pessoalmente identificáveis</td>
+                </tr>
+            </table>
+
+            <h3>Requisitos de Notificação</h3>
+            <ul>
+                <li><strong>Regulador:</strong> autoridade de proteção de dados</li>
+                <li><strong>Aplicação da Lei:</strong> quando aplicável</li>
+                <li><strong>Indivíduos Afetados:</strong> notificação direta</li>
+                <li><strong>Terceiros:</strong> empresas afetadas</li>
+                <li><strong>Público:</strong> através de mídia ou redes sociais</li>
+            </ul>
+
+            <div class="golden-rule">
+                <strong>⚠️ PRAZOS CRÍTICOS:</strong>
+                <ul>
+                    <li><strong>GDPR:</strong> notificação dentro de 72 horas</li>
+                    <li><strong>HIPAA:</strong> notificar indivíduos, Departamento de Saúde e mídia (se >500 pessoas)</li>
+                </ul>
+            </div>
+
+            <h3>Divulgação Deve Incluir</h3>
+            <ul>
+                <li>Descrição das informações violadas</li>
+                <li>Ponto de contato principal</li>
+                <li>Consequências prováveis</li>
+                <li>Medidas tomadas para mitigar</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>2️⃣ Classificação de Informações</h2>
+
+            <h3>Dados Regulamentados</h3>
+            <ul>
+                <li>Informações financeiras, registros de saúde, números de seguridade social, detalhes de cartões</li>
+                <li><strong>HIPAA:</strong> dados de saúde</li>
+                <li><strong>PCI DSS:</strong> informações de cartões</li>
+                <li><strong>GDPR/CCPA:</strong> dados pessoais</li>
+            </ul>
+
+            <h3>Segredos Comerciais</h3>
+            <ul>
+                <li>Fórmulas, processos, métodos, listas de clientes, informações de preços</li>
+                <li>Proteção: NDAs, restrições de acesso, ações legais</li>
+            </ul>
+
+            <h3>Dados Legais e Financeiros</h3>
+            <ul>
+                <li><strong>Legais:</strong> contratos, acordos, registros judiciais, PI</li>
+                <li><strong>Financeiros:</strong> demonstrações, balanços, auditorias, registros fiscais</li>
+            </ul>
+
+            <h3>Esquemas de Classificação</h3>
+            <table>
+                <tr>
+                    <th>Baseado em Confidencialidade</th>
+                    <th>Baseado em Tipo de Ativo</th>
+                </tr>
+                <tr>
+                    <td><strong>Público:</strong> sem restrições</td>
+                    <td><strong>Proprietário:</strong> PI da empresa</td>
+                </tr>
+                <tr>
+                    <td><strong>Confidencial:</strong> apenas aprovados</td>
+                    <td><strong>Privado/Pessoal:</strong> PII</td>
+                </tr>
+                <tr>
+                    <td><strong>Crítico:</strong> visualização restrita</td>
+                    <td><strong>Sensível:</strong> informações que podem prejudicar</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><strong>Restrito:</strong> controles rigorosos</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>3️⃣ Privacidade e Responsabilidade de Dados</h2>
+
+            <h3>Dados de Privacidade vs Dados Confidenciais</h3>
+            <table>
+                <tr>
+                    <th>Aspecto</th>
+                    <th>Dados Confidenciais</th>
+                    <th>Dados de Privacidade</th>
+                </tr>
+                <tr>
+                    <td><strong>Escopo</strong></td>
+                    <td>Informação confidencial da organização</td>
+                    <td>Especificamente informações pessoais</td>
+                </tr>
+                <tr>
+                    <td><strong>Foco</strong></td>
+                    <td>Proteção de informações proprietárias</td>
+                    <td>Preservação de direitos de privacidade</td>
+                </tr>
+                <tr>
+                    <td><strong>Direitos</strong></td>
+                    <td>Não concedem direitos específicos</td>
+                    <td>Acesso, correção, exclusão</td>
+                </tr>
+                <tr>
+                    <td><strong>Consentimento</strong></td>
+                    <td>Pode não requerer consentimento</td>
+                    <td>Geralmente requer consentimento explícito</td>
+                </tr>
+            </table>
+
+            <h3>Papéis e Responsabilidades</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>🎯 Controlador</h4>
+                    <ul>
+                        <li>Determina propósitos e meios</li>
+                        <li>Autoridade de tomada de decisão</li>
+                        <li>Responsável por conformidade</li>
+                        <li>Gerencia solicitações de titulares</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>⚙️ Processador</h4>
+                    <ul>
+                        <li>Processa em nome do controlador</li>
+                        <li>Sem poder de decisão independente</li>
+                        <li>Implementa medidas de segurança</li>
+                        <li>Ex: provedores cloud, folha de pagamento</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>👤 Titular</h4>
+                    <ul>
+                        <li>Indivíduo cujos dados são processados</li>
+                        <li>Possui direitos sob leis de proteção</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Direitos dos Titulares</h3>
+            <table>
+                <tr>
+                    <th>Direito</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr><td><strong>Acesso</strong></td><td>Solicitar acesso a seus dados</td></tr>
+                <tr><td><strong>Retificação</strong></td><td>Corrigir dados imprecisos</td></tr>
+                <tr><td><strong>Apagamento</strong></td><td>Excluir dados sob certas circunstâncias</td></tr>
+                <tr><td><strong>Restrição</strong></td><td>Limitar processamento</td></tr>
+                <tr><td><strong>Portabilidade</strong></td><td>Receber dados em formato legível</td></tr>
+                <tr><td><strong>Objeção</strong></td><td>Objetar ao processamento</td></tr>
+            </table>
+
+            <div class="golden-rule">
+                <strong>⚠️ Direito ao Esquecimento (GDPR):</strong> Direito de solicitar apagamento de dados pessoais quando não mais necessários, consentimento retirado, ou sem fundamentos legítimos.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4️⃣ Destruição de Dados</h2>
+
+            <h3>Descomissionamento</h3>
+            <ol>
+                <li>Sanitização de dados (apagamento seguro)</li>
+                <li>Restauração para configurações de fábrica</li>
+                <li>Eliminação de configurações residuais</li>
+                <li>Atualização de registros de inventário</li>
+                <li>Conformidade com padrões de segurança</li>
+            </ol>
+
+            <h3>Métodos de Sanitização</h3>
+            <table>
+                <tr>
+                    <th>Método</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Exclusão Simples</strong></td>
+                    <td>Remove apenas referências, dados recuperáveis</td>
+                </tr>
+                <tr>
+                    <td><strong>Zero Filling</strong></td>
+                    <td>Define cada bit como zero (pode deixar padrões)</td>
+                </tr>
+                <tr>
+                    <td><strong>Sobrescrita Múltipla</strong></td>
+                    <td>1ª passagem: zeros, 2ª: uns, 3ª: aleatório</td>
+                </tr>
+                <tr>
+                    <td><strong>Software de Limpeza</strong></td>
+                    <td>Active KillDisk, certificados de apagamento</td>
+                </tr>
+            </table>
+
+            <h3>Considerações Especiais</h3>
+            <ul>
+                <li><strong>HDDs:</strong> sobrescrita eficaz</li>
+                <li><strong>SSDs:</strong> células podem reter dados, destruição física recomendada</li>
+                <li><strong>Impressoras multifuncionais:</strong> sanitizar trabalhos, credenciais, reset de fábrica</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>5️⃣ Políticas de Pessoal</h2>
+
+            <h3>Três Fases de Políticas de RH</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>1️⃣ Recrutamento</h4>
+                    <ul>
+                        <li>Triagem de candidatos</li>
+                        <li>Verificações de antecedentes</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>2️⃣ Operação</h4>
+                    <ul>
+                        <li>Comunicação de políticas</li>
+                        <li>Treinamento e conscientização</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>3️⃣ Rescisão</h4>
+                    <ul>
+                        <li>Desabilitar contas</li>
+                        <li>Recuperar ativos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Onboarding (Integração)</h3>
+            <ul>
+                <li><strong>Criação de Conta:</strong> privilégios apropriados, credenciais seguras</li>
+                <li><strong>Transmissão Segura:</strong> senhas iniciais, smart cards</li>
+                <li><strong>Alocação de Ativos:</strong> dispositivos, BYOD</li>
+                <li><strong>Treinamento:</strong> conscientização de segurança</li>
+            </ul>
+
+            <h3>Offboarding (Desligamento)</h3>
+            <ul>
+                <li><strong>Gerenciamento de Conta:</strong> desabilitar privilégios, garantir acesso a ativos</li>
+                <li><strong>Ativos da Empresa:</strong> recuperar dispositivos, chaves, mídias</li>
+                <li><strong>Ativos Pessoais:</strong> limpar dados corporativos</li>
+                <li><strong>Mudanças Imediatas:</strong> credenciais para acesso crítico</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>6️⃣ Treinamento e Conscientização</h2>
+
+            <h3>Campanhas de Phishing</h3>
+            <ul>
+                <li>Ataques simulados para conscientização</li>
+                <li>Aumenta consciência de ameaças</li>
+                <li>Mitiga riscos de engenharia social</li>
+                <li>Promove resposta a incidentes</li>
+            </ul>
+
+            <h3>Ciclo de Vida do Treinamento</h3>
+            <ol>
+                <li><strong>Avaliação:</strong> necessidades e riscos</li>
+                <li><strong>Planejamento:</strong> objetivos, tópicos, métodos</li>
+                <li><strong>Desenvolvimento:</strong> materiais envolventes</li>
+                <li><strong>Entrega:</strong> presencial ou CBT</li>
+                <li><strong>Avaliação:</strong> eficácia, feedback</li>
+                <li><strong>Reforço:</strong> recorrente, lembretes</li>
+                <li><strong>Monitoramento:</strong> ajustes contínuos</li>
+            </ol>
+
+            <h3>Métodos de Medição</h3>
+            <table>
+                <tr>
+                    <th>Método</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr><td><strong>Avaliações e Quizzes</strong></td><td>Pré e pós-treinamento</td></tr>
+                <tr><td><strong>Relatório de Incidentes</strong></td><td>Impacto na detecção</td></tr>
+                <tr><td><strong>Simulações de Phishing</strong></td><td>Reconhecimento e resposta</td></tr>
+                <tr><td><strong>Observações</strong></td><td>Feedback de gerentes</td></tr>
+                <tr><td><strong>Métricas</strong></td><td>Incidentes, conformidade, senhas</td></tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>7️⃣ Proteção de Dados</h2>
+
+            <h3>Estados de Dados</h3>
+            <div class="data-states">
+                <div class="data-state">
+                    <strong>💾 Em Repouso (At Rest)</strong>
+                    <p>Armazenados em mídia persistente: bancos de dados, arquivos, configurações</p>
+                    <p><em>Proteção:</em> criptografia de disco, banco de dados, ACLs</p>
+                </div>
+                <div class="data-state">
+                    <strong>📡 Em Trânsito (In Motion)</strong>
+                    <p>Transmitidos pela rede: tráfego web, acesso remoto</p>
+                    <p><em>Proteção:</em> TLS, IPSec, chaves efêmeras</p>
+                </div>
+                <div class="data-state">
+                    <strong>🧠 Em Uso (In Processing)</strong>
+                    <p>Memória volátil: RAM, registros CPU, cache</p>
+                    <p><em>Proteção:</em> TEE, Intel SGX (criptografia em memória)</p>
+                </div>
+            </div>
+
+            <h3>DLP (Data Loss Prevention)</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Componentes</h4>
+                    <ul>
+                        <li><strong>Servidor de Política:</strong> regras, incidentes, relatórios</li>
+                        <li><strong>Agentes de Endpoint:</strong> aplicam política em clientes</li>
+                        <li><strong>Agentes de Rede:</strong> monitoram comunicações</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Mecanismos de Remediação</h4>
+                    <ul>
+                        <li><strong>Alerta Apenas:</strong> cópia permitida, incidente registrado</li>
+                        <li><strong>Bloquear:</strong> usuário impedido de copiar</li>
+                        <li><strong>Quarentena:</strong> acesso negado</li>
+                        <li><strong>Lápide:</strong> arquivo substituído por descrição</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>8️⃣ Soberania de Dados e Considerações Geográficas</h2>
+
+            <h3>Soberania de Dados</h3>
+            <ul>
+                <li>Jurisdição impede ou restringe processamento/armazenamento</li>
+                <li>Dados devem residir fisicamente dentro da jurisdição</li>
+                <li><strong>GDPR:</strong> proteções estendidas a cidadãos da UE</li>
+                <li><strong>Privacy Shield (EUA):</strong> auto-certificação de proteções</li>
+            </ul>
+
+            <h3>Considerações Geográficas</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>📍 Locais de Armazenamento</h4>
+                    <p>Seleção de datacenters dentro de limites legais</p>
+                </div>
+                <div class="card">
+                    <h4>🌍 Acesso Múltiplo</h4>
+                    <p>Controles baseados em geolocalização para validar acesso</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>9️⃣ Políticas de Retenção de Dados</h2>
+
+            <h3>Definição</h3>
+            <p>Define como informações são mantidas e por quanto tempo, baseado em requisitos legais e de negócio.</p>
+
+            <h3>Benefícios</h3>
+            <ul>
+                <li><strong>Proteção Legal:</strong> contra acusações de destruição de evidências</li>
+                <li><strong>Redução de Custos:</strong> discovery mais barato, menos material antigo</li>
+                <li><strong>Redução de Exposição:</strong> menos informações que poderiam expor a litígio</li>
+                <li><strong>Requisitos de Armazenamento:</strong> menor necessidade de hardware</li>
+            </ul>
+
+            <h3>Melhores Práticas</h3>
+            <ul>
+                <li>Toda informação destruída antes do descarte</li>
+                <li>Etiquetas de classificação para política específica</li>
+                <li>Automação com ferramentas de software</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <strong>💡 DICAS FINAIS PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>GDPR:</strong> notificação 72h, direito ao esquecimento</li>
+                <li><strong>Controlador:</strong> decide | <strong>Processador:</strong> executa</li>
+                <li><strong>Classificação:</strong> Público, Confidencial, Crítico, Proprietário, Restrito</li>
+                <li><strong>Dados em Repouso:</strong> criptografia de disco | <strong>Trânsito:</strong> TLS | <strong>Uso:</strong> TEE/SGX</li>
+                <li><strong>DLP:</strong> Alert, Block, Quarantine, Tombstone</li>
+                <li><strong>Destruição:</strong> exclusão simples não basta, usar sobrescrita ou destruição física</li>
+                <li><strong>Onboarding:</strong> criar conta, alocar ativos, treinar</li>
+                <li><strong>Offboarding:</strong> desabilitar conta, recuperar ativos</li>
+                <li><strong>Phishing:</strong> treinamento contínuo e simulações</li>
+                <li><strong>Soberania:</strong> dados devem ficar dentro da jurisdição</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>📚 Resumo autoral para certificação CompTIA Security+ • Capítulo 13</p>
+        </div>
+    </div>
+</body>
+</html>

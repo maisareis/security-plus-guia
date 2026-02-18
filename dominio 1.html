@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Domínio 1 - Ameaças, Ataques e Vulnerabilidades</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .flashcard-area { max-width: 900px; margin: 0 auto; }
+        .card-info {
+            background: rgba(255,255,255,0.25);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .flashcard:hover { transform: scale(1.02); }
+        .side-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .flashcard-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #1f2937;
+        }
+        .flip-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn-nav {
+            background: white;
+            font-size: 1.5rem;
+            width: 55px;
+            height: 55px;
+        }
+        .btn-master {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        .btn-master.mastered {
+            background: #10b981;
+            color: white;
+        }
+        .btn-shuffle {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .summary {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .summary h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 15px;
+        }
+        .summary h2 {
+            color: #764ba2;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        .summary h3 {
+            color: #667eea;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .summary ul, .summary ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .attack-chain {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin: 30px 0;
+        }
+        .chain-item {
+            padding: 15px;
+            background: #f3f4f6;
+            border-left: 5px solid #667eea;
+            border-radius: 5px;
+            display: flex;
+            gap: 15px;
+        }
+        .chain-number {
+            font-weight: bold;
+            color: #667eea;
+            min-width: 30px;
+        }
+        .malware-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .malware-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .malware-card strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Domínio 1</h1>
+            <p>Ameaças, Ataques e Vulnerabilidades</p>
+            <div class="stats-bar">
+                <div class="stat-card">📚 75 Flashcards</div>
+                <div class="stat-card">❓ 35 Questões</div>
+                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="flashcard-area">
+                <div class="card-info">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
+                        <div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 75</div>
+                            <div id="mastered-count">0 dominados</div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="side-indicator" id="side-indicator">FRENTE</div>
+                    <div class="flashcard-text" id="card-text"></div>
+                    <div class="flip-hint">👆 Clique para virar</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
+                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab1" class="content">
+            <div class="summary">
+                <h1>📖 Resumo - Domínio 1: Ameaças, Ataques e Vulnerabilidades</h1>
+                
+                <div class="info-box">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Tipos de Atores:</strong> Nation-state (APT), Crime Organizado (financeiro), Hacktivists (político), Insider (interno)</li>
+                        <li><strong>Cyber Kill Chain:</strong> 7 fases do ataque - Reconhecimento → Weaponization → Delivery → Exploitation → Installation → C2 → Ações</li>
+                        <li><strong>Phishing vs Spear Phishing vs Whaling:</strong> Massa vs Direcionado vs Executivos</li>
+                        <li><strong>Ransomware:</strong> Criptografa dados e exige pagamento - BACKUP é a melhor defesa!</li>
+                    </ul>
+                </div>
+
+                <h2>1️⃣ Atores de Ameaças (Threat Actors)</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#667eea; color:white;">Tipo</th><th style="background:#667eea; color:white;">Recursos</th><th style="background:#667eea; color:white;">Motivação</th><th style="background:#667eea; color:white;">Características</th></tr>
+                    <tr><td><strong>Nation-state</strong></td><td>Ilimitados</td><td>Espionagem, guerra</td><td>APTs, sofisticados</td></tr>
+                    <tr><td><strong>Crime Organizado</strong></td><td>Altos</td><td>Financeira</td><td>Ransomware, fraudes</td></tr>
+                    <tr><td><strong>Hacktivists</strong></td><td>Baixos</td><td>Política/social</td><td>DDoS, defacement</td></tr>
+                    <tr><td><strong>Insider Threat</strong></td><td>Acesso legítimo</td><td>Vingança, dinheiro</td><td>Difícil detectar</td></tr>
+                    <tr><td><strong>Script Kiddies</strong></td><td>Baixos</td><td>Diversão</td><td>Ferramentas prontas</td></tr>
+                </table>
+
+                <div class="golden-rule">
+                    <strong>⚠️ DIFERENÇA CRÍTICA:</strong> Ameaça Interna (Insider) já tem acesso legítimo - mais difícil de detectar que ameaça externa.
+                </div>
+
+                <h2>2️⃣ Cyber Kill Chain (Estratégia de Ataque)</h2>
+                
+                <div class="attack-chain">
+                    <div class="chain-item"><span class="chain-number">1.</span><div><strong>Reconhecimento:</strong> Coletar informações sobre o alvo (OSINT, varreduras)</div></div>
+                    <div class="chain-item"><span class="chain-number">2.</span><div><strong>Weaponization:</strong> Criar/preparar o exploit para vulnerabilidade</div></div>
+                    <div class="chain-item"><span class="chain-number">3.</span><div><strong>Delivery:</strong> Entregar o exploit (email, USB, site)</div></div>
+                    <div class="chain-item"><span class="chain-number">4.</span><div><strong>Exploitation:</strong> Executar o exploit, ganhar acesso inicial</div></div>
+                    <div class="chain-item"><span class="chain-number">5.</span><div><strong>Installation:</strong> Instalar backdoor/malware persistente</div></div>
+                    <div class="chain-item"><span class="chain-number">6.</span><div><strong>C2 (Command & Control):</strong> Comunicação com servidor atacante</div></div>
+                    <div class="chain-item"><span class="chain-number">7.</span><div><strong>Actions on Objectives:</strong> Roubar dados, destruir, espionar</div></div>
+                </div>
+
+                <h2>3️⃣ Engenharia Social</h2>
+
+                <h3>Processo de Engenharia Social</h3>
+                <ol>
+                    <li><strong>Pesquisa:</strong> Reunir informações (footprinting, dumpster diving)</li>
+                    <li><strong>Desenvolvimento:</strong> Selecionar alvos, construir relacionamento</li>
+                    <li><strong>Exploração:</strong> Tirar vantagem do relacionamento</li>
+                    <li><strong>Saída:</strong> Finalizar sem levantar suspeitas</li>
+                </ol>
+
+                <h3>Princípios de Manipulação</h3>
+                <ul>
+                    <li><strong>Autoridade:</strong> Fingir ser chefe, polícia, suporte técnico</li>
+                    <li><strong>Urgência:</strong> "Resolva agora ou sua conta será bloqueada"</li>
+                    <li><strong>Escassez:</strong> "Oferta por tempo limitado"</li>
+                    <li><strong>Prova Social:</strong> "Todo mundo está fazendo"</li>
+                    <li><strong>Medo:</strong> Ameaçar com consequências negativas</li>
+                </ul>
+
+                <h3>Técnicas de Engenharia Social</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#667eea; color:white;">Técnica</th><th style="background:#667eea; color:white;">Descrição</th></tr>
+                    <tr><td><strong>Phishing</strong></td><td>Email malicioso em massa</td></tr>
+                    <tr><td><strong>Spear Phishing</strong></td><td>Direcionado a pessoa específica</td></tr>
+                    <tr><td><strong>Whaling</strong></td><td>Phishing para executivos</td></tr>
+                    <tr><td><strong>Vishing</strong></td><td>Por telefone</td></tr>
+                    <tr><td><strong>Smishing</strong></td><td>Por SMS</td></tr>
+                    <tr><td><strong>Pretexting</strong></td><td>Criar cenário falso</td></tr>
+                    <tr><td><strong>Baiting</strong></td><td>Oferecer algo atraente (USB infectada)</td></tr>
+                    <tr><td><strong>Tailgating</strong></td><td>Seguir pessoa autorizada</td></tr>
+                    <tr><td><strong>Pharming</strong></td><td>Redirecionar DNS para site falso</td></tr>
+                    <tr><td><strong>Typosquatting</strong></td><td>Domínios com erros de digitação</td></tr>
+                </table>
+
+                <h2>4️⃣ Malware</h2>
+
+                <div class="malware-grid">
+                    <div class="malware-card"><strong>Vírus</strong><p>Infecta arquivos executáveis, precisa ser executado</p></div>
+                    <div class="malware-card"><strong>Worm</strong><p>Auto-replicante, não precisa de arquivo hospedeiro</p></div>
+                    <div class="malware-card"><strong>Trojan</strong><p>Parece legítimo mas é malicioso</p></div>
+                    <div class="malware-card"><strong>Ransomware</strong><p>Criptografa dados e exige pagamento</p></div>
+                    <div class="malware-card"><strong>Spyware</strong><p>Monitora atividades e rouba informações</p></div>
+                    <div class="malware-card"><strong>Keylogger</strong><p>Registra teclas digitadas</p></div>
+                    <div class="malware-card"><strong>Rootkit</strong><p>Esconde presença do malware</p></div>
+                    <div class="malware-card"><strong>Botnet</strong><p>Rede de computadores infectados</p></div>
+                    <div class="malware-card"><strong>RAT</strong><p>Remote Access Trojan - controle remoto</p></div>
+                    <div class="malware-card"><strong>Fileless Malware</strong><p>Executa na memória, não grava em disco</p></div>
+                </div>
+
+                <h2>5️⃣ Ataques de Rede e Senha</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#667eea; color:white;">Ataque</th><th style="background:#667eea; color:white;">Descrição</th><th style="background:#667eea; color:white;">Contramedida</th></tr>
+                    <tr><td><strong>ARP Poisoning</strong></td><td>Associa MAC do atacante ao IP da gateway</td><td>DAI, port security</td></tr>
+                    <tr><td><strong>DNS Poisoning</strong></td><td>Corrompe cache DNS com entradas falsas</td><td>DNSSEC</td></tr>
+                    <tr><td><strong>SYN Flood</strong></td><td>Muitos SYN sem completar handshake</td><td>SYN cookies</td></tr>
+                    <tr><td><strong>Brute Force</strong></td><td>Testa todas combinações possíveis</td><td>Lockout, senhas fortes</td></tr>
+                    <tr><td><strong>Dictionary Attack</strong></td><td>Usa lista de palavras comuns</td><td>Complexidade, salt</td></tr>
+                    <tr><td><strong>Rainbow Table</strong></td><td>Tabela hash→plaintext pré-computada</td><td>Salt</td></tr>
+                </table>
+
+                <div class="tip-box">
+                    <strong>💡 ATAQUES DE SENHA:</strong> Online (contra serviço ativo) é lento e detectável. Offline (contra hash) é rápido e indetectável.
+                </div>
+
+                <h2>6️⃣ Reconhecimento e Varredura</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#667eea; color:white;">Tipo</th><th style="background:#667eea; color:white;">Descrição</th></tr>
+                    <tr><td><strong>Passive Recon</strong></td><td>Não interage com alvo: OSINT, DNS lookups, redes sociais</td></tr>
+                    <tr><td><strong>Active Recon</strong></td><td>Interage com alvo: port scan, ping sweep, banner grabbing</td></tr>
+                    <tr><td><strong>Nmap -sS</strong></td><td>SYN scan (stealth), não completa handshake</td></tr>
+                    <tr><td><strong>Nmap -sV</strong></td><td>Version detection (serviços)</td></tr>
+                    <tr><td><strong>Nmap -O</strong></td><td>OS detection</td></tr>
+                </table>
+
+                <div class="golden-rule">
+                    <strong>🎯 DICAS FINAIS PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Insider Threat é o <strong>mais difícil de detectar</strong></li>
+                        <li>Phishing (massa) vs Spear Phishing (direcionado) vs Whaling (executivos)</li>
+                        <li>Ransomware = BACKUP é a melhor defesa</li>
+                        <li>Rootkit de firmware sobrevive formatação</li>
+                        <li>Fileless malware usa PowerShell/WMI</li>
+                        <li>ARP poisoning → DAI | MAC flooding → Port Security</li>
+                        <li>Salt torna rainbow table inútil</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab2" class="content">
+            <div class="quiz-area" style="max-width: 1000px; margin:0 auto;">
+                <div class="quiz-header" style="text-align:center; color:white; margin-bottom:35px;">
+                    <h2>Quiz - 35 Questões</h2>
+                </div>
+                <div id="questions"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; padding:15px 40px;">Ver Resultados</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-modal" id="results-modal" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:1000;">
+        <div class="results-content" style="background:white; padding:50px; border-radius:25px; max-width:500px; text-align:center;">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle" style="width:180px; height:180px; border-radius:50%; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:bold; margin:30px auto;">0%</div>
+            <p id="score-text" style="font-size:1.2rem; margin-bottom:20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; padding:15px 40px;">Refazer Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const cards = [
+            // Atores de Ameaça (1-10)
+            {f: "O que é um ator de ameaça do tipo Nation-state (Estado-nação)?", b: "São governos com recursos ilimitados. Realizam espionagem e ataques avançados (APT - Advanced Persistent Threat). Alvos estratégicos."},
+            {f: "O que é Organized Crime (Crime Organizado)?", b: "Grupos criminosos com motivação financeira. Utilizam ransomware, fraudes bancárias e roubo de dados."},
+            {f: "O que são Hacktivists?", b: "Ativistas com motivação política ou social. Realizam ataques DDoS, desfiguração de sites (defacement) e vazamentos."},
+            {f: "O que é Insider Threat (Ameaça Interna)?", b: "Funcionários ou pessoas com acesso legítimo que comprometem a segurança por vingança, ganho financeiro ou negligência."},
+            {f: "O que são Script Kiddies?", b: "Atacantes com baixa habilidade técnica que usam ferramentas prontas. Motivação: diversão e reconhecimento."},
+            {f: "O que é APT (Advanced Persistent Threat)?", b: "Ameaça avançada e persistente: ataques sofisticados e prolongados, geralmente patrocinados por governos, com objetivos de espionagem."},
+            
+            // Cyber Kill Chain (7-13)
+            {f: "O que é Reconnaissance (Reconhecimento)?", b: "Primeira fase do ataque. Coleta de informações sobre o alvo: varreduras, engenharia social, OSINT."},
+            {f: "O que é Weaponization (Preparação)?", b: "Segunda fase. Criação ou preparação do exploit para explorar uma vulnerabilidade."},
+            {f: "O que é Delivery (Entrega)?", b: "Terceira fase. Entrega do exploit ao alvo via email, USB, site comprometido ou outro vetor."},
+            {f: "O que é Exploitation (Exploração)?", b: "Quarta fase. Execução do exploit para ganhar acesso inicial ao sistema alvo."},
+            {f: "O que é Installation (Instalação)?", b: "Quinta fase. Instalação de backdoor, malware ou persistência no sistema comprometido."},
+            {f: "O que é C2 (Command & Control)?", b: "Sexta fase. Estabelecimento de comunicação entre o sistema comprometido e o servidor do atacante."},
+            {f: "O que é Actions on Objectives?", b: "Sétima e última fase. Ações finais do atacante: roubo de dados, destruição, espionagem ou movimentação lateral."},
+
+            // Engenharia Social (14-25)
+            {f: "O que é Social Engineering (Engenharia Social)?", b: "Manipulação psicológica para induzir pessoas a comprometerem a segurança, revelando informações ou executando ações."},
+            {f: "O que é Phishing?", b: "Golpe onde o atacante envia emails falsos fingindo ser uma entidade legítima para roubar credenciais ou instalar malware."},
+            {f: "O que é Spear Phishing?", b: "Phishing direcionado a uma pessoa ou organização específica, com informações personalizadas para aumentar a credibilidade."},
+            {f: "O que é Whaling?", b: "Spear phishing focado em executivos, CEOs e VIPs. O alvo é considerado uma 'baleia' pelo seu alto valor."},
+            {f: "O que é Vishing (Voice Phishing)?", b: "Engenharia social realizada por telefone. O atacante se passa por suporte técnico, banco ou autoridade."},
+            {f: "O que é Smishing (SMS Phishing)?", b: "Golpe realizado via mensagens de texto (SMS), com links maliciosos ou pedidos de informação."},
+            {f: "O que é Pretexting?", b: "Criação de um cenário ou história falsa para obter informações da vítima."},
+            {f: "O que é Baiting?", b: "Oferecer algo atraente (USB infectada, download gratuito) para que a vítima comprometa a segurança."},
+            {f: "O que é Tailgating (ou Piggybacking)?", b: "Seguir uma pessoa autorizada para entrar em uma área restrita, aproveitando a porta aberta."},
+            {f: "O que é Pharming?", b: "Redirecionar o tráfego de um site legítimo para um site falso, geralmente manipulando DNS."},
+            {f: "O que é Typosquatting (URL Hijacking)?", b: "Registrar domínios com erros de digitação comuns (ex: gooogle.com) para capturar tráfego ou aplicar golpes."},
+            {f: "O que é Watering Hole?", b: "Comprometer um site frequentado pelo alvo para infectar os visitantes."},
+
+            // Malware (26-45)
+            {f: "O que é um Vírus?", b: "Malware que infecta arquivos executáveis e se replica, precisando de ação do usuário para ser executado."},
+            {f: "O que é um Worm (Verme)?", b: "Malware auto-replicante que se espalha sem precisar de um arquivo hospedeiro, explorando redes."},
+            {f: "O que é um Trojan (Cavalo de Troia)?", b: "Malware que parece legítimo mas é malicioso. Não se replica."},
+            {f: "O que é Ransomware?", b: "Malware que criptografa os dados da vítima e exige pagamento (resgate) para liberar o acesso."},
+            {f: "O que é Spyware?", b: "Malware que monitora atividades do usuário, coleta informações e rouba dados."},
+            {f: "O que é Keylogger?", b: "Malware que registra todas as teclas digitadas pela vítima para capturar senhas e informações."},
+            {f: "O que é Rootkit?", b: "Malware que se esconde no sistema, muitas vezes em nível de kernel, para evitar detecção e manter acesso."},
+            {f: "O que é Botnet?", b: "Rede de computadores infectados (zumbis) controlados remotamente por um atacante para ataques coordenados."},
+            {f: "O que é RAT (Remote Access Trojan)?", b: "Trojan que permite acesso e controle remoto completo do sistema infectado."},
+            {f: "O que é Fileless Malware?", b: "Malware que executa diretamente na memória, sem gravar arquivos em disco, dificultando detecção."},
+            {f: "O que é Adware?", b: "Malware que exibe anúncios indesejados, pode rastrear hábitos de navegação."},
+
+            // Ataques de Rede (46-55)
+            {f: "O que é ataque de MAC Flooding?", b: "Inunda a tabela CAM do switch. O switch vira um hub (fail open). Atacante consegue snifar todo tráfego. Proteção: Port Security."},
+            {f: "O que é ARP Spoofing/Poisoning?", b: "Atacante associa seu MAC com o IP da vítima. O tráfego vai para o atacante (MitM). Proteção: DAI (Dynamic ARP Inspection)."},
+            {f: "O que é VLAN Hopping?", b: "Atacante salta entre VLANs não autorizadas (double tagging). Proteção: desabilitar DTP, VLAN nativa segura."},
+            {f: "O que é DHCP Spoofing?", b: "Servidor DHCP falso fornece gateway malicioso. Proteção: DHCP Snooping."},
+            {f: "O que é SYN Flood?", b: "Ataque DoS que envia muitos SYN sem completar handshake. Esgota recursos. Contramedida: SYN cookies."},
+            {f: "O que é DNS Amplification?", b: "DDoS usando servidores DNS abertos como amplificadores. Spoofed source IP da vítima."},
+            {f: "O que é On-Path Attack (MITM)?", b: "Intercepta comunicação entre dois lados. Lê, modifica, injeta. ARP poisoning, rogue AP."},
+            {f: "O que é Replay Attack?", b: "Captura tráfego legítimo e retransmite. Contramedida: timestamps, nonces, sequence numbers."},
+            {f: "O que é IP Spoofing?", b: "Falsificação do endereço IP de origem em pacotes de rede. Usado em ataques de DoS, para bypassar filtros."},
+            {f: "O que é MAC Spoofing?", b: "Alteração do endereço MAC. Usado para impersonar outro dispositivo, bypassar filtros MAC."},
+
+            // Ataques de Senha (56-65)
+            {f: "O que é ataque de força bruta (Brute Force)?", b: "Testa todas as combinações possíveis de caracteres. É lento, mas eventualmente encontrará a senha."},
+            {f: "O que é ataque de dicionário (Dictionary Attack)?", b: "Usa uma lista de palavras comuns e suas variações. Rápido, mas só funciona se a senha for fraca."},
+            {f: "O que é ataque híbrido (Hybrid Attack)?", b: "Combina dictionary attack com variações: adiciona números, símbolos (ex: password → password123)."},
+            {f: "O que é rainbow table?", b: "Tabela pré-computada que mapeia hashes a senhas em texto plano. Muito rápida, mas inútil com salt."},
+            {f: "O que é credential stuffing?", b: "Usa pares de usuário/senha vazados de outros serviços para tentar acessar contas. Explora reuso de senhas."},
+            {f: "O que é password spraying?", b: "Testa uma senha comum contra muitas contas de usuário. Evita lockout."},
+            {f: "O que é pass-the-hash?", b: "Usa o hash da senha diretamente para autenticar, sem precisar quebrá-lo. Comum em Windows (NTLM)."},
+            {f: "O que é salting (salt)?", b: "Valor aleatório único adicionado à senha antes do hash. Torna rainbow tables inúteis."},
+            {f: "O que é key stretching?", b: "Técnica que aumenta o tempo para calcular o hash (múltiplas iterações). Ex: PBKDF2, bcrypt, Argon2."},
+            {f: "O que é account lockout?", b: "Política que bloqueia uma conta após X tentativas erradas. Previne brute force online."},
+
+            // Reconhecimento (66-75)
+            {f: "O que é Passive Reconnaissance?", b: "Coleta informações sem interagir com o alvo. Difícil de detectar. Inclui OSINT, redes sociais, DNS lookups."},
+            {f: "O que é Active Reconnaissance?", b: "Interage diretamente com o alvo. Pode ser detectado. Inclui port scan, ping sweep, banner grabbing."},
+            {f: "O que é OSINT?", b: "Open-Source Intelligence. Coleta de informações de fontes públicas: Google, redes sociais, Shodan, whois."},
+            {f: "O que é banner grabbing?", b: "Conectar a um serviço e ler o banner retornado, que geralmente contém informações sobre software e versão."},
+            {f: "O que é nmap -sS?", b: "SYN scan (stealth). Envia pacotes SYN e analisa respostas. Não completa handshake TCP, gerando menos logs."},
+            {f: "O que é nmap -sV?", b: "Version detection. Após descobrir portas abertas, tenta identificar a versão do serviço."},
+            {f: "O que é nmap -O?", b: "OS detection. Tenta identificar o sistema operacional do alvo."},
+            {f: "O que é nmap -A?", b: "Aggressive mode. Ativa várias opções: -O, -sV, -sC (scripts), e traceroute."},
+            {f: "O que é nmap -p-?", b: "Escaneia todas as 65535 portas TCP."},
+            {f: "O que é nmap -Pn?", b: "No ping. Assume que os hosts estão ativos, pulando a fase de descoberta."}
+        ];
+
+        const quiz = [
+            // Atores
+            {q: "Qual ator de ameaça possui recursos ilimitados e realiza APT?", o: ["Script Kiddie", "Hacktivist", "Nation-state", "Insider"], c: 2},
+            {q: "Qual a principal motivação do Crime Organizado?", o: ["Política", "Financeira", "Diversão", "Ideologia"], c: 1},
+            {q: "Funcionário que compromete a segurança se enquadra em qual categoria?", o: ["Nation-state", "Hacktivist", "Insider Threat", "APT"], c: 2},
+            // Cyber Kill Chain
+            {q: "Primeira fase da Cyber Kill Chain:", o: ["Exploitation", "Delivery", "Reconnaissance", "Installation"], c: 2},
+            {q: "Fase onde atacante estabelece comunicação com servidor:", o: ["C2", "Weaponization", "Delivery", "Actions"], c: 0},
+            // Engenharia Social
+            {q: "Email malicioso em massa:", o: ["Vishing", "Phishing", "Smishing", "Baiting"], c: 1},
+            {q: "Phishing para executivos:", o: ["Spear Phishing", "Whaling", "Vishing", "Pretexting"], c: 1},
+            {q: "Golpe por telefone:", o: ["Phishing", "Smishing", "Vishing", "Pharming"], c: 2},
+            {q: "Seguir pessoa autorizada:", o: ["Shoulder Surfing", "Tailgating", "Dumpster Diving", "Baiting"], c: 1},
+            // Malware
+            {q: "Malware que criptografa dados e exige pagamento:", o: ["Spyware", "Ransomware", "Adware", "Keylogger"], c: 1},
+            {q: "Malware que se replica sem precisar de arquivo hospedeiro:", o: ["Vírus", "Worm", "Trojan", "Rootkit"], c: 1},
+            {q: "Malware que parece legítimo mas é malicioso:", o: ["Vírus", "Worm", "Trojan", "Spyware"], c: 2},
+            {q: "Malware que executa na memória sem gravar em disco:", o: ["Rootkit", "RAT", "Fileless Malware", "Adware"], c: 2},
+            // Ataques de Rede
+            {q: "Ataque que inunda tabela CAM do switch:", o: ["ARP Spoofing", "MAC Flooding", "DHCP Spoofing", "VLAN Hopping"], c: 1},
+            {q: "Ataque que associa MAC do atacante ao IP da vítima:", o: ["DNS Poisoning", "ARP Spoofing", "IP Spoofing", "MAC Flooding"], c: 1},
+            {q: "Ataque DoS com muitos SYN sem completar handshake:", o: ["Ping Flood", "SYN Flood", "UDP Flood", "HTTP Flood"], c: 1},
+            // Ataques de Senha
+            {q: "Ataque que testa todas as combinações possíveis:", o: ["Dictionary", "Brute Force", "Hybrid", "Rainbow Table"], c: 1},
+            {q: "Tabela pré-computada de hashes:", o: ["Dictionary", "Rainbow Table", "Salt", "Hash"], c: 1},
+            {q: "Valor aleatório que torna rainbow tables inúteis:", o: ["Complexity", "Length", "Salt", "Lockout"], c: 2},
+            // Reconhecimento
+            {q: "Reconhecimento sem interagir com alvo:", o: ["Active", "Passive", "Port Scan", "Ping Sweep"], c: 1},
+            {q: "Comando nmap para SYN scan (stealth):", o: ["-sT", "-sS", "-sU", "-sV"], c: 1},
+            {q: "Comando nmap para detectar versão de serviços:", o: ["-sT", "-sS", "-sU", "-sV"], c: 3}
+        ];
+
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
+
+        function loadProgress() {
+            const saved = localStorage.getItem('dominio1_mastered');
+            if (saved) mastered = new Set(JSON.parse(saved));
+        }
+        function saveProgress() {
+            localStorage.setItem('dominio1_mastered', JSON.stringify([...mastered]));
+        }
+        loadProgress();
+
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
+            document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+        }
+
+        function updateCard() {
+            if (filteredCards.length === 0) {
+                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                return;
+            }
+            const cardIndex = filteredCards[currentCard];
+            const card = cards[cardIndex];
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            const btn = document.getElementById('master-btn');
+            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+            
+            const progress = (mastered.size / cards.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
+        }
+
+        function flipCard() { flipped = !flipped; updateCard(); }
+        function nextCard() { currentCard = (currentCard + 1) % filteredCards.length; flipped = false; updateCard(); }
+        function prevCard() { currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length; flipped = false; updateCard(); }
+        
+        function toggleMaster() {
+            const cardIndex = filteredCards[currentCard];
+            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
+            else mastered.add(cardIndex);
+            saveProgress();
+            updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = filteredCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+            }
+            currentCard = 0; flipped = false; updateCard();
+        }
+
+        function filterCards(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') filteredCards = [...Array(cards.length).keys()];
+            else if (type === 'mastered') filteredCards = Array.from(mastered);
+            else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            
+            currentCard = 0; flipped = false; updateCard();
+        }
+
+        function loadQuiz() {
+            const container = document.getElementById('questions');
+            quiz.forEach((q, qi) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(qi, oi);
+                    odiv.id = `q${qi}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${qi}`;
+                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                div.appendChild(exp);
+                container.appendChild(div);
+            });
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            quiz[qi].o.forEach((_, i) => document.getElementById(`q${qi}o${i}`).classList.remove('selected'));
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            quiz.forEach((q, qi) => {
+                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (correctAnswer.includes(oi)) el.classList.add('correct');
+                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                });
+                document.getElementById(`exp${qi}`).style.display = 'block';
+                if (correctAnswer.includes(answers[qi])) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').style.display = 'flex';
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('results-modal').style.display = 'none';
+            loadQuiz();
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>

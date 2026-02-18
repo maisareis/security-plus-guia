@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Domínio 5 - Governança, Risco e Conformidade</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .flashcard-area { max-width: 900px; margin: 0 auto; }
+        .card-info {
+            background: rgba(255,255,255,0.25);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .flashcard:hover { transform: scale(1.02); }
+        .side-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #2c3e50;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .flashcard-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #1f2937;
+        }
+        .flip-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn-nav {
+            background: white;
+            font-size: 1.5rem;
+            width: 55px;
+            height: 55px;
+        }
+        .btn-master {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        .btn-master.mastered {
+            background: #10b981;
+            color: white;
+        }
+        .btn-shuffle {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .filter-btn.active {
+            background: white;
+            color: #2c3e50;
+        }
+
+        .summary {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .summary h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            border-bottom: 4px solid #2c3e50;
+            padding-bottom: 15px;
+        }
+        .summary h2 {
+            color: #3498db;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        .summary h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .summary ul, .summary ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .risk-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #2c3e50;
+        }
+        .risk-card strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .doc-hierarchy {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin: 30px 0;
+        }
+        .doc-level {
+            padding: 15px;
+            background: #f3f4f6;
+            border-left: 5px solid #2c3e50;
+            border-radius: 5px;
+        }
+        .doc-level strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .compliance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .compliance-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #2c3e50;
+        }
+        .compliance-card strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .data-class {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .class-level {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+        }
+        .class-public { background: #6c757d; }
+        .class-internal { background: #17a2b8; }
+        .class-confidential { background: #ffc107; color: #212529; }
+        .class-restricted { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚖️ Domínio 5</h1>
+            <p>Governança, Risco e Conformidade</p>
+            <div class="stats-bar">
+                <div class="stat-card">📚 70 Flashcards</div>
+                <div class="stat-card">❓ 35 Questões</div>
+                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="flashcard-area">
+                <div class="card-info">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
+                        <div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 70</div>
+                            <div id="mastered-count">0 dominados</div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="side-indicator" id="side-indicator">FRENTE</div>
+                    <div class="flashcard-text" id="card-text"></div>
+                    <div class="flip-hint">👆 Clique para virar</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
+                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab1" class="content">
+            <div class="summary">
+                <h1>📖 Resumo - Domínio 5: Governança, Risco e Conformidade</h1>
+                
+                <div class="info-box">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Policy:</strong> Alto nível, estratégico ("por que fazer")</li>
+                        <li><strong>Standard:</strong> Requisitos obrigatórios ("o que fazer")</li>
+                        <li><strong>Procedure:</strong> Passo a passo ("como fazer")</li>
+                        <li><strong>Inherent Risk:</strong> Risco natural (sem controles)</li>
+                        <li><strong>Residual Risk:</strong> Risco remanescente (após controles)</li>
+                        <li><strong>ALE = SLE × ARO</strong> (cálculo de risco quantitativo)</li>
+                    </ul>
+                </div>
+
+                <h2>1️⃣ Documentos de Governança</h2>
+
+                <div class="doc-hierarchy">
+                    <div class="doc-level">
+                        <strong>📜 Policy (Política)</strong>
+                        <p>Documento de alto nível, aprovado pela alta gestão. Define objetivos, responsabilidades e requisitos gerais. Ex: Política de Senhas, Política de Uso Aceitável.</p>
+                        <p><em>Nível: Estratégico (POR QUE fazer)</em></p>
+                    </div>
+                    <div class="doc-level">
+                        <strong>📏 Standard (Padrão)</strong>
+                        <p>Requisitos específicos e obrigatórios. Ex: "Senhas devem ter 12+ caracteres", "Usar AES-256".</p>
+                        <p><em>Nível: Tático (O QUE fazer)</em></p>
+                    </div>
+                    <div class="doc-level">
+                        <strong>📋 Procedure (Procedimento)</strong>
+                        <p>Passo a passo detalhado para executar uma tarefa. Ex: "Como provisionar um novo usuário".</p>
+                        <p><em>Nível: Operacional (COMO fazer)</em></p>
+                    </div>
+                    <div class="doc-level">
+                        <strong>💡 Guideline (Diretriz)</strong>
+                        <p>Recomendações e melhores práticas, não obrigatórias. Ex: "Recomenda-se usar um gerenciador de senhas".</p>
+                    </div>
+                </div>
+
+                <h3>Tipos Específicos de Políticas</h3>
+                <ul>
+                    <li><strong>AUP (Acceptable Use Policy):</strong> Define uso aceitável de recursos corporativos (email, internet, dispositivos).</li>
+                    <li><strong>NDA (Non-Disclosure Agreement):</strong> Acordo de confidencialidade para proteger segredos comerciais.</li>
+                </ul>
+
+                <h2>2️⃣ Change Management</h2>
+
+                <div class="risk-grid">
+                    <div class="risk-card">
+                        <strong>1. Request</strong>
+                        <p>Solicitação formal de mudança</p>
+                    </div>
+                    <div class="risk-card">
+                        <strong>2. Approval</strong>
+                        <p>Análise e aprovação pelo CAB</p>
+                    </div>
+                    <div class="risk-card">
+                        <strong>3. Test</strong>
+                        <p>Teste em ambiente controlado</p>
+                    </div>
+                    <div class="risk-card">
+                        <strong>4. Implement</strong>
+                        <p>Implementação em produção</p>
+                    </div>
+                    <div class="risk-card">
+                        <strong>5. Document</strong>
+                        <p>Documentação da mudança</p>
+                    </div>
+                </div>
+
+                <h3>CAB (Change Advisory Board)</h3>
+                <ul>
+                    <li>Comitê que analisa mudanças propostas</li>
+                    <li>Composto por stakeholders: TI, segurança, áreas de negócio</li>
+                </ul>
+
+                <h3>Tipos de Mudança</h3>
+                <ul>
+                    <li><strong>Emergency Change:</strong> Mudança crítica não planejada (incidente, patch urgente)</li>
+                </ul>
+
+                <h2>3️⃣ Conceitos de Risco</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#2c3e50; color:white;">Conceito</th><th style="background:#2c3e50; color:white;">Descrição</th></tr>
+                    <tr><td><strong>Inherent Risk</strong></td><td>Risco natural sem controles implementados. É o baseline.</td></tr>
+                    <tr><td><strong>Residual Risk</strong></td><td>Risco que permanece após a implementação de controles.</td></tr>
+                    <tr><td><strong>Risk Appetite</strong></td><td>Quantidade total de risco que a organização está disposta a aceitar.</td></tr>
+                    <tr><td><strong>Risk Tolerance</strong></td><td>Variação aceitável no apetite de risco.</td></tr>
+                </table>
+
+                <h2>4️⃣ Análise Quantitativa de Riscos</h2>
+
+                <div class="golden-rule">
+                    <strong>⚠️ FÓRMULAS CRÍTICAS:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>ALE = SLE × ARO</strong> (Perda anual esperada)</li>
+                        <li><strong>SLE = AV × EF</strong> (Perda por ocorrência)</li>
+                        <li><strong>ARO</strong> = Frequência anual do risco</li>
+                        <li><strong>EF</strong> = % do ativo perdido no ataque</li>
+                    </ul>
+                </div>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#2c3e50; color:white;">Métrica</th><th style="background:#2c3e50; color:white;">Descrição</th></tr>
+                    <tr><td><strong>ALE</strong></td><td>Annual Loss Expectancy. Perda anual esperada.</td></tr>
+                    <tr><td><strong>SLE</strong></td><td>Single Loss Expectancy. Perda por ocorrência.</td></tr>
+                    <tr><td><strong>ARO</strong></td><td>Annual Rate of Occurrence. Frequência anual.</td></tr>
+                    <tr><td><strong>EF</strong></td><td>Exposure Factor. Percentual de perda.</td></tr>
+                </table>
+
+                <h3>Exemplo Prático</h3>
+                <p>Servidor R$100.000, EF 0.5 (50%), ARO 0.5 (1x a cada 2 anos):</p>
+                <ul>
+                    <li>SLE = R$100.000 × 0.5 = R$50.000</li>
+                    <li>ALE = R$50.000 × 0.5 = R$25.000/ano</li>
+                </ul>
+
+                <h2>5️⃣ Business Continuity</h2>
+
+                <h3>Métricas de Continuidade</h3>
+                <ul>
+                    <li><strong>RTO (Recovery Time Objective):</strong> Tempo máximo que um processo pode ficar offline.</li>
+                    <li><strong>RPO (Recovery Point Objective):</strong> Quantidade máxima de dados que pode ser perdida.</li>
+                    <li><strong>MTD (Maximum Tolerable Downtime):</strong> Tempo máximo que organização pode operar sem o processo.</li>
+                </ul>
+
+                <h2>6️⃣ Vendor Management</h2>
+
+                <ul>
+                    <li><strong>Due Diligence:</strong> Avaliação pré-contrato do fornecedor.</li>
+                    <li><strong>Due Care:</strong> Ações contínuas após o contrato (monitoramento).</li>
+                    <li><strong>SLA (Service Level Agreement):</strong> Contrato que define níveis de serviço.</li>
+                    <li><strong>Right-to-Audit:</strong> Cláusula que permite auditar o fornecedor.</li>
+                </ul>
+
+                <h2>7️⃣ Auditoria</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#2c3e50; color:white;">Tipo</th><th style="background:#2c3e50; color:white;">Descrição</th></tr>
+                    <tr><td><strong>Internal Audit</strong></td><td>Realizado por equipe interna independente.</td></tr>
+                    <tr><td><strong>External Audit</strong></td><td>Realizado por firma externa independente.</td></tr>
+                    <tr><td><strong>First-Party</strong></td><td>Auto-avaliação.</td></tr>
+                    <tr><td><strong>Second-Party</strong></td><td>Avaliação de fornecedor.</td></tr>
+                    <tr><td><strong>Third-Party</strong></td><td>Avaliação independente (certificação).</td></tr>
+                </table>
+
+                <h2>8️⃣ Classificação de Dados</h2>
+
+                <div class="data-class">
+                    <div class="class-level class-public"><strong>Public</strong><br>Informações públicas (site, marketing)</div>
+                    <div class="class-level class-internal"><strong>Internal</strong><br>Uso interno (manuais, políticas)</div>
+                    <div class="class-level class-confidential"><strong>Confidential</strong><br>Dados sensíveis (PII, financeiro)</div>
+                    <div class="class-level class-restricted"><strong>Restricted</strong><br>Altamente sensível (segredos)</div>
+                </div>
+
+                <h2>9️⃣ Regulamentações e Compliance</h2>
+
+                <div class="compliance-grid">
+                    <div class="compliance-card">
+                        <strong>GDPR</strong>
+                        <p>União Europeia. Proteção de dados pessoais. Multas até €20M ou 4% do faturamento.</p>
+                    </div>
+                    <div class="compliance-card">
+                        <strong>LGPD</strong>
+                        <p>Brasil. Baseada no GDPR. Multas até 2% do faturamento (R$50M).</p>
+                    </div>
+                    <div class="compliance-card">
+                        <strong>HIPAA</strong>
+                        <p>EUA. Proteção de dados de saúde (PHI).</p>
+                    </div>
+                    <div class="compliance-card">
+                        <strong>PCI DSS</strong>
+                        <p>Proteção de dados de cartões de crédito.</p>
+                    </div>
+                    <div class="compliance-card">
+                        <strong>SOX</strong>
+                        <p>Governança corporativa e controles financeiros.</p>
+                    </div>
+                </div>
+
+                <h2>🔟 Data Destruction</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#2c3e50; color:white;">Método</th><th style="background:#2c3e50; color:white;">Descrição</th></tr>
+                    <tr><td><strong>Shredding</strong></td><td>Destruição física de papel/discos. Cross-cut mais seguro.</td></tr>
+                    <tr><td><strong>Wiping</strong></td><td>Sobrescrever dados em disco. DoD 5220.22-M para alta segurança.</td></tr>
+                    <tr><td><strong>Degaussing</strong></td><td>Campo magnético para apagar mídia magnética (HDD, fitas).</td></tr>
+                    <tr><td><strong>Incineration</strong></td><td>Queima controlada.</td></tr>
+                </table>
+
+                <h2>1️⃣1️⃣ Políticas de Pessoal</h2>
+
+                <ul>
+                    <li><strong>Background Check:</strong> Verificação pré-contratação (criminal, profissional).</li>
+                    <li><strong>Onboarding:</strong> Concessão gradual de acessos, treinamento.</li>
+                    <li><strong>Offboarding:</strong> Revogação imediata de acessos, recolhimento de ativos.</li>
+                </ul>
+
+                <div class="golden-rule">
+                    <strong>🎯 DICAS FINAIS PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Policy:</strong> Alto nível (POR QUE) | <strong>Standard:</strong> Obrigatório (O QUE) | <strong>Procedure:</strong> Passo a passo (COMO)</li>
+                        <li><strong>Inherent Risk:</strong> sem controles | <strong>Residual Risk:</strong> após controles</li>
+                        <li><strong>ALE = SLE × ARO</strong> (decorar!)</li>
+                        <li><strong>RTO:</strong> tempo offline | <strong>RPO:</strong> dados perdidos</li>
+                        <li><strong>Due Diligence:</strong> antes | <strong>Due Care:</strong> depois</li>
+                        <li><strong>Data Classification:</strong> Public, Internal, Confidential, Restricted</li>
+                        <li><strong>GDPR (UE)</strong> | <strong>LGPD (Brasil)</strong> | <strong>HIPAA (saúde)</strong> | <strong>PCI DSS (cartões)</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab2" class="content">
+            <div class="quiz-area" style="max-width: 1000px; margin:0 auto;">
+                <div class="quiz-header" style="text-align:center; color:white; margin-bottom:35px;">
+                    <h2>Quiz - 35 Questões</h2>
+                </div>
+                <div id="questions"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()" style="background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); color:white; padding:15px 40px;">Ver Resultados</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-modal" id="results-modal" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:1000;">
+        <div class="results-content" style="background:white; padding:50px; border-radius:25px; max-width:500px; text-align:center;">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle" style="width:180px; height:180px; border-radius:50%; background:linear-gradient(135deg, #2c3e50 0%, #3498db 100%); color:white; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:bold; margin:30px auto;">0%</div>
+            <p id="score-text" style="font-size:1.2rem; margin-bottom:20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()" style="background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); color:white; padding:15px 40px;">Refazer Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const cards = [
+            // Documentos de Governança (1-10)
+            {f: "O que é uma Security Policy (Política de Segurança)?", b: "Documento de alto nível, aprovado pela alta gestão, que define objetivos de segurança, responsabilidades e requisitos gerais."},
+            {f: "O que é um Security Standard (Padrão de Segurança)?", b: "Documento que especifica requisitos obrigatórios e detalhados. Ex: 'Senhas devem ter 12+ caracteres'."},
+            {f: "O que é uma Security Procedure (Procedimento)?", b: "Instruções passo a passo para executar uma tarefa específica de segurança."},
+            {f: "O que é uma Security Guideline (Diretriz)?", b: "Recomendações e melhores práticas não obrigatórias."},
+            {f: "O que é uma AUP (Acceptable Use Policy)?", b: "Política de uso aceitável de recursos corporativos."},
+            {f: "O que é um NDA (Non-Disclosure Agreement)?", b: "Acordo de confidencialidade para proteger segredos comerciais."},
+            
+            // Change Management (7-12)
+            {f: "O que é Change Management?", b: "Processo formal para mudanças: Request → Approval → Test → Implement → Document."},
+            {f: "O que é CAB (Change Advisory Board)?", b: "Comitê que analisa e aprova mudanças propostas."},
+            {f: "O que é uma Emergency Change?", b: "Mudança crítica não planejada (incidente, patch urgente). Processo acelerado."},
+            
+            // Conceitos de Risco (13-20)
+            {f: "O que é Inherent Risk (Risco Inerente)?", b: "Risco natural sem controles implementados. Baseline antes da mitigação."},
+            {f: "O que é Residual Risk (Risco Residual)?", b: "Risco que permanece após a implementação de controles."},
+            {f: "O que é Risk Appetite (Apetite de Risco)?", b: "Quantidade total de risco que a organização está disposta a aceitar."},
+            {f: "O que é Risk Tolerance (Tolerância a Risco)?", b: "Variação aceitável no apetite de risco em nível operacional."},
+            
+            // Análise Quantitativa (21-30)
+            {f: "O que é ALE (Annual Loss Expectancy)?", b: "Perda anual esperada. ALE = SLE × ARO."},
+            {f: "O que é SLE (Single Loss Expectancy)?", b: "Perda por ocorrência. SLE = AV × EF."},
+            {f: "O que é ARO (Annual Rate of Occurrence)?", b: "Frequência anual do risco. Ex: ARO 0.5 = 1x a cada 2 anos."},
+            {f: "O que é EF (Exposure Factor)?", b: "Percentual do ativo perdido no ataque."},
+            
+            // Business Continuity (31-35)
+            {f: "O que é RTO (Recovery Time Objective)?", b: "Tempo máximo que um processo pode ficar offline."},
+            {f: "O que é RPO (Recovery Point Objective)?", b: "Quantidade máxima de dados que pode ser perdida."},
+            {f: "O que é MTD (Maximum Tolerable Downtime)?", b: "Tempo máximo sem o processo crítico."},
+            
+            // Vendor Management (36-40)
+            {f: "O que é Due Diligence?", b: "Avaliação pré-contrato do fornecedor."},
+            {f: "O que é Due Care?", b: "Ações contínuas após o contrato (monitoramento)."},
+            {f: "O que é SLA (Service Level Agreement)?", b: "Contrato que define níveis de serviço."},
+            {f: "O que é Right-to-Audit?", b: "Cláusula que permite auditar o fornecedor."},
+            
+            // Auditoria (41-45)
+            {f: "O que é Internal Audit?", b: "Auditoria realizada por equipe interna independente."},
+            {f: "O que é External Audit?", b: "Auditoria por firma externa independente."},
+            {f: "O que é Third-Party Audit?", b: "Avaliação independente para certificação."},
+            
+            // Classificação de Dados (46-50)
+            {f: "O que é Data Classification?", b: "Categorizar dados por sensibilidade: Public, Internal, Confidential, Restricted."},
+            {f: "O que são dados Public?", b: "Informações públicas. Ex: site, marketing."},
+            {f: "O que são dados Internal?", b: "Uso interno. Ex: manuais, políticas."},
+            {f: "O que são dados Confidential?", b: "Dados sensíveis. Ex: PII, financeiro."},
+            {f: "O que são dados Restricted?", b: "Altamente sensíveis. Ex: segredos comerciais."},
+            
+            // Regulamentações (51-60)
+            {f: "O que é GDPR?", b: "Regulamentação de proteção de dados da União Europeia."},
+            {f: "O que é LGPD?", b: "Lei Geral de Proteção de Dados do Brasil."},
+            {f: "O que é HIPAA?", b: "Proteção de dados de saúde nos EUA."},
+            {f: "O que é PCI DSS?", b: "Padrão de segurança para dados de cartões."},
+            {f: "O que é SOX?", b: "Sarbanes-Oxley. Governança corporativa."},
+            
+            // Data Destruction (61-65)
+            {f: "O que é Shredding?", b: "Destruição física de papel/discos."},
+            {f: "O que é Wiping?", b: "Sobrescrever dados em disco."},
+            {f: "O que é Degaussing?", b: "Campo magnético para apagar mídia magnética."},
+            {f: "O que é Incineration?", b: "Queima controlada de mídias."},
+            
+            // Políticas de Pessoal (66-70)
+            {f: "O que é Background Check?", b: "Verificação pré-contratação."},
+            {f: "O que é Onboarding?", b: "Processo de admissão: acessos, treinamento."},
+            {f: "O que é Offboarding?", b: "Processo de desligamento: revogar acessos."},
+            {f: "O que é PoLP (Principle of Least Privilege)?", b: "Usuários têm apenas permissões mínimas necessárias."},
+            {f: "O que é Segregação de Funções (SoD)?", b: "Dividir tarefas críticas entre pessoas diferentes."}
+        ];
+
+        const quiz = [
+            // Documentos
+            {q: "Documento de segurança de alto nível (estratégico):", o: ["Procedure", "Standard", "Policy", "Guideline"], c: 2},
+            {q: "Passo a passo para executar uma tarefa (operacional):", o: ["Policy", "Standard", "Guideline", "Procedure"], c: 3},
+            {q: "Requisitos obrigatórios e detalhados (tático):", o: ["Policy", "Standard", "Procedure", "Guideline"], c: 1},
+            
+            // Risco
+            {q: "Risco natural sem controles implementados:", o: ["Residual Risk", "Inherent Risk", "Accepted Risk", "Transferred Risk"], c: 1},
+            {q: "Risco remanescente após controles:", o: ["Inherent Risk", "Residual Risk", "Avoided Risk", "Mitigated Risk"], c: 1},
+            {q: "Quantidade de risco que organização aceita:", o: ["Risk Tolerance", "Risk Appetite", "Risk Threshold", "Risk Capacity"], c: 1},
+            
+            // Fórmulas
+            {q: "Fórmula para calcular ALE:", o: ["AV × EF", "SLE × ARO", "AV × ARO", "SLE × EF"], c: 1},
+            {q: "Fórmula para calcular SLE:", o: ["AV × EF", "AV × ARO", "SLE × ARO", "EF × ARO"], c: 0},
+            {q: "Frequência anual de um risco:", o: ["SLE", "ALE", "ARO", "EF"], c: 2},
+            
+            // Continuidade
+            {q: "Tempo máximo que processo pode ficar offline:", o: ["RPO", "RTO", "MTD", "SLA"], c: 1},
+            {q: "Quantidade máxima de dados que pode perder:", o: ["RTO", "RPO", "MTD", "BIA"], c: 1},
+            
+            // Vendor
+            {q: "Avaliação pré-contrato do fornecedor:", o: ["Due Care", "Due Diligence", "Right-to-Audit", "SLA"], c: 1},
+            {q: "Ações contínuas pós-contrato:", o: ["Due Diligence", "Due Care", "SLA", "Audit"], c: 1},
+            
+            // Classificação
+            {q: "Dados públicos (site, marketing):", o: ["Public", "Internal", "Confidential", "Restricted"], c: 0},
+            {q: "Dados altamente sensíveis (segredos):", o: ["Internal", "Confidential", "Restricted", "Public"], c: 2},
+            
+            // Regulamentações
+            {q: "Regulamentação de proteção de dados da UE:", o: ["LGPD", "HIPAA", "GDPR", "PCI DSS"], c: 2},
+            {q: "Lei brasileira de proteção de dados:", o: ["GDPR", "HIPAA", "LGPD", "SOX"], c: 2},
+            {q: "Proteção de dados de saúde (EUA):", o: ["GDPR", "HIPAA", "PCI DSS", "SOX"], c: 1},
+            
+            // Data Destruction
+            {q: "Destruição física de papel/discos:", o: ["Wiping", "Degaussing", "Shredding", "Pulping"], c: 2},
+            {q: "Sobrescrever dados em disco:", o: ["Shredding", "Degaussing", "Wiping", "Burning"], c: 2},
+            {q: "Campo magnético para apagar mídias:", o: ["Shredding", "Wiping", "Degaussing", "Incineration"], c: 2},
+            
+            // Pessoal
+            {q: "Verificação pré-contratação:", o: ["NDA", "Background Check", "AUP", "PoLP"], c: 1},
+            {q: "Acordo de confidencialidade:", o: ["AUP", "NDA", "SLA", "BIA"], c: 1},
+            {q: "Princípio do menor privilégio:", o: ["SoD", "PoLP", "AUP", "RBAC"], c: 1}
+        ];
+
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
+
+        function loadProgress() {
+            const saved = localStorage.getItem('dominio5_mastered');
+            if (saved) mastered = new Set(JSON.parse(saved));
+        }
+        function saveProgress() {
+            localStorage.setItem('dominio5_mastered', JSON.stringify([...mastered]));
+        }
+        loadProgress();
+
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
+            document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+        }
+
+        function updateCard() {
+            if (filteredCards.length === 0) {
+                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                return;
+            }
+            const cardIndex = filteredCards[currentCard];
+            const card = cards[cardIndex];
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            const btn = document.getElementById('master-btn');
+            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+            
+            const progress = (mastered.size / cards.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
+        }
+
+        function flipCard() { flipped = !flipped; updateCard(); }
+        function nextCard() { currentCard = (currentCard + 1) % filteredCards.length; flipped = false; updateCard(); }
+        function prevCard() { currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length; flipped = false; updateCard(); }
+        
+        function toggleMaster() {
+            const cardIndex = filteredCards[currentCard];
+            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
+            else mastered.add(cardIndex);
+            saveProgress();
+            updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = filteredCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+            }
+            currentCard = 0; flipped = false; updateCard();
+        }
+
+        function filterCards(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') filteredCards = [...Array(cards.length).keys()];
+            else if (type === 'mastered') filteredCards = Array.from(mastered);
+            else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            
+            currentCard = 0; flipped = false; updateCard();
+        }
+
+        function loadQuiz() {
+            const container = document.getElementById('questions');
+            quiz.forEach((q, qi) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(qi, oi);
+                    odiv.id = `q${qi}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${qi}`;
+                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                div.appendChild(exp);
+                container.appendChild(div);
+            });
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            quiz[qi].o.forEach((_, i) => document.getElementById(`q${qi}o${i}`).classList.remove('selected'));
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            quiz.forEach((q, qi) => {
+                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (correctAnswer.includes(oi)) el.classList.add('correct');
+                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                });
+                document.getElementById(`exp${qi}`).style.display = 'block';
+                if (correctAnswer.includes(answers[qi])) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').style.display = 'flex';
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('results-modal').style.display = 'none';
+            loadQuiz();
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>

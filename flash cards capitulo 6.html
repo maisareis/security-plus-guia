@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Cap 6 - Security Assessment & Testing</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            color: white;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* FLASHCARDS */
+        .flashcard-area { max-width: 900px; margin: 0 auto; }
+        .card-info {
+            background: rgba(255,255,255,0.25);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .flashcard:hover { transform: scale(1.02); }
+        .side-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .flashcard-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #1f2937;
+        }
+        .flip-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn-nav {
+            background: white;
+            font-size: 1.5rem;
+            width: 55px;
+            height: 55px;
+        }
+        .btn-master {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        .btn-master.mastered {
+            background: #10b981;
+            color: white;
+        }
+        .btn-shuffle {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        /* QUIZ */
+        .quiz-area { max-width: 1000px; margin: 0 auto; }
+        .quiz-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+        }
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+        .option:hover {
+            background: #fff5f5;
+            border-color: #ff6b6b;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            border-color: #ff6b6b;
+            background: #fff5f5;
+            font-weight: 600;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff5f5;
+            border-left: 5px solid #ff6b6b;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .results-modal.show { display: flex; }
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .filter-btn.active {
+            background: white;
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Security+ Capítulo 6</h1>
+            <p>Security Assessment & Testing - 75 Cards | 35 Questões</p>
+            <div class="stats-bar">
+                <div class="stat-card">📚 75 Flashcards</div>
+                <div class="stat-card">❓ 35 Questões</div>
+                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="flashcard-area">
+                <div class="card-info">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
+                        <div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 75</div>
+                            <div id="mastered-count">0 dominados</div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="side-indicator" id="side-indicator">FRENTE</div>
+                    <div class="flashcard-text" id="card-text"></div>
+                    <div class="flip-hint">👆 Clique para virar</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
+                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab1" class="content">
+            <div class="summary" style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <h1 style="color: #ff6b6b; margin-bottom: 30px; font-size: 2.5rem; border-bottom: 4px solid #ff6b6b; padding-bottom: 15px;">📖 Resumo - Capítulo 6</h1>
+                
+                <div style="background: #fff5f5; border-left: 5px solid #ff6b6b; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>IDS vs IPS:</strong> IDS detecta e alerta (passivo), IPS detecta e bloqueia (ativo/inline)</li>
+                        <li><strong>Passive vs Active Recon:</strong> Passivo não toca no alvo (OSINT), ativo interage (port scan)</li>
+                        <li><strong>Rainbow Table vs Salt:</strong> Rainbow table = tabela pré-computada, SALT torna inútil</li>
+                        <li><strong>False Negative</strong> (não detectar ataque) é MAIS GRAVE que False Positive</li>
+                        <li><strong>SNMP v3</strong> é seguro (criptografia), v1/v2c são inseguros (community strings texto claro)</li>
+                    </ul>
+                </div>
+
+                <h2 style="color: #feca57; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">1️⃣ Controles Físicos</h2>
+                
+                <h3 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 10px;">Perímetro e Acesso</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Mantrap:</strong> Duas portas, apenas uma aberta por vez. Previne tailgating.</li>
+                    <li><strong>Bollards:</strong> Postes/colunas para impedir entrada de veículos.</li>
+                    <li><strong>Biometric Scanner:</strong> Impressão digital, íris, face para controle de acesso.</li>
+                    <li><strong>Security Guard:</strong> Vigilância humana, pode tomar decisões.</li>
+                    <li><strong>CCTV:</strong> Câmeras de vigilância, monitoramento contínuo.</li>
+                </ul>
+
+                <h3 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 10px;">Proteção de Equipamentos</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Faraday Cage:</strong> Gaiola que bloqueia sinais eletromagnéticos. Previne eavesdropping.</li>
+                    <li><strong>Cable Lock:</strong> Trava física para laptops.</li>
+                    <li><strong>Safe:</strong> Cofre para backups e documentos.</li>
+                    <li><strong>USB Data Blocker:</strong> Previne juice jacking (carga sem dados).</li>
+                </ul>
+
+                <h2 style="color: #feca57; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ Monitoramento de Rede</h2>
+                
+                <h3 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 10px;">Protocolos de Monitoramento</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>SNMP:</strong> Simple Network Management Protocol. UDP 161 (queries), 162 (traps). v1/v2c inseguro (community strings texto claro), v3 com criptografia.</li>
+                    <li><strong>NetFlow:</strong> Coleta metadados de tráfego (IPs, portas, protocolos, volume). Não captura payload.</li>
+                    <li><strong>sFlow:</strong> Similar ao NetFlow, usa amostragem de pacotes.</li>
+                    <li><strong>Syslog:</strong> Logs centralizados, UDP 514. Severity levels (0-7).</li>
+                    <li><strong>SIEM:</strong> Security Information and Event Management. Correlaciona logs, detecta ameaças, gera alertas.</li>
+                </ul>
+
+                <h2 style="color: #feca57; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Reconhecimento (Reconnaissance)</h2>
+
+                <div style="display: flex; gap: 20px; margin: 30px 0; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px; background: #f3f4f6; padding: 20px; border-radius: 10px; border-left: 5px solid #3b82f6;">
+                        <h3 style="color:#3b82f6; margin-top:0;">👀 Passive Recon</h3>
+                        <p>Não interage diretamente com alvo. Difícil detectar.</p>
+                        <ul>
+                            <li>OSINT (Google, redes sociais)</li>
+                            <li>DNS lookups (whois, nslookup)</li>
+                            <li>Shodan (dispositivos IoT)</li>
+                            <li>Job postings (tecnologias usadas)</li>
+                        </ul>
+                    </div>
+                    <div style="flex: 1; min-width: 250px; background: #f3f4f6; padding: 20px; border-radius: 10px; border-left: 5px solid #ef4444;">
+                        <h3 style="color:#ef4444; margin-top:0;">🎯 Active Recon</h3>
+                        <p>Interage com alvo. Pode ser detectado.</p>
+                        <ul>
+                            <li>Port scanning (nmap)</li>
+                            <li>Ping sweep</li>
+                            <li>Banner grabbing</li>
+                            <li>Vulnerability scanning</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 10px;">Nmap - Comandos Essenciais</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th>Comando</th><th>Descrição</th></tr>
+                    <tr><td><code>-sS</code></td><td>SYN scan (stealth), não completa handshake</td></tr>
+                    <tr><td><code>-sT</code></td><td>TCP connect scan (completa handshake)</td></tr>
+                    <tr><td><code>-sU</code></td><td>UDP scan (lento)</td></tr>
+                    <tr><td><code>-sV</code></td><td>Version detection (serviços)</td></tr>
+                    <tr><td><code>-O</code></td><td>OS detection</td></tr>
+                    <tr><td><code>-A</code></td><td>Aggressive mode (OS + versão + scripts)</td></tr>
+                    <tr><td><code>-p-</code></td><td>Todas as portas (1-65535)</td></tr>
+                    <tr><td><code>-Pn</code></td><td>Assume host ativo (sem ping)</td></tr>
+                </table>
+
+                <h2 style="color: #feca57; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">4️⃣ IDS/IPS</h2>
+
+                <div style="display: flex; gap: 20px; margin: 30px 0; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px; background: #dbeafe; padding: 20px; border-radius: 10px;">
+                        <h3 style="color:#3b82f6; margin-top:0;">🛡️ IDS</h3>
+                        <ul>
+                            <li><strong>DETECTA e ALERTA</strong></li>
+                            <li>Modo passivo (out-of-band)</li>
+                            <li>Recebe cópia do tráfego (span port)</li>
+                            <li>Não afeta desempenho</li>
+                        </ul>
+                    </div>
+                    <div style="flex: 1; min-width: 250px; background: #fee2e2; padding: 20px; border-radius: 10px;">
+                        <h3 style="color:#ef4444; margin-top:0;">⚡ IPS</h3>
+                        <ul>
+                            <li><strong>DETECTA e BLOQUEIA</strong></li>
+                            <li>Modo ativo (inline)</li>
+                            <li>Tráfego passa por ele</li>
+                            <li>Pode adicionar latência</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 10px;">Métodos de Detecção</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Signature-based:</strong> Compara com assinaturas conhecidas. Rápido, baixo falso positivo, mas só detecta conhecido.</li>
+                    <li><strong>Anomaly-based:</strong> Detecta desvios do baseline normal. Detecta novos ataques, mas mais falsos positivos.</li>
+                    <li><strong>Behavior-based:</strong> Analisa comportamento. Similar a anomaly.</li>
+                    <li><strong>Heuristic:</strong> Regras baseadas em conhecimento de ataques.</li>
+                </ul>
+
+                <h3 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 10px;">Ações do IPS</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Alert:</strong> Apenas alerta (modo IDS)</li>
+                    <li><strong>Drop:</strong> Descarta pacote silenciosamente</li>
+                    <li><strong>Reject:</strong> Descarta e envia RST/ICMP unreachable</li>
+                    <li><strong>Quarantine:</strong> Isola host suspeito (VLAN de quarentena)</li>
+                </ul>
+
+                <h2 style="color: #feca57; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">5️⃣ Analisadores de Protocolo</h2>
+
+                <h3 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 10px;">Wireshark</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Capture Filter:</strong> Antes de capturar (BPF syntax). Ex: <code>host 192.168.1.1</code></li>
+                    <li><strong>Display Filter:</strong> Após capturar (Wireshark syntax). Ex: <code>tcp.port == 80</code>, <code>http</code></li>
+                    <li><strong>Follow Stream:</strong> Reconstroi conversa TCP/UDP</li>
+                    <li><strong>Statistics:</strong> Análise de protocolos, endpoints, conversas</li>
+                </ul>
+
+                <h3 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 10px;">tcpdump</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li>Linha de comando, Linux/Unix</li>
+                    <li><code>tcpdump -i eth0</code> (interface)</li>
+                    <li><code>tcpdump -w arquivo.pcap</code> (salvar)</li>
+                    <li><code>tcpdump -r arquivo.pcap</code> (ler)</li>
+                </ul>
+
+                <h2 style="color: #feca57; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">6️⃣ Ataques de Rede</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th>Ataque</th><th>Descrição</th><th>Contramedida</th></tr>
+                    <tr><td><strong>ARP Poisoning</strong></td><td>Associa MAC do atacante ao IP da gateway</td><td>DAI, port security, ARP estático</td></tr>
+                    <tr><td><strong>DNS Poisoning</strong></td><td>Corrompe cache DNS com entradas falsas</td><td>DNSSEC</td></tr>
+                    <tr><td><strong>SYN Flood</strong></td><td>Muitos SYN sem completar handshake</td><td>SYN cookies, rate limiting</td></tr>
+                    <tr><td><strong>DNS Amplification</strong></td><td>DDoS usando DNS como amplificador</td><td>Bloquear recursion pública</td></tr>
+                    <tr><td><strong>DNS Tunneling</strong></td><td>Exfiltrar dados via queries DNS</td><td>Monitorar tamanho das queries</td></tr>
+                    <tr><td><strong>MITM (On-Path)</strong></td><td>Intercepta comunicação entre dois lados</td><td>Criptografia (TLS), certificate pinning</td></tr>
+                    <tr><td><strong>Replay Attack</strong></td><td>Captura e retransmite tráfego</td><td>Timestamps, nonces, sequence numbers</td></tr>
+                </table>
+
+                <div style="background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>⚠️ REGRA DE OURO:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>DoS:</strong> Uma fonte | <strong>DDoS:</strong> Múltiplas fontes (botnet)</li>
+                        <li><strong>ARP Poisoning → DAI</strong></li>
+                        <li><strong>MAC Flooding → Port Security</strong></li>
+                        <li><strong>DHCP Spoofing → DHCP Snooping</strong></li>
+                    </ul>
+                </div>
+
+                <h2 style="color: #feca57; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">7️⃣ Ataques de Senha</h2>
+
+                <h3 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 10px;">Tipos de Ataques</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Brute Force:</strong> Testa todas combinações possíveis. Lento, mas efetivo com senhas curtas.</li>
+                    <li><strong>Dictionary Attack:</strong> Usa lista de palavras comuns. Rápido contra senhas fracas.</li>
+                    <li><strong>Hybrid Attack:</strong> Dicionário + variações (password123, Password!)</li>
+                    <li><strong>Rainbow Table:</strong> Tabela hash→plaintext pré-computada. Muito rápido, mas inútil com salt.</li>
+                    <li><strong>Credential Stuffing:</strong> Usa senhas vazadas de outros sites (reuso de senhas).</li>
+                    <li><strong>Password Spraying:</strong> Tenta senha comum em muitas contas (evita lockout).</li>
+                </ul>
+
+                <h3 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 10px;">Ferramentas</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>John the Ripper:</strong> Cracker multiplataforma, vários modos (single, wordlist, incremental)</li>
+                    <li><strong>Hashcat:</strong> Cracker usando GPU, muito rápido, suporta muitos algoritmos</li>
+                    <li><strong>Hydra:</strong> Online password cracker, testa serviços (SSH, FTP, HTTP)</li>
+                    <li><strong>Ophcrack:</strong> Usa rainbow tables, especializado em Windows</li>
+                    <li><strong>Cain & Abel:</strong> Windows, recuperação de senhas, ARP poisoning</li>
+                </ul>
+
+                <h3 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 10px;">Proteções</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Salt:</strong> Valor aleatório único por senha adicionado antes do hash. Torna rainbow table inútil.</li>
+                    <li><strong>Key Stretching:</strong> PBKDF2, bcrypt, Argon2 - múltiplas iterações, dificulta brute force.</li>
+                    <li><strong>Account Lockout:</strong> Bloqueia após X tentativas. Previne brute force online.</li>
+                    <li><strong>MFA:</strong> Protege mesmo se senha comprometida.</li>
+                    <li><strong>Rate Limiting:</strong> Limita tentativas por tempo.</li>
+                </ul>
+
+                <div style="background: #e6f7ff; border-left: 5px solid #3b82f6; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>💡 DIFERENÇA CRÍTICA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Online Attack:</strong> Contra serviço ativo (lento, detectável, limitado por lockout)</li>
+                        <li><strong>Offline Attack:</strong> Contra hash capturado (rápido, indetectável, ilimitado)</li>
+                    </ul>
+                </div>
+
+                <h3 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 10px;">Pass-the-Hash</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li>Usa hash da senha diretamente (sem quebrar)</li>
+                    <li>Comum em Windows (NTLM)</li>
+                    <li><strong>Contramedidas:</strong> Kerberos, Credential Guard, limitar admin local</li>
+                </ul>
+
+                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 30px 0; border-radius: 8px;">
+                    <h3 style="color: #ec4899; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li>IDS = alerta (passivo) | IPS = bloqueia (ativo)</li>
+                        <li>Passive recon = OSINT, DNS lookups | Active recon = port scan, ping sweep</li>
+                        <li>Rainbow table funciona sem salt, com salt é inútil</li>
+                        <li>False negative (não detectar ataque) é MAIS GRAVE que false positive</li>
+                        <li>SNMP v1/v2c inseguro, v3 seguro</li>
+                        <li>ARP poisoning → DAI | MAC flooding → Port Security</li>
+                        <li>Online attack é lento e detectável, offline é rápido e indetectável</li>
+                        <li>PBKDF2, bcrypt, Argon2 = key stretching (dificulta brute force)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab2" class="content">
+            <div class="quiz-area">
+                <div class="quiz-header">
+                    <h2>Quiz - 35 Questões</h2>
+                </div>
+                <div id="questions"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== CARDS TRADUZIDOS PARA PORTUGUÊS ==========
+        const cards = [
+            // Controles Físicos (1-5)
+            {f: "O que é um Mantrap?", b: "Sistema com duas portas, apenas uma aberta por vez. Previne tailgating (seguir pessoa autorizada). A pessoa fica presa entre as portas até autenticar."},
+            {f: "O que são Bollards?", b: "Postes ou colunas instalados para impedir a entrada de veículos. Proteção contra ataques de vehicle ramming (atropelamento intencional)."},
+            {f: "O que é uma Faraday Cage?", b: "Gaiola ou invólucro que bloqueia sinais eletromagnéticos. Impede a comunicação de dispositivos e previne eavesdropping (escuta clandestina)."},
+            {f: "O que é um Cable Lock?", b: "Trava física com cabo de aço usada para prender laptops e outros equipamentos a um ponto fixo. Previne roubo rápido."},
+            {f: "O que é um USB Data Blocker?", b: "Dispositivo que permite apenas a passagem de energia (carga), bloqueando a transferência de dados. Previne juice jacking (roubo de dados via USB público)."},
+
+            // Monitoramento e Reconhecimento (6-15)
+            {f: "O que é SNMP e quais as diferenças entre versões?", b: "Simple Network Management Protocol: monitora dispositivos de rede. UDP 161 (queries) e 162 (traps). v1/v2c usam community strings em texto claro (inseguro). v3 adiciona autenticação e criptografia."},
+            {f: "O que é NetFlow?", b: "Protocolo da Cisco que coleta metadados de tráfego: IPs de origem/destino, portas, protocolos, volume de dados. Não captura o payload. Usado para análise de padrões e detecção de anomalias."},
+            {f: "O que é Syslog?", b: "Protocolo para envio centralizado de logs. Usa UDP 514. Possui níveis de severidade (0-emergency a 7-debug). Facilita a correlação de eventos."},
+            {f: "O que é SIEM?", b: "Security Information and Event Management. Coleta, normaliza e correlaciona logs de múltiplas fontes. Detecta ameaças, gera alertas e auxilia em investigações forenses."},
+            {f: "O que é Passive Reconnaissance?", b: "Coleta de informações sem interagir diretamente com o alvo. Difícil de detectar. Inclui OSINT (Google, redes sociais), consultas DNS (whois, nslookup), Shodan, análise de job postings."},
+            {f: "O que é Active Reconnaissance?", b: "Coleta de informações interagindo diretamente com o alvo. Pode ser detectado. Inclui port scanning, ping sweep, banner grabbing, varredura de vulnerabilidades."},
+            {f: "O que é banner grabbing?", b: "Técnica de reconhecimento ativo onde o atacante se conecta a um serviço (ex: telnet, netcat) e lê o banner retornado, que geralmente contém informações sobre o software e versão."},
+            {f: "O que é OSINT?", b: "Open-Source Intelligence. Coleta de informações a partir de fontes públicas: Google, redes sociais (LinkedIn, Facebook), Shodan (dispositivos IoT), registros WHOIS, fóruns, documentos públicos."},
+            {f: "O que é Shodan?", b: "Motor de busca especializado em dispositivos conectados à internet (IoT, servidores, câmeras, roteadores, sistemas de controle industrial). Permite encontrar sistemas expostos com configurações inseguras."},
+            {f: "Qual a diferença entre capture filter e display filter no Wireshark?", b: "Capture filter: aplicado antes da captura, usando sintaxe BPF (Berkeley Packet Filter). Descarta pacotes não filtrados. Display filter: aplicado após a captura, usando sintaxe própria do Wireshark. Apenas esconde pacotes da visualização."},
+
+            // Comandos Nmap (16-25)
+            {f: "O que faz o comando nmap -sS?", b: "SYN scan (stealth). Envia pacotes SYN e analisa respostas (SYN-ACK = aberta, RST = fechada). Não completa o handshake TCP, gerando menos logs. É o scan padrão do nmap quando executado como root."},
+            {f: "O que faz o comando nmap -sT?", b: "TCP connect scan. Completa o handshake TCP (conexão completa). É mais detectável, mas não requer privilégios root. Usado quando -sS não está disponível."},
+            {f: "O que faz o comando nmap -sU?", b: "UDP scan. Envia pacotes UDP e analisa respostas. Portas abertas geralmente não respondem (timeout). Portas fechadas respondem com ICMP port unreachable. É mais lento que TCP scan."},
+            {f: "O que faz o comando nmap -sV?", b: "Version detection. Após descobrir portas abertas, tenta identificar a versão do serviço rodando em cada porta, enviando probes específicos e analisando as respostas."},
+            {f: "O que faz o comando nmap -O?", b: "OS detection. Tenta identificar o sistema operacional do alvo analisando características das respostas TCP/IP (fingerprinting)."},
+            {f: "O que faz o comando nmap -A?", b: "Aggressive mode. Ativa várias opções ao mesmo tempo: -O (OS detection), -sV (version detection), -sC (script scan), e traceroute."},
+            {f: "O que faz o comando nmap -p-?", b: "Escaneia todas as 65535 portas TCP (range completo). Por padrão, o nmap escaneia apenas as 1000 portas mais comuns."},
+            {f: "O que faz o comando nmap -Pn?", b: "No ping (skip host discovery). Assume que todos os hosts estão ativos, pulando a fase de descoberta (ping sweep). Útil quando firewalls bloqueiam ICMP."},
+            {f: "O que é FIN scan?", b: "Tipo de scan que envia pacotes com flag FIN ativada, sem conexão estabelecida. Portas fechadas respondem com RST; portas abertas ignoram o pacote (sem resposta). Pode bypassar alguns firewalls."},
+            {f: "O que é Xmas scan?", b: "Tipo de scan que envia pacotes com flags FIN, PSH e URG ativadas (como uma árvore de Natal acesa). Portas fechadas respondem com RST; portas abertas ignoram."},
+
+            // IDS/IPS (26-35)
+            {f: "Qual a diferença entre IDS e IPS?", b: "IDS (Intrusion Detection System): modo passivo (out-of-band), detecta e alerta, não afeta o tráfego, recebe cópia do tráfego (span port). IPS (Intrusion Prevention System): modo ativo (inline), detecta e bloqueia, todo tráfego passa por ele, pode adicionar latência."},
+            {f: "O que é detecção baseada em assinatura (signature-based)?", b: "Compara o tráfego com um banco de assinaturas de ataques conhecidos. Rápido, baixo índice de falsos positivos, mas só detecta ameaças conhecidas."},
+            {f: "O que é detecção baseada em anomalia (anomaly-based)?", b: "Estabelece um baseline de comportamento normal e detecta desvios. Consegue detectar ataques novos (zero-day), mas tem maior índice de falsos positivos."},
+            {f: "O que é um falso positivo (false positive)?", b: "Alerta gerado para tráfego ou atividade legítima que foi classificado erroneamente como malicioso. Causa fadiga de alertas (alert fatigue)."},
+            {f: "O que é um falso negativo (false negative)?", b: "Falha na detecção de um ataque real. É o pior cenário, pois deixa o sistema vulnerável sem gerar alerta."},
+            {f: "O que é HIDS/HIPS?", b: "Host-based IDS/IPS. Monitora atividades em um único host: logs, integridade de arquivos, chamadas de sistema, conexões de rede. Ex: OSSEC, Tripwire."},
+            {f: "O que é NIDS/NIPS?", b: "Network-based IDS/IPS. Monitora o tráfego de rede em um segmento. Analisa pacotes em tempo real. Ex: Snort, Suricata, Zeek (Bro)."},
+            {f: "O que é WIPS?", b: "Wireless Intrusion Prevention System. Monitora o espectro Wi-Fi, detecta e bloqueia access points não autorizados (rogue APs), ataques de deauthentication, evil twins."},
+            {f: "O que é um span port (mirror port)?", b: "Porta em um switch configurada para receber uma cópia de todo o tráfego de outras portas (ou VLANs). Usada para conectar dispositivos de monitoramento como IDS, sem interromper o fluxo original."},
+            {f: "O que é modo promíscuo (promiscuous mode)?", b: "Modo de operação da placa de rede (NIC) onde ela captura todos os pacotes que passam pelo meio de transmissão, não apenas aqueles endereçados ao seu MAC. Necessário para sniffing."},
+
+            // ARP e DNS Attacks (36-45)
+            {f: "O que é ARP poisoning (ARP spoofing)?", b: "Ataque onde o atacante envia mensagens ARP falsas associando seu endereço MAC ao endereço IP da gateway ou de outra máquina. Permite interceptar tráfego (Man-in-the-Middle)."},
+            {f: "O que é DAI (Dynamic ARP Inspection)?", b: "Recurso de switches que valida pacotes ARP contra uma tabela confiável (gerada pelo DHCP snooping). Pacotes ARP inválidos são descartados. Previne ARP poisoning."},
+            {f: "O que é DNS poisoning (DNS cache poisoning)?", b: "Ataque que corrompe o cache de um servidor DNS com entradas falsas, redirecionando usuários de sites legítimos para sites maliciosos."},
+            {f: "O que é DNSSEC?", b: "DNS Security Extensions. Conjunto de extensões que adicionam autenticação e integridade às respostas DNS, usando assinaturas digitais. Previne DNS poisoning."},
+            {f: "O que é DNS amplification?", b: "Ataque DDoS onde o atacante envia consultas DNS com endereço de origem falsificado (da vítima) para servidores DNS abertos. A resposta, muito maior que a consulta, é enviada para a vítima, amplificando o tráfego."},
+            {f: "O que é DNS tunneling?", b: "Técnica de exfiltração de dados onde dados são encapsulados em consultas e respostas DNS. Pode bypassar firewalls, pois o tráfego DNS geralmente é permitido."},
+            {f: "O que é SYN flood?", b: "Ataque DoS que envia uma enxurrada de pacotes SYN (início de conexão TCP) sem completar o handshake. O servidor aloca recursos para cada conexão half-open até esgotar, tornando-se indisponível."},
+            {f: "O que são SYN cookies?", b: "Técnica de proteção contra SYN flood. O servidor não aloca recursos imediatamente; codifica informações do handshake no número de sequência da resposta SYN-ACK. Só aloca recursos se receber o ACK final."},
+            {f: "O que é um ataque Man-in-the-Middle (MITM)?", b: "Atacante se posiciona entre dois comunicantes, interceptando, lendo e potencialmente modificando o tráfego sem que as partes percebam. Técnicas comuns: ARP poisoning, rogue AP."},
+            {f: "O que é replay attack?", b: "Captura de tráfego legítimo (como uma autenticação) e retransmissão posterior para obter acesso não autorizado. Contramedidas: timestamps, nonces, números de sequência."},
+
+            // Ataques de Senha (46-60)
+            {f: "O que é brute force attack?", b: "Tenta todas as combinações possíveis de caracteres até encontrar a senha correta. É lento, especialmente com senhas longas, mas eventualmente encontrará a senha (tempo exponencial com o tamanho)."},
+            {f: "O que é dictionary attack?", b: "Usa uma lista de palavras comuns (dicionário) e suas variações simples. É rápido, mas só funciona se a senha for fraca ou comum."},
+            {f: "O que é hybrid attack?", b: "Combina dictionary attack com variações: adiciona números, símbolos, substituições comuns (ex: password → password123, Password!, p@ssw0rd)."},
+            {f: "O que é rainbow table?", b: "Tabela pré-computada que mapeia hashes a senhas em texto plano. Permite quebrar hashes muito rapidamente (busca na tabela), mas requer muito espaço de armazenamento."},
+            {f: "O que é credential stuffing?", b: "Ataque que usa pares de usuário/senha vazados de outros serviços (obtidos em data breaches) para tentar acessar contas em outros sites. Explora o reuso de senhas."},
+            {f: "O que é password spraying?", b: "Ataque que testa uma senha comum (ex: 'Password123') contra muitas contas de usuário. Evita mecanismos de lockout que bloqueiam uma conta após várias tentativas."},
+            {f: "O que é John the Ripper?", b: "Ferramenta de quebra de senhas (password cracker) multiplataforma. Suporta diversos formatos de hash e modos de ataque: single, wordlist, incremental (brute force)."},
+            {f: "O que é Hashcat?", b: "Ferramenta de quebra de senhas que utiliza a GPU (placa de vídeo) para processamento paralelo, tornando-a extremamente rápida. Suporta uma vasta gama de algoritmos de hash."},
+            {f: "O que é Hydra?", b: "Ferramenta de quebra de senhas online (ataque de rede). Testa combinações de usuário/senha contra serviços como SSH, FTP, HTTP, SMB, etc. Executa brute force remoto."},
+            {f: "O que é Ophcrack?", b: "Ferramenta especializada em quebra de senhas do Windows (LM e NTLM) usando rainbow tables. Possui versão live CD."},
+            {f: "O que é salt?", b: "Valor aleatório único gerado para cada senha, adicionado à senha antes de aplicar o hash. É armazenado junto com o hash. Torna ataques de rainbow table inúteis (cada senha teria que ter sua própria tabela)."},
+            {f: "O que é key stretching?", b: "Técnica que aumenta o tempo necessário para calcular o hash de uma senha, aplicando múltiplas iterações. Dificulta ataques de brute force. Exemplos: PBKDF2, bcrypt, Argon2."},
+            {f: "O que é PBKDF2?", b: "Password-Based Key Derivation Function 2. Aplica uma função hash (como SHA-256) milhares de vezes (iterações) para derivar uma chave. Usado em WPA2, muitos sistemas de autenticação."},
+            {f: "O que é bcrypt?", b: "Função de hash de senha baseada no cifra Blowfish. Incorpora key stretching (custo configurável). Resiste a ataques com GPU devido aos requisitos de memória."},
+            {f: "O que é Argon2?", b: "Vencedor do Password Hashing Competition (2015). Projetado para resistir a ataques com GPU e hardware ASIC. Oferece parâmetros de memória, tempo e paralelismo. É o recomendado atualmente."},
+            {f: "Qual a diferença entre ataque online e offline?", b: "Online: contra serviço ativo (ex: tentar login no SSH). É lento, detectável, limitado por lockout. Offline: contra o hash da senha (ex: arquivo /etc/shadow). É rápido, indetectável, ilimitado."},
+            {f: "O que é pass-the-hash?", b: "Técnica de ataque onde o atacante usa o hash da senha diretamente para autenticar, sem precisar quebrá-lo para obter a senha em texto plano. Comum em ambientes Windows com NTLM."},
+            {f: "O que é account lockout policy?", b: "Política que bloqueia uma conta após um determinado número de tentativas de login com senha errada. Previne ataques de brute force online, mas pode causar negação de serviço para o usuário legítimo."},
+            {f: "O que é rate limiting?", b: "Mecanismo que limita o número de tentativas de login (ou requisições) em um determinado período de tempo. Previne ataques automatizados sem bloquear permanentemente a conta."},
+
+            // Ataques de Rede e Wireless (61-70)
+            {f: "O que é rogue AP?", b: "Access Point não autorizado instalado na rede. Pode ser um dispositivo malicioso configurado para interceptar tráfego (evil twin) ou um dispositivo de funcionário bem-intencionado mas inseguro."},
+            {f: "O que é evil twin?", b: "Tipo de rogue AP que imita um access point legítimo (mesmo SSID). Usuários se conectam ao falso AP, permitindo que o atacante capture credenciais e tráfego."},
+            {f: "O que é deauthentication attack (deauth attack)?", b: "Ataque DoS em redes Wi-Fi. O atacante envia frames de deautenticação falsos, forçando clientes a se desconectarem do AP. Frequentemente usado como preparação para um evil twin."},
+            {f: "O que é WPS attack?", b: "Ataque contra o Wi-Fi Protected Setup (WPS). O PIN de 8 dígitos do WPS é vulnerável a brute force (separado em duas metades de 4 dígitos). Pode ser quebrado em horas. A recomendação é desabilitar o WPS."},
+            {f: "O que é wardriving?", b: "Ato de circular por uma área (de carro, a pé) mapeando redes Wi-Fi, coletando informações como SSID, BSSID, tipo de criptografia, localização GPS. Não é um ataque em si, mas precede um."},
+            {f: "O que é IP spoofing?", b: "Falsificação do endereço IP de origem em pacotes de rede. Usado em ataques de DoS, para bypassar filtros baseados em IP, ou para dificultar o rastreamento."},
+            {f: "O que é MAC spoofing?", b: "Alteração do endereço MAC (Media Access Control) da placa de rede. Usado para impersonar outro dispositivo, bypassar filtros MAC (medida de segurança fraca)."},
+            {f: "O que é fragmentation attack?", b: "Técnica de evasão onde o atacante fragmenta pacotes de forma maliciosa para que, ao serem remontados, causem um comportamento inesperado ou para bypassar sistemas de detecção."},
+            {f: "O que é idle scan (zombie scan)?", b: "Técnica de scan extremamente stealth que usa um host intermediário (zumbi) para escanear o alvo. O atacante não envia pacotes diretamente ao alvo, dificultando a detecção."},
+            {f: "O que é ACK scan?", b: "Tipo de scan que envia pacotes com flag ACK. Não determina se a porta está aberta, mas mapeia regras de firewall. Respostas RST indicam que a porta não é filtrada."},
+
+            // Monitoramento e Conceitos (71-75)
+            {f: "O que é baseline?", b: "Comportamento normal da rede, sistema ou aplicação, estabelecido através de monitoramento durante um período de operação normal. Usado por sistemas de detecção baseados em anomalia."},
+            {f: "O que é um analisador de protocolo (packet sniffer)?", b: "Ferramenta que captura e analisa o tráfego de rede em tempo real ou a partir de arquivos de captura (PCAP). Usos: troubleshooting, análise de performance, detecção de intrusões, análise de malware."},
+            {f: "Qual a diferença entre tcpdump e Wireshark?", b: "tcpdump é uma ferramenta de linha de comando para captura e análise básica de pacotes (Linux/Unix). Wireshark possui interface gráfica, filtros mais poderosos e capacidade de reconstruir conversas."},
+            {f: "O que é um NOC (Network Operations Center)?", b: "Centro de Operações de Rede. Responsável pelo monitoramento e manutenção da infraestrutura de rede (desempenho, disponibilidade, configurações)."},
+            {f: "O que é um SOC (Security Operations Center)?", b: "Centro de Operações de Segurança. Responsável pelo monitoramento e resposta a incidentes de segurança. Utiliza ferramentas como SIEM, IDS/IPS, firewalls."}
+        ];
+
+        const quiz = [
+            {q: "Sistema com duas portas, apenas uma aberta por vez, previne tailgating:", o: ["Bollard", "Mantrap", "Turnstile", "Gate"], c: 1},
+            {q: "Dispositivo que bloqueia sinais eletromagnéticos:", o: ["Bollard", "Shielded cable", "Faraday cage", "Safe"], c: 2},
+            {q: "Coleta informações sem interagir diretamente com o alvo:", o: ["Active reconnaissance", "Passive reconnaissance", "Port scan", "Ping sweep"], c: 1},
+            {q: "Comando nmap para stealth scan (SYN scan):", o: ["-sT", "-sS", "-sU", "-sV"], c: 1},
+            {q: "Comando nmap para detectar versão de serviços:", o: ["-sT", "-sS", "-sU", "-sV"], c: 3},
+            {q: "Sistema que detecta e BLOQUEIA ativamente o tráfego:", o: ["IDS", "IPS", "Firewall", "SIEM"], c: 1},
+            {q: "Sistema passivo que detecta e alerta, sem afetar o tráfego:", o: ["IPS", "Firewall", "IDS", "Router"], c: 2},
+            {q: "Método de detecção que compara com padrões de ataques conhecidos:", o: ["Anomaly-based", "Signature-based", "Heuristic", "Behavioral"], c: 1},
+            {q: "Método de detecção que estabelece um baseline e detecta desvios:", o: ["Signature-based", "Anomaly-based", "Pattern-based", "Rule-based"], c: 1},
+            {q: "Ferramenta gráfica de análise de pacotes (packet sniffer):", o: ["tcpdump", "nmap", "Wireshark", "netstat"], c: 2},
+            {q: "Ataque que associa o MAC do atacante ao IP da gateway:", o: ["DNS poisoning", "ARP poisoning", "IP spoofing", "MAC flooding"], c: 1},
+            {q: "Recurso que previne ARP poisoning validando pacotes ARP:", o: ["Port security", "DHCP snooping", "DAI", "Todas as opções"], c: 2},
+            {q: "Ataque que corrompe o cache do servidor DNS:", o: ["ARP poisoning", "IP spoofing", "DNS poisoning", "MITM"], c: 2},
+            {q: "Ataque DoS que envia muitos SYN sem completar handshake:", o: ["Ping flood", "SYN flood", "UDP flood", "HTTP flood"], c: 1},
+            {q: "Ataque DDoS que usa servidores DNS abertos como amplificadores:", o: ["DNS tunneling", "DNS poisoning", "DNS amplification", "DNS hijacking"], c: 2},
+            {q: "Ataque onde o atacante se posiciona entre dois comunicantes:", o: ["DoS", "DDoS", "MITM (Man-in-the-Middle)", "Replay"], c: 2},
+            {q: "Ataque que captura tráfego legítimo e o retransmite posteriormente:", o: ["MITM", "Replay attack", "Sniffing", "Spoofing"], c: 1},
+            {q: "Ataque de senha que testa todas as combinações possíveis:", o: ["Dictionary attack", "Brute force attack", "Hybrid attack", "Rainbow table"], c: 1},
+            {q: "Ataque de senha que usa uma lista de palavras comuns:", o: ["Brute force", "Dictionary attack", "Hybrid", "Password spraying"], c: 1},
+            {q: "Tabela pré-computada de hashes para quebrar senhas rapidamente:", o: ["Dictionary", "Rainbow table", "Hash table", "Lookup table"], c: 1},
+            {q: "Técnica que testa uma senha comum em muitas contas para evitar lockout:", o: ["Brute force", "Dictionary", "Password spraying", "Credential stuffing"], c: 2},
+            {q: "Ataque que usa credenciais vazadas de outros sites (reuso de senhas):", o: ["Spraying", "Credential stuffing", "Dictionary", "Hybrid"], c: 1},
+            {q: "Ferramenta de quebra de senhas multiplataforma (wordlist, incremental):", o: ["Hashcat", "Hydra", "John the Ripper", "Ophcrack"], c: 2},
+            {q: "Ferramenta de quebra de senhas que utiliza GPU para alta velocidade:", o: ["John the Ripper", "Hashcat", "Hydra", "Cain & Abel"], c: 1},
+            {q: "Ferramenta de quebra de senhas online (contra serviços como SSH, FTP):", o: ["John", "Hashcat", "Hydra", "Ophcrack"], c: 2},
+            {q: "Valor aleatório adicionado à senha antes do hash, tornando rainbow tables inúteis:", o: ["Complexity", "Length", "Salt", "Lockout"], c: 2},
+            {q: "Técnica que aplica múltiplas iterações de hash para dificultar brute force:", o: ["Salt", "Hash", "Key stretching", "Encryption"], c: 2},
+            {q: "Técnica de ataque que usa o hash da senha diretamente sem quebrá-la:", o: ["Brute force", "Dictionary", "Pass-the-hash", "Rainbow"], c: 2},
+            {q: "Tipo de ataque contra serviço ativo, detectável e limitado por lockout:", o: ["Offline", "Online", "Rainbow", "Hybrid"], c: 1},
+            {q: "Tipo de ataque contra o hash da senha, rápido e indetectável:", o: ["Online", "Offline", "Active", "Passive"], c: 1},
+            {q: "Protocolo para monitoramento de dispositivos de rede, v3 é seguro:", o: ["Syslog", "NetFlow", "SNMP", "SIEM"], c: 2},
+            {q: "Protocolo para envio centralizado de logs, UDP 514:", o: ["SNMP", "NetFlow", "Syslog", "SIEM"], c: 2},
+            {q: "Sistema que correlaciona logs de múltiplas fontes para detectar ameaças:", o: ["Syslog", "SNMP", "SIEM", "IDS"], c: 2},
+            {q: "Alerta gerado para tráfego legítimo classificado erroneamente como malicioso:", o: ["True positive", "False positive", "False negative", "True negative"], c: 1},
+            {q: "Falha em detectar um ataque real (o pior cenário):", o: ["True positive", "False positive", "False negative", "True negative"], c: 2}
+        ];
+
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
+
+        // ========== LOCALSTORAGE ==========
+        // Carregar progresso salvo
+        function loadProgress() {
+            const saved = localStorage.getItem('security_plus_cap6_mastered');
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
+        }
+
+        // Salvar progresso
+        function saveProgress() {
+            localStorage.setItem('security_plus_cap6_mastered', JSON.stringify([...mastered]));
+        }
+
+        // Chamar loadProgress assim que o script carregar
+        loadProgress();
+
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+        }
+
+        function updateCard() {
+            if (filteredCards.length === 0) {
+                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                return;
+            }
+            const cardIndex = filteredCards[currentCard];
+            const card = cards[cardIndex];
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            const btn = document.getElementById('master-btn');
+            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+            
+            const progress = (mastered.size / cards.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
+        }
+
+        function flipCard() {
+            flipped = !flipped;
+            updateCard();
+        }
+
+        function nextCard() {
+            currentCard = (currentCard + 1) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function prevCard() {
+            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function toggleMaster() {
+            const cardIndex = filteredCards[currentCard];
+            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
+            else mastered.add(cardIndex);
+            
+            // ========== SALVAR PROGRESSO ==========
+            saveProgress();
+            
+            updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = filteredCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+            }
+            currentCard = 0;
+            flipped = false;
+            updateCard();
+        }
+
+        function filterCards(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') {
+                filteredCards = [...Array(cards.length).keys()];
+            } else if (type === 'mastered') {
+                filteredCards = Array.from(mastered);
+            } else {
+                filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            }
+            
+            currentCard = 0;
+            flipped = false;
+            updateCard();
+        }
+
+        function loadQuiz() {
+            const container = document.getElementById('questions');
+            quiz.forEach((q, qi) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(qi, oi);
+                    odiv.id = `q${qi}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${qi}`;
+                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                div.appendChild(exp);
+                container.appendChild(div);
+            });
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            quiz[qi].o.forEach((_, i) => {
+                const el = document.getElementById(`q${qi}o${i}`);
+                el.classList.remove('selected');
+            });
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            quiz.forEach((q, qi) => {
+                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
+                });
+                document.getElementById(`exp${qi}`).style.display = 'block';
+                if (correctAnswer.includes(answers[qi])) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('results-modal').classList.remove('show');
+            loadQuiz();
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Cap 4 - Identity & Access Management</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; color: white; margin-bottom: 30px; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .tab-btn.active { background: #a8edea; color: #333; }
+        .content { display: none; }
+        .content.active { display: block; }
+        
+        .flashcard-area { max-width: 800px; margin: 0 auto; }
+        .card-info {
+            background: rgba(255,255,255,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .flashcard:hover { transform: translateY(-5px); transition: 0.3s; }
+        .flashcard-text { font-size: 1.3rem; line-height: 1.8; text-align: center; }
+        .controls { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-nav { background: white; font-size: 1.5rem; width: 50px; height: 50px; }
+        
+        .summary {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+        }
+        .summary h2 { color: #5dade2; margin-top: 30px; margin-bottom: 15px; }
+        .summary h3 { margin-top: 20px; margin-bottom: 10px; }
+        .summary ul { margin-left: 20px; margin-bottom: 15px; }
+        .summary li { margin-bottom: 8px; line-height: 1.6; }
+        
+        .quiz-area { max-width: 900px; margin: 0 auto; }
+        .quiz-header { text-align: center; color: #333; margin-bottom: 30px; }
+        .question { background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; }
+        .option {
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .option:hover { background: #e8f8f5; }
+        .option.selected { border-color: #a8edea; background: #e8f8f5; }
+        .option.correct { border-color: #10b981; background: #d1fae5; }
+        .option.incorrect { border-color: #ef4444; background: #fee2e2; }
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e8f8f5;
+            border-left: 4px solid #a8edea;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👤 Security+ Capítulo 4</h1>
+            <p>Identity & Access Management (IAM) - 70 Cards | 35 Questões</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+            <button class="tab-btn" onclick="showTab(1)">📝 Resumo</button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="flashcard-area">
+                <div class="card-info">
+                    <div id="card-counter">Card 1 de 70</div>
+                    <div id="mastered-count">0 dominados</div>
+                </div>
+                
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="flashcard-text" id="card-text"></div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
+                    <button class="btn" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab1" class="content">
+            <div class="summary">
+                <h1>Capítulo 4: Identity & Access Management (IAM)</h1>
+                
+                <h2>4.1 Modelos de Controle de Acesso</h2>
+                
+                <h3>Princípios Fundamentais</h3>
+                <ul>
+                    <li><strong>Menor Privilégio (Least Privilege):</strong> Conceder apenas as permissões mínimas necessárias para realizar as tarefas</li>
+                    <li><strong>Segregação de Funções (Separation of Duties):</strong> Dividir tarefas críticas entre múltiplas pessoas para prevenir fraudes</li>
+                    <li><strong>Need to Know:</strong> Acesso apenas às informações necessárias para a função</li>
+                    <li><strong>Job Rotation:</strong> Rotação periódica de funções para detectar irregularidades</li>
+                    <li><strong>Férias Obrigatórias (Mandatory Vacation):</strong> Detecta fraudes que exigem presença constante do fraudador</li>
+                </ul>
+
+                <h3>Modelos de Controle de Acesso</h3>
+                <ul>
+                    <li><strong>DAC (Discretionary Access Control):</strong> O proprietário do recurso define as permissões. Flexível mas menos seguro. Ex: NTFS do Windows.</li>
+                    <li><strong>MAC (Mandatory Access Control):</strong> O sistema define permissões através de rótulos (labels) e níveis de autorização (clearance). Alta segurança. Ex: SELinux, sistemas militares.</li>
+                    <li><strong>RBAC (Role-Based Access Control):</strong> Permissões baseadas em funções ou cargos. Mais comum em empresas. Ex: Admin, Usuário, Gerente.</li>
+                    <li><strong>ABAC (Attribute-Based Access Control):</strong> Políticas baseadas em atributos como horário, localização, dispositivo. Mais granular e dinâmico.</li>
+                </ul>
+
+                <h2>4.2 Autenticação</h2>
+
+                <h3>Fatores de Autenticação</h3>
+                <ul>
+                    <li><strong>Algo que você sabe (Tipo 1):</strong> Senha, PIN, resposta a pergunta secreta</li>
+                    <li><strong>Algo que você tem (Tipo 2):</strong> Smart card, token, celular, token USB</li>
+                    <li><strong>Algo que você é (Tipo 3):</strong> Biometria (impressão digital, íris, face, voz)</li>
+                    <li><strong>Algum lugar onde você está (Tipo 4):</strong> Localização geográfica, geofencing</li>
+                    <li><strong>Algo que você faz (Tipo 5):</strong> Padrão de comportamento (digitação, assinatura)</li>
+                </ul>
+
+                <h3>Autenticação Multifator (MFA - Multi-Factor Authentication)</h3>
+                <ul>
+                    <li>Combina 2 ou mais fatores de categorias DIFERENTES</li>
+                    <li>Senha + SMS NÃO é MFA forte (ambos são algo que você sabe/tem? Na verdade SMS é algo que você tem)</li>
+                    <li>Senha + biometria = MFA forte (fatores diferentes: conhecimento + inerência)</li>
+                </ul>
+
+                <h3>Métodos de Autenticação</h3>
+                <ul>
+                    <li><strong>Senha:</strong> Mais comum, porém vulnerável se fraca</li>
+                    <li><strong>PIN:</strong> Numérico, geralmente mais curto que senha</li>
+                    <li><strong>Biometria:</strong> Impressão digital, íris, retina, face, voz, geometria da mão</li>
+                    <li><strong>Smart Card:</strong> Cartão com chip que armazena certificado digital</li>
+                    <li><strong>Token:</strong> Dispositivo físico (RSA SecureID) ou software (Google Authenticator)</li>
+                    <li><strong>TOTP (Time-based One-Time Password):</strong> Código temporário baseado em tempo. Ex: Google Authenticator, Microsoft Authenticator</li>
+                    <li><strong>HOTP (HMAC-based One-Time Password):</strong> Código baseado em contador</li>
+                    <li><strong>Notificação Push:</strong> Aprovação no celular (Duo, Microsoft Authenticator)</li>
+                </ul>
+
+                <h3>Biometria - Métricas</h3>
+                <ul>
+                    <li><strong>FAR (False Acceptance Rate):</strong> Taxa de aceitar um impostor como legítimo. É a mais GRAVE.</li>
+                    <li><strong>FRR (False Rejection Rate):</strong> Taxa de rejeitar um usuário legítimo. Frustrante, mas menos grave.</li>
+                    <li><strong>CER (Crossover Error Rate):</strong> Ponto onde FAR = FRR. Quanto menor o CER, melhor o sistema biométrico.</li>
+                </ul>
+
+                <h3>Single Sign-On (SSO)</h3>
+                <ul>
+                    <li>Autentica-se uma única vez e ganha acesso a múltiplos sistemas</li>
+                    <li><strong>Vantagem:</strong> Conveniência, menos senhas para lembrar</li>
+                    <li><strong>Risco:</strong> Se a conta SSO for comprometida, todos os sistemas ficam acessíveis</li>
+                    <li><strong>Tecnologias:</strong> Kerberos, SAML, OAuth, OpenID Connect</li>
+                </ul>
+
+                <h2>4.3 Autorização</h2>
+
+                <h3>Conceitos</h3>
+                <ul>
+                    <li><strong>Autorização:</strong> Define o que um usuário autenticado pode fazer</li>
+                    <li><strong>Permissões:</strong> Direitos específicos sobre recursos (ler, escrever, executar)</li>
+                    <li><strong>Direitos (Rights):</strong> Ações no sistema (desligar, fazer backup)</li>
+                    <li><strong>Token de Acesso:</strong> Identifica o usuário e seus grupos após a autenticação</li>
+                </ul>
+
+                <h3>Permissões Cumulativas no Windows</h3>
+                <ul>
+                    <li>As permissões NTFS são cumulativas (soma das permissões do usuário + grupos)</li>
+                    <li>Negar (Deny) sempre prevalece sobre Permitir (Allow)</li>
+                    <li>Permissão efetiva = soma das permissões do usuário e de todos os grupos</li>
+                </ul>
+
+                <h2>4.4 Active Directory (AD)</h2>
+
+                <h3>Componentes</h3>
+                <ul>
+                    <li><strong>Domínio (Domain):</strong> Unidade administrativa principal</li>
+                    <li><strong>OU (Organizational Unit):</strong> Container para organizar objetos (usuários, computadores)</li>
+                    <li><strong>Floresta (Forest):</strong> Conjunto de domínios com relações de confiança</li>
+                    <li><strong>Árvore (Tree):</strong> Hierarquia de domínios</li>
+                    <li><strong>Controlador de Domínio (DC - Domain Controller):</strong> Servidor que autentica usuários</li>
+                </ul>
+
+                <h3>Objetos do AD</h3>
+                <ul>
+                    <li><strong>Conta de Usuário:</strong> Representa uma pessoa</li>
+                    <li><strong>Conta de Computador:</strong> Representa um computador no domínio</li>
+                    <li><strong>Grupo:</strong> Agrupa usuários para facilitar a atribuição de permissões</li>
+                    <li><strong>GPO (Group Policy Object):</strong> Define configurações centralizadas</li>
+                </ul>
+
+                <h3>Tipos de Grupos no AD</h3>
+                <ul>
+                    <li><strong>Grupo de Segurança:</strong> Para atribuir permissões</li>
+                    <li><strong>Grupo de Distribuição:</strong> Para listas de email (Exchange)</li>
+                    <li><strong>Domínio Local:</strong> Membros de qualquer domínio, usado para permissões no domínio local</li>
+                    <li><strong>Global:</strong> Membros de um único domínio, usado em qualquer domínio</li>
+                    <li><strong>Universal:</strong> Membros de qualquer domínio, usado em qualquer domínio (replicado no Catálogo Global)</li>
+                </ul>
+
+                <h3>Group Policy (GPO)</h3>
+                <ul>
+                    <li>Define configurações centralizadas para usuários e computadores</li>
+                    <li>Aplicado a sites, domínios e OUs</li>
+                    <li>Configuração de Usuário + Configuração de Computador</li>
+                    <li>Ordem de aplicação: Local → Site → Domínio → OU</li>
+                    <li>A última política aplicada prevalece (por padrão)</li>
+                </ul>
+
+                <h2>4.5 Hardening de Autenticação</h2>
+
+                <h3>Políticas de Senha</h3>
+                <ul>
+                    <li><strong>Comprimento mínimo:</strong> 12-16+ caracteres recomendado</li>
+                    <li><strong>Complexidade:</strong> Exigir maiúsculas, minúsculas, números e símbolos</li>
+                    <li><strong>Histórico de senhas:</strong> Impede o reuso de senhas antigas</li>
+                    <li><strong>Idade máxima:</strong> Forçar troca periódica (60-90 dias)</li>
+                    <li><strong>Idade mínima:</strong> Impede que o usuário troque a senha várias vezes seguidas para voltar à antiga</li>
+                    <li><strong>Bloqueio de conta (Lockout):</strong> Bloquear após X tentativas erradas</li>
+                </ul>
+
+                <h3>Restrições de Conta</h3>
+                <ul>
+                    <li><strong>Restrição por horário (Time-of-day):</strong> Permitir acesso apenas em determinados horários</li>
+                    <li><strong>Geofencing:</strong> Restringir acesso por localização geográfica</li>
+                    <li><strong>Restrição por dispositivo:</strong> Permitir acesso apenas de dispositivos autorizados</li>
+                    <li><strong>Viagem impossível (Impossible Travel):</strong> Detectar logins de locais geograficamente distantes em curto intervalo</li>
+                </ul>
+
+                <h3>UAC (User Account Control) - Windows</h3>
+                <ul>
+                    <li>Separa usuário padrão de administrador</li>
+                    <li>Solicita elevação para ações administrativas</li>
+                    <li>Reduz o risco de malware executar com privilégios elevados</li>
+                </ul>
+
+                <h3>Gerenciadores de Senha (Password Managers)</h3>
+                <ul>
+                    <li>Armazenam senhas de forma criptografada</li>
+                    <li>Geram senhas fortes e únicas para cada serviço</li>
+                    <li>Protegidos por uma senha mestra (master password)</li>
+                    <li>Exemplos: LastPass, 1Password, BitWarden, KeePass</li>
+                </ul>
+
+                <h3>Autenticação com Smart Card</h3>
+                <ul>
+                    <li>Cartão com chip que armazena certificado digital</li>
+                    <li>Requer leitor de cartão</li>
+                    <li>MFA: algo que você tem (cartão) + algo que você sabe (PIN)</li>
+                    <li>Usado em ambientes de alta segurança</li>
+                </ul>
+
+                <h2>4.6 e 4.7 Linux - Usuários e Grupos</h2>
+
+                <h3>Arquivos Importantes</h3>
+                <ul>
+                    <li><strong>/etc/passwd:</strong> Informações básicas dos usuários (nome, UID, GID, home, shell)</li>
+                    <li><strong>/etc/shadow:</strong> Senhas criptografadas (hash) e informações de expiração</li>
+                    <li><strong>/etc/group:</strong> Informações dos grupos (nome, GID, membros)</li>
+                </ul>
+
+                <h3>Comandos de Usuário</h3>
+                <ul>
+                    <li><strong>useradd:</strong> Criar novo usuário</li>
+                    <li><strong>usermod:</strong> Modificar usuário existente</li>
+                    <li><strong>userdel:</strong> Remover usuário</li>
+                    <li><strong>passwd:</strong> Alterar senha</li>
+                    <li><strong>passwd -l:</strong> Travar conta (lock)</li>
+                    <li><strong>passwd -u:</strong> Destravar conta (unlock)</li>
+                </ul>
+
+                <h3>Comandos de Grupo</h3>
+                <ul>
+                    <li><strong>groupadd:</strong> Criar novo grupo</li>
+                    <li><strong>groupmod:</strong> Modificar grupo</li>
+                    <li><strong>groupdel:</strong> Remover grupo</li>
+                    <li><strong>usermod -aG:</strong> Adicionar usuário a um grupo suplementar</li>
+                    <li><strong>gpasswd -d:</strong> Remover usuário de um grupo</li>
+                </ul>
+
+                <h3>SELinux (Security-Enhanced Linux)</h3>
+                <ul>
+                    <li>Implementação de MAC (Mandatory Access Control) no Linux</li>
+                    <li>Aplica políticas de segurança rígidas</li>
+                    <li><strong>Modos:</strong> Enforcing (aplica), Permissive (apenas registra), Disabled (desativado)</li>
+                    <li>Utiliza contextos de segurança para arquivos e processos</li>
+                </ul>
+
+                <h2>4.8 Acesso Remoto</h2>
+
+                <h3>Protocolos</h3>
+                <ul>
+                    <li><strong>RDP (Remote Desktop Protocol):</strong> Acesso remoto ao Windows, porta 3389</li>
+                    <li><strong>SSH (Secure Shell):</strong> Acesso remoto criptografado, porta 22, padrão Linux/Unix</li>
+                    <li><strong>Telnet:</strong> Acesso remoto inseguro (texto claro), porta 23 - NÃO USAR</li>
+                    <li><strong>VNC:</strong> Multi-plataforma, várias portas</li>
+                </ul>
+
+                <h3>RADIUS (Remote Authentication Dial-In User Service)</h3>
+                <ul>
+                    <li>Protocolo AAA (Autenticação, Autorização e Auditoria) centralizado</li>
+                    <li>UDP portas 1812 (autenticação) e 1813 (auditoria)</li>
+                    <li>Criptografa apenas a senha</li>
+                    <li>Usado em: Wi-Fi corporativo (802.1X), VPN, acesso discado</li>
+                </ul>
+
+                <h3>TACACS+ (Terminal Access Controller Access-Control System Plus)</h3>
+                <ul>
+                    <li>Protocolo AAA proprietário da Cisco</li>
+                    <li>TCP porta 49</li>
+                    <li>Criptografa toda a comunicação</li>
+                    <li>Separa os três componentes AAA (mais granular que RADIUS)</li>
+                    <li>Usado em: Roteadores e switches Cisco</li>
+                </ul>
+
+                <h2>4.9 Autenticação de Rede</h2>
+
+                <h3>Kerberos</h3>
+                <ul>
+                    <li>Protocolo de autenticação usado pelo Active Directory</li>
+                    <li>Utiliza tickets em vez de transmitir senhas</li>
+                    <li><strong>KDC (Key Distribution Center):</strong> Emite os tickets</li>
+                    <li><strong>TGT (Ticket Granting Ticket):</strong> Ticket inicial obtido após autenticação</li>
+                    <li><strong>Service Ticket:</strong> Ticket para acessar um serviço específico</li>
+                    <li>Porta 88 (TCP/UDP)</li>
+                    <li>Requer sincronização de tempo (tolerância de 5 minutos)</li>
+                </ul>
+
+                <h3>LDAP (Lightweight Directory Access Protocol)</h3>
+                <ul>
+                    <li>Protocolo para acessar e manter diretórios (Active Directory, OpenLDAP)</li>
+                    <li>Porta 389 (não seguro)</li>
+                    <li><strong>LDAPS:</strong> LDAP sobre SSL/TLS, porta 636</li>
+                    <li>Estrutura hierárquica: DC (Domain Component), OU (Organizational Unit), CN (Common Name)</li>
+                </ul>
+
+                <h3>SAML (Security Assertion Markup Language)</h3>
+                <ul>
+                    <li>Padrão baseado em XML para SSO (Single Sign-On)</li>
+                    <li>Permite federação de identidades</li>
+                    <li><strong>IdP (Identity Provider):</strong> Provedor de identidade que autentica o usuário</li>
+                    <li><strong>SP (Service Provider):</strong> Provedor de serviço que confia no IdP</li>
+                    <li>Usado em: SSO corporativo, aplicações em nuvem</li>
+                </ul>
+
+                <h3>OAuth 2.0</h3>
+                <ul>
+                    <li>Framework de AUTORIZAÇÃO (NÃO é autenticação!)</li>
+                    <li>Permite delegação de acesso sem compartilhar senha</li>
+                    <li>"Login com Google/Facebook" usa OAuth</li>
+                    <li>Utiliza access tokens com escopo limitado</li>
+                </ul>
+
+                <h3>OpenID Connect (OIDC)</h3>
+                <ul>
+                    <li>Camada de autenticação construída sobre o OAuth 2.0</li>
+                    <li>Adiciona um ID token no formato JWT (JSON Web Token)</li>
+                    <li>SSO moderno para aplicações web e mobile</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="tab2" class="content">
+            <div class="quiz-area">
+                <div class="quiz-header">
+                    <h2>Quiz - 35 Questões</h2>
+                </div>
+                <div id="questions"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn" onclick="checkAnswers()" style="background: #5dade2; color: white; padding: 15px 40px;">Ver Resultados</button>
+                </div>
+                <div id="results" style="display: none; text-align: center; margin-top: 20px;">
+                    <div style="background: white; padding: 30px; border-radius: 15px;">
+                        <h2 id="score"></h2>
+                        <button class="btn" onclick="resetQuiz()" style="margin-top: 15px;">Refazer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cards = [
+            // Princípios Fundamentais (1-5)
+            {f: "O que é o princípio do menor privilégio (Least Privilege)?", b: "Conceder a cada usuário apenas as permissões mínimas necessárias para realizar suas tarefas. Minimiza os danos em caso de comprometimento."},
+            {f: "O que é segregação de funções (Separation of Duties)?", b: "Dividir tarefas críticas entre múltiplas pessoas para prevenir fraudes e erros. Ex: quem aprova um pagamento não pode executá-lo."},
+            {f: "O que é o princípio de need to know?", b: "Conceder acesso apenas às informações estritamente necessárias para a função do usuário, mesmo que ele tenha autorização de acesso mais ampla."},
+            {f: "O que é job rotation (rotação de funções)?", b: "Prática de rotacionar periodicamente as funções dos funcionários para prevenir fraudes, detectar irregularidades e promover treinamento cruzado."},
+            {f: "O que são férias obrigatórias (mandatory vacation)?", b: "Exigir que funcionários tirem férias consecutivas para detectar fraudes que exigem a presença constante do fraudador para serem mantidas."},
+
+            // Modelos de Controle de Acesso (6-10)
+            {f: "O que é DAC (Discretionary Access Control)?", b: "Modelo onde o proprietário do recurso define as permissões. É flexível mas menos seguro. Exemplo: permissões NTFS do Windows."},
+            {f: "O que é MAC (Mandatory Access Control)?", b: "Modelo onde o sistema define permissões através de rótulos (labels) e níveis de autorização (clearance). Alta segurança. Ex: SELinux, sistemas militares."},
+            {f: "O que é RBAC (Role-Based Access Control)?", b: "Modelo onde as permissões são baseadas em funções ou cargos. É o mais comum em empresas. Ex: Admin, Usuário, Gerente."},
+            {f: "O que é ABAC (Attribute-Based Access Control)?", b: "Modelo onde políticas de acesso são baseadas em atributos como horário, localização, dispositivo e cargo. É mais granular e dinâmico."},
+            {f: "Qual a diferença entre RBAC e ABAC?", b: "RBAC usa funções fixas (ex: gerente). ABAC usa atributos dinâmicos (ex: horário comercial + localização no escritório + cargo de gerente)."},
+
+            // Fatores de Autenticação (11-15)
+            {f: "O que é autenticação por algo que você sabe (Tipo 1)?", o: ["Senha, PIN, resposta a pergunta secreta. É o fator mais comum, mas pode ser fraco se não houver complexidade."]},
+            {f: "O que é autenticação por algo que você tem (Tipo 2)?", o: ["Smart card, token, celular, token USB. É um fator físico que pode ser perdido ou roubado."]},
+            {f: "O que é autenticação por algo que você é (Tipo 3)?", o: ["Biometria: impressão digital, íris, retina, face, voz. Não pode ser perdido, mas é difícil de trocar se comprometido."]},
+            {f: "O que é autenticação por algum lugar onde você está (Tipo 4)?", o: ["Localização geográfica, geofencing. Ex: bloquear acesso fora do país ou do escritório."]},
+            {f: "O que é autenticação por algo que você faz (Tipo 5)?", o: ["Padrão de comportamento: ritmo de digitação, padrão de assinatura, movimentos do mouse."]},
+
+            // MFA e Métodos (16-25)
+            {f: "O que é MFA (Multi-Factor Authentication)?", b: "Autenticação que combina dois ou mais fatores de categorias DIFERENTES. Ex: senha (saber) + biometria (ser) = MFA forte."},
+            {f: "O que é TOTP (Time-based One-Time Password)?", b: "Código temporário baseado em tempo, gerado por algoritmos como Google Authenticator e Microsoft Authenticator. Muda a cada 30 segundos."},
+            {f: "O que é HOTP (HMAC-based One-Time Password)?", b: "Código baseado em contador, que muda apenas quando usado. Menos comum que TOTP atualmente."},
+            {f: "O que é um token de hardware?", b: "Dispositivo físico que gera códigos temporários. Ex: RSA SecureID. Pode ser usado mesmo sem conexão com a internet."},
+            {f: "O que é autenticação por notificação push?", b: "Método onde um aplicativo no celular recebe uma notificação para aprovar ou negar uma tentativa de login. Ex: Duo, Microsoft Authenticator."},
+            {f: "O que é FAR (False Acceptance Rate) em biometria?", b: "Taxa de aceitar um impostor como legítimo. É a métrica mais GRAVE em sistemas biométricos."},
+            {f: "O que é FRR (False Rejection Rate) em biometria?", b: "Taxa de rejeitar um usuário legítimo. É frustrante para o usuário, mas menos grave que FAR."},
+            {f: "O que é CER (Crossover Error Rate) em biometria?", b: "Ponto onde FAR e FRR se igualam. Quanto menor o CER, melhor e mais preciso é o sistema biométrico."},
+            {f: "O que é SSO (Single Sign-On)?", b: "Tecnologia que permite ao usuário autenticar-se uma única vez e ganhar acesso a múltiplos sistemas. Vantagem: conveniência. Risco: acesso total se comprometido."},
+            {f: "O que é federação de identidades?", b: "Compartilhamento de identidades entre organizações com relação de confiança. Ex: funcionário de uma empresa acessar sistema de parceiro com suas credenciais corporativas."},
+
+            // Autorização (26-28)
+            {f: "Qual a diferença entre autenticação e autorização?", b: "Autenticação verifica QUEM você é. Autorização define O QUE você pode fazer após autenticado."},
+            {f: "Como funcionam as permissões cumulativas no Windows?", b: "A permissão efetiva é a soma das permissões do usuário + todos os grupos. Negar (Deny) sempre prevalece sobre Permitir (Allow)."},
+            {f: "O que é um token de acesso no Windows?", b: "Objeto criado após a autenticação que contém a identidade do usuário e todos os seus grupos. É usado para verificar permissões."},
+
+            // Active Directory (29-35)
+            {f: "O que é um domínio no Active Directory?", b: "Unidade administrativa principal que compartilha um banco de dados de diretório e políticas de segurança."},
+            {f: "O que é uma OU (Organizational Unit) no AD?", b: "Container usado para organizar objetos como usuários, grupos e computadores. Permite delegar administração e aplicar GPOs."},
+            {f: "O que é uma floresta (forest) no AD?", b: "Conjunto de um ou mais domínios que compartilham um esquema, catálogo global e relações de confiança."},
+            {f: "O que é um Domain Controller (DC)?", b: "Servidor que armazena o banco de dados do Active Directory e autentica usuários e computadores no domínio."},
+            {f: "O que é uma GPO (Group Policy Object)?", b: "Objeto que define configurações centralizadas para usuários e computadores. Pode ser aplicado a sites, domínios e OUs."},
+            {f: "Quais são os tipos de escopo de grupos no AD?", b: "Domínio Local (permissões no domínio local), Global (membros de um domínio, usado em qualquer domínio) e Universal (membros de qualquer domínio, usado em qualquer domínio)."},
+            {f: "Qual a diferença entre grupo de segurança e grupo de distribuição no AD?", b: "Grupo de segurança é usado para atribuir permissões. Grupo de distribuição é usado para listas de email (Exchange)."},
+
+            // Hardening (36-42)
+            {f: "Quais são os componentes de uma política de senhas forte?", b: "Comprimento mínimo (12-16+), complexidade, histórico, idade máxima (60-90 dias), idade mínima (1 dia) e bloqueio após tentativas."},
+            {f: "O que é account lockout?", b: "Mecanismo que bloqueia a conta após um número X de tentativas de login com senha errada. Previne ataques de força bruta."},
+            {f: "O que é restrição por horário (time-of-day restriction)?", b: "Permitir que usuários acessem sistemas apenas em horários específicos. Ex: funcionário só pode logar das 8h às 18h."},
+            {f: "O que é geofencing?", b: "Restrição de acesso baseada na localização geográfica do usuário. Ex: bloquear acessos de fora do país."},
+            {f: "O que é impossible travel (viagem impossível)?", b: "Detecção de logins em locais geograficamente distantes em um curto intervalo de tempo, indicando possível comprometimento."},
+            {f: "O que é UAC (User Account Control) no Windows?", b: "Recurso que separa usuário padrão de administrador, solicitando elevação para ações administrativas. Reduz risco de malware."},
+            {f: "O que é um gerenciador de senhas (password manager)?", b: "Software que armazena senhas criptografadas e gera senhas fortes únicas para cada serviço. Protegido por senha mestra."},
+
+            // Linux (43-50)
+            {f: "Qual a função do arquivo /etc/passwd no Linux?", b: "Armazena informações básicas dos usuários: nome de usuário, UID, GID, diretório home, shell padrão. As senhas ficam em /etc/shadow."},
+            {f: "Qual a função do arquivo /etc/shadow no Linux?", b: "Armazena hashes das senhas e informações de expiração. Apenas root pode ler este arquivo."},
+            {f: "Qual comando cria um novo usuário no Linux?", b: "useradd. Ex: useradd -m -s /bin/bash maria (cria com home directory e shell bash)."},
+            {f: "Qual comando modifica um usuário no Linux?", b: "usermod. Ex: usermod -aG sudo maria (adiciona ao grupo sudo)."},
+            {f: "Qual comando altera a senha no Linux?", b: "passwd. Ex: passwd maria (altera senha do usuário maria)."},
+            {f: "Qual comando adiciona um usuário a um grupo no Linux?", b: "usermod -aG grupo usuario. O -a (append) é importante para não remover outros grupos."},
+            {f: "O que é SELinux?", b: "Security-Enhanced Linux: implementação de MAC no Linux que aplica políticas rígidas de segurança. Modos: Enforcing, Permissive, Disabled."},
+            {f: "Quais são os modos de operação do SELinux?", b: "Enforcing (aplica políticas), Permissive (apenas registra violações) e Disabled (desativado)."},
+
+            // Acesso Remoto (51-55)
+            {f: "O que é SSH e qual porta utiliza?", b: "Secure Shell: protocolo de acesso remoto criptografado, padrão em Linux/Unix. Porta 22. Substitui o inseguro Telnet."},
+            {f: "O que é RDP e qual porta utiliza?", b: "Remote Desktop Protocol: protocolo de acesso remoto do Windows. Porta 3389. Deve usar NLA e criptografia."},
+            {f: "Por que Telnet é inseguro?", b: "Porque transmite todos os dados, incluindo senhas, em texto claro (sem criptografia). Deve ser substituído por SSH."},
+            {f: "O que é RADIUS?", b: "Protocolo AAA centralizado que usa UDP (1812/1813). Criptografa apenas a senha. Usado em Wi-Fi corporativo (802.1X) e VPN."},
+            {f: "O que é TACACS+?", b: "Protocolo AAA proprietário da Cisco. Usa TCP porta 49 e criptografa toda a comunicação. Mais granular que RADIUS."},
+
+            // Kerberos e LDAP (56-60)
+            {f: "O que é Kerberos?", b: "Protocolo de autenticação usado pelo Active Directory. Utiliza tickets em vez de transmitir senhas. Porta 88. Requer sincronização de tempo."},
+            {f: "O que é KDC (Key Distribution Center) no Kerberos?", b: "Componente central que emite tickets. No Active Directory, o Domain Controller faz o papel de KDC."},
+            {f: "O que é TGT (Ticket Granting Ticket) no Kerberos?", b: "Ticket inicial obtido após a autenticação do usuário. É usado para solicitar tickets de serviço."},
+            {f: "O que é LDAP e qual porta utiliza?", b: "Lightweight Directory Access Protocol: acessa diretórios como Active Directory. Porta 389 (não seguro) e 636 (LDAPS com SSL/TLS)."},
+            {f: "O que significam DC, OU e CN no LDAP?", b: "DC = Domain Component (componente do domínio), OU = Organizational Unit (unidade organizacional), CN = Common Name (nome comum)."},
+
+            // SAML, OAuth, OpenID (61-66)
+            {f: "O que é SAML?", b: "Security Assertion Markup Language: padrão baseado em XML para SSO e federação de identidades. Muito usado em aplicações corporativas."},
+            {f: "O que são IdP e SP no SAML?", b: "IdP (Identity Provider): provedor que autentica o usuário. SP (Service Provider): serviço que confia no IdP."},
+            {f: "O que é OAuth 2.0?", b: "Framework de AUTORIZAÇÃO (não autenticação) que permite delegação de acesso sem compartilhar senha. Ex: 'Login com Google'."},
+            {f: "O que é OpenID Connect (OIDC)?", b: "Camada de autenticação construída sobre OAuth 2.0. Adiciona um ID token no formato JWT. SSO moderno para web/mobile."},
+            {f: "O que é JWT (JSON Web Token)?", b: "Token no formato JSON, auto-contido e assinado digitalmente. Usado em OAuth/OpenID Connect para transmitir claims."},
+            {f: "Qual a diferença entre autenticação e autorização?", b: "Autenticação: 'Quem é você?' (identidade). Autorização: 'O que você pode fazer?' (permissões)."},
+
+            // 802.1X e EAP (67-70)
+            {f: "O que é 802.1X?", b: "Padrão de controle de acesso à rede baseado em portas. Usado em Wi-Fi corporativo e switches. Requer supplicant, authenticator e authentication server (RADIUS)."},
+            {f: "O que é EAP (Extensible Authentication Protocol)?", b: "Framework de autenticação usado em 802.1X. Vários métodos: EAP-TLS (certificados), PEAP (túnel TLS), EAP-TTLS."},
+            {f: "O que é EAP-TLS?", b: "Método EAP que usa certificados tanto no servidor quanto no cliente. É o mais seguro, mas requer PKI."},
+            {f: "O que é PEAP (Protected EAP)?", b: "Método EAP que cria um túnel TLS protegido, onde a autenticação do cliente ocorre dentro do túnel. Usa certificado apenas no servidor."}
+        ];
+
+        const quiz = [
+            {q: "Qual princípio de segurança determina que cada usuário deve ter apenas as permissões mínimas necessárias?", o: ["Segregação de Funções", "Menor Privilégio", "Need to Know", "Job Rotation"], c: 1},
+            {q: "Qual princípio divide tarefas críticas entre múltiplas pessoas para prevenir fraudes?", o: ["Menor Privilégio", "Segregação de Funções", "Job Rotation", "Férias Obrigatórias"], c: 1},
+            {q: "Em qual modelo de controle de acesso o proprietário do recurso define as permissões?", o: ["MAC", "DAC", "RBAC", "ABAC"], c: 1},
+            {q: "Em qual modelo de controle de acesso o sistema define permissões através de rótulos (labels)?", o: ["DAC", "MAC", "RBAC", "ABAC"], c: 1},
+            {q: "Qual modelo de controle de acesso baseia permissões em funções ou cargos?", o: ["DAC", "MAC", "RBAC", "ABAC"], c: 2},
+            {q: "Uma senha se enquadra em qual fator de autenticação?", o: ["Algo que você tem", "Algo que você sabe", "Algo que você é", "Algum lugar onde você está"], c: 1},
+            {q: "Um smart card se enquadra em qual fator de autenticação?", o: ["Algo que você sabe", "Algo que você tem", "Algo que você é", "Algo que você faz"], c: 1},
+            {q: "A biometria se enquadra em qual fator de autenticação?", o: ["Algo que você sabe", "Algo que você tem", "Algo que você é", "Algum lugar onde você está"], c: 2},
+            {q: "Qual métrica biométrica mede a taxa de aceitar um impostor (mais grave)?", o: ["FRR", "FAR", "CER", "EER"], c: 1},
+            {q: "Qual métrica biométrica mede a taxa de rejeitar um usuário legítimo?", o: ["FAR", "FRR", "CER", "EER"], c: 1},
+            {q: "Qual é o ponto onde FAR e FRR se igualam em um sistema biométrico?", o: ["MFA", "SSO", "CER", "TOTP"], c: 2},
+            {q: "Qual tecnologia gera códigos temporários baseados em tempo (ex: Google Authenticator)?", o: ["HOTP", "TOTP", "SMS", "Push"], c: 1},
+            {q: "Qual tecnologia permite autenticar uma vez e acessar múltiplos sistemas?", o: ["MFA", "SSO", "TOTP", "Kerberos"], c: 1},
+            {q: "Qual é o protocolo de autenticação padrão do Active Directory?", o: ["LDAP", "RADIUS", "Kerberos", "TACACS+"], c: 2},
+            {q: "Qual protocolo acessa diretórios como Active Directory na porta 389?", o: ["Kerberos", "LDAP", "RADIUS", "TACACS+"], c: 1},
+            {q: "Qual protocolo AAA usa UDP e criptografa apenas a senha?", o: ["TACACS+", "RADIUS", "Kerberos", "LDAP"], c: 1},
+            {q: "Qual protocolo AAA da Cisco usa TCP e criptografa toda a comunicação?", o: ["RADIUS", "TACACS+", "Kerberos", "LDAP"], c: 1},
+            {q: "Qual servidor armazena o banco de dados do Active Directory e autentica usuários?", o: ["Member Server", "Domain Controller", "RODC", "File Server"], c: 1},
+            {q: "Qual container do Active Directory é usado para organizar objetos e aplicar GPOs?", o: ["Domínio", "Floresta", "OU", "Árvore"], c: 2},
+            {q: "Qual objeto do Active Directory define configurações centralizadas?", o: ["ACL", "GPO", "DACL", "SACL"], c: 1},
+            {q: "Qual tipo de grupo no Active Directory é usado para atribuir permissões?", o: ["Distribuição", "Segurança", "Universal", "Built-in"], c: 1},
+            {q: "Qual recurso do Windows separa usuário padrão de administrador e pede elevação?", o: ["GPO", "ACL", "UAC", "RBAC"], c: 2},
+            {q: "Qual mecanismo bloqueia uma conta após várias tentativas de login com senha errada?", o: ["Complexidade de senha", "Account Lockout", "Histórico de senhas", "Idade máxima"], c: 1},
+            {q: "Qual ferramenta armazena senhas de forma criptografada e gera senhas fortes?", o: ["Navegador", "Gerenciador de senhas", "Bloco de notas", "Email"], c: 1},
+            {q: "Qual dispositivo armazena um certificado digital em um chip e requer PIN?", o: ["Token", "Smart Card", "USB Key", "RFID"], c: 1},
+            {q: "Qual arquivo no Linux armazena os hashes das senhas dos usuários?", o: ["/etc/passwd", "/etc/shadow", "/etc/group", "/etc/sudoers"], c: 1},
+            {q: "Qual comando no Linux é usado para criar um novo usuário?", o: ["adduser", "useradd", "newuser", "mkuser"], c: 1},
+            {q: "Qual comando no Linux adiciona um usuário a um grupo suplementar?", o: ["groupadd", "addgroup", "usermod -aG", "useradd -G"], c: 2},
+            {q: "Qual implementação de MAC (Mandatory Access Control) é comum no Linux?", o: ["AppArmor", "SELinux", "PAM", "sudo"], c: 1},
+            {q: "Qual protocolo de acesso remoto criptografado usa a porta 22?", o: ["Telnet", "RDP", "SSH", "VNC"], c: 2},
+            {q: "Qual protocolo de acesso remoto do Windows usa a porta 3389?", o: ["SSH", "Telnet", "RDP", "VNC"], c: 2},
+            {q: "Qual padrão baseado em XML é usado para SSO e federação de identidades?", o: ["OAuth", "OpenID", "SAML", "JWT"], c: 2},
+            {q: "Qual framework é usado para AUTORIZAÇÃO e delegação de acesso (ex: Login com Google)?", o: ["SAML", "OAuth", "Kerberos", "LDAP"], c: 1},
+            {q: "Qual camada de autenticação é construída sobre OAuth 2.0 e usa ID tokens?", o: ["SAML", "JWT", "OpenID Connect", "Kerberos"], c: 2},
+            {q: "Qual é a regra sobre permissões Deny e Allow no Windows?", o: ["Allow prevalece", "Deny prevalece", "São iguais", "Depende do administrador"], c: 1}
+        ];
+
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+
+        // Carregar progresso salvo
+        function loadProgress() {
+            const saved = localStorage.getItem('security_plus_cap4_mastered');
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
+        }
+
+        // Salvar progresso
+        function saveProgress() {
+            localStorage.setItem('security_plus_cap4_mastered', JSON.stringify([...mastered]));
+        }
+
+        // Chamar loadProgress assim que o script carregar
+        loadProgress();
+
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+        }
+
+        function updateCard() {
+            const card = cards[currentCard];
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${cards.length}`;
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            const btn = document.getElementById('master-btn');
+            btn.textContent = mastered.has(currentCard) ? '✓ Dominado' : 'Marcar Dominado';
+            btn.style.background = mastered.has(currentCard) ? '#10b981' : '#e5e7eb';
+            btn.style.color = mastered.has(currentCard) ? 'white' : 'black';
+        }
+
+        function flipCard() {
+            flipped = !flipped;
+            updateCard();
+        }
+
+        function nextCard() {
+            currentCard = (currentCard + 1) % cards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function prevCard() {
+            currentCard = (currentCard - 1 + cards.length) % cards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function toggleMaster() {
+            if (mastered.has(currentCard)) mastered.delete(currentCard);
+            else mastered.add(currentCard);
+            
+            // Salvar sempre que mudar
+            saveProgress();
+            
+            updateCard();
+        }
+
+        function loadQuiz() {
+            const container = document.getElementById('questions');
+            quiz.forEach((q, qi) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(qi, oi);
+                    odiv.id = `q${qi}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${qi}`;
+                exp.innerHTML = `<strong>Resposta correta:</strong> ${q.o[q.c]}`;
+                div.appendChild(exp);
+                container.appendChild(div);
+            });
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            quiz[qi].o.forEach((_, i) => {
+                document.getElementById(`q${qi}o${i}`).classList.remove('selected');
+            });
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            quiz.forEach((q, qi) => {
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (oi === q.c) el.classList.add('correct');
+                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                });
+                document.getElementById(`exp${qi}`).style.display = 'block';
+                if (answers[qi] === q.c) correct++;
+            });
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score').textContent = `${correct}/${quiz.length} (${pct}%)`;
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('results').style.display = 'none';
+            loadQuiz();
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>

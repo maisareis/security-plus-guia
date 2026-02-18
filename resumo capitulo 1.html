@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Cap 1 - Introdução à Segurança</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .summary {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .summary h1 {
+            color: #f5576c;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            border-bottom: 4px solid #f5576c;
+            padding-bottom: 15px;
+        }
+        .summary h2 {
+            color: #f093fb;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        .summary h3 {
+            color: #f5576c;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        .summary ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        .summary li {
+            margin-bottom: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #f093fb;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .timeline-item {
+            flex: 1;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .timeline-item.preventive { background: #d1fae5; border-left: 5px solid #10b981; }
+        .timeline-item.detective { background: #fef3c7; border-left: 5px solid #f59e0b; }
+        .timeline-item.corrective { background: #fee2e2; border-left: 5px solid #ef4444; }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box strong {
+            color: #ec4899;
+            font-size: 1.1rem;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule strong {
+            color: #f59e0b;
+            font-size: 1.1rem;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .pyramid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+        .pyramid-level {
+            width: 80%;
+            padding: 15px;
+            margin: 2px 0;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+        .pyramid-level.policies { background: #ef4444; width: 100%; }
+        .pyramid-level.technical { background: #f59e0b; width: 90%; }
+        .pyramid-level.operational { background: #10b981; width: 80%; }
+        .pyramid-level.physical { background: #3b82f6; width: 70%; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 Security+ Capítulo 1</h1>
+            <p>Introdução à Segurança da Informação</p>
+            <div class="stats-bar">
+                <div class="stat-card">📚 Fundamentos</div>
+                <div class="stat-card">🔐 Tríade CIA</div>
+                <div class="stat-card">🛡️ Controles</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">📖 Resumo</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="summary">
+                <h1>📖 Resumo - Capítulo 1: Introdução à Segurança</h1>
+                
+                <div class="info-box">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Tríade CIA:</strong> Confidencialidade, Integridade, Disponibilidade</li>
+                        <li><strong>Controles Preventivos</strong> agem ANTES, <strong>Detectivos</strong> DURANTE, <strong>Corretivos</strong> DEPOIS</li>
+                        <li><strong>Preventivo ≠ Deterrente:</strong> Preventivo bloqueia fisicamente, Deterrente desencoraja psicologicamente</li>
+                        <li><strong>Defesa em Profundidade:</strong> Múltiplas camadas de segurança</li>
+                    </ul>
+                </div>
+
+                <h2>1️⃣ Fundamentos e Desafios Modernos</h2>
+                
+                <h3>Conceito de Segurança</h3>
+                <ul>
+                    <li><strong>Processo contínuo,</strong> não um estado final</li>
+                    <li>Inclui: avaliação de requisitos, configuração de sistemas, hardening, monitoramento, resposta a ataques, dissuasão</li>
+                </ul>
+
+                <h3>Desafios de Segurança Modernos</h3>
+                <ul>
+                    <li><strong>Ataques sofisticados:</strong> difíceis de detectar, usam ferramentas comuns da Internet, variam comportamento</li>
+                    <li><strong>Proliferação de ferramentas:</strong> qualquer pessoa com conhecimento técnico moderado pode baixar ferramentas de ataque</li>
+                    <li><strong>Escala e velocidade:</strong> ataques afetam milhões de computadores em minutos ou dias, propagação automática</li>
+                </ul>
+
+                <h2>2️⃣ Tríade CIA</h2>
+                
+                <table>
+                    <tr>
+                        <th>Objetivo</th>
+                        <th>Descrição</th>
+                        <th>Exemplos</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Confidencialidade</strong></td>
+                        <td>Garantir que dados não sejam divulgados a pessoas não autorizadas</td>
+                        <td>Criptografia, controle de acesso, classificação de dados</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Integridade</strong></td>
+                        <td>Garantir que dados não sejam modificados ou adulterados</td>
+                        <td>Hashing, assinaturas digitais, checksums</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Disponibilidade</strong></td>
+                        <td>Garantir que dados estejam acessíveis quando necessário</td>
+                        <td>Redundância, backups, balanceamento de carga</td>
+                    </tr>
+                </table>
+
+                <div class="golden-rule">
+                    <strong>⚠️ REGRA DE OURO:</strong> A Tríade CIA é a base de TODOS os controles de segurança. Qualquer medida de segurança deve proteger pelo menos um destes pilares!
+                </div>
+
+                <h2>3️⃣ Tipos de Controles de Segurança</h2>
+
+                <h3>Classificação por Implementação</h3>
+                <table>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Exemplos</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Gerenciais (Managerial)</strong></td>
+                        <td>Supervisão do sistema de informação</td>
+                        <td>Identificação de riscos, avaliação e seleção de controles</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Operacionais (Operational)</strong></td>
+                        <td>Implementados principalmente por pessoas</td>
+                        <td>Guardas de segurança, programas de treinamento</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Técnicos (Technical)</strong></td>
+                        <td>Implementados como hardware/software/firmware</td>
+                        <td>Firewalls, antivírus, controle de acesso do SO</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Físicos (Physical)</strong></td>
+                        <td>Impedem e detectam acesso a instalações e hardware</td>
+                        <td>Alarmes, portões, fechaduras, câmeras</td>
+                    </tr>
+                </table>
+
+                <div class="pyramid">
+                    <div class="pyramid-level policies">Políticas (Gerenciais)</div>
+                    <div class="pyramid-level technical">Técnicos</div>
+                    <div class="pyramid-level operational">Operacionais</div>
+                    <div class="pyramid-level physical">Físicos</div>
+                </div>
+                <p style="text-align: center; font-style: italic;">Pirâmide de Controles - Base física sustenta os demais</p>
+
+                <h3>Classificação por Função/Objetivo</h3>
+                
+                <div class="timeline">
+                    <div class="timeline-item preventive">
+                        <strong>ANTES</strong><br>
+                        PREVENTIVO
+                    </div>
+                    <div class="timeline-item detective">
+                        <strong>DURANTE</strong><br>
+                        DETECTIVO
+                    </div>
+                    <div class="timeline-item corrective">
+                        <strong>DEPOIS</strong><br>
+                        CORRETIVO
+                    </div>
+                </div>
+
+                <table>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Função</th>
+                        <th>Quando</th>
+                        <th>Exemplos</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Preventivo</strong></td>
+                        <td>Elimina ou reduz probabilidade de ataque ter sucesso</td>
+                        <td>ANTES</td>
+                        <td>ACLs em firewalls, ACLs em objetos de sistema de arquivos, antimalware bloqueando, gerenciamento de patches</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Detectivo</strong></td>
+                        <td>Identifica e registra intrusão (não impede)</td>
+                        <td>DURANTE</td>
+                        <td>Logs de sistema, IDS, monitoramento de rede, câmeras</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Corretivo</strong></td>
+                        <td>Elimina ou reduz impacto de violação</td>
+                        <td>APÓS</td>
+                        <td>Backups, patches após descoberta, recuperação de desastres</td>
+                    </tr>
+                </table>
+
+                <h3>Tipos Adicionais de Controles</h3>
+                <table>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Exemplos</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Diretivo</strong></td>
+                        <td>Impõe regra de comportamento</td>
+                        <td>Políticas, SOPs, treinamento, contratos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dissuasivo</strong></td>
+                        <td>Desencoraja psicologicamente atacante</td>
+                        <td>Placas de aviso, avisos de penalidades legais</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Compensatório</strong></td>
+                        <td>Substituto para controle principal, mesmo nível de proteção</td>
+                        <td>MFA compensando senhas fracas, isolamento quando patch não disponível</td>
+                    </tr>
+                </table>
+
+                <div class="info-box">
+                    <strong>💡 DICA CRÍTICA:</strong> 
+                    <ul>
+                        <li><strong>Preventivo vs Deterrente:</strong> Preventivo bloqueia fisicamente (firewall), Deterrente desencoraja (placa de "monitorado")</li>
+                        <li><strong>Fail-Open vs Fail-Closed:</strong> Fail-Open mantém acesso (prioriza disponibilidade), Fail-Closed bloqueia acesso (prioriza confidencialidade)</li>
+                    </ul>
+                </div>
+
+                <h2>4️⃣ Papéis e Responsabilidades de Segurança</h2>
+
+                <h3>Liderança Executiva</h3>
+                <ul>
+                    <li><strong>CIO (Chief Information Officer):</strong> Responsabilidade geral pela função de TI, supervisão estratégica</li>
+                    <li><strong>CTO (Chief Technology Officer):</strong> Uso eficaz de produtos de TI, novas soluções emergentes</li>
+                    <li><strong>CISO/CSO (Chief Information Security Officer):</strong> Departamento dedicado à segurança, responsabilidade interna</li>
+                </ul>
+
+                <h3>Gerência e Pessoal Técnico</h3>
+                <ul>
+                    <li><strong>Gerentes:</strong> Responsabilidade por domínio específico, implementação de políticas</li>
+                    <li><strong>Pessoal Técnico:</strong> Implementação, manutenção e monitoramento de políticas</li>
+                    <li><strong>ISSO (Information Systems Security Officer):</strong> Título comum para profissional de segurança</li>
+                </ul>
+
+                <h3>Responsabilidade Externa</h3>
+                <ul>
+                    <li><strong>Diretores/Proprietários:</strong> Responsabilidade legal e regulatória (due care/liability)</li>
+                    <li><strong>Todos funcionários:</strong> Responsabilidade de conformidade com políticas</li>
+                </ul>
+
+                <h2>5️⃣ Unidades Organizacionais de Segurança</h2>
+
+                <h3>SOC (Security Operations Center)</h3>
+                <ul>
+                    <li>Local onde profissionais monitoram e protegem ativos de informação críticos</li>
+                    <li>Monitoramento 24/7 com múltiplos fusos horários</li>
+                    <li>Dashboards com dados, mapas de ameaças em tempo real</li>
+                </ul>
+
+                <h3>DevOps e DevSecOps</h3>
+                <ul>
+                    <li><strong>DevOps:</strong> Colaboração entre desenvolvedores e administradores de sistemas</li>
+                    <li><strong>DevSecOps:</strong> Segurança como consideração primária em cada estágio</li>
+                    <li><strong>Shift Left:</strong> Considerações de segurança durante requisitos e planejamento, não no final</li>
+                </ul>
+
+                <h3>Equipes de Resposta a Incidentes</h3>
+                <ul>
+                    <li><strong>CIRT/CSIRT/CERT:</strong> Ponto único de contato para notificação de incidentes</li>
+                    <li>Coordenação de resposta, análise e contenção de ameaças</li>
+                </ul>
+
+                <h2>6️⃣ Atividades de Profissionais de Segurança</h2>
+
+                <table>
+                    <tr>
+                        <th>Atividade</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Avaliação e Testes</strong></td>
+                        <td>Participar de avaliações de risco, testar sistemas, fazer recomendações</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Aquisição e Configuração</strong></td>
+                        <td>Especificar dispositivos seguros, sourcing, instalação e configuração</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gerenciamento de Acesso</strong></td>
+                        <td>Configurar controle de acesso, manter perfis de privilégios</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Monitoramento e Auditoria</strong></td>
+                        <td>Monitorar logs, revisar privilégios, documentar controles, analisar eventos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Resposta a Incidentes</strong></td>
+                        <td>Gerenciar resposta, relatar incidentes, documentar e analisar</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Continuidade de Negócios</strong></td>
+                        <td>Criar planos de continuidade e recuperação, testar procedimentos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Educação e Treinamento</strong></td>
+                        <td>Participar de treinamentos, desenvolver materiais, conduzir conscientização</td>
+                    </tr>
+                </table>
+
+                <div class="golden-rule">
+                    <strong>📌 NIST Cybersecurity Framework (CSF):</strong>
+                    <ol style="margin-top: 10px;">
+                        <li><strong>Identificar:</strong> Desenvolver políticas, avaliar riscos e ameaças</li>
+                        <li><strong>Proteger:</strong> Implementar controles de segurança</li>
+                        <li><strong>Detectar:</strong> Monitoramento proativo contínuo</li>
+                        <li><strong>Responder:</strong> Conter e erradicar ameaças</li>
+                        <li><strong>Recuperar:</strong> Restaurar sistemas e dados após incidentes</li>
+                    </ol>
+                </div>
+
+                <div class="info-box">
+                    <strong>🎯 DICAS FINAIS PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Controles Preventivos agem ANTES, Detectivos DURANTE, Corretivos DEPOIS</li>
+                        <li>Preventivo bloqueia fisicamente, Deterrente desencoraja psicologicamente</li>
+                        <li>Fail-Open = disponibilidade, Fail-Closed = confidencialidade</li>
+                        <li>Defesa em Profundidade = múltiplas camadas</li>
+                        <li>NIST CSF: Identify, Protect, Detect, Respond, Recover</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+        }
+    </script>
+</body>
+</html>

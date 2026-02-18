@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo Security+ Capítulo 5 - Arquitetura e Segurança de Redes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
+            padding: 50px;
+            border: 1px solid #e2e8f0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .badge {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .download-btn {
+            background: #0f172a;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+        .download-btn:hover {
+            background: #1e293b;
+            transform: translateY(-2px);
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box strong {
+            color: #ec4899;
+            font-size: 1.1rem;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule strong {
+            color: #f59e0b;
+            font-size: 1.1rem;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            font-size: 1.8rem;
+            color: #0f172a;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            padding-left: 15px;
+        }
+        .section h3 {
+            font-size: 1.3rem;
+            color: #334155;
+            margin: 20px 0 10px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .card ul {
+            list-style: none;
+        }
+        .card li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .card li:before {
+            content: "•";
+            color: #667eea;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        tr:hover {
+            background: #f1f5f9;
+        }
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px dashed #e2e8f0;
+            text-align: center;
+            color: #64748b;
+        }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📘 Capítulo 5: Arquitetura e Segurança de Redes</h1>
+            <span class="badge">Resumo Completo</span>
+        </div>
+
+        <div class="info-box">
+            <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>Screened Subnet (DMZ):</strong> 2 firewalls, se externo falha = só DMZ comprometida</li>
+                <li><strong>VPN = MELHOR para acesso remoto seguro</strong> a recursos privados</li>
+                <li><strong>NAC = Authentication E Authorization</strong> (zero-trust)</li>
+                <li><strong>Fail-Open:</strong> prioriza disponibilidade | <strong>Fail-Closed:</strong> prioriza confidencialidade</li>
+                <li><strong>802.1X:</strong> Autenticação baseada em porta (EAP + RADIUS)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣ Appliances de Segurança</h2>
+
+            <h3>Proxy Server</h3>
+            <ul>
+                <li>Age em nome do cliente ao acessar recursos na internet</li>
+                <li>Trabalha com modelo store-and-forward (desconstrói, analisa e reconstrói pacotes)</li>
+                <li><strong>Benefícios:</strong> Gerenciamento de tráfego, proteção/anonimato (mascara IPs), cache, filtragem, balanceamento de carga</li>
+            </ul>
+
+            <h3>Jump Server</h3>
+            <ul>
+                <li>Servidor fortificado que fornece acesso a outros hosts</li>
+                <li>Usado para tarefas administrativas</li>
+                <li>Gateway para sistemas isolados da rede externa</li>
+                <li>Alto nível de segurança e controle de acesso</li>
+            </ul>
+
+            <h3>Balanceador de Carga (Load Balancer)</h3>
+            <ul>
+                <li>Distribui tráfego entre múltiplos servidores</li>
+                <li>Fornece tolerância a falhas</li>
+                <li><strong>Tipos:</strong>
+                    <ul>
+                        <li><strong>Layer 4:</strong> Decisões baseadas em IP e portas TCP/UDP</li>
+                        <li><strong>Layer 7:</strong> Decisões baseadas em dados da camada de aplicação</li>
+                    </ul>
+                </li>
+                <li>Pode incluir WAF (Web Application Firewall)</li>
+            </ul>
+
+            <h3>Sensor (Packet Sniffer)</h3>
+            <ul>
+                <li>Colocado atrás de firewall ou perto de servidor importante</li>
+                <li>Identifica tráfego malicioso que passou pelo firewall</li>
+                <li>Transfere dados capturados para IDS (Snort, Suricata, Zeek)</li>
+                <li>Sensor passivo - não desacelera tráfego e é indetectável</li>
+            </ul>
+
+            <h3>UTM (Unified Threat Management)</h3>
+            <ul>
+                <li>Múltiplas funções de segurança em um único dispositivo</li>
+                <li><strong>Funcionalidades:</strong> Filtragem URL, inspeção de conteúdo, filtragem spam, firewall, IDS/IPS, switch, router</li>
+                <li><strong>Desvantagens:</strong> Ponto único de falha, latência, desempenho inferior a soluções dedicadas</li>
+                <li>Comum em pequenas/médias empresas</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>2️⃣ Modos de Falha</h2>
+
+            <table>
+                <tr>
+                    <th>Modo</th>
+                    <th>Descrição</th>
+                    <th>Risco</th>
+                </tr>
+                <tr>
+                    <td><strong>Fail-Open</strong></td>
+                    <td>Preserva acesso à rede/host. Prioriza <strong>DISPONIBILIDADE</strong>.</td>
+                    <td>Atacante pode forçar falha para contornar controle</td>
+                </tr>
+                <tr>
+                    <td><strong>Fail-Closed</strong></td>
+                    <td>Bloqueia acesso ou entra em estado mais seguro. Prioriza <strong>CONFIDENCIALIDADE</strong>.</td>
+                    <td>Downtime do sistema</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>3️⃣ Filtragem de Conteúdo</h2>
+
+            <h3>Servidor de Filtragem de Conteúdo</h3>
+            <ul>
+                <li><strong>Configurações:</strong> Permitir tudo exceto banido OU Bloquear tudo exceto permitido</li>
+                <li>Controles: níveis de segurança, listas de permissão/negação</li>
+            </ul>
+
+            <h3>Filtragem Web - Abordagens</h3>
+            <table>
+                <tr>
+                    <th>Abordagem</th>
+                    <th>Descrição</th>
+                    <th>Vantagens</th>
+                </tr>
+                <tr>
+                    <td><strong>Baseada em Agente</strong></td>
+                    <td>Software instalado em cada endpoint</td>
+                    <td>Funciona fora da rede corporativa, controle granular (HTTPS)</td>
+                </tr>
+                <tr>
+                    <td><strong>Centralizada (Proxy)</strong></td>
+                    <td>Servidor proxy centralizado</td>
+                    <td>Escaneamento URL, categorização, reputação</td>
+                </tr>
+            </table>
+
+            <h3>Desafios da Filtragem</h3>
+            <ul>
+                <li><strong>Overblocking:</strong> muito restritivo</li>
+                <li><strong>Underblocking:</strong> permite conteúdo prejudicial</li>
+                <li><strong>Tráfego criptografado (HTTPS)</strong></li>
+            </ul>
+
+            <h3>Filtragem DNS</h3>
+            <ul>
+                <li>Bloqueia/permite acesso controlando resolução de nomes</li>
+                <li><strong>Benefícios:</strong> Defesa proativa contra phishing/malware, aplica políticas AUP, protege IoT, solução econômica</li>
+                <li>Deve ser combinada com outras medidas</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>4️⃣ Zonas de Segurança</h2>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Screened Subnet (DMZ)</h4>
+                    <ul>
+                        <li>Rede pública acessível como buffer</li>
+                        <li>Usa um ou dois firewalls</li>
+                        <li>Hospeda: email, VPN, web servers</li>
+                        <li>Servidores como bastion host (fortificados)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Intranet</h4>
+                    <ul>
+                        <li>Rede privada (LAN) com serviços de internet</li>
+                        <li>Uso interno apenas</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Extranet</h4>
+                    <ul>
+                        <li>Rede privada entre internet e LAN</li>
+                        <li>Acesso a parceiros, fornecedores</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Wireless / Guest</h4>
+                    <ul>
+                        <li><strong>Wireless:</strong> usuários internos via Wi-Fi</li>
+                        <li><strong>Guest:</strong> visitantes, só internet com firewall</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Honeypots e Tecnologias Enganosas</h3>
+            <table>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Honeypot</strong></td>
+                    <td>Sistema isca que imita sistemas reais. Tipos: pesquisa (governo/militar) e produção (organizações)</td>
+                </tr>
+                <tr>
+                    <td><strong>Honeynet</strong></td>
+                    <td>Rede isca com múltiplos honeypots</td>
+                </tr>
+                <tr>
+                    <td><strong>Honeyfile</strong></td>
+                    <td>Arquivo único (passwords.txt) que dispara alarme ao ser acessado</td>
+                </tr>
+                <tr>
+                    <td><strong>Honeytoken</strong></td>
+                    <td>Credenciais falsas para distrair atacantes</td>
+                </tr>
+                <tr>
+                    <td><strong>DNS Sinkhole</strong></td>
+                    <td>Redireciona tráfego malicioso para IP controlado. Limitação: malware deve usar DNS da organização</td>
+                </tr>
+                <tr>
+                    <td><strong>Fake Telemetry</strong></td>
+                    <td>Retorna dados falsos (IPs, credenciais) para rastrear atacantes</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>5️⃣ Screened Subnet (DMZ) - Detalhado</h2>
+
+            <div class="golden-rule">
+                <strong>⚠️ REGRA DE OURO:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Firewall Externo:</strong> Internet → DMZ (permite tráfego para serviços)</li>
+                    <li><strong>Firewall Interno:</strong> DMZ → LAN (bloqueia praticamente tudo)</li>
+                    <li>Se firewall <strong>EXTERNO</strong> falha → Apenas DMZ comprometida (LAN protegida!)</li>
+                </ul>
+            </div>
+
+            <h3>Termos Relacionados</h3>
+            <ul>
+                <li><strong>Bastion Host:</strong> Host exposto e fortificado. Medidas: uma aplicação por servidor, patches, firewall pessoal, remover serviços desnecessários.</li>
+                <li><strong>Screening Router:</strong> Roteador mais externo com ACLs</li>
+                <li><strong>Dual-Homed Gateway:</strong> Firewall com 3 interfaces (Internet, DMZ, LAN)</li>
+                <li><strong>Screened-Host Gateway:</strong> Na DMZ, requer autenticação</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>6️⃣ Firewalls</h2>
+
+            <h3>Tipos de Firewall</h3>
+            <table>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Host-Based</strong></td>
+                    <td>Inspeciona tráfego do host. Proteção quando não há firewall de rede</td>
+                </tr>
+                <tr>
+                    <td><strong>Network-Based</strong></td>
+                    <td>Hardware na borda da rede privada</td>
+                </tr>
+                <tr>
+                    <td><strong>WAF</strong></td>
+                    <td>Protege servidores web contra SQLi, XSS, DoS</td>
+                </tr>
+                <tr>
+                    <td><strong>NGFW</strong></td>
+                    <td>Layer 7 + TLS inspection + IPS + integração diretórios</td>
+                </tr>
+                <tr>
+                    <td><strong>UTM</strong></td>
+                    <td>Tudo-em-um: firewall + antimalware + IPS + spam + VPN</td>
+                </tr>
+                <tr>
+                    <td><strong>Stateless</strong></td>
+                    <td>Filtra pacotes independentes, não rastreia sessões</td>
+                </tr>
+                <tr>
+                    <td><strong>Stateful</strong></td>
+                    <td>Rastreia sessões em state table. Todos firewalls modernos</td>
+                </tr>
+                <tr>
+                    <td><strong>Layer 4</strong></td>
+                    <td>Examina handshake TCP, rastreia UDP</td>
+                </tr>
+                <tr>
+                    <td><strong>Layer 7</strong></td>
+                    <td>Inspeciona headers + payload, verifica protocolo × porta</td>
+                </tr>
+            </table>
+
+            <h3>ACLs e Regras</h3>
+            <ul>
+                <li>Processadas de cima para baixo</li>
+                <li>Regras mais específicas no topo</li>
+                <li><strong>Tuples:</strong> protocolo, IP origem/destino, porta origem/destino</li>
+                <li><strong>Implicit Deny:</strong> última regra bloqueia tudo não permitido</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>7️⃣ VPN (Virtual Private Network)</h2>
+
+            <h3>Tipos de Túnel</h3>
+            <ul>
+                <li><strong>Full Tunnel:</strong> Todo tráfego vai pela VPN</li>
+                <li><strong>Split Tunnel:</strong> Apenas tráfego corporativo vai pela VPN</li>
+            </ul>
+
+            <h3>Implementações VPN</h3>
+            <table>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Host-to-Host</strong></td>
+                    <td>Host individual conecta a outro host</td>
+                </tr>
+                <tr>
+                    <td><strong>Site-to-Site</strong></td>
+                    <td>Roteadores nas bordas, hosts não sabem da VPN</td>
+                </tr>
+                <tr>
+                    <td><strong>Remote Access</strong></td>
+                    <td>Concentrador VPN aceita múltiplas conexões</td>
+                </tr>
+                <tr>
+                    <td><strong>Always-On</strong></td>
+                    <td>Usuário sempre na VPN, não desliga</td>
+                </tr>
+            </table>
+
+            <h3>Protocolos VPN</h3>
+            <ul>
+                <li><strong>TLS VPN:</strong> Certificados digitais, autenticação mútua, RADIUS</li>
+                <li><strong>IPsec:</strong> Opera camada 3, menor overhead</li>
+                <li><strong>AH (Authentication Header):</strong> Hash criptográfico, sem confidencialidade</li>
+                <li><strong>ESP (Encapsulating Security Payload):</strong> Criptografa payload</li>
+            </ul>
+
+            <h3>Modos IPsec</h3>
+            <ul>
+                <li><strong>Transport Mode:</strong> Apenas payload criptografado (IP header não)</li>
+                <li><strong>Tunnel Mode:</strong> Pacote IP completo criptografado e encapsulado</li>
+            </ul>
+
+            <h3>IKE (Internet Key Exchange)</h3>
+            <ul>
+                <li><strong>Phase I:</strong> Estabelece identidade, Diffie-Hellman, canal seguro</li>
+                <li><strong>Phase II:</strong> Estabelece cifras para AH/ESP</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>8️⃣ NAC (Network Access Control)</h2>
+
+            <div class="info-box">
+                <strong>🔑 ZERO-TRUST:</strong> NAC = Autenticação E Autorização. Se falhar qualquer, nega acesso.
+            </div>
+
+            <h3>Processo de Duas Etapas</h3>
+            <ol>
+                <li><strong>Autenticação:</strong> Define pré-requisitos (antivírus, SO, patches)</li>
+                <li><strong>Autorização:</strong> Aplica políticas apropriadas</li>
+            </ol>
+
+            <h3>Atribuição Dinâmica de VLAN</h3>
+            <ul>
+                <li>Dispositivo não conforme → VLAN de quarentena</li>
+                <li>Após remediação → reavaliado → VLAN normal</li>
+            </ul>
+
+            <h3>Agente vs Agentless</h3>
+            <table>
+                <tr>
+                    <th>Baseado em Agente</th>
+                    <th>Agentless</th>
+                </tr>
+                <tr>
+                    <td>Software instalado</td>
+                    <td>Controle por porta/scan</td>
+                </tr>
+                <tr>
+                    <td>Informações detalhadas</td>
+                    <td>Menos detalhado</td>
+                </tr>
+                <tr>
+                    <td>Remediação automática</td>
+                    <td>Funciona com guests/IoT</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>9️⃣ Segurança de Switch</h2>
+
+            <h3>VLANs</h3>
+            <ul>
+                <li>Agrupamento lógico de computadores por portas</li>
+                <li>Cada porta pertence a uma VLAN</li>
+                <li><strong>Trunk Port:</strong> Conecta switches, membro de todas VLANs (tagging 802.1Q)</li>
+                <li>Inter-VLAN precisa de roteador ou switch Layer 3</li>
+            </ul>
+
+            <h3>Segurança de Porta</h3>
+            <ul>
+                <li>Limita dispositivos por endereço MAC</li>
+                <li>Pode descartar frames ou desligar porta em violação</li>
+            </ul>
+
+            <h3>802.1X (Port Authentication)</h3>
+            <ul>
+                <li><strong>Supplicant:</strong> dispositivo solicitante</li>
+                <li><strong>Authenticator:</strong> switch (condutor)</li>
+                <li><strong>Authentication Server:</strong> RADIUS valida credenciais</li>
+                <li><strong>EAPoL:</strong> EAP over LAN</li>
+            </ul>
+
+            <h3>Ataques a Switches</h3>
+            <table>
+                <tr>
+                    <th>Ataque</th>
+                    <th>Descrição</th>
+                    <th>Proteção</th>
+                </tr>
+                <tr>
+                    <td><strong>MAC Flooding</strong></td>
+                    <td>Inunda tabela CAM, switch vira hub</td>
+                    <td>Port Security</td>
+                </tr>
+                <tr>
+                    <td><strong>ARP Spoofing</strong></td>
+                    <td>Associa MAC atacante ao IP vítima</td>
+                    <td>DAI</td>
+                </tr>
+                <tr>
+                    <td><strong>MAC Spoofing</strong></td>
+                    <td>Muda MAC de origem</td>
+                    <td>802.1X</td>
+                </tr>
+            </table>
+
+            <h3>Spanning Tree Protocol (STP)</h3>
+            <ul>
+                <li>Previne switching loops</li>
+                <li>Mantém caminhos redundantes (tolerância a falhas)</li>
+                <li>Portas: Root, Designated, Blocked</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🔟 Segurança de Roteadores</h2>
+
+            <h3>Medidas de Hardening</h3>
+            <ul>
+                <li><strong>Mudar defaults:</strong> senha, endereço de rede</li>
+                <li><strong>Protocolos seguros:</strong> SSH (não Telnet), SCP (não FTP), HTTPS (não HTTP)</li>
+                <li><strong>Atualizar firmware</strong> (primeira ação!)</li>
+                <li><strong>Regras anti-spoofing:</strong> bloquear pacotes externos com IP interno</li>
+                <li><strong>ACLs:</strong> filtro em nível de roteador</li>
+                <li><strong>Segurança física:</strong> sala trancada (senha não protege acesso físico)</li>
+            </ul>
+
+            <h3>Segmentação</h3>
+            <ul>
+                <li>Divide sistemas em segmentos/sub-redes</li>
+                <li>Controles de acesso distintos por segmento</li>
+                <li>Limita movimento lateral de atacantes</li>
+                <li>Protege contra worms e ransomware</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣1️⃣ SD-WAN e SASE</h2>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h4>SD-WAN</h4>
+                    <ul>
+                        <li>Conecta filiais, datacenters e cloud</li>
+                        <li>Criptografia em trânsito</li>
+                        <li>Segmentação por prioridade</li>
+                        <li>Roteamento inteligente</li>
+                        <li>Integração com firewalls</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>SASE</h4>
+                    <ul>
+                        <li>WAN + segurança cloud</li>
+                        <li>Zero trust</li>
+                        <li>IAM</li>
+                        <li>Prevenção de ameaças</li>
+                        <li>Acesso seguro independente de localização</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <strong>💡 DICAS FINAIS PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li>Screened subnet = 2 firewalls SEMPRE na prova</li>
+                <li>VPN = melhor para acesso remoto seguro</li>
+                <li>Nova ACL = bloqueia tudo por padrão (implicit deny)</li>
+                <li>NAC = Authentication E Authorization (zero-trust)</li>
+                <li>MAC flooding → Port Security</li>
+                <li>ARP spoofing → DAI</li>
+                <li>802.1X usa RADIUS + EAP</li>
+                <li>Fail-Open = disponibilidade | Fail-Closed = confidencialidade</li>
+                <li>SSH não Telnet, SCP não FTP</li>
+                <li>Physical access sem controle = passwords inúteis</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>📚 Resumo autoral para certificação CompTIA Security+ • Capítulo 5</p>
+        </div>
+    </div>
+</body>
+</html>

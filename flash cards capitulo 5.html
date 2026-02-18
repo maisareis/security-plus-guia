@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Cap 5 - Arquitetura de Redes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* FLASHCARDS */
+        .flashcard-area { max-width: 900px; margin: 0 auto; }
+        .card-info {
+            background: rgba(255,255,255,0.25);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .flashcard:hover { transform: scale(1.02); }
+        .side-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .flashcard-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #1f2937;
+        }
+        .flip-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn-nav {
+            background: white;
+            font-size: 1.5rem;
+            width: 55px;
+            height: 55px;
+        }
+        .btn-master {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        .btn-master.mastered {
+            background: #10b981;
+            color: white;
+        }
+        .btn-shuffle {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        /* QUIZ */
+        .quiz-area { max-width: 1000px; margin: 0 auto; }
+        .quiz-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+        }
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+        .option:hover {
+            background: #f9fafb;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            border-color: #667eea;
+            background: #eff6ff;
+            font-weight: 600;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #eff6ff;
+            border-left: 5px solid #667eea;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .results-modal.show { display: flex; }
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 Security+ Capítulo 5</h1>
+            <p>Arquitetura e Segurança de Redes - Questões CompTIA Reais</p>
+            <div class="stats-bar">
+                <div class="stat-card">📚 70 Flashcards</div>
+                <div class="stat-card">❓ 35 Questões CompTIA</div>
+                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz CompTIA</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="flashcard-area">
+                <div class="card-info">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
+                        <div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 70</div>
+                            <div id="mastered-count">0 dominados</div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="side-indicator" id="side-indicator">FRENTE</div>
+                    <div class="flashcard-text" id="card-text"></div>
+                    <div class="flip-hint">👆 Clique para virar</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
+                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab1" class="content">
+            <div style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <h1 style="color: #667eea; margin-bottom: 30px; font-size: 2.5rem; border-bottom: 4px solid #667eea; padding-bottom: 15px;">📖 Resumo - Capítulo 5</h1>
+                
+                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>Screened Subnet (DMZ):</strong> 2 firewalls, se externo falha = só DMZ comprometida</li>
+                        <li><strong>VPN = MELHOR para acesso remoto seguro</strong> a recursos privados</li>
+                        <li><strong>Web server público → DMZ | Database → LAN privada</strong></li>
+                        <li><strong>NAC = Authentication E Authorization</strong> (zero-trust)</li>
+                        <li><strong>ACL nova = bloqueia tudo</strong> por padrão (implicit deny)</li>
+                    </ul>
+                </div>
+
+                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">1️⃣ Arquitetura de Rede</h2>
+                
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Three-Tier Architecture</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Core Layer:</strong> Backbone alta velocidade, roteamento entre segmentos</li>
+                    <li><strong>Distribution Layer:</strong> Políticas, ACLs, filtragem, agregação</li>
+                    <li><strong>Access Layer:</strong> Conecta usuários finais, switches de acesso</li>
+                </ul>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Modelo OSI Essencial</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Layer 1 (Physical):</strong> Cabos, sinais elétricos/ópticos, wireless</li>
+                    <li><strong>Layer 2 (Data Link):</strong> Switches, APs, MAC address (48-bit)</li>
+                    <li><strong>Layer 3 (Network):</strong> Routers, IP addresses, default gateway</li>
+                    <li><strong>Layer 4 (Transport):</strong> TCP (confiável), UDP (não confiável), portas</li>
+                    <li><strong>Layer 7 (Application):</strong> HTTP, FTP, SMTP, DNS</li>
+                </ul>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">On-Premises vs Cloud</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>On-Prem:</strong> Alto CapEx, controle total, baixa escalabilidade</li>
+                    <li><strong>Cloud:</strong> OpEx, alta escalabilidade, menos controle, melhor resiliência</li>
+                </ul>
+
+                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ Defense in Depth</h2>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Preventivo:</strong> Firewall na borda (bloqueia antes de entrar)</li>
+                    <li><strong>Detectivo:</strong> IDS dentro do perímetro (alerta sobre ameaças)</li>
+                    <li><strong>Corretivo:</strong> Load balancer (mitiga DDoS), endpoint protection</li>
+                    <li><strong>Active:</strong> Requer config (firewall como gateway)</li>
+                    <li><strong>Passive:</strong> Transparente (TAP, mirror port)</li>
+                    <li><strong>Fail-Open:</strong> Mantém acesso → prioriza AVAILABILITY</li>
+                    <li><strong>Fail-Closed:</strong> Bloqueia acesso → prioriza CONFIDENTIALITY</li>
+                </ul>
+
+                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Screened Subnet (DMZ) ⭐ CRÍTICO</h2>
+                
+                <div style="background: #eff6ff; border-left: 5px solid #3b82f6; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>💡 Configuração:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>Firewall Externo:</strong> Internet → DMZ</li>
+                        <li><strong>DMZ:</strong> Web server, FTP, Email público, DNS público</li>
+                        <li><strong>Firewall Interno:</strong> DMZ → LAN privada</li>
+                    </ul>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Conceitos Chave</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Dual-Homed Gateway:</strong> 3 interfaces (internet, DMZ, LAN)</li>
+                    <li><strong>Screening Router:</strong> Router + firewall (ACLs), mais externo</li>
+                    <li><strong>Bastion Host:</strong> Servidor fortificado exposto à internet</li>
+                    <li><strong>Screened-Host Gateway:</strong> Na DMZ, requer autenticação</li>
+                    <li><strong>Packet Filters:</strong> Permitem tráfego para recursos públicos na DMZ</li>
+                </ul>
+
+                <div style="background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>⚠️ REGRA DE OURO:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Se firewall <strong>EXTERNO</strong> falha → Apenas DMZ comprometida (LAN protegida!)</li>
+                        <li><strong>Web server público → DMZ</strong></li>
+                        <li><strong>Database → LAN privada</strong> (firewall interno permite só tráfego do web)</li>
+                        <li><strong>VPN server → pode ficar na DMZ</strong></li>
+                    </ul>
+                </div>
+
+                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">4️⃣ Firewalls</h2>
+                
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Tipos</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Stateless (Packet Filter):</strong> Analisa cada packet independente, IP/porta/protocolo</li>
+                    <li><strong>Stateful:</strong> Rastreia estado de conexões TCP, state table</li>
+                    <li><strong>Layer 4:</strong> Examina TCP handshake (SYN/SYN-ACK/ACK)</li>
+                    <li><strong>Layer 7 (Application):</strong> Inspeciona headers + payload, verifica protocol/port match</li>
+                    <li><strong>NGFW:</strong> Firewall + IPS + DPI + TLS inspection + threat intel</li>
+                    <li><strong>WAF:</strong> Web Application Firewall - SQL Injection, XSS, CSRF</li>
+                    <li><strong>UTM:</strong> All-in-one (firewall + antimalware + IPS + spam + VPN)</li>
+                </ul>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Regras de Firewall</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Processamento:</strong> Top-down sequencial</li>
+                    <li><strong>Ordem:</strong> Específicas ANTES de gerais</li>
+                    <li><strong>Implicit Deny:</strong> Última regra nega tudo não permitido</li>
+                    <li><strong>Best Practice:</strong> Fechar TODAS portas, abrir apenas necessárias</li>
+                </ul>
+
+                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">5️⃣ VPN ⭐ CRÍTICO</h2>
+                
+                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>🎯 PARA PROVA:</strong> VPN é a <strong>MELHOR</strong> solução para permitir acesso seguro a recursos privados da internet!
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Tipos</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Site-to-Site:</strong> Conecta redes (matriz-filial), routers nas bordas, sempre ativa</li>
+                    <li><strong>Remote Access:</strong> Usuários individuais → VPN concentrator</li>
+                    <li><strong>Split Tunnel:</strong> Corporativo via VPN, resto via internet (RISCO: bypass políticas)</li>
+                    <li><strong>Full Tunnel:</strong> Todo tráfego via VPN (mais seguro)</li>
+                    <li><strong>Always-On:</strong> Sempre na VPN, não liga/desliga</li>
+                </ul>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Protocolos</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>IPSec:</strong> Transport mode (host-to-host, só payload) vs Tunnel mode (site-to-site, pacote inteiro)</li>
+                    <li><strong>AH:</strong> Authentication Header, ICV hash, sem criptografia</li>
+                    <li><strong>ESP:</strong> Encapsulating Security Payload, criptografa</li>
+                    <li><strong>IKE:</strong> Phase 1 (identifica peers, canal seguro) + Phase 2 (negocia ciphers)</li>
+                    <li><strong>L2TP/IPSec:</strong> L2TP tunneling + IPSec encryption</li>
+                    <li><strong>TLS VPN:</strong> Certificados digitais, mutual auth, porta 443</li>
+                </ul>
+
+                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">6️⃣ NAC (Network Access Control) ⭐</h2>
+                
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Zero-Trust Security</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Authentication:</strong> Define prerequisites (antivirus, OS, patches)</li>
+                    <li><strong>Authorization:</strong> Aplica políticas apropriadas</li>
+                    <li><strong>Zero-Trust:</strong> Nada trusted unless passa AMBOS</li>
+                </ul>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Implementação</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Agent-based:</strong> Software no device, info detalhada, auto-remediation</li>
+                    <li><strong>Agentless:</strong> Port-based/scan, funciona com guests/IoT</li>
+                    <li><strong>Persistent:</strong> Instalado permanente</li>
+                    <li><strong>Nonpersistent:</strong> Loaded na memória, removido após assessment</li>
+                    <li><strong>Dynamic VLAN:</strong> NAC atribui VLAN por compliance, quarantine se necessário</li>
+                </ul>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Processo: Plan → Define → Apply → Review</h3>
+
+                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">7️⃣ Switch Security</h2>
+                
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Ataques</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>MAC Flooding:</strong> Inunda CAM table → switch vira hub</li>
+                    <li><strong>ARP Spoofing:</strong> Atacante associa seu MAC com IP vítima (MitM)</li>
+                    <li><strong>VLAN Hopping:</strong> Salta entre VLANs (double tagging)</li>
+                    <li><strong>DHCP Spoofing:</strong> DHCP falso fornece gateway malicioso</li>
+                    <li><strong>MAC Spoofing:</strong> Muda source MAC, bypass 802.1x/MAC filtering</li>
+                </ul>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Proteções</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Port Security:</strong> Limita MACs por porta → previne MAC flooding</li>
+                    <li><strong>DHCP Snooping:</strong> Identifica portas com DHCP legítimo</li>
+                    <li><strong>DAI:</strong> Dynamic ARP Inspection, valida ARPs → previne ARP spoofing</li>
+                    <li><strong>802.1X:</strong> Port authentication (EAP + RADIUS)</li>
+                    <li><strong>Desabilitar DTP:</strong> Dynamic Trunking Protocol não seguro</li>
+                </ul>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">VLANs</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>VLAN:</strong> Segmentação lógica, cada port = 1 VLAN</li>
+                    <li><strong>Trunk Port:</strong> Membro de TODAS VLANs, 802.1Q tagging</li>
+                    <li><strong>Inter-VLAN:</strong> Por padrão NÃO comunicam, precisa router/L3 switch</li>
+                    <li><strong>Spanning Tree:</strong> Previne loops, 1 path ativo + backups blocked</li>
+                </ul>
+
+                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">8️⃣ Router Security</h2>
+                
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">ACLs</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Standard (1-99):</strong> Filtra apenas IP origem, perto do DESTINO</li>
+                    <li><strong>Extended (100-199):</strong> IP origem/dest + portas + protocolo, perto da ORIGEM</li>
+                    <li><strong>Wildcard Mask:</strong> Inverso subnet mask (0=match, 255=ignore)</li>
+                    <li><strong>Nova ACL:</strong> Por padrão BLOQUEIA TUDO (implicit deny)</li>
+                </ul>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Best Practices</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>SSH não Telnet:</strong> Criptografado vs texto claro</li>
+                    <li><strong>SCP não FTP/TFTP:</strong> Para backups seguros</li>
+                    <li><strong>Update firmware PRIMEIRO:</strong> Após trocar defaults</li>
+                    <li><strong>Physical security:</strong> Locked room (sem isso, passwords inúteis)</li>
+                    <li><strong>Anti-spoofing rules:</strong> Bloqueia packets externos fingindo ser internos</li>
+                    <li><strong>Segmentation:</strong> Divide network para conter breaches</li>
+                </ul>
+
+                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">9️⃣ Application Security</h2>
+                
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Application Control</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Signatures:</strong> Identifica apps por inspection de packet contents</li>
+                    <li><strong>Flag:</strong> Permite mas loga violation (monitoring)</li>
+                    <li><strong>Block:</strong> Não permite, session dropped/reset</li>
+                    <li><strong>Tarpit:</strong> Conexão alive mas data dropped (app não percebe block)</li>
+                </ul>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Vulnerability Management</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Vulnerability Scanning:</strong> Non-intrusive, analisa sem exploitar</li>
+                    <li><strong>App Vuln Scanning:</strong> Static (code sem executar) + Dynamic (running)</li>
+                    <li><strong>SBOM:</strong> Software Bill of Materials - lista components</li>
+                    <li><strong>SCA:</strong> Software Composition Analysis - identifica dependencies + vulns</li>
+                    <li><strong>Package Monitoring:</strong> Track third-party packages, automated SCA tools</li>
+                </ul>
+
+                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">🔟 Vulnerabilidades Comuns</h2>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Default Credentials:</strong> Trocar IMEDIATAMENTE (públicos online)</li>
+                    <li><strong>Complex Passwords:</strong> 8+ chars, mix types, não words/username</li>
+                    <li><strong>Privilege Escalation:</strong> User normal acessa funções admin (explora bug)</li>
+                    <li><strong>Backdoor:</strong> Hard-coded passwords, hidden accounts, added por devs/atacantes</li>
+                    <li><strong>Zero-Day:</strong> Vuln desconhecida, sem patch, muito perigosa (valem milhões)</li>
+                </ul>
+
+                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">1️⃣1️⃣ Hardening & Baselines</h2>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Attack Surface Reduction:</strong> Remove unnecessary services/software</li>
+                    <li><strong>Role Separation:</strong> Services em separate physical systems</li>
+                    <li><strong>Configuration Baseline:</strong> Consistent requirements para devices</li>
+                    <li><strong>Security Templates:</strong> Apply settings para multiple computers</li>
+                    <li><strong>Least Privilege:</strong> Privileges mínimos necessários</li>
+                    <li><strong>Test First:</strong> Test patches em environment antes production</li>
+                    <li><strong>WSUS + Group Policy:</strong> Automated patch distribution</li>
+                </ul>
+
+                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">1️⃣2️⃣ Security Solutions</h2>
+                
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Appliances</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Proxy:</strong> Forward (protege clients) vs Reverse (protege servers)</li>
+                    <li><strong>Load Balancer:</strong> Distribui traffic, fault tolerance, pode incluir WAF</li>
+                    <li><strong>Jump Server:</strong> Hardened gateway para access isolated systems</li>
+                    <li><strong>Sensor:</strong> Packet sniffer (TAP ou SPAN/mirror port)</li>
+                    <li><strong>IDS:</strong> Passive, detecta e alerta</li>
+                    <li><strong>IPS:</strong> Inline, detecta e bloqueia</li>
+                </ul>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Deception Technologies</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Honeypot:</strong> Sistema isca individual</li>
+                    <li><strong>Honeynet:</strong> Rede completa de decoys</li>
+                    <li><strong>Honeyfile:</strong> File trap (ex: passwords.txt)</li>
+                    <li><strong>DNS Sinkhole:</strong> Redireciona malicious traffic, fornece false DNS info</li>
+                    <li><strong>Fake Telemetry:</strong> Spoofed data em response a probes</li>
+                </ul>
+
+                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Security Zones</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Screened Subnet/DMZ:</strong> Buffer entre internet e LAN</li>
+                    <li><strong>Intranet:</strong> Private LAN com internet services (interno)</li>
+                    <li><strong>Extranet:</strong> Parte da network para partners/suppliers</li>
+                    <li><strong>Guest Network:</strong> Internet only, firewall regulado</li>
+                    <li><strong>Air-Gapped:</strong> Isolamento físico completo (root CA, malware analysis)</li>
+                </ul>
+
+                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 30px 0; border-radius: 8px;">
+                    <h3 style="color: #ec4899; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li>Screened subnet = 2 firewalls SEMPRE na prova</li>
+                        <li>VPN = melhor para acesso remoto seguro</li>
+                        <li>Nova ACL = bloqueia tudo por padrão</li>
+                        <li>NAC = Authentication E Authorization (ambos)</li>
+                        <li>MAC flooding → Port Security</li>
+                        <li>ARP spoofing → DAI</li>
+                        <li>DHCP spoofing → DHCP Snooping</li>
+                        <li>Inter-VLAN precisa router/L3 switch</li>
+                        <li>SSH não Telnet, SCP não FTP</li>
+                        <li>Zero-day = sem patch, muito perigosa</li>
+                        <li>Physical access sem controle = passwords inúteis</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab2" class="content">
+            <div class="quiz-area">
+                <div class="quiz-header">
+                    <h2>Quiz - 35 Questões CompTIA Reais</h2>
+                    <p>Passing Score: 80% (28/35 corretas)</p>
+                </div>
+                <div id="questions"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== CARDS TRADUZIDOS PARA PORTUGUÊS ==========
+        const cards = [
+            // Arquitetura e OSI
+            {f: "O que é arquitetura de três camadas (Three-Tier Architecture)?", b: "Core Layer (backbone alta velocidade, roteamento entre segmentos) + Distribution Layer (políticas, ACLs, agregação) + Access Layer (conecta usuários finais, switches de acesso)"},
+            {f: "Modelo OSI: quais são as camadas 1, 2, 3 e seus dispositivos?", b: "L1 Física: cabos, sinais. L2 Enlace: switches/APs + endereço MAC. L3 Rede: roteadores + endereço IP. L4 Transporte: TCP (confiável)/UDP (não confiável) + portas. L7 Aplicação: HTTP, DNS, FTP"},
+            {f: "Qual a diferença entre LAN e WAN?", b: "LAN: Rede Local, um único site, domínio de broadcast. WAN: Rede de longa distância, conecta múltiplas LANs geograficamente dispersas"},
+            {f: "O que são Host Node e Intermediary Node?", b: "Host Node: inicia transferências (servidores, clientes). Intermediary Node: encaminha tráfego (switches, roteadores)"},
+            
+            // Defense in Depth e Controles
+            {f: "O que é Defense in Depth (Defesa em Profundidade)?", b: "Múltiplas camadas de controles preventivos, detectivos e corretivos em diferentes pontos da rede. Diversidade de controles protegendo zonas críticas"},
+            {f: "Qual a diferença entre controle Active e Passive?", b: "Passive: sem configuração no cliente, transparente (ex: TAP, porta espelhada). Active: requer configuração, credenciais (ex: firewall como gateway)"},
+            {f: "Qual a diferença entre dispositivo Inline e TAP/Monitor?", b: "Inline: parte do caminho do cabo, sem IP/MAC configurado. TAP: copia TUDO fisicamente (incluindo erros). SPAN/Mirror: switch copia frames (pode perder sob carga)"},
+            {f: "O que são Fail-Open e Fail-Closed?", b: "Fail-Open: mantém acesso em caso de falha, prioriza DISPONIBILIDADE. Fail-Closed: bloqueia acesso, prioriza CONFIDENCIALIDADE/INTEGRIDADE"},
+            
+            // Screened Subnet (DMZ)
+            {f: "Qual a configuração de uma Screened Subnet (DMZ)?", b: "2 firewalls: Externo (internet → DMZ) + Interno (DMZ → LAN). A DMZ contém servidores públicos (web, FTP, email, DNS público)"},
+            {f: "O que acontece se o firewall EXTERNO da DMZ falhar?", b: "Apenas os servidores na DMZ são comprometidos. A LAN permanece protegida pelo firewall interno!"},
+            {f: "Quantas interfaces tem um Dual-Homed Gateway?", b: "3 interfaces: Internet + DMZ + LAN privada"},
+            {f: "O que é um Screening Router?", b: "Roteador que acumula função de firewall com ACLs. É o dispositivo mais externo da rede, próximo à internet"},
+            {f: "O que é um Screened-Host Gateway?", b: "Host na DMZ que requer autenticação para acessar a DMZ ou a intranet"},
+            {f: "O que é um Bastion Host?", b: "Servidor fortificado exposto diretamente à internet, sem proteção de firewall. É hardening contra ataques"},
+            {f: "Qual a diferença entre Honeypot e Honeynet?", b: "Honeypot: sistema isca individual. Honeynet: rede completa de sistemas decoy para atrair e estudar atacantes"},
+            {f: "O que é Padded Cell?", b: "Contramedida de IDS que retarda intrusos para coletar informações para investigação"},
+            {f: "O que é DNS Sinkhole?", b: "DNS temporário que redireciona tráfego malicioso para um IP controlado. Fornece informação falsa para consultas DNS. Limitação: não funciona se malware usa DNS público próprio"},
+            
+            // Posicionamento de Servidores
+            {f: "Onde colocar um web server público e um database?", b: "Web server na DMZ (público). Database na LAN privada. O firewall interno permite apenas tráfego do web server para o database"},
+            {f: "O que são Packet Filters na DMZ?", b: "Configurados em ambos os firewalls. Permitem tráfego para recursos públicos na DMZ. Previnem tráfego não autorizado para a LAN"},
+            
+            // VPN
+            {f: "Qual a melhor solução para acesso remoto seguro?", b: "VPN é a MELHOR solução para acessar recursos privados da internet. O servidor VPN pode ficar na DMZ. Usuários autenticam no VPN server e o tráfego atravessa o firewall interno"},
+            {f: "O que é VPN Site-to-Site?", b: "Conecta redes inteiras (matriz-filial). Roteadores nas bordas. Sempre ativa. Os hosts não sabem que a VPN existe"},
+            {f: "O que é VPN Remote Access?", b: "Usuários individuais conectam-se à rede corporativa. Um concentrador VPN aceita múltiplas conexões"},
+            {f: "O que é Split Tunnel VPN?", b: "Tráfego corporativo vai pela VPN, o resto vai pela internet local. RISCO: pode bypassar políticas de segurança"},
+            {f: "O que é Full Tunnel VPN?", b: "Todo o tráfego vai pela VPN. Mais seguro, mas pode ser mais lento"},
+            {f: "O que é Always-On VPN?", b: "Usuário está sempre na VPN, dentro ou fora da LAN. Não liga/desliga. É full tunnel"},
+            {f: "Qual a diferença entre os modos Transport e Tunnel do IPSec?", b: "Transport: host-to-host, apenas payload criptografado, header original. Tunnel: site-to-site, pacote inteiro criptografado + novo header IP"},
+            {f: "Qual a diferença entre AH e ESP no IPSec?", b: "AH (Authentication Header): ICV hash, sem criptografia. ESP (Encapsulating Security Payload): criptografa o payload"},
+            {f: "Quais são as fases do IKE?", b: "Fase 1: identifica peers, Diffie-Hellman, cria canal seguro (usa certificados digitais ou chave pré-compartilhada). Fase 2: usa o canal seguro para negociar os cifradores AH/ESP"},
+            {f: "O que é L2TP/IPSec?", b: "L2TP faz o tunelamento + IPSec faz a criptografia. Recomendado para VPN dial-up"},
+            {f: "O que é TLS VPN?", b: "Cliente usa certificados digitais. Autenticação mútua. Túnel criptografado para credenciais (RADIUS). Pode usar TCP ou UDP (DTLS)"},
+            {f: "É seguro usar VPN em WiFi aberto?", b: "Aceitável se usar tunelamento forte (IPSec ou SSL). Evitar PPTP+MS-CHAPv2. Requisições HTTPS devem passar pela VPN (não bypass)"},
+            
+            // Firewalls
+            {f: "Quais são os tipos de firewall?", b: "Host-based (no endpoint), Network-based (hardware na borda), Stateless (filtro de pacotes), Stateful (rastreia sessões)"},
+            {f: "O que é WAF (Web Application Firewall)?", b: "Protege aplicações web contra SQL Injection, XSS, CSRF. Usa assinaturas. Examina a camada 7 HTTP"},
+            {f: "O que é NGFW (Next-Gen Firewall)?", b: "Firewall de próxima geração: filtragem camada 7 + IPS + inspeção profunda de pacotes + inspeção TLS + integração com diretórios + inteligência de ameaças + integração em nuvem"},
+            {f: "O que é UTM (Unified Threat Management)?", b: "Tudo-em-um: firewall + antimalware + IPS + filtro de spam + filtro de conteúdo + DLP + VPN. Solução pronta para PMEs"},
+            {f: "Qual a diferença entre firewall de camada 4 e camada 7?", b: "Camada 4: examina handshake TCP (SYN/SYN-ACK/ACK), números de sequência, rastreamento UDP. Camada 7: inspeciona cabeçalhos + payload, verifica se protocolo corresponde à porta"},
+            {f: "O que é Application-Level Gateway?", b: "Opera até a camada 7. Para cada pacote. Remonta mensagens completas. Inspeciona tráfego criptografado (SSL). Filtra por usuário/grupo/URL. É MAIS LENTO"},
+            {f: "Como funcionam as regras de firewall?", b: "Processadas top-down sequencialmente. Regras específicas ANTES das gerais. Implicit Deny ao final (ou explicit deny all manual)"},
+            {f: "Qual a diferença entre ACL e regras de firewall?", b: "ACL: em roteadores/switches, camada 3 (IP/porta/protocolo). Regras de firewall: nível de rede e aplicação, pode incluir usuário/conteúdo"},
+            {f: "Qual a melhor prática para portas em firewall?", b: "Fechar TODAS as portas, abrir apenas as necessárias para aplicações internas. Não abrir tudo e depois fechar as ruins"},
+            
+            // NAC - Network Access Control
+            {f: "O que é NAC (Network Access Control)?", b: "Autentica usuários/dispositivos E verifica conformidade (antivírus, patches, SO) antes de permitir acesso à rede"},
+            {f: "O que é Zero-Trust Security?", b: "Nunca confiar, sempre verificar. NAC = Autenticação E Autorização. Se qualquer uma falhar, o acesso é negado"},
+            {f: "Qual a diferença entre Authentication e Authorization no NAC?", b: "Authentication: define pré-requisitos (antimalware, SO, nível de patch). Authorization: aplica políticas apropriadas baseadas na autenticação"},
+            {f: "Qual a diferença entre NAC Agent-based e Agentless?", b: "Agent-based: software no dispositivo, informação detalhada, auto-remediação. Agentless: baseado em porta/scan de rede, funciona com convidados/IoT sem configuração prévia"},
+            {f: "Qual a diferença entre agente Persistent e Nonpersistent no NAC?", b: "Persistent: instalado permanentemente. Nonpersistent/Dissolvable: carregado na memória durante a avaliação, removido depois"},
+            {f: "Como funciona NAC com Dynamic VLAN?", b: "O NAC atribui VLAN baseado em identidade/tipo de dispositivo/conformidade. Dispositivo não conforme → VLAN de quarentena isolada. Após remediação → reavaliado"},
+            {f: "Qual o processo do NAC?", b: "Plan (planejar) → Define (definir) → Apply (aplicar) → Review (revisar)"},
+            {f: "O que é remediação automática no NAC?", b: "Dispositivo não conforme → acesso apenas a recursos de remediação. Após correções → reavaliado → acesso liberado"},
+            
+            // IDS/IPS
+            {f: "Qual a diferença entre IDS e IPS?", b: "IDS: passivo, detecta e alerta. IPS: inline/ativo, detecta e bloqueia automaticamente"},
+            {f: "Qual a diferença entre detecção por assinatura e por anomalia?", b: "Assinaturas: padrões conhecidos, baixo falso positivo. Anomalia: desvios do normal, pode ter falsos positivos"},
+            {f: "O que é um sensor de IDS/IPS?", b: "Packet sniffer, controle passivo. Fica atrás do firewall ou perto de servidor importante. Envia tráfego para análise (Snort, Suricata, Zeek)"},
+            
+            // Switch Security
+            {f: "O que é ataque de MAC Flooding?", b: "Inunda a tabela CAM do switch. O switch vira um hub (fail open). Atacante consegue snifar todo tráfego. Proteção: Port Security"},
+            {f: "O que é ARP Spoofing/Poisoning?", b: "Atacante associa seu MAC com o IP da vítima. O tráfego vai para o atacante (MitM). Proteção: DAI (Dynamic ARP Inspection)"},
+            {f: "O que é VLAN Hopping?", b: "Atacante salta entre VLANs não autorizadas (double tagging). Proteção: desabilitar DTP, VLAN nativa segura"},
+            {f: "O que é DHCP Spoofing?", b: "Servidor DHCP falso fornece gateway malicioso. Proteção: DHCP Snooping (identifica portas com DHCP legítimo)"},
+            {f: "O que é MAC Spoofing?", b: "Mudar o MAC de origem nos frames. Bypass de 802.1x, filtro MAC, filtro MAC wireless. Personifica outro dispositivo"},
+            {f: "O que é Port Security?", b: "Limita o número de endereços MAC por porta. Previne MAC flooding. Violação: drop frames ou shutdown da porta"},
+            {f: "O que é DHCP Snooping?", b: "Identifica portas com servidores DHCP legítimos. Cria um banco de dados usado pelo DAI"},
+            {f: "O que é DAI (Dynamic ARP Inspection)?", b: "Valida pacotes ARP contra o banco de dados do DHCP snooping. Previne ARP Spoofing"},
+            {f: "O que é 802.1X?", b: "Autenticação baseada em porta. EAP + RADIUS. Supplicant → Authenticator (switch) → Authentication Server. A porta só abre após autenticação"},
+            {f: "O que é VLAN?", b: "Rede local virtual: segmenta a rede logicamente. Mesmo switch, diferentes domínios de broadcast. Cada porta = 1 VLAN (exceto trunk)"},
+            {f: "O que é uma porta Trunk?", b: "Membro de TODAS as VLANs. Carrega tráfego entre switches. Usa tagging 802.1Q. Tipicamente gigabit ethernet"},
+            {f: "Como funciona a comunicação Inter-VLAN?", b: "Por padrão, dispositivos em VLANs diferentes NÃO comunicam. Precisa de roteador ou switch camada 3 para roteamento inter-VLAN"},
+            {f: "O que é Spanning Tree Protocol (STP)?", b: "Previne loops de switching. Mantém múltiplos caminhos mas apenas 1 ativo. Estados: Forwarding (ativo) e Blocking (backup). Auto-recupera se o caminho cair"},
+            {f: "O que é DTP (Dynamic Trunking Protocol)?", b: "Detecta automaticamente portas trunk. NÃO é seguro! Pode permitir que dispositivos não autorizados modifiquem a configuração. DESABILITAR em portas de acesso"},
+            {f: "O que é Private VLAN?", b: "Isola hosts na mesma VLAN. Hosts não comunicam entre si, só com o gateway"},
+            {f: "O que é Air-Gapped?", b: "Isolamento físico completo. Host/rede sem conexão física com outras redes. Usado para: root CA PKI, análise de malware, sistemas militares"},
+            
+            // Router Security
+            {f: "O que é ACL Standard (1-99)?", b: "Filtra apenas por IP de origem. Deve ser posicionada PERTO DO DESTINO"},
+            {f: "O que é ACL Extended (100-199)?", b: "Filtra por IP origem/destino + portas + protocolo. Deve ser posicionada PERTO DA ORIGEM"},
+            {f: "O que é máscara wildcard em ACL?", b: "Inverso da máscara de sub-rede. 0 = deve coincidir, 255 = ignorar"},
+            {f: "O que é Implicit Deny em ACL?", b: "Por padrão, uma nova ACL BLOQUEIA TODO o tráfego (hidden Deny Any no final). É preciso criar regras de permissão"},
+            {f: "O que são regras anti-spoofing em roteadores?", b: "Source: IP interno ou IP do roteador. Destination: Any. Interface: external. Direction: Inbound. Action: DENY. Bloqueia pacotes externos fingindo ser internos"},
+            {f: "O que é segmentação de rede?", b: "Divide a rede em segmentos/sub-redes separadas. Limita a propagação de ataques. Isola sistemas. Controle granular de acesso. Reduz o impacto de uma violação"},
+            {f: "SSH vs Telnet para gerenciamento de roteador?", b: "SSH: criptografa tudo, seguro. Telnet: texto claro, INSEGURO. Usar SCP para backups em vez de FTP/TFTP"},
+            {f: "Quais são as medidas de segurança para roteadores?", b: "Mudar padrões, atualizar firmware PRIMEIRO, usar SSH não Telnet, segurança física (sala trancada), backups SCP criptografados, regras anti-spoofing, ACLs"},
+            
+            // Security Solutions
+            {f: "O que é um Proxy Server?", b: "Intermediário entre cliente e internet. Forward Proxy: protege clientes. Reverse Proxy: protege servidores. Cache, filtro de conteúdo, anonimato"},
+            {f: "O que é um Jump Server?", b: "Servidor fortificado, gateway para acessar sistemas isolados. Administradores conectam no jump server e depois nos sistemas internos. Segurança aprimorada controlando acesso"},
+            {f: "O que é um Load Balancer?", b: "Distribui tráfego entre servidores. Camada 4 (IP/porta) ou camada 7 (dados de aplicação/URL). Tolerância a falhas. Pode incluir WAF"},
+            {f: "O que é All-in-One / UTM?", b: "Firewall + IDS/IPS + antimalware + filtro de spam + filtro de conteúdo + filtro URL + switch + roteador. Gerenciado via web. Assinatura para atualizações"},
+            {f: "O que é Content Filtering?", b: "Permitir tudo exceto bloqueado OU Bloquear tudo exceto permitido. Categorias, URLs, palavras-chave. Baseado em agente (endpoint) ou Centralizado (proxy server)"},
+            {f: "O que é DNS Filtering?", b: "Controla a resolução de nomes de domínio. Bloqueia domínios maliciosos/inapropriados. Proativo, protege todos os dispositivos (incluindo IoT), reforça políticas de uso aceitável"},
+            
+            // Vulnerabilities
+            {f: "O que são contas e senhas padrão (default)?", b: "Padrões de fábrica. Devem ser trocados IMEDIATAMENTE na primeira configuração. São públicos na internet"},
+            {f: "O que é uma senha complexa?", b: "Mínimo 8+ caracteres. Mistura de tipos (números, símbolos). NÃO usar palavras, variações ou derivados do nome de usuário"},
+            {f: "O que é escalada de privilégio (Privilege Escalation)?", b: "Usuário com conta normal acessa funções de administrador. Explora um bug para ganhar privilégios não tipicamente disponíveis"},
+            {f: "O que é uma backdoor?", b: "Método de acesso não protegido. Senhas hard-coded, contas ocultas. Adicionado por desenvolvedores (atalho) ou atacantes. Pode controlar remotamente. Depende do segredo"},
+            {f: "O que é uma vulnerabilidade Zero-Day?", b: "Vulnerabilidade desconhecida antes de ser descoberta. Fabricantes têm '0 dias' para corrigir. Muito perigosa pois não há patch. Usada por estados-nação, crime organizado. Valem milhões"},
+            {f: "O que é quebra de senha (Password Cracking)?", b: "Processo de recuperar senhas secretas a partir de dados armazenados/transmitidos. Se atacante obtém credenciais de admin = password cracking (NÃO escalada de privilégio)"},
+            
+            // Application Security
+            {f: "O que é Flag no controle de aplicações?", b: "Aplicação permitida mas a violação é registrada quando identificada. Usado para monitoramento antes de aplicar bloqueio"},
+            {f: "O que é Block no controle de aplicações?", b: "Aplicação não permitida. A sessão é descartada (UDP) ou resetada (TCP)"},
+            {f: "O que é Tarpit no controle de aplicações?", b: "Aplicação não permitida. A conexão é mantida viva mas os dados são descartados silenciosamente. A aplicação não percebe que foi bloqueada. Previne circumvenção"},
+            {f: "O que são assinaturas de aplicação (Application Signatures)?", b: "Controle de aplicações usa assinaturas para identificar aplicações específicas. Inspeciona o conteúdo dos pacotes e compara com assinaturas"},
+            {f: "O que é varredura de vulnerabilidades (Vulnerability Scanning)?", b: "Não intrusiva. Identifica vulnerabilidades por análise (build, níveis de patch, políticas). NÃO explora. Teste de penetração é ativo + intrusivo"},
+            {f: "O que é varredura de vulnerabilidades em aplicações?", b: "Varredura especializada. Análise estática (código sem executar) + Análise dinâmica (aplicação em execução). Identifica: entradas não validadas, quebra de acesso, SQL injection"},
+            {f: "O que é SBOM (Software Bill of Materials)?", b: "Lista de componentes no software. Identifica dependências open source e de terceiros. Gerencia riscos da cadeia de suprimentos de software"},
+            {f: "O que é SCA (Software Composition Analysis)?", b: "Identifica dependências open source e de terceiros na base de código. Detecta vulnerabilidades conhecidas. Compara com NVD. Sugere atualizações/substituições"},
+            {f: "O que é monitoramento de pacotes (Package Monitoring)?", b: "Rastreia pacotes/bibliotecas/dependências de terceiros. Ferramentas automatizadas de SCA. Identifica pacotes desatualizados ou vulneráveis. Auditorias regulares + processos de aprovação"},
+            
+            // Security Zones
+            {f: "O que é Screened Subnet/DMZ?", b: "Zona de amortecimento entre a internet e a LAN privada. 2 firewalls. Hospeda serviços públicos. Atua como intermediário. Pode usar 1 ou 2 firewalls"},
+            {f: "O que é Intranet?", b: "LAN privada que usa serviços de informação da internet. Só para uso interno. Ex: servidores web internos, servidores de email internos"},
+            {f: "O que é Extranet?", b: "Rede controlada privadamente. Entre a internet e a LAN. Para parceiros de negócios, fornecedores, clientes. Acesso limitado a recursos específicos"},
+            {f: "O que é Guest Network?", b: "Concede apenas acesso à internet. O firewall regula o acesso. Recursos internos limitados. Convidados não acessam a intranet"},
+            {f: "O que é Wireless Zone?", b: "Rede transmitida por ondas de rádio. Usuários não precisam de conexão física. Conectam-se via ponto de acesso sem fio"},
+            {f: "O que é Honeyfile?", b: "Arquivo único configurado como isca. Ex: passwords.txt, vpn_instructions.docx. Alarme quando acessado. Usuários podem criar seus próprios honeyfiles"},
+            {f: "O que é Honeytoken?", b: "Credenciais falsas ou dados de login. Distraem atacantes, disparam alertas, fornecem insights sobre a atividade do atacante"},
+            {f: "O que é Fake Telemetry?", b: "Dados falsos em resposta a sondagens de rede. Credenciais falsas, informação IP falsa, sistemas vulneráveis falsos. Atacantes agem com base na informação falsa e são rastreados"},
+            
+            // Network Architecture
+            {f: "Quais são as considerações sobre On-Premises?", b: "Alto CapEx, baixa escalabilidade, controle total, manutenção interna, recuperação complexa, menor disponibilidade/resiliência"},
+            {f: "Quais são as considerações sobre Cloud?", b: "OpEx, alta escalabilidade, menos controle, responsabilidade compartilhada, melhor resiliência"},
+            {f: "Quais fatores considerar na arquitetura?", b: "Custos (CapEx/OpEx), capacidade de resposta, escalabilidade, disponibilidade, resiliência, energia, disponibilidade de patches, transferência de risco (SLA)"},
+            {f: "O que é Configuration Baseline?", b: "Conjunto de requisitos consistentes para workstation/servidor. Inclui configurações de segurança. Security template = valores de configuração salvos que produzem a baseline"},
+            {f: "O que são Security Templates?", b: "Aplicam configurações rapidamente para múltiplos computadores. Trazem para conformidade com a security baseline. NÃO são para patches ou corrigir problemas específicos"},
+            {f: "O que é redução de superfície de ataque (ASR)?", b: "Remove software/serviços/funcionalidades desnecessárias. Elimina possíveis ataques. Separação de funções: serviços em sistemas físicos separados"},
+            {f: "O que são Group Policy e WSUS?", b: "Group Policy: distribui e auto-instala patches. WSUS: gerenciamento de patches, clientes baixam do servidor WSUS interno (não direto da Microsoft)"},
+            {f: "Quais são as diretrizes de hardening?", b: "Security baseline + atualizações/patches regulares + passos de hardening. Separação de funções. Aplicar patches completamente. Remover o desnecessário. Desabilitar serviços não utilizados"},
+            {f: "Como garantir segurança em mídias removíveis?", b: "Criptografar dados na mídia removível. Mais vulnerável durante transferência. Criptografia garante que se perdido/roubado, os dados ficam inacessíveis sem a chave"},
+            {f: "O que é princípio do menor privilégio?", b: "Limitar os privilégios de cada usuário ao mínimo necessário. Reduz o impacto de uma conta comprometida. Parte do hardening"},
+            
+            // SD-WAN e SASE
+            {f: "O que é SD-WAN?", b: "WAN definida por software. Conecta filiais/data centers/nuvem. Criptografia, segmentação de tráfego por prioridade, roteamento inteligente, integração com firewall"},
+            {f: "O que é SASE?", b: "Secure Access Service Edge. WAN + segurança em nuvem convergentes. Modelo zero trust. IAM. Prevenção de ameaças (IPS, malware, filtro de conteúdo). Centraliza segurança/acesso"},
+        ];
+
+        const quiz = [
+            // Screened Subnet / DMZ Questions (baseado nos PDFs)
+            {
+                q: "Qual é a MELHOR solução para permitir acesso a recursos privados da internet?",
+                o: ["Packet filters", "VPN", "Subnet", "FTP"],
+                c: 1,
+                e: "VPN fornece conexão segura externa para recursos internos. VPN server pode ficar na DMZ. Usuários autenticam ao VPN server, então tráfego permitido através do firewall interno."
+            },
+            {
+                q: "Qual é outro nome para firewall que executa funções de roteador?",
+                o: ["Screening router", "Dual-homed gateway", "Screened subnet", "Screened-host gateway"],
+                c: 0,
+                e: "Screening router usa ACLs para filtrar packets como segurança. É o router mais externo, próximo à internet."
+            },
+            {
+                q: "O que acontece se o firewall gerenciando tráfego PARA a screened subnet falhar?",
+                o: ["Nada acontece - todos dispositivos ficam protegidos", "LAN comprometida mas screened subnet protegida", "Todos devices em screened subnet E LAN comprometidos", "Apenas servers na screened subnet comprometidos, LAN protegida"],
+                c: 3,
+                e: "Se firewall EXTERNO falha, apenas servers na screened subnet são comprometidos. A LAN permanece protegida pelo firewall interno."
+            },
+            {
+                q: "Qual zona serve como buffer network entre rede privada e internet não confiável?",
+                o: ["Padded cell", "Screened subnet", "Extranet", "Intranet"],
+                c: 1,
+                e: "Screened subnet é rede entre private network e untrusted internet. Grants external users access to controlled services. Serve como buffer."
+            },
+            {
+                q: "Em qual situação você implementaria uma screened subnet?",
+                o: ["Quer que users vejam single IP quando acessam sua rede", "Quer proteger public web server de ataque", "Quer criptografar data entre dois hosts via internet", "Quer detectar e responder a ataques em real time"],
+                c: 1,
+                e: "Use screened subnet para proteger public hosts como web server. Outer firewall previne internet attacks. Second firewall protege private network."
+            },
+            {
+                q: "Você tem web server acessível à internet que se comunica com database. Como posicionar CORRETAMENTE? (Select two)",
+                o: ["Web server na screened subnet", "Web server na rede privada", "Web e database ambos atrás da screened subnet", "Database server na rede privada", "Database na screened subnet"],
+                c: [0, 3],
+                e: "Web server (público) vai na screened subnet. Database (não deve ter contato direto com público) vai na private network. Firewall interno permite apenas tráfego do web server."
+            },
+            {
+                q: "O que precisa ser configurado no firewall para permitir tráfego para recurso público na screened subnet?",
+                o: ["FTP", "Packet filters", "VPN", "Subnet"],
+                c: 1,
+                e: "Packet filters permitem tráfego direcionado aos public resources na screened subnet. Também previnem unauthorized traffic para private network."
+            },
+            {
+                q: "Quantas interfaces de rede tem dual-homed gateway tipicamente?",
+                o: ["3", "2", "1", "4"],
+                c: 0,
+                e: "Dual-homed gateway tem 3 interfaces: internet, public subnet (DMZ), e private network."
+            },
+            {
+                q: "Solução para permitir users internet access, proteger rede privada E tornar web server público?",
+                o: ["Firewalls para criar screened subnet. Web server na screened subnet, private network atrás", "Single firewall. Web server e private network atrás", "Firewalls criar screened subnet. Web server e private network NA screened subnet", "Single firewall. Web server na frente, private network atrás"],
+                c: 0,
+                e: "Screened subnet = buffer entre private e internet. Two firewalls. Public resources (web, FTP, email) NA screened subnet. Private resources ATRÁS (behind inner firewall)."
+            },
+            {
+                q: "Qual termo descreve network device exposto a ataques e hardened contra eles?",
+                o: ["Circuit proxy", "Bastion ou sacrificial host", "Kernel proxy", "Multi-homed"],
+                c: 1,
+                e: "Bastion/sacrificial host é unprotected por firewall. Device fortified against attack. Sacrificial pode ser intentionally exposed (honeypot)."
+            },
+            
+            // Firewall Questions
+            {
+                q: "Características de basic packet-filtering firewall? (Select two)",
+                o: ["Stateless", "Filtra based em URL", "Filtra IP address e port", "Stateful", "Filtra based em sessions"],
+                c: [0, 2],
+                e: "Packet-filtering examina IP packet header (source/dest addresses, ports, protocols). É stateless: analisa cada packet independente, sem record de packets anteriores."
+            },
+            {
+                q: "O que MELHOR descreve stateful inspection?",
+                o: ["Sits entre host e web server, comunica com server on behalf of host", "Permite internal traffic compartilhar single public IP", "Determina legitimidade de traffic baseado no state da conexão de origem", "Oferece secure connectivity entre entities usando encryption"],
+                c: 2,
+                e: "Stateful firewalls determinam legitimidade baseado no connection state. Mantém state table tracking conexões ativas."
+            },
+            {
+                q: "Ao desenhar firewall, qual approach recomendado para portas?",
+                o: ["Close all ports", "Close all ports; open apenas required by apps inside", "Open all ports; close que mostram improper traffic", "Close all; open 20,21,53,80,443", "Open all; close que expõem common attacks"],
+                c: 1,
+                e: "Best practice: close ALL ports então open apenas ports que permitem traffic desejado inside firewall/private network."
+            },
+            {
+                q: "Packet-filtering firewall: quais opções você pode configurar? (Select three)",
+                o: ["Port number", "Checksum", "Source address", "Digital signature", "Acknowledgment number", "Sequence number", "Destination address"],
+                c: [0, 2, 6],
+                e: "Packet-filtering examina IP packet header info: source/destination addresses, ports, service protocols. NÃO examina sequence, ack, signature, checksum por padrão."
+            },
+            {
+                q: "NGFW deployment: administrator deve considerar para security efetiva sem disrupção?",
+                o: ["Usar NGFW como load balancer", "NGFW em fail-open mode", "Deploy NGFW em inline mode", "Position NGFW como jump server"],
+                c: 2,
+                e: "Deploy NGFW inline mode permite examinar todo traffic, identificar/mitigar threats, manter connectivity sem disruptar operações normais."
+            },
+            {
+                q: "Laptop usado em company network, home e traveling. Proteger de internet-based attacks?",
+                o: ["Host-based firewall", "Network-based firewall", "VPN concentrator", "Proxy server"],
+                c: 0,
+                e: "Host-based firewall inspeciona traffic recebido por host. Use quando não há network-based firewall (ex: public locations)."
+            },
+            {
+                q: "Hardening após DLP audit: tenet de host-based firewalls?",
+                o: ["Requer deploy specialized software agents", "Descreve tools que monitor individual hosts", "Fornece controls para incoming E outgoing traffic", "Usa signature-based e anomaly detection"],
+                c: 2,
+                e: "Host-based firewalls fornecem controls para incoming E outgoing network traffic. Essencial para detectar potential attacks. Implement default-deny policies."
+            },
+            {
+                q: "Features de application-level gateway? (Select two)",
+                o: ["Allows apenas valid packets in approved sessions", "Verifies packets properly sequenced", "Uses access control lists", "Stops cada packet at firewall for inspection", "Reassembles entire messages"],
+                c: [3, 4],
+                e: "Application-level gateways: opera Layer 7, para cada packet para inspection, reassembla entire messages, examina encrypted, slower porque reassembla no Application layer."
+            },
+            {
+                q: "Como ACLs podem melhorar network security?",
+                o: ["Filtra traffic based em frame header (MAC address)", "Procura patterns entre multiple packets", "Filtra traffic based em IP header info (source/dest IP, protocol, socket)", "Identifica traffic que precisa authentication/encryption"],
+                c: 2,
+                e: "ACL filtra baseado em IP header info: source/dest IP, protocol, socket number. Configurado em routers, opera Layer 3. IDS/IPS examina patterns cross-packet."
+            },
+            {
+                q: "Zero-day vulnerability em web portal permite XSS. Ação MAIS efetiva?",
+                o: ["Upgrade server hardware", "Encourage staff trocar passwords", "Restringir login attempts", "Implementar WAF"],
+                c: 3,
+                e: "Implementar WAF diretamente addresses zero-day e XSS attacks inspecionando incoming traffic e bloqueando suspicious requests."
+            },
+            
+            // VPN Questions
+            {
+                q: "Qual VPN tunnel style roteia apenas certos tipos de tráfego?",
+                o: ["Host-to-host", "Split", "Site-to-site", "Full"],
+                c: 1,
+                e: "Split tunnel roteia apenas certain traffic (usually por destination IP) através VPN. Demais traffic passa por normal internet connection."
+            },
+            {
+                q: "Qual VPN implementation usa routers na edge de cada site?",
+                o: ["Host-to-host", "Site-to-site", "Always-on", "Remote access"],
+                c: 1,
+                e: "Site-to-site VPN usa routers na edge. Routers configurados para VPN, encrypt/decrypt packets. Individual hosts unaware da VPN."
+            },
+            {
+                q: "VPN é primariamente usado para qual propósito?",
+                o: ["Suportar secured communications over untrusted network", "Permitir uso de network-attached printers", "Support distribution de public web docs", "Permitir remote systems economizar long-distance charges"],
+                c: 0,
+                e: "VPN primariamente suporta secured communications over untrusted network. Pode ser LAN, WAN, internet, dial-up connection."
+            },
+            {
+                q: "IT dept enfrenta desafios com remote desktop connections. Approach para secure communications?",
+                o: ["Enable open access para easy manageability", "Implementar TLS para all remote desktop connections", "Establish VPN tunnels sem encryption", "Disable firewall rules para remote desktop"],
+                c: 1,
+                e: "TLS fornece secure communication para remote desktop criptografando data transmitida entre user e server, reduzindo risk de breaches."
+            },
+            {
+                q: "Qual VPN protocol tipicamente usa IPsec como encryption mechanism?",
+                o: ["L2TP", "PPP", "PPTP", "L2F"],
+                c: 0,
+                e: "L2TP (Layer 2 Tunneling Protocol) tipicamente usa IPsec para data encryption. L2TP é recommended para dial-up VPN."
+            },
+            {
+                q: "Statement que MELHOR descreve IPsec em tunnel mode?",
+                o: ["Identities não protegidas", "Entire data packet, including headers, encapsulated", "IPsec tunnel mode não pode ser usado para WAN", "Packets routed usando original headers, apenas payload encrypted"],
+                c: 1,
+                e: "IPsec tunnel mode: entire packet (including original headers) encapsulated. New encrypted packets com headers indicando apenas endpoint addresses. Protege identities e packet contents."
+            },
+            {
+                q: "Commonly usado na Phase 1 de IKE negotiations para autenticar peers?",
+                o: ["Digital certificates", "Biometrics", "Passwords", "Security questions"],
+                c: 0,
+                e: "Digital certificates commonly usados em Phase 1 IKE para authenticate peer identity. Fornecem way to exchange public keys."
+            },
+            {
+                q: "Remote access solution para global enterprise. Secure encrypted communication E detect threats real time?",
+                o: ["NGFW + WAF + IPS em tap/monitor", "SD-WAN com SASE + IPS", "VPN usando IKE e IPSec + inline IDS", "802.1X + EAP + load balancer"],
+                c: 2,
+                e: "VPN usando IKE e IPSec protocols secure remote access. Inline IDS detecta potential security threats em real time."
+            },
+            {
+                q: "Além de Authentication Header (AH), IPSec é composto de qual outro service?",
+                o: ["Encapsulating Security Payload (ESP)", "Extended Authentication Protocol (EAP)", "Encryption File System (EFS)", "Advanced Encryption Standard (AES)"],
+                c: 0,
+                e: "IPsec tem 2 services: AH (authenticate partners) e ESP (encrypt/secure data transferred). IPSec usa ISAKMP para key management."
+            },
+            {
+                q: "Salesperson acessa network via open WiFi. Key steps para VPN over open wireless? (Select two)",
+                o: ["Configure VPN connection usar IPsec", "Configure browser send HTTPS direto para WiFi sem VPN", "Configure browser send HTTPS through VPN", "Configure VPN usar PPTP", "Configure VPN usar MS-CHAPv2"],
+                c: [0, 2],
+                e: "Usar IPsec ou SSL para secure VPN. Configure browser HTTPS requests ir through VPN connection. Evitar PPTP com MS-CHAPv2 (não mais secure)."
+            },
+            
+            // NAC Questions
+            {
+                q: "O que MELHOR descreve zero-trust security?",
+                o: ["Apenas devices que passam authentication E authorization são trusted", "All devices são trusted", "Apenas devices que passam authentication são trusted", "Apenas devices que passam authorization são trusted"],
+                c: 0,
+                e: "NAC usa two-stage: authentication E authorization. Zero-trust = nada é trusted unless passa AMBOS stages."
+            },
+            {
+                q: "International business com aumento de remote work e BYOD. Solução MAIS efetiva?",
+                o: ["Implement agentless NAC sem firewall integration", "Deploy agent-based NAC com dynamic VLANs e firewall integration", "Use NAC sem dynamic VLANs", "Depend solely em firewall existente"],
+                c: 1,
+                e: "Agent-based NAC com dynamic VLAN assignment e firewall integration fornece comprehensive solution: robust device auth, security policy compliance, flexibility para device types/user roles."
+            },
+            {
+                q: "Qual step no NAC process: committee meeting para definir como NAC deve ser implementado?",
+                o: ["Define", "Review", "Plan", "Apply"],
+                c: 2,
+                e: "Planning é first step no NAC implementation. Committee convenes e decide como NAC should work."
+            },
+            {
+                q: "Sobre nonpersistent NAC agent, qual statement é true?",
+                o: ["Loaded na memória durante posture assessment mas NÃO instalado no device", "Remains indefinidamente após assessment", "Requer prior configuration no device", "Não pode fornecer detailed info sobre device status"],
+                c: 0,
+                e: "Nonpersistent agent loaded na memória durante posture assessment mas não permanently installed. Removed após assessment completed (dissolvable agent)."
+            },
+            {
+                q: "NAC com automatic remediation: significant number de devices quarantined. Next action?",
+                o: ["Reduzir security standards para decrease quarantined", "Investigate root cause da frequent non-compliance", "Disable automatic remediation feature", "Ignore issue pois NAC está fazendo seu job"],
+                c: 1,
+                e: "Investigate root cause melhor ação. Pode ser outdated software, overly strict policies, etc. Address root cause reduz quarantined e improve security."
+            },
+            {
+                q: "O que aplica appropriate policies para fornecer device com acesso definido?",
+                o: ["Identity Services Engine", "Authorization", "Zero-trust security", "Authentication"],
+                c: 1,
+                e: "Authorization olha authentication info e aplica appropriate policies para fornecer device com access defined."
+            },
+            {
+                q: "O que define todos prerequisites que device deve meet para acessar network?",
+                o: ["ISE", "Authorization", "Zero-trust security", "Authentication"],
+                c: 3,
+                e: "Authentication define prerequisites: anti-malware, OS, patch level, etc. Authorization então aplica policies."
+            },
+            {
+                q: "Qual NAC step ocorre uma vez que policies foram defined?",
+                o: ["Apply", "Review", "Test", "Plan"],
+                c: 0,
+                e: "Third step: apply policies. Ocorre após policies terem sido defined. Review é final step."
+            },
+            {
+                q: "Qual NAC agent type seria usado para IoT devices?",
+                o: ["Dissolvable", "Agentless", "Zero-trust", "Permanent"],
+                c: 1,
+                e: "Agentless agent está no domain controller. Quando user logs no domain, autentica com network. Usado quando limited disk space (IoT devices)."
+            },
+            
+            // Switch Security Questions  
+            {
+                q: "Qual ataque, se successful, causa switch funcionar como hub?",
+                o: ["Replay attack", "MAC flooding", "MAC spoofing", "ARP poisoning"],
+                c: 1,
+                e: "MAC flooding overloads MAC forwarding table. Switch entra fail open mode. Incoming packets broadcast para ALL ports (como hub)."
+            },
+            {
+                q: "Qual ataque associa attacker MAC address com IP da vítima?",
+                o: ["DNS poisoning", "ARP spoofing/poisoning", "XSS", "MAC spoofing"],
+                c: 1,
+                e: "ARP spoofing/poisoning: quando computers enviam ARP request, attacker responde com seu MAC. Source device envia frames para attacker MAC."
+            },
+            {
+                q: "VLANs criadas mas devices em diferentes VLANs não comunicam. Razão MAIS provável e next step?",
+                o: ["Inter-VLAN routing não enabled. Implementar router ou Layer 3 switch", "Devices não properly configured. Review network settings", "Switch não configured. Review VLAN config", "Switch ports não assigned. Review VLAN assignments"],
+                c: 0,
+                e: "Por padrão, devices em different VLANs NÃO comunicam. Para enable communication, precisa router ou Layer 3 switch para inter-VLAN routing."
+            },
+            {
+                q: "O que MELHOR descreve conceito de virtual LAN?",
+                o: ["Devices conectados via internet que comunicam sem network address", "Devices na mesma network logicamente agrupados como se em separate networks", "Devices em different networks que recebem multicast", "Devices conectados por transmission medium diferente de cable", "Devices em separate networks logicamente agrupados como se mesma network"],
+                c: 1,
+                e: "Virtual LAN: subset de devices na MESMA network logicamente agrupados como se em SEPARATE networks. VLANs = subdivisions de LAN."
+            },
+            {
+                q: "Ao configurar VLANs, qual type de switch ports são members de ALL VLANs?",
+                o: ["Uplink ports", "Trunk ports", "Gigabit e higher ports", "Qualquer port não assigned", "Cada port só pode ser member de single VLAN"],
+                c: 1,
+                e: "Trunk port é member de ALL VLANs defined no switch e carries traffic entre switches. Trunking usa tagging com VLAN ID."
+            },
+            {
+                q: "Single subnet com 3 switches conectados redundantly. Feature que previne switching loops?",
+                o: ["Trunking", "Spanning Tree Protocol", "Bonding", "802.1x", "PoE"],
+                c: 1,
+                e: "Spanning Tree Protocol mantém multiple paths mas seleciona single path entre switches. Ports: Forwarding state (active) ou Blocking state (backup). Auto-recovers quando path cai."
+            },
+            {
+                q: "Library computers: patrons desconectam library computers e conectam próprios laptops. Restringir acesso?",
+                o: ["Create static MACs e associate com VLAN", "Remove hub, place cada library computer em own access port", "Configure port security no switch", "Create VLAN para cada group de 4 computers"],
+                c: 2,
+                e: "Port security pode restringir acesso para que apenas specific MAC addresses conectem ao configured switch port. Previne laptop connectivity."
+            },
+            {
+                q: "MAC filtering implemented mas unauthorized device conectou. Explicação MAIS provável e next step?",
+                o: ["Unauthorized device spoofed MAC de authorized device. Implementar secondary authentication", "Unauthorized device bypassed por disabled port. Ensure unused ports disabled", "MAC do unauthorized foi manually added. Review allowed list", "MAC filtering malfunctioning. Troubleshoot feature"],
+                c: 0,
+                e: "Unauthorized device spoofed MAC de authorized é most likely. MAC spoofing = técnica comum para bypass MAC filtering. Implementar secondary auth (802.1x)."
+            },
+            {
+                q: "Qual scenario tipicamente utiliza 802.1X authentication?",
+                o: ["Authenticating remote access clients", "Controlling access through switch", "Controlling access through router", "Authenticating VPN users"],
+                c: 1,
+                e: "802.1X authentication é método usado em LAN para allow/deny access baseado em port/connection. Usado para port authentication em switches com RADIUS server."
+            },
+            
+            // Router/Device Security Questions
+            {
+                q: "Novo Cisco router: FTP para backup config, console port para config, admin01/P@ssW0rd com MD5. O que fazer?",
+                o: ["Use encrypted Type 7 passwords", "Use SCP para backup config para remote location", "Move router para secure data center", "Use SSH client para access config"],
+                c: 1,
+                e: "Config sendo copiado via unsecure FTP (cleartext). Deve usar SCP (Secure Copy Protocol) para transfer backup para remote storage."
+            },
+            {
+                q: "Router em server room com ID access. Backup encrypted. Telnet com admin/P@ssW0rd e MD5. O que fazer? (Select two)",
+                o: ["Use web browser via HTTP", "Use SSH client", "Change default administrative username e password", "Use encrypted Type 7 passwords", "Use TFTP para backup"],
+                c: [1, 2],
+                e: "Use SSH client (Telnet = cleartext). Change default username/password (defaults available em websites)."
+            },
+            {
+                q: "Remediation practices: divide network em separate pieces para contain attack?",
+                o: ["Segmentation", "Compensating controls", "Patching", "Insurance"],
+                c: 0,
+                e: "Segmentation envolve dividir network em separate pieces para contain potential security breaches."
+            },
+            {
+                q: "ICS/SCADA systems: qual unique control para protect?",
+                o: ["Regular system updates", "Network segmentation", "Transport encryption protocols", "Secure boot mechanisms"],
+                c: 1,
+                e: "Network segmentation isola ICS/SCADA systems de wider network, protegendo limitando access e defendendo contra inbound attacks."
+            },
+            {
+                q: "Financial institution processando transactions. Método para minimize risk?",
+                o: ["Segmentation", "Firewalling", "VPN", "NAT"],
+                c: 0,
+                e: "Segmentation divide network em different sections para instituição pode protect data enquanto processing."
+            },
+            {
+                q: "O que pode tornar passwords useless num router?",
+                o: ["Storing config file em secure location", "Using MD5 hashing para encrypt password", "Using SSH para remotely connect", "Not controlling physical access"],
+                c: 3,
+                e: "Se alguém ganha physical access, pode easily bypass configured passwords. Passwords são useless se physical access não controlado."
+            },
+            {
+                q: "Brand new router deployment. Após change factory defaults, o que fazer next?",
+                o: ["Secure config file", "Configure SSH", "Update firmware", "Configure anti-spoofing rules"],
+                c: 2,
+                e: "Após change defaults, update firmware. Updates fix vulnerabilities resolved by manufacturer no passado."
+            },
+            {
+                q: "O que acontece por default quando cria e aplica new ACL num router?",
+                o: ["All traffic permitted", "ACL ignored until applied", "All traffic blocked", "ACLs não created em router"],
+                c: 2,
+                e: "Nova ACL quase sempre inclui hidden Deny Any statement ao final. All traffic automatically blocked até configured."
+            },
+            {
+                q: "Anti-spoofing rule config MAIS efetiva?",
+                o: ["Source: Any, Dest: Internal IP/router, Interface: external, Direction: Outbound", "Source: Any, Dest: Any, Interface: external, Direction: Inbound", "Source: External IP, Dest: Any, Interface: internal, Direction: Outbound", "Source: Internal IP/router IP, Dest: Any, Interface: external, Direction: Inbound, Action: Deny"],
+                c: 3,
+                e: "Config efetiva bloqueia inbound packets de external interface que fingem ser da internal network ou router. Tática comum em spoofing attacks."
+            },
+            {
+                q: "O que deve ser configurado no router para filtrar traffic no router level?",
+                o: ["Telnet", "SSH", "Anti-spoofing rules", "Access control list"],
+                c: 3,
+                e: "Router ACLs podem ser configurados para increase security e limit traffic, como firewall mas no router level. ACLs filtram traffic e determinam se data deve ser blocked ou forwarded."
+            },
+            
+            // Application/Vulnerability Questions
+            {
+                q: "Application control: antes enforce allow list, quer monitor e log violations. Como configurar?",
+                o: ["Tarpit", "Drop", "Flag", "Block"],
+                c: 2,
+                e: "Flagged applications são allowed mas violation logged quando identified. Usado para discovery e monitoring antes enforcement."
+            },
+            {
+                q: "Qual descreve non-intrusive scanning framework?",
+                o: ["Vulnerability scanning", "Keylogger", "Penetration testing", "ACL"],
+                c: 0,
+                e: "Vulnerability scanners = non-intrusive. Identificam vulns analisando build/patch levels, policies. Penetration testing = active e intrusive."
+            },
+            {
+                q: "IT manager de company que desenvolve software. MAIS efetivo para implement app vulnerability scanning?",
+                o: ["Implement e immediately halt development até vulns addressed", "Implement mas ignore minor vulnerabilities", "Implement apenas para apps previously compromised", "Implement apenas sem informar dev team", "Implement E fornecer comprehensive training ao dev team"],
+                c: 4,
+                e: "Implement scanning E training é most effective. Não só introduz método para identify vulns mas ensures dev team equipped para address. Training e communication são key."
+            },
+            {
+                q: "Application control: app continuously circumvents blocking. Como configurar?",
+                o: ["Drop", "Tarpit", "Flag", "Block"],
+                c: 1,
+                e: "Tarpit: conexão kept alive mas app data silently dropped. Faz parecer que hosts estão recebendo mas não respondendo. Malicious apps não percebem block e não circumvent."
+            },
+            {
+                q: "Application control solutions usam o que para identificar apps específicas?",
+                o: ["Packet inspection", "Allow lists", "Flags", "Application signatures"],
+                c: 3,
+                e: "Application control usa application signatures para identificar specific applications. Contents de packets inspecionados e comparados contra signatures."
+            },
+            {
+                q: "Practices importantes em app vulnerability assessment para third-party software? (Select two)",
+                o: ["SSL", "SBOM", "DHCP", "SCA", "VPN"],
+                c: [1, 3],
+                e: "SBOM = Software Bill of Materials (lista components). SCA = Software Composition Analysis (identifica open source + third-party dependencies, detecta known vulns)."
+            },
+            {
+                q: "Cybersecurity analyst permite IM services com encryption. Concern: software vulnerabilities. Qual action?",
+                o: ["Allow uso sem changes pois encryption sufficient", "Implement additional encryption layers", "Regularly update e patch IM apps", "Disable all IM services"],
+                c: 2,
+                e: "Regularly update e patch IM apps para address known software vulnerabilities. Encryption oferece security mas keeping apps up-to-date é crucial."
+            },
+            {
+                q: "Package monitoring: quais actions prioritizadas? (Select two)",
+                o: ["Tracking outdated software packages", "Block firewall ports used by software", "Buying latest antivirus every month", "Monitoring software repositories para new updates", "Manually updating software daily"],
+                c: [0, 3],
+                e: "Track outdated packages (targets para attackers). Monitor repositories (stay informed sobre latest updates/patches). Manual daily updates = excessive."
+            },
+            {
+                q: "Melhores formas de monitor software usage e secure apps/dependencies? (Select two)",
+                o: ["Implementing application vulnerability scanning", "Ignoring software updates/patches", "Using package monitoring", "Allowing unrestricted software install", "Relying solely em firewall"],
+                c: [0, 2],
+                e: "App vulnerability scanning (static + dynamic analysis) identifica weaknesses. Package monitoring (SCA tools) tracks third-party packages, identifica outdated/vulnerable."
+            },
+            {
+                q: "Implementar application allow list. MAIS efetivo?",
+                o: ["Implement immediately e block all sem informar", "Implement, inform employees, provide process para request additions", "Create mas não enforce", "Create baseado apenas em IT preferences", "Implement mas allow employees instalar se necessary"],
+                c: 1,
+                e: "Implement allow list, inform employees, provide request process. Ensures adherence enquanto mantém communication channel. Allows requests previne inadvertent blocks."
+            },
+            
+            // Security Solutions/Concepts
+            {
+                q: "Network security engineer: empresa lançando software product, customer access via internet, internal production network secure. Qual zone?",
+                o: ["Intranet", "Extranet", "Screened Subnet", "Wireless"],
+                c: 2,
+                e: "Screened subnet = public-facing accessible network. Acts as buffer/barrier para internal production network. Configured com 1 ou 2 firewalls, middleman entre internet e internal."
+            },
+            {
+                q: "Company quer setup private network com internet info services para internal use only. Qual tipo?",
+                o: ["Internet", "Extranet", "Intranet", "Honeynet"],
+                c: 2,
+                e: "Intranet = private network (LAN) que usa internet information services para internal use only. Web servers e email servers para company employees."
+            },
+            {
+                q: "Proxy server pode ser configurado para fazer o quê?",
+                o: ["Block all exceto permissible", "Restrict users inside de getting out to internet", "Act como UTM ou web security gateway", "Allow all exceto restricted"],
+                c: 1,
+                e: "Proxies podem: restrict users inside de getting OUT to internet, restrict access by user/website, restrict protocols, use access controls, provide anonymity, cache content."
+            },
+            {
+                q: "Main role de load balancer em network security?",
+                o: ["Act como gateway para access isolated systems", "Act on behalf of client accessing internet", "Capture packets para intrusion detection", "Distribute network traffic across multiple servers"],
+                c: 3,
+                e: "Load balancer distribui client requests across available server nodes em farm/pool, optimizando performance e providing fault tolerance."
+            },
+            {
+                q: "Security device configurado para fail-closed. O que acontece quando ataque ocorre?",
+                o: ["Device acts on behalf of client", "Device distribui traffic", "Device blocks access ou enters most secure state", "Device preserves network/host access"],
+                c: 2,
+                e: "Fail-closed: prioritizes confidentiality/integrity over availability. Se failure, access blocked ou system enters most secure state available."
+            },
+            {
+                q: "High school library computers: students acessando inappropriate material. Budget limited. Qual content filtering?",
+                o: ["Block all exceto permissible", "Allow all exceto restricted", "Restrict content based em categories", "Block specific DNS domains"],
+                c: 2,
+                e: "Restrict baseado em categories fornece most protection com least research/involvement. Outras opções requerem research para identify specific content/sites."
+            },
+            {
+                q: "Small financial credit business: secure client records, budget issue. BEST security?",
+                o: ["All-in-one security appliance", "NAC system", "Proxy server com access controls", "Firewall em gateway server"],
+                c: 0,
+                e: "All-in-one appliance fornece best overall protection. Least space, least technical assistance. Inclui: spam filter, URL filter, content filter, malware inspection, IDS."
+            },
+            {
+                q: "Cybersecurity specialist: setup honeynet. BEST way?",
+                o: ["Setup com decoy systems e monitor para attacker activity", "Setup com real systems e ignore até attack", "Setup com real data/systems", "Setup com decoys e ignore até attack"],
+                c: 0,
+                e: "Honeynet com decoy systems que mimicam real systems. Monitoring permite gather info sobre attacker tactics/tools para strengthen defenses."
+            },
+            {
+                q: "Aumento em SMTP-based attacks (open relay, DDoS, spam). BEST solution?",
+                o: ["Setup email honeypot designed para attract/trap attacks", "Implement strong firewall e block all SMTP", "Regularly change email server IP", "Shut down email server"],
+                c: 0,
+                e: "Email honeypot = best solution. Designed para attract SMTP attacks. Enquanto distrai, team monitora malicious activity para learn e strengthen defenses."
+            },
+            {
+                q: "Limitation de usar DNS sinkhole como cybersecurity measure?",
+                o: ["DNS sinkholes podem prevent malware execution", "DNS sinkholes só podem provide false info", "DNS sinkholes podem block all malicious traffic", "DNS sinkholes ineffective se malware usa public DNS ou own DNS server"],
+                c: 3,
+                e: "Se malware usa public DNS server ou own DNS server, sinkhole não efetivo porque não pode intercept/redirect DNS queries."
+            },
+            
+            // Hardening/Baseline Questions
+            {
+                q: "Critical security patch para database software requer taking offline. O que fazer?",
+                o: ["Apply patch para test environment first, então roll out gradually", "Wait few weeks antes apply", "Apply immediately para all systems", "Ignore patch, disruption too significant"],
+                c: 0,
+                e: "Test patch em controlled environment permite identify/address issues antes roll out. Minimiza risk de disruption."
+            },
+            {
+                q: "Security templates permitem fazer o quê? (Select two)",
+                o: ["Fix specific software problem", "Configure consistent security settings entre devices", "Apply new patches", "Block malicious sites", "Quickly apply settings para multiple computers"],
+                c: [1, 4],
+                e: "Security templates permitem quickly e consistently apply settings para multiple computers para bring compliance com security baseline."
+            },
+            {
+                q: "Actions para reduce attack surface de server?",
+                o: ["Install anti-malware", "Remove unused services", "Install latest patches", "Install host-based IDS"],
+                c: 1,
+                e: "Attack Surface Reduction (ASR) = cut down software/services running. Remove unnecessary elimina possible attacks. Role separation: services em separate physical systems."
+            },
+            {
+                q: "Global corporation prioritizando server security. Opção MAIS efetiva?",
+                o: ["Enable all services", "Switch off all security features", "Use simple passwords", "Implement security baseline, apply updates/patches, adhere to hardening guidelines"],
+                c: 3,
+                e: "Establish security baseline, regular updates/patches, hardening guidelines = significantly improves security, reduzindo risk de cyber threats."
+            },
+            {
+                q: "System admin hardening: strategy MAIS efetiva para reduce impact se single system compromised?",
+                o: ["Using complex passwords", "Role separation", "Installing anti-virus", "Regularly updating software"],
+                c: 1,
+                e: "Role separation = installing services em separate physical systems. Se single system compromised, apenas few services naquele system affected."
+            },
+            {
+                q: "Healthcare org usando USB drives para transfer patient data. MAIS efetivo para achieve security?",
+                o: ["Regularly update OS/apps", "Encrypt data on removable media", "Implement strict password policy", "Install latest antivirus"],
+                c: 1,
+                e: "Encrypt data no removable media ensures que mesmo se lost/stolen, data cannot be accessed sem encryption key."
+            },
+            {
+                q: "IT company: server usa default settings, potential vulnerability. Qual change?",
+                o: ["Switch off server quando não em uso", "Limit privileges de each user", "Continue default mas increase monitoring", "Ignore software/security patches"],
+                c: 1,
+                e: "Limit user privileges para least necessary (principle of least privilege) reduz impact de compromised account. Part of hardening."
+            },
+            {
+                q: "IT Security Manager: new servers para critical apps. OS hardening, first step?",
+                o: ["Connect servers to network", "Install latest antivirus", "Enforce strict password policy", "Apply configuration baseline template"],
+                c: 3,
+                e: "Apply configuration baseline template = first step. Ensures servers configured according to industry security standards. Reduz attack surface."
+            },
+            {
+                q: "O que MELHOR descreve configuration baseline?",
+                o: ["Set de performance statistics", "List de common security settings que group/all devices share", "Minimum services required", "Collection de security settings auto-applied"],
+                c: 1,
+                e: "Configuration baseline = set de consistent requirements para workstation/server. List de common security settings. Security template = saved config values."
+            },
+            {
+                q: "Tools para automatically distribute/install patches em Windows network? (Select two)",
+                o: ["Security Configuration and Analysis", "Group Policy", "Configuration baseline", "Security Templates", "WSUS"],
+                c: [1, 4],
+                e: "WSUS (Windows Software Update Services) = patch management, clients download do WSUS server. Group Policy = distribute/auto-install patches (incluindo non-Microsoft software)."
+            }
+        ];
+
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
+
+        // ========== LOCALSTORAGE ==========
+        // Carregar progresso salvo
+        function loadProgress() {
+            const saved = localStorage.getItem('security_plus_cap5_mastered');
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
+        }
+
+        // Salvar progresso
+        function saveProgress() {
+            localStorage.setItem('security_plus_cap5_mastered', JSON.stringify([...mastered]));
+        }
+
+        // Chamar loadProgress assim que o script carregar
+        loadProgress();
+
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+        }
+
+        function updateCard() {
+            if (filteredCards.length === 0) {
+                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                return;
+            }
+            const cardIndex = filteredCards[currentCard];
+            const card = cards[cardIndex];
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            const btn = document.getElementById('master-btn');
+            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+            
+            const progress = (mastered.size / cards.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
+        }
+
+        function flipCard() {
+            flipped = !flipped;
+            updateCard();
+        }
+
+        function nextCard() {
+            currentCard = (currentCard + 1) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function prevCard() {
+            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function toggleMaster() {
+            const cardIndex = filteredCards[currentCard];
+            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
+            else mastered.add(cardIndex);
+            
+            // ========== SALVAR PROGRESSO ==========
+            saveProgress();
+            
+            updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = filteredCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+            }
+            currentCard = 0;
+            flipped = false;
+            updateCard();
+        }
+
+        function filterCards(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') {
+                filteredCards = [...Array(cards.length).keys()];
+            } else if (type === 'mastered') {
+                filteredCards = Array.from(mastered);
+            } else {
+                filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            }
+            
+            currentCard = 0;
+            flipped = false;
+            updateCard();
+        }
+
+        function loadQuiz() {
+            const container = document.getElementById('questions');
+            quiz.forEach((q, qi) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(qi, oi);
+                    odiv.id = `q${qi}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${qi}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
+                div.appendChild(exp);
+                container.appendChild(div);
+            });
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            quiz[qi].o.forEach((_, i) => {
+                const el = document.getElementById(`q${qi}o${i}`);
+                el.classList.remove('selected');
+            });
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            quiz.forEach((q, qi) => {
+                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
+                });
+                document.getElementById(`exp${qi}`).style.display = 'block';
+                if (correctAnswer.includes(answers[qi])) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 80 ? 'APROVADO! ✓' : 'Precisa 80% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('results-modal').classList.remove('show');
+            loadQuiz();
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>

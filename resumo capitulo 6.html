@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo Security+ Capítulo 6 - Segurança Cibernética</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
+            padding: 50px;
+            border: 1px solid #e2e8f0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #ff6b6b;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box strong {
+            color: #ec4899;
+            font-size: 1.1rem;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule strong {
+            color: #f59e0b;
+            font-size: 1.1rem;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            font-size: 1.8rem;
+            color: #0f172a;
+            margin-bottom: 20px;
+            border-left: 5px solid #ff6b6b;
+            padding-left: 15px;
+        }
+        .section h3 {
+            font-size: 1.3rem;
+            color: #334155;
+            margin: 20px 0 10px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .card h4 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .card ul {
+            list-style: none;
+        }
+        .card li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .card li:before {
+            content: "•";
+            color: #ff6b6b;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th {
+            background: #ff6b6b;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        tr:hover {
+            background: #f1f5f9;
+        }
+        .attack-chain {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin: 30px 0;
+        }
+        .chain-item {
+            padding: 15px;
+            background: #f3f4f6;
+            border-left: 5px solid #ff6b6b;
+            border-radius: 5px;
+            display: flex;
+            gap: 15px;
+        }
+        .chain-number {
+            font-weight: bold;
+            color: #ff6b6b;
+            min-width: 30px;
+        }
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px dashed #e2e8f0;
+            text-align: center;
+            color: #64748b;
+        }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📘 Capítulo 6: Segurança Cibernética</h1>
+            <span class="badge">Resumo Completo</span>
+        </div>
+
+        <div class="info-box">
+            <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>IDS vs IPS:</strong> IDS detecta e alerta (passivo), IPS detecta e bloqueia (ativo)</li>
+                <li><strong>False Negative</strong> (não detectar ataque) é MAIS GRAVE que False Positive</li>
+                <li><strong>Reconhecimento Passivo:</strong> não interage (OSINT, war driving) | <strong>Ativo:</strong> interage (port scan, enumeração)</li>
+                <li><strong>Rainbow Table:</strong> tabela pré-computada de hashes - SALT torna inútil</li>
+                <li><strong>ARP Poisoning:</strong> atacante associa seu MAC ao IP da vítima (MitM)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣ Segurança Física</h2>
+
+            <h3>Princípios dos Controles de Acesso Físico</h3>
+            <ul>
+                <li><strong>Autenticação:</strong> Identifica pessoas autorizadas</li>
+                <li><strong>Autorização:</strong> Cria barreiras físicas com pontos de entrada/saída definidos</li>
+                <li><strong>Contabilização:</strong> Registra uso dos pontos de acesso e detecta violações</li>
+            </ul>
+
+            <h3>Dispositivos de Controle</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Controles de Perímetro</h4>
+                    <ul>
+                        <li>Barricadas e cercas</li>
+                        <li>Iluminação estratégica</li>
+                        <li>Postes de segurança (anti-veículo)</li>
+                        <li>Portões e fechaduras</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Controles de Acesso</h4>
+                    <ul>
+                        <li>Vestíbulos de controle (mantraps)</li>
+                        <li>Crachás RFID/NFC</li>
+                        <li>PACS (sistema centralizado)</li>
+                        <li>Biometria</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Vigilância</h4>
+                    <ul>
+                        <li>Guardas de segurança</li>
+                        <li>Câmeras CFTV</li>
+                        <li>IA para reconhecimento</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Sistemas de Alarme</h4>
+                    <ul>
+                        <li>Circuito fechado</li>
+                        <li>Detecção de movimento</li>
+                        <li>Detecção de ruído</li>
+                        <li>Alarme de coação</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Ataques Físicos Comuns</h3>
+            <ul>
+                <li><strong>Força bruta:</strong> destruição de dispositivos ou arrombamento</li>
+                <li><strong>Ambiental:</strong> interrupção de energia, refrigeração ou cabos</li>
+                <li><strong>Clonagem RFID:</strong> falsificação de cartões de acesso</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>2️⃣ Reconhecimento e Monitoramento de Rede</h2>
+
+            <h3>Ferramentas de Monitoramento</h3>
+            <table>
+                <tr>
+                    <th>Ferramenta</th>
+                    <th>Função</th>
+                </tr>
+                <tr><td>ping</td><td>Testa conexão entre dispositivos</td></tr>
+                <tr><td>tracert/traceroute</td><td>Mostra caminho dos pacotes</td></tr>
+                <tr><td>netstat</td><td>Exibe estatísticas de rede, portas abertas</td></tr>
+                <tr><td>nmap</td><td>Scanner de segurança (portas, serviços, SO)</td></tr>
+                <tr><td>Wireshark</td><td>Analisador de protocolo</td></tr>
+            </table>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h4>🔍 Reconhecimento Passivo</h4>
+                    <p>Sem interação direta:</p>
+                    <ul>
+                        <li>Análise de pacotes</li>
+                        <li>OSINT (redes sociais, sites)</li>
+                        <li>Escuta clandestina</li>
+                        <li>Shoulder surfing</li>
+                        <li>War driving/flying</li>
+                        <li>Vasculhar lixo</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🎯 Reconhecimento Ativo</h4>
+                    <p>Com interação direta:</p>
+                    <ul>
+                        <li>Varredura de portas</li>
+                        <li>Enumeração de serviços</li>
+                        <li>Identificação de SO</li>
+                        <li>Enumeração DNS</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Ferramentas de Reconhecimento</h3>
+            <div class="grid-3">
+                <div class="card"><strong>theHarvester</strong> - Coleta e-mails, nomes, IPs</div>
+                <div class="card"><strong>Shodan</strong> - Busca dispositivos conectados</div>
+                <div class="card"><strong>Dnsenum</strong> - Enumeração DNS</div>
+                <div class="card"><strong>Nessus</strong> - Scanner de vulnerabilidades</div>
+                <div class="card"><strong>Sn1per</strong> - Scanner automatizado</div>
+                <div class="card"><strong>Scanless</strong> - Varredura anônima</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3️⃣ Sistemas de Detecção de Intrusão (IDS/IPS)</h2>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h4>🟡 IDS (Passivo)</h4>
+                    <ul>
+                        <li>Monitora, registra e detecta violações</li>
+                        <li>Não bloqueia ataques</li>
+                        <li>Envia alertas para análise</li>
+                        <li>Não pode ser detectado na rede</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🔴 IPS (Ativo)</h4>
+                    <ul>
+                        <li>Executa funções do IDS + reage</li>
+                        <li>Encerra sessões maliciosas</li>
+                        <li>Bloqueia atividades suspeitas</li>
+                        <li>Automatiza respostas</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Estados de Avaliação</h3>
+            <table>
+                <tr>
+                    <th>Estado</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr><td><strong>Positivo</strong></td><td>Ataque detectado e bloqueado corretamente</td></tr>
+                <tr><td><strong>Falso positivo</strong></td><td>Tráfego inofensivo identificado como ofensivo</td></tr>
+                <tr><td><strong>Negativo</strong></td><td>Tráfego inofensivo passou normalmente</td></tr>
+                <tr><td><strong>Falso negativo</strong></td><td>Tráfego prejudicial não detectado (pior cenário)</td></tr>
+            </table>
+
+            <h3>Métodos de Detecção</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>📋 Baseado em Assinatura</h4>
+                    <ul>
+                        <li>Compara padrões conhecidos</li>
+                        <li>Requer atualizações regulares</li>
+                        <li>Mais falsos negativos</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>📊 Baseado em Heurística</h4>
+                    <ul>
+                        <li>Define linha de base e detecta anomalias</li>
+                        <li>Detecta ataques desconhecidos</li>
+                        <li>Mais falsos positivos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Implementação</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>💻 HIDS (Host-based)</h4>
+                    <ul>
+                        <li>Instalado no sistema individual</li>
+                        <li>Monitora atividades locais</li>
+                        <li>Analisa tráfego criptografado</li>
+                        <li>Ex: software antivírus</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🌐 NIDS (Network-based)</h4>
+                    <ul>
+                        <li>Dispositivo dedicado na rede</li>
+                        <li>Fora da banda ou em linha</li>
+                        <li>Detecta varreduras e DoS</li>
+                        <li>Não analisa tráfego criptografado</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4️⃣ Analisadores de Protocolo</h2>
+
+            <h3>Funcionamento</h3>
+            <ul>
+                <li>Captura frames de toda a rede</li>
+                <li>Requer modo promíscuo na placa de rede</li>
+                <li>Usa espelhamento de portas em switches</li>
+                <li>Dispositivo passivo por padrão</li>
+            </ul>
+
+            <h3>Filtros</h3>
+            <ul>
+                <li><strong>Filtro de captura:</strong> Grava apenas frames específicos</li>
+                <li><strong>Filtro de exibição:</strong> Mostra apenas frames que correspondem aos critérios</li>
+            </ul>
+
+            <h3>Usos por Função</h3>
+            <table>
+                <tr>
+                    <th>Função</th>
+                    <th>Uso</th>
+                </tr>
+                <tr><td><strong>Administrador de rede</strong></td><td>Monitora tráfego, protocolos, desempenho, soluciona problemas</td></tr>
+                <tr><td><strong>SecOps</strong></td><td>Identifica frames malformados, descobre senhas em texto claro, localiza portas abertas</td></tr>
+                <tr><td><strong>Usuário malicioso</strong></td><td>Coleta informações, spoofing, MITM, identificação de SO</td></tr>
+            </table>
+
+            <h3>Ferramentas Comuns</h3>
+            <div class="grid-4">
+                <div class="card">Wireshark</div>
+                <div class="card">Ethereal</div>
+                <div class="card">Tcpdump</div>
+                <div class="card">Ettercap</div>
+                <div class="card">Dsniff</div>
+                <div class="card">Cain e Abel</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>5️⃣ Análise de Ataques de Rede</h2>
+
+            <h3>Ciclo de Vida do Ataque Cibernético</h3>
+            <div class="attack-chain">
+                <div class="chain-item"><span class="chain-number">1.</span> Reconhecimento (scanning, fingerprinting)</div>
+                <div class="chain-item"><span class="chain-number">2.</span> Coleta de credenciais</div>
+                <div class="chain-item"><span class="chain-number">3.</span> Negação de serviço (DoS)</div>
+                <div class="chain-item"><span class="chain-number">4.</span> Armamentização e entrega</div>
+                <div class="chain-item"><span class="chain-number">5.</span> Comando e controle (C2)</div>
+                <div class="chain-item"><span class="chain-number">6.</span> Movimento lateral</div>
+                <div class="chain-item"><span class="chain-number">7.</span> Exfiltração de dados</div>
+            </div>
+
+            <h3>Tipos de Ataques</h3>
+            
+            <h4>DDoS (Distributed Denial of Service)</h4>
+            <ul>
+                <li>Consome largura de banda ou recursos</li>
+                <li><strong>SYN flood:</strong> esgota conexões pendentes</li>
+                <li><strong>Ataques refletidos (DRDoS):</strong> usa terceiros falsificando IP da vítima</li>
+                <li><strong>Ataques amplificados:</strong> explora DNS, NTP, CLDAP, Memcached</li>
+                <li>Indicador: picos de tráfego inexplicáveis</li>
+            </ul>
+
+            <h4>On-Path (Man-in-the-Middle)</h4>
+            <ul>
+                <li>Intercepta e monitora comunicações</li>
+                <li><strong>ARP poisoning:</strong> falsifica tabelas ARP (gratuitous ARP é indicador)</li>
+                <li>Pode modificar tráfego secretamente</li>
+            </ul>
+
+            <h4>Ataques DNS</h4>
+            <ul>
+                <li><strong>Typosquatting:</strong> domínios similares para enganar</li>
+                <li><strong>Envenenamento de cache DNS:</strong> corrompe registros</li>
+                <li><strong>On-path DNS:</strong> ARP poisoning + respostas falsas</li>
+                <li><strong>Envenenamento do servidor DNS:</strong> DoS + spoofing</li>
+                <li>Usado para comando e controle (C2)</li>
+            </ul>
+
+            <h4>Código Malicioso - Indicadores</h4>
+            <ul>
+                <li><strong>Shellcode:</strong> explora vulnerabilidades</li>
+                <li><strong>Dumping de credenciais:</strong> SAM, lsass.exe, DCSync</li>
+                <li><strong>Movimento lateral:</strong> PsExec, PowerShell</li>
+                <li><strong>Persistência:</strong> AutoRun, tarefas agendadas, WMI</li>
+            </ul>
+
+            <h4>Linguagens/Ferramentas Maliciosas</h4>
+            <table>
+                <tr>
+                    <th>Linguagem</th>
+                    <th>Características</th>
+                </tr>
+                <tr><td><strong>Python</strong></td><td>Popular para RATs, multiplataforma, mas requer Python instalado</td></tr>
+                <tr><td><strong>PowerShell</strong></td><td>Fileless malware (memória), difícil detecção</td></tr>
+                <tr><td><strong>Bash</strong></td><td>Servidores Linux/MacOS, Shellshock</td></tr>
+                <tr><td><strong>Macros (VBA)</strong></td><td>Office, pode abrir shell no Windows</td></tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>6️⃣ Ataques de Senha</h2>
+
+            <h3>Ataques Online vs Offline</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>🌐 Online</h4>
+                    <ul>
+                        <li>Interage com sistema de autenticação</li>
+                        <li>Aparece em logs</li>
+                        <li>Mitigação: limitar tentativas, bloquear IPs</li>
+                        <li>Risco: pode causar DoS legítimo</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>💾 Offline</h4>
+                    <ul>
+                        <li>Rouba banco de hashes (SAM, NTDS.DIT)</li>
+                        <li>Sem limitações de tentativas</li>
+                        <li>Pode usar packet sniffer</li>
+                        <li>Indicador: logs de acesso a credenciais</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Técnicas de Ataque</h3>
+            <table>
+                <tr>
+                    <th>Técnica</th>
+                    <th>Descrição</th>
+                    <th>Defesa</th>
+                </tr>
+                <tr>
+                    <td><strong>Engenharia Social</strong></td>
+                    <td>Adivinhação, manipulação, shoulder surfing, dumpster diving</td>
+                    <td>Educação de usuários</td>
+                </tr>
+                <tr>
+                    <td><strong>Força Bruta</strong></td>
+                    <td>Testa todas combinações. Password spraying (mesma senha em várias contas)</td>
+                    <td>Bloqueio de conta</td>
+                </tr>
+                <tr>
+                    <td><strong>Dicionário</strong></td>
+                    <td>Lista de palavras comuns</td>
+                    <td>Políticas de complexidade</td>
+                </tr>
+                <tr>
+                    <td><strong>Rainbow Table</strong></td>
+                    <td>Tabela pré-computada de hashes (30-300GB)</td>
+                    <td>SALT</td>
+                </tr>
+            </table>
+
+            <h3>Ferramentas de Ataque</h3>
+            <div class="grid-3">
+                <div class="card"><strong>John the Ripper</strong> - Cracker</div>
+                <div class="card"><strong>Hashcat</strong> - Cracker com GPU</div>
+                <div class="card"><strong>Medusa</strong> - Força bruta</div>
+                <div class="card"><strong>Cain and Abel</strong> - Suite</div>
+                <div class="card"><strong>Ophcrack</strong> - Rainbow tables</div>
+                <div class="card"><strong>rcrack</strong> - Rainbow crack</div>
+            </div>
+
+            <h3>Boas Práticas de Senha</h3>
+            <ul>
+                <li>Mínimo 8 caracteres (quanto mais, melhor)</li>
+                <li>Combinar maiúsculas, minúsculas, números e símbolos</li>
+                <li>Evitar palavras/frases comuns</li>
+                <li>Usar passphrases em vez de senhas simples</li>
+                <li>Implementar salting nos hashes</li>
+                <li>Políticas de bloqueio após tentativas falhadas</li>
+                <li>Documentos devem ser triturados</li>
+            </ul>
+
+            <div class="golden-rule">
+                <strong>⚠️ SALT:</strong> Adicionar caracteres aleatórios ao hash torna as rainbow tables INÚTEIS!
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <strong>💡 DICAS FINAIS PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>IDS vs IPS:</strong> IDS alerta (passivo), IPS bloqueia (ativo)</li>
+                <li><strong>False Negative</strong> (não detectar) é MAIS GRAVE que False Positive</li>
+                <li><strong>ARP poisoning → DAI</strong> (Dynamic ARP Inspection)</li>
+                <li><strong>HIDS:</strong> analisa tráfego criptografado | <strong>NIDS:</strong> não analisa</li>
+                <li><strong>Rainbow table:</strong> funciona sem salt, com salt é inútil</li>
+                <li><strong>PowerShell:</strong> fileless malware (só memória)</li>
+                <li><strong>Password spraying:</strong> mesma senha em várias contas (evita lockout)</li>
+                <li><strong>War driving:</strong> busca redes Wi-Fi abertas</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>📚 Resumo autoral para certificação CompTIA Security+ • Capítulo 6</p>
+        </div>
+    </div>
+</body>
+</html>

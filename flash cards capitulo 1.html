@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Cap 1 - Security Concepts</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; color: white; margin-bottom: 30px; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .tab-btn.active { background: #f093fb; color: white; }
+        .content { display: none; }
+        .content.active { display: block; }
+        
+        .flashcard-area { max-width: 800px; margin: 0 auto; }
+        .card-info {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-bottom: 25px;
+        }
+        .flashcard-text { font-size: 1.3rem; line-height: 1.8; text-align: center; }
+        .controls { display: flex; gap: 15px; justify-content: center; }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-nav { background: white; font-size: 1.5rem; width: 50px; height: 50px; }
+        
+        .summary {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+        }
+        .summary h2 { color: #f093fb; margin-top: 30px; }
+        .summary h3 { margin-top: 20px; }
+        .summary ul { margin-left: 20px; margin-bottom: 15px; }
+        .summary li { margin-bottom: 8px; }
+        
+        .quiz-area { max-width: 900px; margin: 0 auto; }
+        .quiz-header { text-align: center; color: white; margin-bottom: 30px; }
+        .question { background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; }
+        .option {
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .option:hover { background: #fce7f3; }
+        .option.selected { border-color: #f093fb; background: #fce7f3; }
+        .option.correct { border-color: #10b981; background: #d1fae5; }
+        .option.incorrect { border-color: #ef4444; background: #fee2e2; }
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fce7f3;
+            border-left: 4px solid #f093fb;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Security+ Capítulo 1</h1>
+            <p>Security Concepts - 40 Cards | 40 Questões</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+            <button class="tab-btn" onclick="showTab(1)">📝 Resumo</button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="flashcard-area">
+                <div class="card-info">
+                    <div id="card-counter">Card 1 de 40</div>
+                    <div id="mastered-count">0 dominados</div>
+                </div>
+                
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="flashcard-text" id="card-text"></div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
+                    <button class="btn" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab1" class="content">
+            <div class="summary">
+                <h1>Capítulo 1: Security Concepts</h1>
+                
+                <h2>1.1 CIA Triad</h2>
+                <ul>
+                    <li><strong>Confidencialidade:</strong> Acesso apenas autorizado (criptografia, controle acesso)</li>
+                    <li><strong>Integridade:</strong> Dados não alterados (hashing, assinaturas)</li>
+                    <li><strong>Disponibilidade:</strong> Sistemas acessíveis (redundância, backups)</li>
+                </ul>
+
+                <h2>AAA Framework</h2>
+                <ul>
+                    <li><strong>Autenticação (Authentication):</strong> Verificar identidade</li>
+                    <li><strong>Autorização (Authorization):</strong> Definir permissões</li>
+                    <li><strong>Auditoria (Accounting):</strong> Registrar ações</li>
+                </ul>
+
+                <h2>1.2 Categorias de Controles</h2>
+                <ul>
+                    <li><strong>Preventivo:</strong> Previne antes (firewall, criptografia)</li>
+                    <li><strong>Detectivo:</strong> Detecta durante/depois (IDS, logs)</li>
+                    <li><strong>Corretivo:</strong> Corrige depois (backup, patches)</li>
+                    <li><strong>Deterrente:</strong> Desencorajam (avisos, guardas)</li>
+                    <li><strong>Compensatório:</strong> Substitui controle primário (MFA)</li>
+                    <li><strong>Diretivo:</strong> Orienta comportamento (políticas)</li>
+                </ul>
+
+                <h2>Tipos de Controles</h2>
+                <ul>
+                    <li><strong>Técnico:</strong> Via tecnologia (firewall, IDS)</li>
+                    <li><strong>Gerencial:</strong> Políticas e procedimentos</li>
+                    <li><strong>Operacional:</strong> Por pessoas (guardas, treinamento)</li>
+                    <li><strong>Físico:</strong> Barreiras físicas (travas, cercas)</li>
+                </ul>
+
+                <h2>Princípios Importantes</h2>
+                <ul>
+                    <li><strong>Defesa em Profundidade (Defense in Depth):</strong> Múltiplas camadas</li>
+                    <li><strong>Menor Privilégio (Least Privilege):</strong> Mínimo necessário</li>
+                    <li><strong>Segregação de Funções (Separation of Duties):</strong> Tarefas divididas</li>
+                    <li><strong>Não-repúdio (Non-repudiation):</strong> Não pode negar ação</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="tab2" class="content">
+            <div class="quiz-area">
+                <div class="quiz-header">
+                    <h2>Quiz - 40 Questões</h2>
+                </div>
+                <div id="questions"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn" onclick="checkAnswers()" style="background: #f093fb; color: white; padding: 15px 40px;">Ver Resultados</button>
+                </div>
+                <div id="results" style="display: none; text-align: center; margin-top: 20px;">
+                    <div style="background: white; padding: 30px; border-radius: 15px;">
+                        <h2 id="score"></h2>
+                        <button class="btn" onclick="resetQuiz()" style="margin-top: 15px;">Refazer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cards = [
+            {f: "O que é a tríade CIA (Confidentiality, Integrity, Availability)?", b: "São os três pilares da segurança da informação: Confidencialidade (acesso apenas autorizado), Integridade (dados não alterados) e Disponibilidade (sistemas acessíveis quando necessário)."},
+            {f: "O que significa confidencialidade (Confidentiality) na segurança?", b: "Garantir que as informações sejam acessíveis apenas por pessoas autorizadas. Técnicas: criptografia, controle de acesso, classificação de dados."},
+            {f: "O que significa integridade (Integrity) na segurança?", b: "Garantir que os dados não sejam alterados ou corrompidos indevidamente. Técnicas: hashing, checksums, assinaturas digitais."},
+            {f: "O que significa disponibilidade (Availability) na segurança?", b: "Garantir que sistemas e dados estejam acessíveis quando os usuários precisarem. Técnicas: redundância, backups, balanceamento de carga."},
+            {f: "O que é o framework AAA?", b: "É um modelo de segurança com três componentes: Authentication (autenticação - verificar identidade), Authorization (autorização - definir permissões) e Accounting (auditoria - registrar ações)."},
+            {f: "O que é autenticação (Authentication)?", b: "Processo de verificar se o usuário é realmente quem ele diz ser. Métodos: senhas, biometria, cartões inteligentes, certificados digitais."},
+            {f: "O que é autorização (Authorization)?", b: "Processo de determinar quais recursos e ações um usuário autenticado pode acessar. Técnicas: ACLs (listas de controle de acesso), RBAC (controle baseado em funções)."},
+            {f: "O que é auditoria (Accounting) em segurança?", b: "Registro e monitoramento das ações dos usuários e sistemas. Inclui logs, trilhas de auditoria, SIEM e análise forense."},
+            {f: "O que é não-repúdio (Non-repudiation)?", b: "Garantia de que uma pessoa não pode negar ter realizado uma ação. Implementado com assinaturas digitais e logs detalhados."},
+            {f: "O que é um controle preventivo?", b: "Controle que atua antes do incidente para evitar que ele ocorra. Exemplos: firewall, antivírus, autenticação forte, criptografia."},
+            {f: "O que é um controle detectivo?", b: "Controle que identifica incidentes durante ou depois de ocorrerem. Exemplos: IDS, SIEM, logs, câmeras de vigilância."},
+            {f: "O que é um controle corretivo?", b: "Controle que age após o incidente para corrigir ou recuperar. Exemplos: backups, planos de recuperação, aplicação de patches."},
+            {f: "O que é um controle deterrente?", b: "Controle que desencoraja potenciais atacantes. Exemplos: avisos legais, placas de advertência, presença de guardas."},
+            {f: "O que é um controle compensatório?", b: "Controle alternativo usado quando o controle primário não é viável. Exemplo: MFA (autenticação multifator) compensando senhas fracas."},
+            {f: "O que é um controle diretivo?", b: "Controle que orienta comportamentos através de políticas e procedimentos. Exemplos: políticas de segurança, códigos de conduta."},
+            {f: "O que é um controle técnico?", b: "Controle implementado através de tecnologia. Exemplos: firewalls, criptografia, sistemas biométricos, antivírus."},
+            {f: "O que é um controle gerencial?", b: "Controle baseado em políticas, procedimentos e diretrizes administrativas. Exemplos: políticas de segurança, planos de continuidade."},
+            {f: "O que é um controle operacional?", b: "Controle executado por pessoas em suas atividades diárias. Exemplos: guardas de segurança, treinamentos, conscientização."},
+            {f: "O que é um controle físico?", b: "Barreiras físicas que protegem instalações e equipamentos. Exemplos: cercas, travas, câmeras, biometria física."},
+            {f: "Firewall se enquadra em quais categorias?", b: "Preventivo (bloqueia ameaças antes) e Técnico (implementado por software/hardware)."},
+            {f: "IDS se enquadra em quais categorias?", b: "Detectivo (identifica intrusões) e Técnico (baseado em tecnologia)."},
+            {f: "Backup se enquadra em quais categorias?", b: "Corretivo (recupera após perda) e Técnico (realizado por software)."},
+            {f: "Guarda de segurança se enquadra em quais categorias?", b: "Deterrente/Preventivo (desencoraja e impede) e Físico/Operacional (presença física e ação humana)."},
+            {f: "O que é defesa em profundidade (Defense in Depth)?", b: "Estratégia de implementar múltiplas camadas de segurança. Se uma camada falhar, as outras ainda protegem."},
+            {f: "O que é princípio do menor privilégio (Least Privilege)?", b: "Conceder a cada usuário apenas as permissões mínimas necessárias para realizar suas funções."},
+            {f: "O que é segregação de funções (Separation of Duties)?", b: "Dividir tarefas críticas entre diferentes pessoas para prevenir fraudes e conflitos de interesse."},
+            {f: "O que é o framework NIST Cybersecurity?", b: "Framework com 5 funções: Identify (identificar), Protect (proteger), Detect (detectar), Respond (responder), Recover (recuperar)."},
+            {f: "O que é a ISO 27001?", b: "Padrão internacional que estabelece requisitos para implementar e manter um Sistema de Gestão de Segurança da Informação (ISMS)."},
+            {f: "O que é PCI-DSS?", b: "Padrão de segurança para organizações que processam, armazenam ou transmitem dados de cartões de pagamento."},
+            {f: "O que é HIPAA?", b: "Lei americana que estabelece requisitos de privacidade e segurança para proteger informações de saúde dos pacientes."},
+            {f: "O que são LGPD e GDPR?", b: "Leis de proteção de dados pessoais: LGPD (Brasil) e GDPR (Europa). Estabelecem direitos sobre dados e obrigações para empresas."},
+            {f: "O que faz um Security Analyst?", b: "Monitora sistemas, detecta ameaças, analisa alertas e responde a incidentes de segurança."},
+            {f: "O que faz um Penetration Tester?", b: "Simula ataques controlados para identificar vulnerabilidades em sistemas, redes e aplicações."},
+            {f: "O que faz um Security Architect?", b: "Projeta e planeja arquiteturas de segurança, define controles e padrões para proteger a organização."},
+            {f: "O que faz um CISO?", b: "Chief Information Security Officer. Liderança executiva responsável pela estratégia e governança de segurança da informação."},
+            {f: "O que faz um Incident Responder?", b: "Atua durante e após incidentes de segurança para conter ameaças, erradicar problemas e recuperar sistemas."},
+            {f: "O que faz um Forensic Analyst?", b: "Investiga crimes digitais, coleta e analisa evidências para determinar como o incidente ocorreu."},
+            {f: "O que faz um Security Auditor?", b: "Avalia se os controles de segurança estão em conformidade com políticas, padrões e regulamentações."},
+            {f: "Qual a diferença entre privacidade (privacy) e segurança (security)?", b: "Privacidade: controle sobre como dados pessoais são coletados e usados. Segurança: proteção contra ameaças e acessos não autorizados."},
+            {f: "Qual a diferença entre safety e security?", b: "Safety: proteção contra acidentes e perigos não intencionais. Security: proteção contra ações maliciosas e intencionais."}
+        ];
+
+        const quiz = [
+            // CIA Triad (1-12)
+            {q: "O que significa o pilar da confidencialidade (Confidentiality) na segurança da informação?", o: ["Garantir que os dados não sejam alterados sem permissão", "Garantir que apenas pessoas autorizadas possam acessar as informações", "Garantir que os sistemas estejam sempre disponíveis quando necessário", "Garantir que o usuário é quem diz ser"], c: 1},
+            {q: "O que significa o pilar da integridade (Integrity) na segurança da informação?", o: ["Proteger informações contra acesso não autorizado", "Garantir que os dados não sejam modificados de forma indevida", "Manter os sistemas em funcionamento", "Registrar todas as ações dos usuários"], c: 1},
+            {q: "O que significa o pilar da disponibilidade (Availability) na segurança?", o: ["Informações acessíveis apenas por autorizados", "Dados mantidos sem alterações", "Sistemas e dados acessíveis quando os usuários precisam", "Identificação correta dos usuários"], c: 2},
+            {q: "Quando um site fica fora do ar por um ataque DDoS, qual pilar da segurança foi comprometido?", o: ["Confidencialidade", "Integridade", "Disponibilidade", "Autenticidade"], c: 2},
+            {q: "Para proteger a confidencialidade dos dados, qual técnica é mais adequada?", o: ["Hashing", "Criptografia", "Backup", "Assinatura digital"], c: 1},
+            {q: "Qual técnica é utilizada para verificar se um arquivo não foi alterado?", o: ["Criptografia", "Hashing", "Firewall", "Backup"], c: 1},
+            {q: "Se um funcionário acessa dados sigilosos sem permissão, qual pilar foi violado?", o: ["Disponibilidade", "Integridade", "Confidencialidade", "Não-repúdio"], c: 2},
+            {q: "A implementação de backups regulares ajuda a garantir qual pilar?", o: ["Confidencialidade", "Integridade", "Disponibilidade", "Autenticação"], c: 2},
+            {q: "Qual pilar da segurança é afetado quando um arquivo é modificado por um invasor?", o: ["Confidencialidade", "Integridade", "Disponibilidade", "Autorização"], c: 1},
+            {q: "O controle de acesso baseado em funções (RBAC) protege principalmente qual pilar?", o: ["Confidencialidade", "Integridade", "Disponibilidade", "Auditoria"], c: 0},
+            {q: "Um sistema de detecção de intrusão (IDS) ajuda a proteger qual pilar?", o: ["Confidencialidade", "Integridade", "Disponibilidade", "Todos os anteriores"], c: 3},
+            {q: "A assinatura digital garante quais aspectos de segurança?", o: ["Confidencialidade e disponibilidade", "Integridade e não-repúdio", "Autenticação e confidencialidade", "Disponibilidade e autorização"], c: 1},
+
+            // AAA Framework (13-18)
+            {q: "No modelo AAA, o que significa autenticação (Authentication)?", o: ["Verificar se o usuário é realmente quem ele diz ser", "Definir quais recursos o usuário pode acessar", "Registrar as ações realizadas pelo usuário", "Criptografar os dados do usuário"], c: 0},
+            {q: "No modelo AAA, o que significa autorização (Authorization)?", o: ["Confirmar a identidade do usuário", "Determinar quais recursos o usuário tem permissão para acessar", "Manter logs das atividades do usuário", "Proteger a senha do usuário"], c: 1},
+            {q: "No modelo AAA, o que significa auditoria (Accounting)?", o: ["Verificação de identidade por biometria", "Controle de permissões de acesso", "Registro e monitoramento das ações dos usuários", "Criptografia de dados em trânsito"], c: 2},
+            {q: "O não-repúdio (Non-repudiation) está mais relacionado a qual componente do AAA?", o: ["Autenticação", "Autorização", "Auditoria", "Todos igualmente"], c: 2},
+            {q: "Qual tecnologia garante que uma pessoa não possa negar que realizou uma ação?", o: ["Criptografia simétrica", "Firewall de aplicação", "Assinatura digital", "Sistema biométrico"], c: 2},
+            {q: "Em um sistema que usa AAA, a verificação de senha acontece em qual etapa?", o: ["Autenticação", "Autorização", "Auditoria", "Todas as etapas"], c: 0},
+
+            // Categorias de Controles (19-32)
+            {q: "Um firewall é classificado como qual tipo de controle de segurança?", o: ["Preventivo - pois bloqueia ameaças antes que elas entrem", "Detectivo - pois identifica ataques em andamento", "Corretivo - pois corrige problemas após ocorrerem", "Compensatório - pois substitui outros controles"], c: 0},
+            {q: "Um sistema de detecção de intrusão (IDS) se enquadra em qual categoria?", o: ["Preventivo - impede ataques", "Detectivo - identifica ataques em andamento", "Corretivo - recupera sistemas após ataques", "Deterrente - desencoraja atacantes"], c: 1},
+            {q: "A realização de backups periódicos é um exemplo de controle:", o: ["Preventivo - evita perda de dados", "Detectivo - identifica falhas", "Corretivo - permite recuperação após incidentes", "Compensatório - alternativa a outro controle"], c: 2},
+            {q: "A autenticação multifator (MFA) é frequentemente considerada um controle:", o: ["Preventivo - pois dificulta acessos não autorizados", "Detectivo - pois alerta sobre tentativas de acesso", "Compensatório - pois compensa senhas fracas", "Diretivo - pois orienta comportamento"], c: 2},
+            {q: "Placas de aviso como 'Área restrita' ou 'Proibido entrar' são controles de qual categoria?", o: ["Preventivo - impedem fisicamente a entrada", "Deterrente - desencorajam tentativas de invasão", "Detectivo - identificam invasores", "Corretivo - corrigem comportamento"], c: 1},
+            {q: "Documentos com políticas de segurança da empresa são controles de qual tipo?", o: ["Técnico - pois usam tecnologia", "Gerencial - pois administram e orientam", "Operacional - pois envolvem pessoas", "Físico - pois são documentos"], c: 1},
+            {q: "Um vigilante ou guarda de segurança se enquadra em qual tipo de controle?", o: ["Técnico - usa equipamentos", "Gerencial - aplica políticas", "Operacional - envolve ação humana direta", "Físico - barreira física"], c: 2},
+            {q: "Câmeras de vigilância (CFTV) são classificadas como controles:", o: ["Preventivos - impedem crimes", "Detectivos - monitoram e registram atividades", "Corretivos - recuperam evidências", "Compensatórios - substituem guardas"], c: 1},
+            {q: "Cercas elétricas e muros são exemplos de controles:", o: ["Técnicos", "Gerenciais", "Operacionais", "Físicos"], c: 3},
+            {q: "Treinamentos de conscientização em segurança para funcionários são controles:", o: ["Técnicos - ensinam a usar ferramentas", "Gerenciais - definem regras", "Operacionais - mudam comportamento das pessoas", "Físicos - protegem o ambiente"], c: 2},
+            {q: "A criptografia de dados é um controle de qual tipo?", o: ["Técnico - implementado por software/hardware", "Gerencial - definido em políticas", "Operacional - executado por pessoas", "Físico - protege o hardware"], c: 0},
+            {q: "Um plano de recuperação de desastres é um controle:", o: ["Preventivo - evita desastres", "Detectivo - identifica desastres", "Corretivo - recupera após desastres", "Deterrente - desencoraja desastres"], c: 2},
+            {q: "Um sistema SIEM (Security Information and Event Management) é classificado como controle:", o: ["Preventivo - bloqueia ameaças", "Detectivo - correlaciona eventos e alerta", "Corretivo - corrige vulnerabilidades", "Compensatório - substitui outros controles"], c: 1},
+            {q: "Um software antivírus é um exemplo de controle:", o: ["Preventivo e técnico", "Detectivo e físico", "Corretivo e gerencial", "Compensatório e operacional"], c: 0},
+
+            // Princípios e Frameworks (33-40)
+            {q: "O que significa o princípio da defesa em profundidade (Defense in Depth)?", o: ["Concentrar toda a segurança em uma única camada forte", "Implementar múltiplas camadas de segurança para proteção em conjunto", "Usar apenas firewall como medida de segurança", "Eliminar todos os controles para simplificar"], c: 1},
+            {q: "O princípio do menor privilégio (Least Privilege) determina que:", o: ["Todos os usuários devem ter acesso total a tudo", "Cada usuário deve ter apenas as permissões mínimas necessárias", "Nenhum usuário deve ter acesso a nada", "Apenas administradores devem ter acesso"], c: 1},
+            {q: "A segregação de funções (Separation of Duties) é importante para:", o: ["Proteger contra malware", "Prevenir fraudes e conflitos de interesse", "Melhorar performance do sistema", "Facilitar o trabalho dos administradores"], c: 1},
+            {q: "Quais são as cinco funções do framework NIST Cybersecurity?", o: ["Planejar, Fazer, Verificar, Agir, Revisar", "Identificar, Proteger, Detectar, Responder, Recuperar", "Prevenir, Detectar, Corrigir, Analisar, Reportar", "Confidencialidade, Integridade, Disponibilidade, Autenticidade, Não-repúdio"], c: 1},
+            {q: "A norma ISO 27001 estabelece requisitos para:", o: ["Segurança de redes corporativas", "Sistema de gestão de segurança da informação (ISMS)", "Proteção de dados em nuvem", "Criptografia de dados sensíveis"], c: 1},
+            {q: "O padrão PCI-DSS se aplica a organizações que:", o: ["Trabalham com dados de saúde", "Processam, armazenam ou transmitem dados de cartões de pagamento", "Coletam dados pessoais de usuários", "Prestam serviços para o governo"], c: 1},
+            {q: "A HIPAA é uma regulamentação dos EUA que protege:", o: ["Dados financeiros bancários", "Informações de saúde dos pacientes", "Dados de cartões de crédito", "Informações de crianças online"], c: 1},
+            {q: "Qual é a principal diferença entre privacidade (privacy) e segurança (security)?", o: ["São termos idênticos e podem ser usados como sinônimos", "Privacidade: controle sobre dados pessoais; Segurança: proteção contra ameaças", "Privacidade: proteção técnica; Segurança: proteção física", "Privacidade se aplica a pessoas; Segurança se aplica a empresas"], c: 1}
+        ];
+
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+
+        // Carregar progresso salvo
+        function loadProgress() {
+            const saved = localStorage.getItem('security_plus_cap1_mastered');
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
+        }
+
+        // Salvar progresso
+        function saveProgress() {
+            localStorage.setItem('security_plus_cap1_mastered', JSON.stringify([...mastered]));
+        }
+
+        // Chamar loadProgress assim que o script carregar
+        loadProgress();
+
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+        }
+
+        function updateCard() {
+            const card = cards[currentCard];
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${cards.length}`;
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            const btn = document.getElementById('master-btn');
+            btn.textContent = mastered.has(currentCard) ? '✓ Dominado' : 'Marcar Dominado';
+            btn.style.background = mastered.has(currentCard) ? '#10b981' : '#e5e7eb';
+            btn.style.color = mastered.has(currentCard) ? 'white' : 'black';
+        }
+
+        function flipCard() {
+            flipped = !flipped;
+            updateCard();
+        }
+
+        function nextCard() {
+            currentCard = (currentCard + 1) % cards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function prevCard() {
+            currentCard = (currentCard - 1 + cards.length) % cards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function toggleMaster() {
+            if (mastered.has(currentCard)) mastered.delete(currentCard);
+            else mastered.add(currentCard);
+            
+            // Salvar sempre que mudar
+            saveProgress();
+            
+            updateCard();
+        }
+
+        function loadQuiz() {
+            const container = document.getElementById('questions');
+            quiz.forEach((q, qi) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(qi, oi);
+                    odiv.id = `q${qi}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${qi}`;
+                exp.innerHTML = `<strong>Resposta correta:</strong> ${q.o[q.c]}`;
+                div.appendChild(exp);
+                container.appendChild(div);
+            });
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            quiz[qi].o.forEach((_, i) => {
+                document.getElementById(`q${qi}o${i}`).classList.remove('selected');
+            });
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            quiz.forEach((q, qi) => {
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (oi === q.c) el.classList.add('correct');
+                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                });
+                document.getElementById(`exp${qi}`).style.display = 'block';
+                if (answers[qi] === q.c) correct++;
+            });
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score').textContent = `${correct}/${quiz.length} (${pct}%)`;
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('results').style.display = 'none';
+            loadQuiz();
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>

@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Cap 7 - Vulnerability Management</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* FLASHCARDS */
+        .flashcard-area { max-width: 900px; margin: 0 auto; }
+        .card-info {
+            background: rgba(255,255,255,0.25);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .flashcard:hover { transform: scale(1.02); }
+        .side-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #11998e;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .flashcard-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #1f2937;
+        }
+        .flip-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn-nav {
+            background: white;
+            font-size: 1.5rem;
+            width: 55px;
+            height: 55px;
+        }
+        .btn-master {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        .btn-master.mastered {
+            background: #10b981;
+            color: white;
+        }
+        .btn-shuffle {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        /* QUIZ */
+        .quiz-area { max-width: 1000px; margin: 0 auto; }
+        .quiz-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+        }
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+        .option:hover {
+            background: #d1fae5;
+            border-color: #11998e;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            border-color: #11998e;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #d1fae5;
+            border-left: 5px solid #11998e;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .results-modal.show { display: flex; }
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .filter-btn.active {
+            background: white;
+            color: #11998e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Security+ Capítulo 7</h1>
+            <p>Vulnerability Management - 70 Cards | 35 Questões</p>
+            <div class="stats-bar">
+                <div class="stat-card">📚 70 Flashcards</div>
+                <div class="stat-card">❓ 35 Questões</div>
+                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="flashcard-area">
+                <div class="card-info">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
+                        <div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 70</div>
+                            <div id="mastered-count">0 dominados</div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="side-indicator" id="side-indicator">FRENTE</div>
+                    <div class="flashcard-text" id="card-text"></div>
+                    <div class="flip-hint">👆 Clique para virar</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
+                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab1" class="content">
+            <div class="summary" style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <h1 style="color: #11998e; margin-bottom: 30px; font-size: 2.5rem; border-bottom: 4px solid #11998e; padding-bottom: 15px;">📖 Resumo - Capítulo 7</h1>
+                
+                <div style="background: #d1fae5; border-left: 5px solid #10b981; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>Ciclo de Vulnerability Management:</strong> Discovery → Assessment → Prioritization → Remediation → Verification → Monitoring</li>
+                        <li><strong>CVSS Score:</strong> Critical (9-10), High (7-8.9), Medium (4-6.9), Low (0.1-3.9)</li>
+                        <li><strong>False Negative</strong> (vuln real não detectada) é MAIS GRAVE que False Positive</li>
+                        <li><strong>Credentialed Scan:</strong> Mais profundo (com login) | <strong>Non-credentialed:</strong> Visão de atacante externo</li>
+                        <li><strong>SIEM</strong> coleta e correlaciona logs | <strong>SOAR</strong> automatiza resposta a incidentes</li>
+                    </ul>
+                </div>
+
+                <h2 style="color: #38ef7d; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">1️⃣ Ciclo de Gestão de Vulnerabilidades</h2>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0;">
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #11998e;">
+                        <strong>1. Discovery</strong><br>Identificar
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #11998e;">
+                        <strong>2. Assessment</strong><br>Avaliar severidade
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #11998e;">
+                        <strong>3. Prioritization</strong><br>Priorizar por risco
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #11998e;">
+                        <strong>4. Remediation</strong><br>Corrigir
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #11998e;">
+                        <strong>5. Verification</strong><br>Confirmar correção
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #11998e;">
+                        <strong>6. Monitoring</strong><br>Monitoramento contínuo
+                    </div>
+                </div>
+
+                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Tipos de Vulnerabilidades</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Software:</strong> Bugs, falhas de código, bibliotecas vulneráveis</li>
+                    <li><strong>Configuration:</strong> Configurações incorretas, defaults inseguros</li>
+                    <li><strong>Platform:</strong> SO desatualizado, serviços desnecessários</li>
+                    <li><strong>Hardware:</strong> Firmware desatualizado, falhas físicas</li>
+                    <li><strong>Zero-Day:</strong> Vulnerabilidade desconhecida do fabricante, sem patch</li>
+                    <li><strong>Legacy Systems:</strong> Sistemas antigos sem suporte (EOL/EOSL)</li>
+                    <li><strong>Weak Encryption:</strong> Algoritmos fracos ou mal implementados</li>
+                    <li><strong>Race Condition:</strong> Problema de concorrência (TOC/TOU)</li>
+                    <li><strong>Memory Leak:</strong> Programa não libera memória, causa DoS</li>
+                    <li><strong>Buffer Overflow:</strong> Escreve além do buffer, execução de código</li>
+                </ul>
+
+                <h2 style="color: #38ef7d; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ CVSS, CVE e NVD</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#11998e; color:white;">Score</th><th style="background:#11998e; color:white;">Severidade</th></tr>
+                    <tr><td>0.0</td><td>None</td></tr>
+                    <tr><td>0.1 - 3.9</td><td>Low</td></tr>
+                    <tr><td>4.0 - 6.9</td><td>Medium</td></tr>
+                    <tr><td>7.0 - 8.9</td><td>High</td></tr>
+                    <tr><td>9.0 - 10.0</td><td>Critical</td></tr>
+                </table>
+
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>CVE (Common Vulnerabilities and Exposures):</strong> ID único para vulnerabilidades (ex: CVE-2024-12345)</li>
+                    <li><strong>CWE (Common Weakness Enumeration):</strong> Categorias de fraquezas (ex: CWE-79 = XSS, CWE-89 = SQLi)</li>
+                    <li><strong>NVD (National Vulnerability Database):</strong> Banco de dados do governo dos EUA com CVEs e scores CVSS</li>
+                </ul>
+
+                <h2 style="color: #38ef7d; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Vulnerability Scanning</h2>
+
+                <div style="display: flex; gap: 20px; margin: 30px 0; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px; background: #dbeafe; padding: 20px; border-radius: 10px;">
+                        <h3 style="color:#3b82f6; margin-top:0;">🔑 Credentialed</h3>
+                        <ul>
+                            <li>Com credenciais de login</li>
+                            <li>Mais profundo (acessa configurações internas)</li>
+                            <li>Menos falsos negativos</li>
+                        </ul>
+                    </div>
+                    <div style="flex: 1; min-width: 250px; background: #fee2e2; padding: 20px; border-radius: 10px;">
+                        <h3 style="color:#ef4444; margin-top:0;">👁️ Non-credentialed</h3>
+                        <ul>
+                            <li>Sem credenciais</li>
+                            <li>Visão de atacante externo</li>
+                            <li>Mais falsos negativos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Ferramentas de Scan</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Nessus:</strong> Comercial, mais usado, interface gráfica (Tenable)</li>
+                    <li><strong>OpenVAS:</strong> Open source, alternativa gratuita ao Nessus (Greenbone)</li>
+                    <li><strong>Qualys:</strong> Cloud-based, monitoramento contínuo</li>
+                    <li><strong>Rapid7 Nexpose:</strong> Comercial, integra com Metasploit</li>
+                    <li><strong>Tenable.io:</strong> Versão cloud do Nessus</li>
+                </ul>
+
+                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Interpretação de Resultados</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th>Tipo</th><th>Descrição</th></tr>
+                    <tr><td><strong>True Positive</strong></td><td>Vulnerabilidade real detectada corretamente ✅</td></tr>
+                    <tr><td><strong>False Positive</strong></td><td>Alerta incorreto (não é vulnerabilidade) ⚠️</td></tr>
+                    <tr><td><strong>False Negative</strong></td><td>Vulnerabilidade real NÃO detectada ❌ (MAIS GRAVE!)</td></tr>
+                    <tr><td><strong>True Negative</strong></td><td>Corretamente não alerta (sistema seguro) ✅</td></tr>
+                </table>
+
+                <div style="background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>⚠️ REGRA DE OURO:</strong> False Negative é MUITO pior que False Positive! Deixar uma vulnerabilidade real sem detecção pode levar a um ataque real.
+                </div>
+
+                <h2 style="color: #38ef7d; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">4️⃣ SIEM, SOAR e DLP</h2>
+
+                <div style="display: flex; gap: 20px; margin: 30px 0; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px; background: #d1fae5; padding: 20px; border-radius: 10px;">
+                        <h3 style="color:#10b981; margin-top:0;">📊 SIEM</h3>
+                        <p>Security Information and Event Management</p>
+                        <ul>
+                            <li>Coleta e agrega logs</li>
+                            <li>Correlaciona eventos</li>
+                            <li>Gera alertas e dashboards</li>
+                            <li>Ex: Splunk, QRadar, ArcSight</li>
+                        </ul>
+                    </div>
+                    <div style="flex: 1; min-width: 250px; background: #fef3c7; padding: 20px; border-radius: 10px;">
+                        <h3 style="color:#f59e0b; margin-top:0;">🤖 SOAR</h3>
+                        <p>Security Orchestration, Automation and Response</p>
+                        <ul>
+                            <li>Automatiza resposta a incidentes</li>
+                            <li>Playbooks automáticos</li>
+                            <li>Integra ferramentas</li>
+                            <li>Ex: Cortex XSOAR, Phantom</li>
+                        </ul>
+                    </div>
+                    <div style="flex: 1; min-width: 250px; background: #fee2e2; padding: 20px; border-radius: 10px;">
+                        <h3 style="color:#ef4444; margin-top:0;">🔒 DLP</h3>
+                        <p>Data Loss Prevention</p>
+                        <ul>
+                            <li>Network DLP (tráfego)</li>
+                            <li>Endpoint DLP (USB, impressão)</li>
+                            <li>Storage DLP (dados em repouso)</li>
+                            <li>Cloud DLP (SaaS)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">NetFlow</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li>Protocolo Cisco para coleta de metadados de tráfego</li>
+                    <li><strong>Informações:</strong> IPs origem/destino, portas, protocolo, bytes, pacotes</li>
+                    <li><strong>NÃO captura:</strong> Payload dos pacotes</li>
+                    <li><strong>Uso:</strong> Análise de tráfego, detecção de anomalias, capacity planning</li>
+                </ul>
+
+                <h2 style="color: #38ef7d; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">5️⃣ Penetration Testing</h2>
+
+                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Tipos de Conhecimento</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Black Box:</strong> Sem conhecimento prévio. Simula atacante externo.</li>
+                    <li><strong>White Box:</strong> Conhecimento completo (código, arquitetura, credenciais). Mais profundo.</li>
+                    <li><strong>Gray Box:</strong> Conhecimento parcial. Simula atacante com algum acesso.</li>
+                </ul>
+
+                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Fases do Pentest</h3>
+                <ol style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Planning:</strong> Escopo, regras de engajamento, objetivos</li>
+                    <li><strong>Reconnaissance:</strong> Coleta de informações</li>
+                    <li><strong>Scanning:</strong> Port scan, vulnerability scan</li>
+                    <li><strong>Exploitation:</strong> Explorar vulnerabilidades, ganhar acesso</li>
+                    <li><strong>Post-Exploitation:</strong> Manter acesso, privilege escalation, lateral movement</li>
+                    <li><strong>Reporting:</strong> Documentar achados, recomendações</li>
+                </ol>
+
+                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Ferramentas de Pentest</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; margin: 20px 0;">
+                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>Metasploit:</strong> Framework de exploração</div>
+                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>Burp Suite:</strong> Proxy para web apps</div>
+                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>OWASP ZAP:</strong> Web scanner open source</div>
+                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>Nmap:</strong> Port scanning</div>
+                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>sqlmap:</strong> SQL injection automation</div>
+                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>Mimikatz:</strong> Windows credential dumping</div>
+                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>SET:</strong> Social Engineer Toolkit</div>
+                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>Aircrack-ng:</strong> Wi-Fi security</div>
+                </div>
+
+                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Regras de Engajamento (ROE)</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li>Documento assinado antes do pentest (proteção legal)</li>
+                    <li><strong>Define:</strong> Escopo (IPs, domínios), fora de escopo, horários, métodos permitidos, contatos de emergência</li>
+                </ul>
+
+                <div style="background: #d1fae5; border-left: 5px solid #10b981; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>💡 DIFERENÇAS IMPORTANTES:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Vulnerability Scan vs Pentest:</strong> Scan é automatizado, identifica mas não explora. Pentest é manual, explora e simula atacante real.</li>
+                        <li><strong>Pentest vs Red Team:</strong> Pentest tem escopo definido, objetivo é encontrar vulnerabilidades. Red Team tem objetivo específico (ex: acessar servidor X), testa a defesa (Blue Team), mais stealth.</li>
+                    </ul>
+                </div>
+
+                <h2 style="color: #38ef7d; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">6️⃣ Remediação e Opções</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th>Opção</th><th>Descrição</th></tr>
+                    <tr><td><strong>Patch</strong></td><td>Aplicar correção oficial do fabricante</td></tr>
+                    <tr><td><strong>Workaround</strong></td><td>Solução temporária até o patch</td></tr>
+                    <tr><td><strong>Mitigation</strong></td><td>Reduzir risco sem eliminar (ex: regra de firewall, WAF)</td></tr>
+                    <tr><td><strong>Accept</strong></td><td>Aceitar o risco formalmente (baixo impacto, alto custo de correção)</td></tr>
+                    <tr><td><strong>Exception</strong></td><td>Aceitar temporariamente com justificativa</td></tr>
+                </table>
+
+                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">EOL / EOSL</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>End of Life / End of Service Life:</strong> Software/hardware sem suporte do fabricante</li>
+                    <li><strong>Riscos:</strong> Sem patches de segurança, vulnerabilidades não corrigidas, não conformidade</li>
+                    <li><strong>Opções:</strong> Upgrade, substituir, isolar, aceitar risco</li>
+                </ul>
+
+                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 30px 0; border-radius: 8px;">
+                    <h3 style="color: #ec4899; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Ciclo VM:</strong> Discovery → Assessment → Prioritization → Remediation → Verification → Monitoring</li>
+                        <li><strong>CVSS:</strong> 9-10 = Critical, 7-8.9 = High, 4-6.9 = Medium, 0.1-3.9 = Low</li>
+                        <li><strong>False Negative</strong> (não detectar) é MAIS GRAVE que False Positive</li>
+                        <li><strong>Credentialed scan:</strong> mais profundo, <strong>Non-credentialed:</strong> visão externa</li>
+                        <li><strong>SIEM</strong> = correlação de logs, <strong>SOAR</strong> = automação de resposta</li>
+                        <li><strong>DLP:</strong> Network, Endpoint, Storage, Cloud</li>
+                        <li><strong>Black Box</strong> (sem info) vs <strong>White Box</strong> (completo) vs <strong>Gray Box</strong> (parcial)</li>
+                        <li><strong>ROE</strong> = Rules of Engagement (documento antes do pentest)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab2" class="content">
+            <div class="quiz-area">
+                <div class="quiz-header">
+                    <h2>Quiz - 35 Questões</h2>
+                </div>
+                <div id="questions"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== CARDS TRADUZIDOS PARA PORTUGUÊS ==========
+        const cards = [
+            // Ciclo de Gestão de Vulnerabilidades (1-6)
+            {f: "Quais são as 6 fases do ciclo de gestão de vulnerabilidades (Vulnerability Management Cycle)?", b: "1) Discovery (descoberta) 2) Assessment (avaliação) 3) Prioritization (priorização) 4) Remediation (remediação) 5) Verification (verificação) 6) Monitoring (monitoramento). É um processo contínuo."},
+            {f: "O que é uma vulnerabilidade Zero-Day?", b: "Vulnerabilidade desconhecida do fabricante (vendor). Não há patch disponível no momento da descoberta. É altamente valiosa para atacantes e frequentemente usada em ataques direcionados."},
+            {f: "O que é Buffer Overflow?", b: "Falha onde o programa escreve dados além do limite do buffer alocado na memória. Pode sobrescrever áreas adjacentes e permitir a execução de código arbitrário."},
+            {f: "O que é Race Condition?", b: "Problema de temporização em código concorrente. O resultado depende da ordem de execução dos processos/threads. Exemplo clássico: TOC/TOU (Time of Check / Time of Use)."},
+            {f: "O que é Memory Leak?", b: "Quando um programa aloca memória mas não a libera após o uso. O consumo de memória cresce continuamente, podendo levar à exaustão de recursos e negação de serviço (DoS)."},
+            {f: "Quais são os tipos de vulnerabilidades mais comuns?", b: "Software (bugs), Configuration (configurações incorretas), Platform (SO desatualizado), Hardware (firmware), Zero-Day, Legacy Systems (sistemas sem suporte), Weak Encryption (criptografia fraca)."},
+
+            // CVE, CVSS, CWE (7-12)
+            {f: "O que é CVE (Common Vulnerabilities and Exposures)?", b: "Identificador único para vulnerabilidades de segurança. Formato: CVE-ANO-NÚMERO (ex: CVE-2024-12345). Mantido pela MITRE. Facilita a referência a vulnerabilidades específicas."},
+            {f: "O que é CVSS (Common Vulnerability Scoring System)?", b: "Sistema de pontuação para vulnerabilidades, com score de 0 a 10. Quanto maior, mais grave. Avalia vetores como ataque, impacto, complexidade."},
+            {f: "Quais são as faixas de severidade do CVSS?", b: "0.0 = None. 0.1-3.9 = Low (baixo). 4.0-6.9 = Medium (médio). 7.0-8.9 = High (alto). 9.0-10.0 = Critical (crítico)."},
+            {f: "O que é CWE (Common Weakness Enumeration)?", b: "Catálogo de categorias de fraquezas de software e hardware. Exemplos: CWE-79 (Cross-Site Scripting - XSS), CWE-89 (SQL Injection), CWE-22 (Path Traversal)."},
+            {f: "O que é NVD (National Vulnerability Database)?", b: "Banco de dados do governo dos EUA que contém todas as CVEs publicadas, com scores CVSS, informações de impacto e referências."},
+            {f: "O que significa EOL / EOSL?", b: "End of Life / End of Service Life. Indica que um produto (software/hardware) não recebe mais suporte do fabricante, incluindo patches de segurança. Representa alto risco."},
+
+            // Vulnerability Scanning (13-22)
+            {f: "Qual a diferença entre credentialed scan e non-credentialed scan?", b: "Credentialed scan: usa credenciais de acesso (login), consegue inspecionar configurações internas, mais profundo, menos falsos negativos. Non-credentialed: sem credenciais, visão de atacante externo, mais limitado."},
+            {f: "Qual a diferença entre agent-based scan e agentless scan?", b: "Agent-based: agente instalado no host, scan contínuo, mais preciso, requer manutenção. Agentless: scan remoto sem agente, menos intrusivo, mais fácil de implantar, menos profundo."},
+            {f: "O que é Nessus?", b: "Scanner de vulnerabilidades comercial da Tenable. É o mais utilizado no mercado. Possui interface gráfica amigável, vasta base de plugins e relatórios detalhados."},
+            {f: "O que é OpenVAS?", b: "Scanner de vulnerabilidades open source (atualmente Greenbone). É uma alternativa gratuita ao Nessus. Oferece funcionalidades similares de descoberta e análise."},
+            {f: "O que é Qualys?", b: "Plataforma cloud-based de gerenciamento de vulnerabilidades e conformidade. Oferece monitoramento contínuo e integrações com diversos sistemas."},
+            {f: "O que é Rapid7 Nexpose?", b: "Scanner de vulnerabilidades comercial que integra nativamente com o Metasploit, permitindo validar vulnerabilidades encontradas através de exploração."},
+            {f: "O que é um True Positive em scanning?", b: "Resultado correto onde o scanner detectou uma vulnerabilidade que realmente existe no sistema alvo."},
+            {f: "O que é um False Positive em scanning?", b: "Falso positivo: o scanner alerta para uma vulnerabilidade que na verdade não existe. Gera trabalho desnecessário e requer tuning para reduzir."},
+            {f: "O que é um False Negative em scanning?", b: "Falso negativo: o scanner deixa de detectar uma vulnerabilidade que realmente existe no sistema. É a situação MAIS GRAVE, pois o sistema fica vulnerável sem conhecimento."},
+            {f: "O que é um True Negative em scanning?", b: "Resultado correto onde o scanner não alerta e o sistema realmente não possui a vulnerabilidade."},
+
+            // SIEM, SOAR, DLP (23-30)
+            {f: "O que é SIEM (Security Information and Event Management)?", b: "Sistema que coleta, agrega, normaliza e correlaciona logs de múltiplas fontes (firewalls, servidores, aplicações). Gera alertas, dashboards e relatórios de compliance. Exemplos: Splunk, IBM QRadar, ArcSight."},
+            {f: "O que é SOAR (Security Orchestration, Automation and Response)?", b: "Plataforma que automatiza a resposta a incidentes de segurança. Orquestra ferramentas, executa playbooks automáticos, gerencia casos e integra inteligência de ameaças. Exemplos: Palo Alto Cortex XSOAR, Splunk Phantom, IBM Resilient."},
+            {f: "O que é DLP (Data Loss Prevention)?", b: "Soluções que previnem a exfiltração de dados sensíveis (perda, vazamento). Monitoram dados em uso, em movimento e em repouso."},
+            {f: "Quais são os tipos de DLP?", b: "Network DLP (monitora tráfego de rede: email, web, FTP). Endpoint DLP (monitora dispositivos: USB, impressão, clipboard, captura de tela). Storage/Data-at-rest DLP (escaneia arquivos armazenados). Cloud DLP (protege dados em SaaS como O365, Google Workspace)."},
+            {f: "O que é NetFlow?", b: "Protocolo da Cisco para coleta de metadados de tráfego de rede. Coleta informações como IPs origem/destino, portas, protocolo, bytes e pacotes. NÃO captura o payload. Usado para análise de tráfego, detecção de anomalias e capacity planning."},
+            {f: "O que é Log Management?", b: "Processo de coletar, agregar, armazenar e analisar logs de diversas fontes. Inclui definição de períodos de retenção (compliance) e garantia de integridade dos logs."},
+            {f: "O que é Threat Intelligence?", b: "Informações sobre ameaças cibernéticas: indicadores de comprometimento (IOCs), táticas, técnicas e procedimentos (TTPs), e perfis de atores de ameaça. Alimenta SIEM, SOAR e equipes de segurança."},
+            {f: "O que é MITRE ATT&CK?", b: "Framework de conhecimento baseado em observações do mundo real, que cataloga táticas e técnicas usadas por atacantes. Usado para threat hunting, desenvolvimento de detecções e avaliação de capacidades defensivas."},
+
+            // Penetration Testing (31-45)
+            {f: "O que é Penetration Testing (Pentest)?", b: "Simulação de ataque autorizado contra sistemas, redes ou aplicações, com o objetivo de identificar vulnerabilidades exploráveis e avaliar a postura de segurança."},
+            {f: "O que é Black Box pentest?", b: "Teste onde o pentester não recebe nenhuma informação prévia sobre o alvo. Simula um atacante externo sem conhecimento interno. É mais realista, porém pode ser menos profundo."},
+            {f: "O que é White Box pentest?", b: "Teste onde o pentester recebe informações completas sobre o alvo: código-fonte, diagramas de arquitetura, credenciais. Permite uma análise mais profunda e eficiente."},
+            {f: "O que é Gray Box pentest?", b: "Teste onde o pentester recebe informações parciais sobre o alvo. Simula um atacante que já possui algum nível de acesso ou conhecimento (ex: funcionário, fornecedor)."},
+            {f: "Quais são as fases de um pentest?", b: "1) Planning (planejamento, escopo, ROE). 2) Reconnaissance (reconhecimento, coleta de informações). 3) Scanning (varredura de portas, serviços, vulnerabilidades). 4) Exploitation (exploração de vulnerabilidades). 5) Post-Exploitation (movimentação lateral, escalação de privilégio). 6) Reporting (relatório final com achados e recomendações)."},
+            {f: "O que é Metasploit?", b: "Framework de exploração mais utilizado em pentests. Contém uma vasta biblioteca de exploits, payloads, encoders e módulos auxiliares. Permite desenvolver e executar ataques de forma estruturada."},
+            {f: "O que é Burp Suite?", b: "Proxy interceptador para testes de segurança em aplicações web. Permite inspecionar, modificar e repetir requisições HTTP. Possui scanner, intruder (para brute force) e diversas extensões."},
+            {f: "O que é OWASP ZAP?", b: "Ferramenta open source de teste de segurança em aplicações web. Similar ao Burp Suite, oferece proxy, scanner automático, spider e funcionalidades de fuzzing."},
+            {f: "O que é sqlmap?", b: "Ferramenta open source que automatiza a detecção e exploração de vulnerabilidades de SQL Injection. Consegue extrair dados, enumerar usuários e até obter acesso ao sistema operacional."},
+            {f: "O que é Mimikatz?", b: "Ferramenta para extrair credenciais da memória de sistemas Windows. Permite obter hashes de senha (pass-the-hash), tickets Kerberos e senhas em texto plano. Muito usada em pós-exploração."},
+            {f: "O que é Social Engineer Toolkit (SET)?", b: "Framework para automação de ataques de engenharia social. Inclui vetores de phishing, coleta de credenciais, criação de payloads e ataques de websites falsos."},
+            {f: "O que é Aircrack-ng?", b: "Suíte de ferramentas para teste de segurança de redes Wi-Fi. Permite capturar handshakes, quebrar chaves WEP/WPA/WPA2 (dicionário), monitorar tráfego e injetar pacotes."},
+            {f: "O que são ROE (Rules of Engagement)?", b: "Documento formal assinado antes do início de um pentest. Define o escopo (IPs, domínios, aplicações), itens fora de escopo, horários permitidos, metodologias, contatos de emergência e proteção legal."},
+            {f: "Qual a diferença entre Vulnerability Scan e Penetration Test?", b: "Vulnerability Scan: automatizado, identifica vulnerabilidades conhecidas, mas não as explora. Penetration Test: manual, explora vulnerabilidades para validar se são realmente exploráveis, simulando um atacante real."},
+            {f: "Qual a diferença entre Pentest e Red Team?", b: "Pentest: escopo definido e limitado, objetivo é encontrar o maior número possível de vulnerabilidades. Red Team: objetivo específico (ex: acessar um ativo crítico), opera de forma mais stealth, testa a capacidade de detecção e resposta da equipe de defesa (Blue Team)."},
+
+            // Remediação (46-55)
+            {f: "Quais são as opções de remediação para vulnerabilidades?", b: "Patch (aplicar correção do fabricante). Workaround (solução temporária). Mitigation (reduzir risco sem eliminar, ex: regra de firewall). Accept (aceitar formalmente o risco). Exception (aceitar temporariamente com justificativa)."},
+            {f: "O que é Patch Management?", b: "Processo de gerenciar a aplicação de patches: testar em ambiente controlado, agendar janelas de manutenção, aplicar em produção e verificar a correta instalação. Inclui plano de rollback."},
+            {f: "O que é Virtual Patching?", b: "Proteção temporária contra uma vulnerabilidade sem aplicar o patch oficial no sistema. Implementado via regras de WAF (Web Application Firewall) ou assinaturas de IPS. Usado até que o patch real possa ser aplicado."},
+            {f: "O que é Configuration Management?", b: "Processo de manter configurações de sistemas consistentes e seguras. Utiliza baselines de segurança, controle de mudanças e ferramentas de automação (ex: Ansible, Puppet)."},
+            {f: "O que é Baseline Configuration?", b: "Configuração padrão e segura definida para um tipo de sistema (ex: servidor web, workstation). Serve como referência para detectar desvios (drift) e garantir conformidade."},
+            {f: "O que é Change Management?", b: "Processo formal para autorizar e implementar mudanças em sistemas de TI. Etapas: solicitação, aprovação, teste, implementação e verificação. Previne mudanças não autorizadas que possam introduzir riscos."},
+            {f: "O que é Vulnerability Prioritization?", b: "Processo de classificar vulnerabilidades por prioridade de correção baseado em: CVSS score, existência de exploit público, criticidade do ativo afetado, exposição e impacto no negócio. Risco = Impacto x Probabilidade."},
+            {f: "O que é Risk Acceptance?", b: "Decisão formal de aceitar um risco identificado, sem aplicar correção. Geralmente quando o custo de remediar é maior que o impacto potencial. Requer aprovação da gestão."},
+            {f: "O que é Compensating Control?", b: "Controle alternativo implementado quando o controle primário não é viável ou não pode ser aplicado. Ex: usar um IDS para alertar sobre tráfego malicioso quando não é possível ter um IPS."},
+            {f: "O que é Legacy System?", b: "Sistema antigo que atingiu o fim de vida (EOL) e não recebe mais patches de segurança. Representa alto risco. Opções: upgrade, substituir, isolar na rede, ou aceitar o risco (com seguro cibernético)."},
+
+            // Indicadores e Frameworks (56-65)
+            {f: "O que é Asset Inventory?", b: "Inventário completo e atualizado de todos os ativos de TI da organização: hardware, software, dispositivos de rede, dados. É a base para um programa eficaz de gerenciamento de vulnerabilidades."},
+            {f: "O que é Attack Surface?", b: "Conjunto de todos os pontos de entrada possíveis que um atacante pode explorar (portas abertas, serviços, aplicações, interfaces). Reduzir a superfície de ataque é uma prática fundamental de hardening."},
+            {f: "O que é IOC (Indicator of Compromise)?", b: "Evidência forense de que um sistema pode ter sido comprometido. Exemplos: endereço IP malicioso, hash de um arquivo de malware, domínio de comando e controle (C2), assinatura de rede."},
+            {f: "O que é TTP (Tactics, Techniques, and Procedures)?", b: "Descrição de como um atacante opera: Táticas (objetivos), Técnicas (como alcançar o objetivo) e Procedimentos (implementações específicas). Usado no MITRE ATT&CK."},
+            {f: "O que é Threat Hunting?", b: "Busca proativa por ameaças que possam ter escapado das detecções automatizadas. Baseia-se em hipóteses, análise de dados e inteligência de ameaças."},
+            {f: "O que são CIS Benchmarks?", b: "Guias de configuração segura desenvolvidos pelo Center for Internet Security. São baselines consensuais para hardening de diversos sistemas operacionais, aplicações e dispositivos."},
+            {f: "O que são DISA STIGs?", b: "Security Technical Implementation Guides do Departamento de Defesa dos EUA. São padrões de hardening extremamente rigorosos para sistemas utilizados em ambientes militares."},
+            {f: "O que é Continuous Monitoring?", b: "Monitoramento contínuo da postura de segurança através de ferramentas como agentes, SIEM e scanners. Permite detectar mudanças, novas vulnerabilidades e ameaças em tempo real."},
+            {f: "O que é Vulnerability Window?", b: "Janela de tempo entre a descoberta pública de uma vulnerabilidade e a aplicação do patch no sistema. O objetivo é minimizar essa janela para reduzir o risco de exploração."},
+            {f: "O que é Exploit Availability?", b: "Disponibilidade de um exploit público para uma vulnerabilidade. Aumenta drasticamente a prioridade de correção, pois qualquer atacante pode usar a ferramenta."},
+
+            // Report e Disclosure (66-70)
+            {f: "O que deve conter um relatório de pentest?", b: "Sumário executivo (para gestão), escopo detalhado, metodologia utilizada, achados com severidade (CVSS), prova de conceito (POC), recomendações de remediação e apêndices técnicos."},
+            {f: "O que é Responsible Disclosure?", b: "Prática de reportar uma vulnerabilidade descoberta ao fabricante (vendor) antes de divulgá-la publicamente. Geralmente concede-se um período (ex: 90 dias) para que o fabricante corrija o problema."},
+            {f: "O que é Bug Bounty Program?", b: "Programa onde uma organização oferece recompensas financeiras para pesquisadores de segurança que reportarem vulnerabilidades em seus sistemas. Incentiva a descoberta responsável."},
+            {f: "O que é Regression Testing após patch?", b: "Testes realizados para garantir que a aplicação de um patch não introduziu novos problemas ou quebrou funcionalidades existentes. Essencial antes de colocar em produção."},
+            {f: "O que é Emergency Patching?", b: "Processo acelerado de aplicação de patches críticos, fora da janela de manutenção normal. Acionado quando há uma vulnerabilidade grave sendo explorada ativamente."}
+        ];
+
+        const quiz = [
+            {q: "Primeira fase do ciclo de gestão de vulnerabilidades:", o: ["Remediation", "Discovery", "Prioritization", "Verification"], c: 1},
+            {q: "Vulnerabilidade desconhecida do fabricante, sem patch disponível:", o: ["CVE", "Zero-day", "EOL", "Legacy"], c: 1},
+            {q: "Sistema de pontuação para vulnerabilidades (0-10):", o: ["CVE", "CWE", "CVSS", "NVD"], c: 2},
+            {q: "Identificador único para vulnerabilidades (ex: CVE-2024-12345):", o: ["CVE", "CWE", "CVSS", "NVD"], c: 0},
+            {q: "Catálogo de categorias de fraquezas (ex: CWE-79 = XSS):", o: ["CVE", "CWE", "CVSS", "NVD"], c: 1},
+            {q: "Banco de dados do governo dos EUA com CVEs e scores:", o: ["NVD", "MITRE", "OWASP", "CIS"], c: 0},
+            {q: "Software sem suporte do fabricante (sem patches):", o: ["Zero-day", "Legacy", "EOL/EOSL", "Patch"], c: 2},
+            {q: "Scan de vulnerabilidades COM credenciais de acesso:", o: ["Black box", "Credentialed", "Non-credentialed", "Agent-based"], c: 1},
+            {q: "Scan SEM credenciais, visão de atacante externo:", o: ["Credentialed", "White box", "Non-credentialed", "Agent-based"], c: 2},
+            {q: "Scanner de vulnerabilidades comercial mais utilizado:", o: ["OpenVAS", "Qualys", "Nessus", "Nexpose"], c: 2},
+            {q: "Scanner de vulnerabilidades open source:", o: ["Nessus", "Qualys", "OpenVAS", "Rapid7"], c: 2},
+            {q: "Resultado onde scanner alerta mas não há vulnerabilidade real:", o: ["True positive", "False positive", "False negative", "True negative"], c: 1},
+            {q: "Vulnerabilidade real NÃO detectada pelo scanner (MAIS GRAVE):", o: ["True positive", "False positive", "False negative", "True negative"], c: 2},
+            {q: "Sistema que coleta, agrega e correlaciona logs de múltiplas fontes:", o: ["SOAR", "SIEM", "DLP", "IDS"], c: 1},
+            {q: "Plataforma que automatiza resposta a incidentes com playbooks:", o: ["SIEM", "SOAR", "DLP", "IPS"], c: 1},
+            {q: "Solução que previne exfiltração de dados sensíveis:", o: ["IDS", "IPS", "Firewall", "DLP"], c: 3},
+            {q: "Tipo de DLP que monitora tráfego de rede:", o: ["Endpoint", "Network", "Storage", "Cloud"], c: 1},
+            {q: "Tipo de DLP que monitora dispositivos (USB, impressão):", o: ["Network", "Endpoint", "Storage", "Cloud"], c: 1},
+            {q: "Protocolo da Cisco que coleta metadados de tráfego (não payload):", o: ["NetFlow", "SNMP", "Syslog", "IPFIX"], c: 0},
+            {q: "Teste de intrusão SEM conhecimento prévio do alvo:", o: ["White box", "Gray box", "Black box", "Red team"], c: 2},
+            {q: "Teste de intrusão COM conhecimento completo (código, arquitetura):", o: ["Black box", "Gray box", "White box", "Blue team"], c: 2},
+            {q: "Framework de exploração mais utilizado em pentests:", o: ["Nmap", "Burp", "Metasploit", "Wireshark"], c: 2},
+            {q: "Proxy interceptador para testes em aplicações web:", o: ["Metasploit", "Burp Suite", "Nmap", "sqlmap"], c: 1},
+            {q: "Ferramenta open source de SQL injection automation:", o: ["Burp", "ZAP", "sqlmap", "Hydra"], c: 2},
+            {q: "Ferramenta para extrair credenciais da memória do Windows:", o: ["Metasploit", "Mimikatz", "John", "Hashcat"], c: 1},
+            {q: "Framework para automação de ataques de engenharia social:", o: ["Metasploit", "Burp", "SET", "BeEF"], c: 2},
+            {q: "Suíte de ferramentas para teste de segurança Wi-Fi:", o: ["Wireshark", "Aircrack-ng", "Nmap", "Kismet"], c: 1},
+            {q: "Documento formal que define escopo e regras de um pentest:", o: ["NDA", "SLA", "ROE", "MOU"], c: 2},
+            {q: "Diferença entre Vulnerability Scan e Pentest:", o: ["Scan é manual, Pentest automatizado", "Scan identifica, Pentest explora", "Scan é mais caro", "São a mesma coisa"], c: 1},
+            {q: "Aplicar correção oficial do fabricante:", o: ["Workaround", "Mitigation", "Patch", "Accept"], c: 2},
+            {q: "Solução temporária até que o patch oficial seja aplicado:", o: ["Patch", "Workaround", "Accept", "Exception"], c: 1},
+            {q: "Proteção temporária sem aplicar patch real (ex: regra WAF):", o: ["Virtual patching", "Workaround", "Accept", "Exception"], c: 0},
+            {q: "Decisão formal de aceitar um risco (não corrigir):", o: ["Patch", "Mitigation", "Accept", "Exception"], c: 2},
+            {q: "Evidência forense de comprometimento (IP malicioso, hash de malware):", o: ["TTP", "IOC", "CVE", "CVSS"], c: 1},
+            {q: "Framework de táticas e técnicas de atacantes:", o: ["NIST", "MITRE ATT&CK", "CIS", "OWASP"], c: 1}
+        ];
+
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
+
+        // ========== LOCALSTORAGE ==========
+        // Carregar progresso salvo
+        function loadProgress() {
+            const saved = localStorage.getItem('security_plus_cap7_mastered');
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
+        }
+
+        // Salvar progresso
+        function saveProgress() {
+            localStorage.setItem('security_plus_cap7_mastered', JSON.stringify([...mastered]));
+        }
+
+        // Chamar loadProgress assim que o script carregar
+        loadProgress();
+
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+        }
+
+        function updateCard() {
+            if (filteredCards.length === 0) {
+                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                return;
+            }
+            const cardIndex = filteredCards[currentCard];
+            const card = cards[cardIndex];
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            const btn = document.getElementById('master-btn');
+            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+            
+            const progress = (mastered.size / cards.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
+        }
+
+        function flipCard() {
+            flipped = !flipped;
+            updateCard();
+        }
+
+        function nextCard() {
+            currentCard = (currentCard + 1) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function prevCard() {
+            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function toggleMaster() {
+            const cardIndex = filteredCards[currentCard];
+            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
+            else mastered.add(cardIndex);
+            
+            // ========== SALVAR PROGRESSO ==========
+            saveProgress();
+            
+            updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = filteredCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+            }
+            currentCard = 0;
+            flipped = false;
+            updateCard();
+        }
+
+        function filterCards(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') {
+                filteredCards = [...Array(cards.length).keys()];
+            } else if (type === 'mastered') {
+                filteredCards = Array.from(mastered);
+            } else {
+                filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            }
+            
+            currentCard = 0;
+            flipped = false;
+            updateCard();
+        }
+
+        function loadQuiz() {
+            const container = document.getElementById('questions');
+            quiz.forEach((q, qi) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(qi, oi);
+                    odiv.id = `q${qi}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${qi}`;
+                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                div.appendChild(exp);
+                container.appendChild(div);
+            });
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            quiz[qi].o.forEach((_, i) => {
+                const el = document.getElementById(`q${qi}o${i}`);
+                el.classList.remove('selected');
+            });
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            quiz.forEach((q, qi) => {
+                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
+                });
+                document.getElementById(`exp${qi}`).style.display = 'block';
+                if (correctAnswer.includes(answers[qi])) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('results-modal').classList.remove('show');
+            loadQuiz();
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>

@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado Geral #1 - Security+</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+
+        .option:hover {
+            background: #f9fafb;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #eff6ff;
+            font-weight: 600;
+        }
+
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #eff6ff;
+            border-left: 5px solid #667eea;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+            margin: 30px auto;
+            display: block;
+        }
+
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .results-modal.show {
+            display: flex;
+        }
+
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .question {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Simulado Geral #1</h1>
+            <p>70 questões | Todas comentadas</p>
+            <div class="stats-bar">
+                <div class="stat-card">📊 70 questões</div>
+                <div class="stat-card">⏱️ 90 minutos</div>
+                <div class="stat-card" id="answered-count">✅ 0 respondidas</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterQuestions('all')">Todas</button>
+            <button class="filter-btn" onclick="filterQuestions('unanswered')">Não respondidas</button>
+            <button class="filter-btn" onclick="filterQuestions('answered')">Respondidas</button>
+        </div>
+
+        <div id="questions"></div>
+
+        <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+    </div>
+
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()" style="margin: 0 auto;">Refazer Simulado</button>
+        </div>
+    </div>
+
+    <script>
+        const quiz = [
+            // Capítulo 1 - Security Concepts (Questões 1-5)
+            {
+                q: "Qual pilar da tríade CIA garante que apenas pessoas autorizadas possam acessar as informações?",
+                o: ["Disponibilidade", "Integridade", "Confidencialidade", "Autenticidade"],
+                c: 2,
+                e: "Confidencialidade garante que informações sejam acessíveis apenas por pessoas autorizadas. Integridade garante que dados não sejam alterados, disponibilidade garante que sistemas estejam acessíveis quando necessário."
+            },
+            {
+                q: "Um firewall é um exemplo de qual tipo de controle de segurança?",
+                o: ["Detectivo", "Preventivo", "Corretivo", "Compensatório"],
+                c: 1,
+                e: "Firewall é um controle preventivo, pois atua antes do incidente para bloquear tráfego não autorizado. Controles preventivos impedem que ataques aconteçam."
+            },
+            {
+                q: "Qual é a função de um controle detectivo?",
+                o: ["Bloquear ataques antes que aconteçam", "Identificar e registrar intrusões durante o ataque", "Corrigir danos após o incidente", "Desencorajar psicologicamente atacantes"],
+                c: 1,
+                e: "Controles detectivos identificam e registram intrusões durante o ataque. Exemplos: IDS, logs, câmeras de vigilância."
+            },
+            {
+                q: "O que significa o princípio de defesa em profundidade (Defense in Depth)?",
+                o: ["Usar apenas um tipo de controle de segurança", "Implementar múltiplas camadas de segurança", "Concentrar todos os recursos em um ponto", "Eliminar controles redundantes"],
+                c: 1,
+                e: "Defesa em profundidade significa implementar múltiplas camadas de segurança. Se uma camada falhar, as outras continuam protegendo."
+            },
+            {
+                q: "Qual é a diferença entre um controle preventivo e um deterrente?",
+                o: ["São a mesma coisa", "Preventivo bloqueia fisicamente, deterrente desencoraja psicologicamente", "Preventivo age depois, deterrente age antes", "Não há diferença prática"],
+                c: 1,
+                e: "Preventivo bloqueia fisicamente (ex: firewall), deterrente desencoraja psicologicamente (ex: placa de 'monitorado')."
+            },
+
+            // Capítulo 2 - Threats & Vulnerabilities (Questões 6-15)
+            {
+                q: "Qual ator de ameaça possui recursos ilimitados e realiza ataques sofisticados como APT?",
+                o: ["Script Kiddie", "Hacktivist", "Nation-state", "Insider Threat"],
+                c: 2,
+                e: "Nation-state (estados-nação) possuem recursos ilimitados e realizam APTs (Advanced Persistent Threats) para espionagem e guerra cibernética."
+            },
+            {
+                q: "Qual é a principal motivação do crime organizado (Organized Crime)?",
+                o: ["Política", "Financeira", "Diversão", "Ideologia"],
+                c: 1,
+                e: "Crime organizado tem motivação financeira, utilizando ransomware, fraudes e roubo de dados para obter lucro."
+            },
+            {
+                q: "O que é phishing?",
+                o: ["Ataque físico à rede", "Email malicioso fingindo ser legítimo", "Varredura de portas", "Ataque de força bruta"],
+                c: 1,
+                e: "Phishing é um golpe onde o atacante envia emails falsos fingindo ser entidade legítima para roubar credenciais ou instalar malware."
+            },
+            {
+                q: "Qual a diferença entre phishing e spear phishing?",
+                o: ["Phishing é mais perigoso", "Spear phishing é direcionado a pessoa/organização específica", "Phishing usa telefone", "São a mesma coisa"],
+                c: 1,
+                e: "Spear phishing é direcionado a uma pessoa ou organização específica, com informações personalizadas. Phishing é enviado em massa."
+            },
+            {
+                q: "O que é ransomware?",
+                o: ["Malware que monitora atividades", "Malware que criptografa dados e exige pagamento", "Malware que se auto-replica", "Malware que esconde presença"],
+                c: 1,
+                e: "Ransomware criptografa os dados da vítima e exige pagamento (resgate) para liberar o acesso. BACKUP é a melhor defesa!"
+            },
+            {
+                q: "Qual é a primeira fase da Cyber Kill Chain?",
+                o: ["Exploitation", "Delivery", "Reconnaissance", "Installation"],
+                c: 2,
+                e: "Reconnaissance (reconhecimento) é a primeira fase, onde o atacante coleta informações sobre o alvo."
+            },
+            {
+                q: "O que é tailgating?",
+                o: ["Seguir pessoa autorizada por porta segura", "Olhar por cima do ombro", "Procurar informações no lixo", "Enviar emails falsos"],
+                c: 0,
+                e: "Tailgating é seguir uma pessoa autorizada para entrar em área restrita, aproveitando a porta aberta."
+            },
+            {
+                q: "Qual malware executa na memória sem gravar em disco?",
+                o: ["Vírus", "Worm", "Trojan", "Fileless Malware"],
+                c: 3,
+                e: "Fileless malware executa diretamente na memória, sem gravar arquivos em disco, dificultando detecção por antivírus tradicionais."
+            },
+            {
+                q: "O que é um rootkit?",
+                o: ["Malware que se replica", "Malware que esconde sua presença no sistema", "Malware que criptografa dados", "Malware que rouba senhas"],
+                c: 1,
+                e: "Rootkit é um malware que se esconde no sistema, muitas vezes em nível de kernel, para evitar detecção e manter acesso privilegiado."
+            },
+            {
+                q: "Qual técnica de engenharia social usa ofertas atraentes como USB infectada?",
+                o: ["Pretexting", "Phishing", "Baiting", "Tailgating"],
+                c: 2,
+                e: "Baiting oferece algo atraente (USB infectada, download gratuito) para que a vítima comprometa a segurança."
+            },
+
+            // Capítulo 3 - Criptografia (Questões 16-25)
+            {
+                q: "Qual tipo de criptografia usa a mesma chave para cifrar e decifrar?",
+                o: ["Assimétrica", "Simétrica", "Hashing", "PKI"],
+                c: 1,
+                e: "Criptografia simétrica usa a mesma chave para criptografar e descriptografar. É rápida, mas o desafio é compartilhar a chave com segurança."
+            },
+            {
+                q: "Qual é o algoritmo simétrico considerado padrão atual?",
+                o: ["DES", "3DES", "AES", "RC4"],
+                c: 2,
+                e: "AES (Advanced Encryption Standard) é o padrão atual de criptografia simétrica, com chaves de 128, 192 ou 256 bits."
+            },
+            {
+                q: "Qual algoritmo assimétrico é mais utilizado atualmente?",
+                o: ["AES", "DES", "RSA", "MD5"],
+                c: 2,
+                e: "RSA é o algoritmo assimétrico mais utilizado para criptografia e assinaturas digitais. Recomenda-se chaves de 2048 bits ou mais."
+            },
+            {
+                q: "O que é hashing?",
+                o: ["Criptografia reversível", "Função one-way que gera hash de tamanho fixo", "Criptografia assimétrica", "Troca de chaves"],
+                c: 1,
+                e: "Hashing é uma função matemática one-way (não reversível) que gera uma saída de tamanho fixo (hash). Usado para verificar integridade."
+            },
+            {
+                q: "Qual algoritmo de hash é considerado obsoleto e vulnerável a colisões?",
+                o: ["SHA-256", "MD5", "SHA-512", "SHA-3"],
+                c: 1,
+                e: "MD5 (128 bits) e SHA-1 são obsoletos e vulneráveis a colisões. Não devem ser usados para segurança. Prefira SHA-2 ou SHA-3."
+            },
+            {
+                q: "O que é salt em hashing de senhas?",
+                o: ["Criptografia adicional", "Valor aleatório único adicionado antes do hash", "Chave secreta", "Algoritmo de hash"],
+                c: 1,
+                e: "Salt é um valor aleatório único adicionado à senha antes do hash. Previne ataques de rainbow table, pois cada senha tem um salt diferente."
+            },
+            {
+                q: "O que é PKI (Public Key Infrastructure)?",
+                o: ["Algoritmo de criptografia", "Infraestrutura de chaves públicas com CAs e certificados", "Tipo de hash", "Firewall"],
+                c: 1,
+                e: "PKI é a infraestrutura de chaves públicas que gerencia certificados digitais através de CAs (Certificate Authorities), CRLs e OCSP."
+            },
+            {
+                q: "Qual protocolo verifica status de certificado em tempo real?",
+                o: ["CRL", "OCSP", "CA", "RA"],
+                c: 1,
+                e: "OCSP (Online Certificate Status Protocol) verifica em tempo real se um certificado foi revogado, substituindo o CRL que é uma lista baixada periodicamente."
+            },
+            {
+                q: "O que é um certificado wildcard?",
+                o: ["Certificado auto-assinado", "Certificado que cobre *.dominio.com", "Certificado de email", "Certificado de code signing"],
+                c: 1,
+                e: "Certificado wildcard cobre um domínio e todos seus subdomínios (ex: *.dominio.com)."
+            },
+            {
+                q: "Qual é a diferença entre TPM e HSM?",
+                o: ["São a mesma coisa", "TPM é chip na placa-mãe, HSM é dispositivo dedicado", "TPM é software, HSM é hardware", "TPM é mais seguro"],
+                c: 1,
+                e: "TPM (Trusted Platform Module) é um chip na placa-mãe. HSM (Hardware Security Module) é um dispositivo dedicado para gerenciar chaves, usado em bancos e CAs."
+            },
+
+            // Capítulo 4 - IAM (Questões 26-35)
+            {
+                q: "O que é autenticação multifator (MFA)?",
+                o: ["Usar senhas complexas", "Combinar dois ou mais fatores DIFERENTES", "Usar biometria", "Usar tokens"],
+                c: 1,
+                e: "MFA combina dois ou mais fatores de categorias DIFERENTES (ex: senha + biometria). Senha + SMS é MFA fraco (ambos 'algo que você tem')."
+            },
+            {
+                q: "No modelo AAA, o que significa autenticação (Authentication)?",
+                o: ["Definir permissões", "Verificar identidade do usuário", "Registrar ações", "Criptografar dados"],
+                c: 1,
+                e: "Autenticação verifica QUEM é o usuário. Autorização define O QUE pode fazer. Auditoria (accounting) registra O QUE fez."
+            },
+            {
+                q: "Qual modelo de controle de acesso é baseado em funções (cargos)?",
+                o: ["DAC", "MAC", "RBAC", "ABAC"],
+                c: 2,
+                e: "RBAC (Role-Based Access Control) baseia permissões em funções/cargos. É o mais comum em empresas (Admin, User, Manager)."
+            },
+            {
+                q: "Qual é o protocolo de autenticação padrão do Active Directory?",
+                o: ["LDAP", "RADIUS", "Kerberos", "TACACS+"],
+                c: 2,
+                e: "Kerberos é o protocolo padrão do Active Directory. Usa tickets em vez de transmitir senhas e requer sincronização de tempo (tolerância de 5 minutos)."
+            },
+            {
+                q: "O que é LDAP?",
+                o: ["Protocolo de autenticação", "Protocolo para acessar diretórios", "Servidor de email", "Firewall"],
+                c: 1,
+                e: "LDAP (Lightweight Directory Access Protocol) é usado para acessar e manter diretórios como Active Directory. Porta 389 (não seguro) e 636 (LDAPS)."
+            },
+            {
+                q: "Qual fator de autenticação é classificado como 'algo que você é'?",
+                o: ["Senha", "Token", "Biometria", "Smart card"],
+                c: 2,
+                e: "Biometria (impressão digital, íris, face) é 'algo que você é' (Tipo 3). Senha é 'algo que você sabe' (Tipo 1). Token é 'algo que você tem' (Tipo 2)."
+            },
+            {
+                q: "O que é FAR (False Acceptance Rate) em biometria?",
+                o: ["Taxa de rejeitar legítimos", "Taxa de aceitar impostores (MAIS GRAVE)", "Ponto onde FAR = FRR", "Velocidade de autenticação"],
+                c: 1,
+                e: "FAR é a taxa de aceitar um impostor como legítimo. É a métrica MAIS GRAVE em sistemas biométricos."
+            },
+            {
+                q: "Qual é a diferença entre RADIUS e TACACS+?",
+                o: ["São iguais", "RADIUS criptografa só senha (UDP), TACACS+ criptografa tudo (TCP)", "TACACS+ é mais antigo", "RADIUS é da Cisco"],
+                c: 1,
+                e: "RADIUS (UDP 1812/1813) criptografa apenas a senha. TACACS+ (TCP 49) criptografa todo o pacote e é proprietário da Cisco."
+            },
+            {
+                q: "O que é Single Sign-On (SSO)?",
+                o: ["Autenticar várias vezes", "Autenticar uma vez e acessar múltiplos sistemas", "Usar MFA", "Gerenciar senhas"],
+                c: 1,
+                e: "SSO permite autenticar-se uma única vez e ganhar acesso a múltiplos sistemas. Vantagem: conveniência. Risco: acesso total se comprometido."
+            },
+            {
+                q: "O que é o princípio do menor privilégio (PoLP)?",
+                o: ["Dar acesso total a todos", "Conceder apenas permissões mínimas necessárias", "Nunca dar acesso", "Usar MFA"],
+                c: 1,
+                e: "Menor privilégio significa conceder a cada usuário apenas as permissões mínimas necessárias para realizar suas funções."
+            },
+
+            // Capítulo 5 - Arquitetura de Redes (Questões 36-45)
+            {
+                q: "O que acontece se o firewall EXTERNO de uma DMZ falhar?",
+                o: ["Tudo comprometido", "Apenas a DMZ é comprometida, a LAN permanece protegida", "Apenas a LAN é comprometida", "Nada acontece"],
+                c: 1,
+                e: "Se o firewall EXTERNO falhar, apenas os servidores na DMZ são comprometidos. A LAN permanece protegida pelo firewall interno."
+            },
+            {
+                q: "Qual é a melhor solução para acesso remoto seguro a recursos privados?",
+                o: ["FTP", "Telnet", "VPN", "HTTP"],
+                c: 2,
+                e: "VPN é a MELHOR solução para acessar recursos privados da internet. O servidor VPN pode ficar na DMZ."
+            },
+            {
+                q: "Qual tipo de firewall rastreia o estado das conexões?",
+                o: ["Stateless", "Stateful", "Packet Filter", "Proxy"],
+                c: 1,
+                e: "Stateful firewall rastreia o estado das conexões TCP em uma state table, confirmando se pacotes pertencem a conexões existentes."
+            },
+            {
+                q: "O que é NAC (Network Access Control)?",
+                o: ["Firewall de rede", "Controla acesso baseado em conformidade do dispositivo", "Roteador", "Switch"],
+                c: 1,
+                e: "NAC autentica usuários/dispositivos E verifica conformidade (antivírus, patches, SO) antes de permitir acesso à rede."
+            },
+            {
+                q: "Qual ataque de switch inunda a tabela CAM fazendo o switch funcionar como hub?",
+                o: ["ARP Spoofing", "MAC Flooding", "VLAN Hopping", "DHCP Spoofing"],
+                c: 1,
+                e: "MAC Flooding inunda a tabela CAM do switch. O switch entra em modo fail open e age como hub, permitindo que o atacante sniffe todo tráfego."
+            },
+            {
+                q: "Qual recurso previne ARP Spoofing?",
+                o: ["Port Security", "DAI (Dynamic ARP Inspection)", "DHCP Snooping", "BPDU Guard"],
+                c: 1,
+                e: "DAI (Dynamic ARP Inspection) valida pacotes ARP contra a tabela do DHCP snooping, prevenindo ARP spoofing."
+            },
+            {
+                q: "O que é um bastion host?",
+                o: ["Servidor interno", "Servidor fortificado exposto à internet", "Firewall", "Roteador"],
+                c: 1,
+                e: "Bastion host é um servidor fortificado exposto diretamente à internet, com hardening contra ataques."
+            },
+            {
+                q: "Qual é a diferença entre split tunnel e full tunnel VPN?",
+                o: ["Split tunnel roteia todo tráfego", "Split tunnel roteia apenas tráfego corporativo via VPN", "Full tunnel é menos seguro", "São iguais"],
+                c: 1,
+                e: "Split tunnel roteia apenas tráfego corporativo via VPN. Full tunnel roteia TODO o tráfego via VPN (mais seguro)."
+            },
+            {
+                q: "O que é WAF (Web Application Firewall)?",
+                o: ["Firewall de rede", "Protege aplicações web contra SQLi, XSS", "Firewall de perímetro", "IDS"],
+                c: 1,
+                e: "WAF protege aplicações web contra SQL Injection, XSS e CSRF, examinando tráfego na camada 7 HTTP."
+            },
+            {
+                q: "O que é 802.1X?",
+                o: ["Padrão Wi-Fi", "Autenticação baseada em porta (EAP + RADIUS)", "Protocolo de roteamento", "Firewall"],
+                c: 1,
+                e: "802.1X é autenticação baseada em porta, usada em Wi-Fi Enterprise. Componentes: Supplicant, Authenticator, Authentication Server (RADIUS)."
+            },
+
+            // Capítulo 6 - Security Assessment (Questões 46-50)
+            {
+                q: "Qual a diferença entre IDS e IPS?",
+                o: ["IDS detecta e bloqueia, IPS só detecta", "IDS detecta e alerta (passivo), IPS detecta e bloqueia (ativo)", "São a mesma coisa", "IDS é hardware, IPS é software"],
+                c: 1,
+                e: "IDS (passivo) detecta e alerta. IPS (ativo) detecta e bloqueia automaticamente em modo inline."
+            },
+            {
+                q: "O que é um falso negativo (false negative) em scanning?",
+                o: ["Alerta incorreto", "Vulnerabilidade real NÃO detectada (MAIS GRAVE)", "Tráfego legítimo bloqueado", "Detecção correta"],
+                c: 1,
+                e: "False negative é quando o scanner deixa de detectar uma vulnerabilidade real. É a situação MAIS GRAVE, pois o sistema fica vulnerável sem alerta."
+            },
+            {
+                q: "Qual ferramenta é usada para análise de memória RAM (memory forensics)?",
+                o: ["FTK Imager", "Volatility", "Autopsy", "dd"],
+                c: 1,
+                e: "Volatility é um framework para análise de memória RAM (memory forensics). Analisa dumps de memória para encontrar processos, conexões e malware."
+            },
+            {
+                q: "O que é um ataque de rainbow table?",
+                o: ["Força bruta", "Tabela pré-computada de hashes para quebrar senhas", "Ataque de dicionário", "Ataque de rede"],
+                c: 1,
+                e: "Rainbow table é uma tabela pré-computada que mapeia hashes a senhas em texto plano. É muito rápida, mas inútil se a senha tiver salt."
+            },
+            {
+                q: "O que é pass-the-hash?",
+                o: ["Quebrar hash de senha", "Usar o hash diretamente para autenticar (sem quebrar)", "Força bruta", "Ataque de rede"],
+                c: 1,
+                e: "Pass-the-hash é uma técnica onde o atacante usa o hash da senha diretamente para autenticar, sem precisar quebrá-lo. Comum em Windows (NTLM)."
+            },
+
+            // Capítulo 7 - Vulnerability Management (Questões 51-55)
+            {
+                q: "O que é CVSS?",
+                o: ["ID único para vulnerabilidades", "Sistema de pontuação para vulnerabilidades (0-10)", "Banco de dados de vulnerabilidades", "Categoria de fraquezas"],
+                c: 1,
+                e: "CVSS (Common Vulnerability Scoring System) é um sistema de pontuação para vulnerabilidades, com score de 0 a 10. Critical (9-10), High (7-8.9)."
+            },
+            {
+                q: "O que é CVE?",
+                o: ["Sistema de pontuação", "ID único para vulnerabilidades (CVE-2024-12345)", "Categoria de fraquezas", "Banco de dados"],
+                c: 1,
+                e: "CVE (Common Vulnerabilities and Exposures) é um identificador único para vulnerabilidades de segurança. Ex: CVE-2024-12345."
+            },
+            {
+                q: "Qual a diferença entre scan credenciado e não-credenciado?",
+                o: ["Credenciado é mais rápido", "Credenciado usa credenciais e é mais profundo", "Não-credenciado é mais seguro", "São iguais"],
+                c: 1,
+                e: "Credenciado: usa credenciais de login, acessa configurações internas, mais profundo, menos falsos negativos. Não-credenciado: sem login, visão de atacante externo."
+            },
+            {
+                q: "O que é SIEM?",
+                o: ["Firewall", "Sistema que coleta e correlaciona logs de segurança", "Antivírus", "Scanner de vulnerabilidades"],
+                c: 1,
+                e: "SIEM (Security Information and Event Management) coleta, agrega e correlaciona logs de múltiplas fontes para detectar ameaças."
+            },
+            {
+                q: "O que é SOAR?",
+                o: ["Sistema de logs", "Orquestração, automação e resposta a incidentes", "Firewall", "Antivírus"],
+                c: 1,
+                e: "SOAR (Security Orchestration, Automation and Response) automatiza resposta a incidentes com playbooks, integrando ferramentas de segurança."
+            },
+
+            // Capítulo 8 - Network & Endpoint (Questões 56-60)
+            {
+                q: "Qual é o padrão Wi-Fi mais seguro atualmente?",
+                o: ["WEP", "WPA", "WPA2", "WPA3"],
+                c: 3,
+                e: "WPA3 é o padrão mais seguro, com SAE (Simultaneous Authentication of Equals) substituindo PSK e Perfect Forward Secrecy."
+            },
+            {
+                q: "O que é um evil twin?",
+                o: ["Dois roteadores iguais", "AP falso com mesmo SSID do legítimo (MITM)", "Ataque de força bruta", "Vulnerabilidade WPA2"],
+                c: 1,
+                e: "Evil twin é um Access Point falso configurado com o mesmo SSID de um AP legítimo para capturar credenciais (ataque MITM)."
+            },
+            {
+                q: "Qual é a diferença entre SAST e DAST?",
+                o: ["SAST analisa código (white box), DAST testa app rodando (black box)", "São a mesma coisa", "SAST é mais rápido", "DAST analisa código"],
+                c: 0,
+                e: "SAST (Static Analysis) analisa código fonte sem executar (white box). DAST (Dynamic Analysis) testa aplicação em execução (black box)."
+            },
+            {
+                q: "O que é code signing?",
+                o: ["Criptografar código", "Assinar código com certificado para garantir autenticidade", "Ofuscar código", "Compilar código"],
+                c: 1,
+                e: "Code signing assina digitalmente o código com um certificado, garantindo autenticidade e integridade. NÃO garante que o código é seguro."
+            },
+            {
+                q: "O que é o atributo HttpOnly em cookies?",
+                o: ["Cookie enviado só via HTTPS", "Previne acesso via JavaScript (XSS)", "Limita envio cross-site", "Expira o cookie"],
+                c: 1,
+                e: "HttpOnly previne que scripts client-side acessem o cookie, protegendo contra ataques de cross-site scripting (XSS)."
+            },
+
+            // Capítulo 9 - Incident Response (Questões 61-63)
+            {
+                q: "Quais são as 6 fases do processo de resposta a incidentes?",
+                o: ["Detecção, Análise, Conteção, Erradicação, Recuperação, Lições", "Preparation, Identification, Containment, Eradication, Recovery, Lessons Learned", "Planejamento, Execução, Controle, Encerramento", "Não há fases definidas"],
+                c: 1,
+                e: "As 6 fases são: Preparation (preparação), Identification (identificação), Containment (contenção), Eradication (erradicação), Recovery (recuperação), Lessons Learned (lições aprendidas)."
+            },
+            {
+                q: "O que é ordem de volatilidade em forense?",
+                o: ["Ordem de importância dos dados", "Coletar do mais volátil para o menos volátil (CPU/RAM → Disco → Backups)", "Ordem de aquisição", "Tempo de retenção"],
+                c: 1,
+                e: "Ordem de volatilidade: coletar primeiro os dados mais voláteis: 1) CPU/RAM, 2) Disco, 3) Logs remotos, 4) Backups."
+            },
+            {
+                q: "O que é chain of custody (cadeia de custódia)?",
+                o: ["Corrente usada para prender equipamentos", "Documentação de quem acessou a evidência, quando e por quê", "Armazenamento seguro", "Backup"],
+                c: 1,
+                e: "Chain of custody documenta quem teve acesso à evidência, quando, onde e por quê. Essencial para admissibilidade em tribunal."
+            },
+
+            // Capítulo 10 - Virtualização e Cloud (Questões 64-66)
+            {
+                q: "Qual é a diferença entre hypervisor Type 1 e Type 2?",
+                o: ["Type 1 é mais lento", "Type 1 roda direto no hardware (bare metal), Type 2 roda sobre SO", "São a mesma coisa", "Type 2 é mais seguro"],
+                c: 1,
+                e: "Type 1 (bare metal): roda diretamente no hardware (ESXi, Hyper-V). Type 2 (hosted): roda sobre um SO (VirtualBox, Workstation)."
+            },
+            {
+                q: "O que é SaaS (Software as a Service)?",
+                o: ["Infraestrutura como serviço", "Software como serviço (ex: Gmail, Office 365)", "Plataforma como serviço", "Banco de dados como serviço"],
+                c: 1,
+                e: "SaaS fornece software pronto para uso. O cliente não gerencia nada, apenas usa. Ex: Gmail, Office 365, Salesforce."
+            },
+            {
+                q: "O que é MDM (Mobile Device Management)?",
+                o: ["Gerenciamento de aplicativos", "Gerenciamento centralizado de dispositivos móveis", "Gerenciamento de senhas", "Firewall móvel"],
+                c: 1,
+                e: "MDM gerencia dispositivos móveis remotamente: políticas, remote wipe, push de apps, configurações de segurança."
+            },
+
+            // Capítulo 11 - Governance (Questão 67)
+            {
+                q: "Qual a diferença entre Policy, Standard e Procedure?",
+                o: ["São a mesma coisa", "Policy (alto nível), Standard (requisitos), Procedure (passo a passo)", "Standard é mais importante", "Procedure é opcional"],
+                c: 1,
+                e: "Policy: documento de alto nível (POR QUE). Standard: requisitos obrigatórios (O QUE). Procedure: instruções passo a passo (COMO)."
+            },
+
+            // Capítulo 12 - Risk Management (Questões 68-69)
+            {
+                q: "O que significa RTO (Recovery Time Objective)?",
+                o: ["Quantidade de dados perdidos", "Tempo máximo que um sistema pode ficar offline", "Frequência de backup", "Tempo entre falhas"],
+                c: 1,
+                e: "RTO é o tempo máximo que um processo pode ficar offline após um desastre. Define a velocidade de recuperação necessária."
+            },
+            {
+                q: "Qual a fórmula da ALE (Annual Loss Expectancy)?",
+                o: ["AV × EF", "SLE × ARO", "SLE + ARO", "AV × ARO"],
+                c: 1,
+                e: "ALE = SLE × ARO (perda anual esperada). SLE = AV × EF (perda por ocorrência)."
+            },
+
+            // Capítulo 13 - Data Protection (Questão 70)
+            {
+                q: "Qual é o prazo de notificação de violação de dados no GDPR?",
+                o: ["24 horas", "72 horas", "7 dias", "30 dias"],
+                c: 1,
+                e: "GDPR exige notificação da violação à autoridade de proteção de dados dentro de 72 horas após tomar conhecimento."
+            }
+        ];
+
+        let answers = {};
+        let checked = false;
+        let filteredQuestions = [...Array(quiz.length).keys()];
+        let currentFilter = 'all';
+
+        function loadQuestions() {
+            const container = document.getElementById('questions');
+            container.innerHTML = '';
+            
+            filteredQuestions.forEach((index, i) => {
+                const q = quiz[index];
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.id = `q-${index}`;
+                div.innerHTML = `<h3>${i + 1}. ${q.q}</h3>`;
+                
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(index, oi);
+                    odiv.id = `q${index}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${index}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
+                div.appendChild(exp);
+                
+                container.appendChild(div);
+            });
+            
+            updateProgress();
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            
+            quiz[qi].o.forEach((_, i) => {
+                const el = document.getElementById(`q${qi}o${i}`);
+                if (el) el.classList.remove('selected');
+            });
+            
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(answers).length;
+            document.getElementById('answered-count').textContent = `✅ ${answered} respondidas`;
+            const progress = (answered / quiz.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+
+        function filterQuestions(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') {
+                filteredQuestions = [...Array(quiz.length).keys()];
+            } else if (type === 'answered') {
+                filteredQuestions = Object.keys(answers).map(Number).sort((a,b) => a - b);
+            } else {
+                filteredQuestions = [...Array(quiz.length).keys()].filter(i => answers[i] === undefined);
+            }
+            
+            loadQuestions();
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            
+            quiz.forEach((q, qi) => {
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (el) {
+                        if (oi === q.c) {
+                            el.classList.add('correct');
+                        } else if (answers[qi] === oi) {
+                            el.classList.add('incorrect');
+                        }
+                    }
+                });
+                
+                const exp = document.getElementById(`exp${qi}`);
+                if (exp) exp.style.display = 'block';
+                
+                if (answers[qi] === q.c) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = 
+                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            filteredQuestions = [...Array(quiz.length).keys()];
+            currentFilter = 'all';
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.filter-btn').classList.add('active');
+            loadQuestions();
+            document.getElementById('results-modal').classList.remove('show');
+        }
+
+        loadQuestions();
+    </script>
+</body>
+</html>

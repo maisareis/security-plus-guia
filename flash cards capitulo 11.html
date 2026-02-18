@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Cap 11 - Security Governance Concepts</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+            color: white;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* FLASHCARDS */
+        .flashcard-area { max-width: 900px; margin: 0 auto; }
+        .card-info {
+            background: rgba(255,255,255,0.25);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .flashcard:hover { transform: scale(1.02); }
+        .side-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #0ba360;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .flashcard-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #1f2937;
+        }
+        .flip-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn-nav {
+            background: white;
+            font-size: 1.5rem;
+            width: 55px;
+            height: 55px;
+        }
+        .btn-master {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        .btn-master.mastered {
+            background: #10b981;
+            color: white;
+        }
+        .btn-shuffle {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        /* QUIZ */
+        .quiz-area { max-width: 1000px; margin: 0 auto; }
+        .quiz-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+        }
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+        .option:hover {
+            background: #d1fae5;
+            border-color: #0ba360;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            border-color: #0ba360;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #d1fae5;
+            border-left: 5px solid #0ba360;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .results-modal.show { display: flex; }
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .filter-btn.active {
+            background: white;
+            color: #0ba360;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Security+ Capítulo 11</h1>
+            <p>Security Governance Concepts - 15 Cards | 8 Questões</p>
+            <div class="stats-bar">
+                <div class="stat-card">📚 15 Flashcards</div>
+                <div class="stat-card">❓ 8 Questões</div>
+                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="flashcard-area">
+                <div class="card-info">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
+                        <div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 15</div>
+                            <div id="mastered-count">0 dominados</div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="side-indicator" id="side-indicator">FRENTE</div>
+                    <div class="flashcard-text" id="card-text"></div>
+                    <div class="flip-hint">👆 Clique para virar</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
+                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab1" class="content">
+            <div class="summary" style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <h1 style="color: #0ba360; margin-bottom: 30px; font-size: 2.5rem; border-bottom: 4px solid #0ba360; padding-bottom: 15px;">📖 Resumo - Capítulo 11</h1>
+                
+                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>Policy (Política):</strong> Alto nível, estratégico ("por que fazer")</li>
+                        <li><strong>Standard (Padrão):</strong> Requisitos obrigatórios ("o que fazer")</li>
+                        <li><strong>Procedure (Procedimento):</strong> Passo a passo ("como fazer")</li>
+                        <li><strong>Guideline (Diretriz):</strong> Recomendações não obrigatórias</li>
+                        <li><strong>Change Management:</strong> Request → Approval → Test → Implement → Document</li>
+                        <li><strong>CAB (Change Advisory Board):</strong> Comitê que aprova mudanças</li>
+                    </ul>
+                </div>
+
+                <h2 style="color: #3cba92; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">1️⃣ Policies, Standards, and Procedures</h2>
+
+                <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Hierarquia de Documentos de Segurança</h3>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px; margin: 30px 0;">
+                    <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; border-left: 5px solid #0ba360;">
+                        <strong style="color: #0ba360; font-size: 1.2rem;">📜 Policy (Política)</strong>
+                        <p>Documento de alto nível, aprovado pela alta gestão. Define objetivos de segurança, responsabilidades e requisitos gerais. Ex: Política de Senhas, Política de Uso Aceitável.</p>
+                        <p><em>Nível: Estratégico (POR QUE fazer)</em></p>
+                    </div>
+                    <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; border-left: 5px solid #0ba360;">
+                        <strong style="color: #0ba360; font-size: 1.2rem;">📏 Standard (Padrão)</strong>
+                        <p>Requisitos específicos e obrigatórios. Ex: "Senhas devem ter 12+ caracteres", "Usar AES-256 para criptografia".</p>
+                        <p><em>Nível: Tático (O QUE fazer)</em></p>
+                    </div>
+                    <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; border-left: 5px solid #0ba360;">
+                        <strong style="color: #0ba360; font-size: 1.2rem;">📋 Procedure (Procedimento)</strong>
+                        <p>Passo a passo detalhado para executar uma tarefa. Ex: "Como provisionar um novo usuário no Active Directory".</p>
+                        <p><em>Nível: Operacional (COMO fazer)</em></p>
+                    </div>
+                    <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; border-left: 5px solid #0ba360;">
+                        <strong style="color: #0ba360; font-size: 1.2rem;">💡 Guideline (Diretriz)</strong>
+                        <p>Recomendações e melhores práticas, não obrigatórias. Ex: "Recomenda-se usar um gerenciador de senhas".</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Tipos Específicos de Políticas</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>AUP (Acceptable Use Policy):</strong> Define uso aceitável de recursos corporativos (email, internet, dispositivos). Tem força legal.</li>
+                    <li><strong>Data Classification Policy:</strong> Define categorias de dados: Public (público), Internal (interno), Confidential (confidencial), Restricted (restrito).</li>
+                </ul>
+
+                <h2 style="color: #3cba92; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ Change Management</h2>
+
+                <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Processo de Mudança</h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0;">
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #0ba360;">
+                        <strong>1. Request</strong><br>Solicitação formal
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #0ba360;">
+                        <strong>2. Approval</strong><br>Análise pelo CAB
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #0ba360;">
+                        <strong>3. Test</strong><br>Testar em ambiente controlado
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #0ba360;">
+                        <strong>4. Implement</strong><br>Implementar em produção
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #0ba360;">
+                        <strong>5. Document</strong><br>Documentar mudança
+                    </div>
+                </div>
+
+                <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">CAB (Change Advisory Board)</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li>Comitê que analisa mudanças propostas</li>
+                    <li>Composto por stakeholders: TI, segurança, áreas de negócio, gestão</li>
+                    <li>Avalia impacto, risco, recursos e janelas de manutenção</li>
+                    <li>Aprova ou rejeita solicitações de mudança</li>
+                </ul>
+
+                <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Tipos de Mudança</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#0ba360; color:white;">Tipo</th><th style="background:#0ba360; color:white;">Descrição</th></tr>
+                    <tr><td><strong>Normal Change</strong></td><td>Mudança planejada, segue processo completo</td></tr>
+                    <tr><td><strong>Emergency Change</strong></td><td>Mudança crítica não planejada (incidente, patch urgente). Processo acelerado, mas ainda documentado.</td></tr>
+                    <tr><td><strong>Standard Change</strong></td><td>Mudança de baixo risco, pré-aprovada (ex: nova VM, backup).</td></tr>
+                </table>
+
+                <div style="background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>⚠️ REGRA DE OURO:</strong> Toda mudança deve ter um plano de rollback (backout plan) e ser testada antes da implementação em produção.
+                </div>
+
+                <h2 style="color: #3cba92; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Automation and Orchestration</h2>
+
+                <div style="display: flex; gap: 20px; margin: 30px 0; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px; background: #dbeafe; padding: 20px; border-radius: 10px;">
+                        <h3 style="color:#3b82f6; margin-top:0;">⚙️ Automation</h3>
+                        <p>Execução automática de tarefas individuais</p>
+                        <ul>
+                            <li>Scripts (Python, PowerShell, Bash)</li>
+                            <li>Ex: provisionamento de usuário, backup</li>
+                            <li>Reduz erros humanos</li>
+                            <li>Consistência</li>
+                        </ul>
+                    </div>
+                    <div style="flex: 1; min-width: 250px; background: #fef3c7; padding: 20px; border-radius: 10px;">
+                        <h3 style="color:#f59e0b; margin-top:0;">🔄 Orchestration</h3>
+                        <p>Coordenação de múltiplas automações em um workflow</p>
+                        <ul>
+                            <li>Integra sistemas diferentes</li>
+                            <li>Ex: deploy completo de servidor</li>
+                            <li>Resposta automatizada a incidentes</li>
+                            <li>SOAR (Security Orchestration, Automation and Response)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Conceitos Relacionados</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#0ba360; color:white;">Conceito</th><th style="background:#0ba360; color:white;">Descrição</th></tr>
+                    <tr><td><strong>CI/CD</strong></td><td>Continuous Integration/Continuous Deployment. Automatiza build, teste e deploy. Essencial em DevOps.</td></tr>
+                    <tr><td><strong>IaC (Infrastructure as Code)</strong></td><td>Gerencia infraestrutura via código (Terraform, CloudFormation). Versionamento, repetibilidade.</td></tr>
+                    <tr><td><strong>SOAR</strong></td><td>Security Orchestration, Automation and Response. Plataforma para automatizar resposta a incidentes com playbooks.</td></tr>
+                    <tr><td><strong>Scripting</strong></td><td>Linguagens: Python (geral), PowerShell (Windows), Bash (Linux). Base da automação.</td></tr>
+                </table>
+
+                <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Benefícios da Automação</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Consistência:</strong> Mesmo processo sempre executado igual</li>
+                    <li><strong>Redução de erros humanos:</strong> Menos falhas manuais</li>
+                    <li><strong>Resposta mais rápida:</strong> Incidentes são tratados em segundos</li>
+                    <li><strong>Escalabilidade:</strong> Gerencia milhares de sistemas com mesmo esforço</li>
+                    <li><strong>Auditabilidade:</strong> Logs e registros automáticos</li>
+                </ul>
+
+                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 30px 0; border-radius: 8px;">
+                    <h3 style="color: #ec4899; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Policy:</strong> Alto nível (POR QUE) | <strong>Standard:</strong> Obrigatório (O QUE) | <strong>Procedure:</strong> Passo a passo (COMO)</li>
+                        <li><strong>Guideline:</strong> Recomendação, não obrigatório</li>
+                        <li><strong>Change Management:</strong> Request → Approval → Test → Implement → Document</li>
+                        <li><strong>CAB:</strong> Comitê que aprova mudanças</li>
+                        <li><strong>Emergency Change:</strong> Crítica, processo acelerado</li>
+                        <li><strong>Automation:</strong> Tarefa única | <strong>Orchestration:</strong> Workflow completo</li>
+                        <li><strong>SOAR:</strong> Orquestração de segurança</li>
+                        <li><strong>IaC:</strong> Infraestrutura como código (Terraform)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab2" class="content">
+            <div class="quiz-area">
+                <div class="quiz-header">
+                    <h2>Quiz - 8 Questões</h2>
+                </div>
+                <div id="questions"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== CARDS TRADUZIDOS PARA PORTUGUÊS ==========
+        const cards = [
+            {f: "O que é uma Security Policy (Política de Segurança)?", b: "Documento de alto nível, aprovado pela alta gestão, que define objetivos de segurança, responsabilidades e requisitos gerais. Ex: Política de Senhas, Política de Uso Aceitável."},
+            {f: "O que é um Security Standard (Padrão de Segurança)?", b: "Documento que especifica requisitos obrigatórios e detalhados. Ex: 'Senhas devem ter 12+ caracteres', 'Usar AES-256 para criptografia'."},
+            {f: "O que é uma Security Procedure (Procedimento de Segurança)?", b: "Instruções passo a passo para executar uma tarefa específica de segurança. Ex: 'Como provisionar um novo usuário', 'Como responder a um incidente'."},
+            {f: "O que é uma Security Guideline (Diretriz de Segurança)?", b: "Recomendações e melhores práticas que não são obrigatórias. Ex: 'Recomenda-se usar um gerenciador de senhas', 'É boa prática ter MFA'."},
+            {f: "O que é uma Acceptable Use Policy (AUP)?", b: "Política que define o uso aceitável dos recursos corporativos: email, internet, dispositivos. Tem força legal e pode incluir consequências disciplinares."},
+            {f: "O que é uma Data Classification Policy?", b: "Política que define categorias de dados baseadas em sensibilidade. Ex: Public (público), Internal (interno), Confidential (confidencial), Restricted (restrito). Cada categoria tem controles específicos."},
+            {f: "O que é Change Management?", b: "Processo formal para gerenciar mudanças em sistemas de produção: Request (solicitação) → Approval (aprovação) → Test (teste) → Implement (implementação) → Document (documentação). Previne interrupções e incidentes."},
+            {f: "O que é CAB (Change Advisory Board)?", b: "Comitê responsável por analisar e aprovar mudanças propostas. Inclui stakeholders de TI, segurança, áreas de negócio e gestão. Avalia impacto, risco e recursos."},
+            {f: "O que é um Change Request (Solicitação de Mudança)?", b: "Documento formal solicitando uma mudança. Deve incluir: o que será feito, por que, impacto esperado, plano de rollback (backout plan) e resultados de testes."},
+            {f: "O que é uma Emergency Change (Mudança de Emergência)?", b: "Mudança crítica não planejada, geralmente em resposta a incidentes ou vulnerabilidades críticas. Processo acelerado, mas ainda requer documentação."},
+            {f: "O que é Automation (Automação) em segurança?", b: "Execução automática de tarefas individuais usando scripts (Python, PowerShell, Bash) ou ferramentas. Ex: provisionamento de usuários, backup, deploy de patches."},
+            {f: "O que é Orchestration (Orquestração)?", b: "Coordenação de múltiplas automações em um workflow completo. Integra sistemas diferentes para executar processos complexos. Ex: deploy completo de servidor, resposta automatizada a incidentes."},
+            {f: "O que é CI/CD?", b: "Continuous Integration/Continuous Deployment. Prática de automatizar build, teste e deploy de software. Essencial em DevOps e DevSecOps."},
+            {f: "O que é Infrastructure as Code (IaC)?", b: "Gerenciamento de infraestrutura através de código (Terraform, CloudFormation). Permite versionamento, repetibilidade e consistência."},
+            {f: "O que é SOAR (Security Orchestration, Automation and Response)?", b: "Plataforma que integra ferramentas de segurança e automatiza resposta a incidentes usando playbooks. Combina orquestração, automação e gerenciamento de casos."}
+        ];
+
+        const quiz = [
+            {q: "Documento de segurança de alto nível, aprovado pela diretoria:", o: ["Procedure", "Standard", "Policy", "Guideline"], c: 2},
+            {q: "Passo a passo detalhado para executar uma tarefa:", o: ["Policy", "Standard", "Guideline", "Procedure"], c: 3},
+            {q: "Processo formal para mudanças em produção:", o: ["Risk Management", "Change Management", "Incident Response", "Vendor Management"], c: 1},
+            {q: "Comitê que analisa e aprova mudanças propostas:", o: ["SOC", "CAB", "NOC", "CISO"], c: 1},
+            {q: "Mudança crítica não planejada (ex: patch urgente):", o: ["Standard Change", "Normal Change", "Emergency Change", "Routine Change"], c: 2},
+            {q: "Execução automática de tarefas individuais (ex: script):", o: ["Orchestration", "Automation", "SOAR", "Integration"], c: 1},
+            {q: "Coordenação de múltiplas automações em workflow completo:", o: ["Automation", "Orchestration", "Scripting", "CI/CD"], c: 1},
+            {q: "Gerenciamento de infraestrutura através de código (Terraform):", o: ["SOAR", "CI/CD", "IaC", "DevOps"], c: 2}
+        ];
+
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
+
+        // ========== LOCALSTORAGE ==========
+        // Carregar progresso salvo
+        function loadProgress() {
+            const saved = localStorage.getItem('security_plus_cap11_mastered');
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
+        }
+
+        // Salvar progresso
+        function saveProgress() {
+            localStorage.setItem('security_plus_cap11_mastered', JSON.stringify([...mastered]));
+        }
+
+        // Chamar loadProgress assim que o script carregar
+        loadProgress();
+
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+        }
+
+        function updateCard() {
+            if (filteredCards.length === 0) {
+                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                return;
+            }
+            const cardIndex = filteredCards[currentCard];
+            const card = cards[cardIndex];
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            const btn = document.getElementById('master-btn');
+            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+            
+            const progress = (mastered.size / cards.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
+        }
+
+        function flipCard() {
+            flipped = !flipped;
+            updateCard();
+        }
+
+        function nextCard() {
+            currentCard = (currentCard + 1) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function prevCard() {
+            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
+
+        function toggleMaster() {
+            const cardIndex = filteredCards[currentCard];
+            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
+            else mastered.add(cardIndex);
+            
+            // ========== SALVAR PROGRESSO ==========
+            saveProgress();
+            
+            updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = filteredCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+            }
+            currentCard = 0;
+            flipped = false;
+            updateCard();
+        }
+
+        function filterCards(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') {
+                filteredCards = [...Array(cards.length).keys()];
+            } else if (type === 'mastered') {
+                filteredCards = Array.from(mastered);
+            } else {
+                filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            }
+            
+            currentCard = 0;
+            flipped = false;
+            updateCard();
+        }
+
+        function loadQuiz() {
+            const container = document.getElementById('questions');
+            quiz.forEach((q, qi) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(qi, oi);
+                    odiv.id = `q${qi}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${qi}`;
+                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                div.appendChild(exp);
+                container.appendChild(div);
+            });
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            quiz[qi].o.forEach((_, i) => {
+                const el = document.getElementById(`q${qi}o${i}`);
+                el.classList.remove('selected');
+            });
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            quiz.forEach((q, qi) => {
+                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
+                });
+                document.getElementById(`exp${qi}`).style.display = 'block';
+                if (correctAnswer.includes(answers[qi])) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('results-modal').classList.remove('show');
+            loadQuiz();
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>

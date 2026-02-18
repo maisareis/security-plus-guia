@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Domínio 3 - Implementação de Segurança</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .flashcard-area { max-width: 900px; margin: 0 auto; }
+        .card-info {
+            background: rgba(255,255,255,0.25);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .flashcard:hover { transform: scale(1.02); }
+        .side-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .flashcard-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #1f2937;
+        }
+        .flip-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn-nav {
+            background: white;
+            font-size: 1.5rem;
+            width: 55px;
+            height: 55px;
+        }
+        .btn-master {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        .btn-master.mastered {
+            background: #10b981;
+            color: white;
+        }
+        .btn-shuffle {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .summary {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .summary h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 15px;
+        }
+        .summary h2 {
+            color: #764ba2;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        .summary h3 {
+            color: #667eea;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .summary ul, .summary ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .crypto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .crypto-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .crypto-card strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .auth-factors {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .factor-card {
+            flex: 1;
+            min-width: 150px;
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 5px solid #667eea;
+        }
+        .factor-card strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .model-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .model-card strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .pki-chain {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin: 30px 0;
+            align-items: center;
+        }
+        .chain-level {
+            padding: 15px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            width: 80%;
+            text-align: center;
+        }
+        .chain-level.root { background: #fecaca; border: 2px solid #ef4444; }
+        .chain-level.intermediate { background: #fed7aa; border: 2px solid #f97316; }
+        .chain-level.leaf { background: #d1fae5; border: 2px solid #10b981; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ Domínio 3</h1>
+            <p>Implementação de Segurança</p>
+            <div class="stats-bar">
+                <div class="stat-card">📚 85 Flashcards</div>
+                <div class="stat-card">❓ 40 Questões</div>
+                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="flashcard-area">
+                <div class="card-info">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
+                        <div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 85</div>
+                            <div id="mastered-count">0 dominados</div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="side-indicator" id="side-indicator">FRENTE</div>
+                    <div class="flashcard-text" id="card-text"></div>
+                    <div class="flip-hint">👆 Clique para virar</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
+                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab1" class="content">
+            <div class="summary">
+                <h1>📖 Resumo - Domínio 3: Implementação de Segurança</h1>
+                
+                <div class="info-box">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Criptografia Simétrica (AES):</strong> Mesma chave, rápida</li>
+                        <li><strong>Criptografia Assimétrica (RSA/ECC):</strong> Par de chaves (pública/privada)</li>
+                        <li><strong>Hashing:</strong> MD5/SHA-1 obsoletos, SHA-2/3 atuais. Salt previne rainbow tables</li>
+                        <li><strong>PKI:</strong> CA emite certificados, CRL/OCSP para revogação</li>
+                        <li><strong>MFA:</strong> Algo que você sabe + tem + é</li>
+                        <li><strong>Kerberos:</strong> Protocolo do AD, usa tickets</li>
+                    </ul>
+                </div>
+
+                <h2>1️⃣ Criptografia Simétrica vs Assimétrica</h2>
+
+                <div class="crypto-grid">
+                    <div class="crypto-card">
+                        <strong>🔑 Simétrica</strong>
+                        <ul>
+                            <li>Mesma chave para cifrar/decifrar</li>
+                            <li>Rápida - ideal para grandes volumes</li>
+                            <li>Problema: compartilhamento da chave</li>
+                            <li><strong>AES</strong> (128/192/256 bits) - padrão atual</li>
+                            <li>DES (56 bits) - obsoleto</li>
+                            <li>3DES - sendo substituído</li>
+                            <li>Blowfish, Twofish</li>
+                        </ul>
+                    </div>
+                    <div class="crypto-card">
+                        <strong>🔓 Assimétrica</strong>
+                        <ul>
+                            <li>Par de chaves: pública + privada</li>
+                            <li>Lenta - ineficiente para grandes dados</li>
+                            <li>Resolve compartilhamento de chaves</li>
+                            <li><strong>RSA</strong> (2048+ bits) - mais usado</li>
+                            <li><strong>ECC</strong> - chaves menores, mesma segurança</li>
+                            <li>Diffie-Hellman - troca de chaves</li>
+                            <li>DSA - apenas assinaturas</li>
+                        </ul>
+                    </div>
+                    <div class="crypto-card">
+                        <strong>🔒 Hashing</strong>
+                        <ul>
+                            <li>One-way: não reversível</li>
+                            <li>Tamanho fixo de saída (digest)</li>
+                            <li>Integridade: verifica alterações</li>
+                            <li><strong>MD5</strong> (128 bits) - obsoleto</li>
+                            <li><strong>SHA-1</strong> (160 bits) - obsoleto</li>
+                            <li><strong>SHA-2</strong> (256/512) - padrão atual</li>
+                            <li><strong>HMAC</strong> - hash com chave</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="golden-rule">
+                    <strong>⚠️ SEGURANÇA DE CHAVES:</strong>
+                    <ul>
+                        <li>AES-128: keyspace 2^128</li>
+                        <li>AES-256: NÃO é 2x maior, é <strong>trilhões de vezes maior</strong></li>
+                        <li>RSA: mínimo 2048 bits recomendado</li>
+                        <li>ECC: 256 bits = segurança RSA 3072 bits</li>
+                    </ul>
+                </div>
+
+                <h2>2️⃣ Modos de Operação de Block Cipher</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#667eea; color:white;">Modo</th><th style="background:#667eea; color:white;">Descrição</th></tr>
+                    <tr><td><strong>ECB</strong></td><td>Mais simples, blocos iguais → ciphertext igual. <span style="color:#ef4444;">INSEGURO!</span></td></tr>
+                    <tr><td><strong>CBC</strong></td><td>Usa IV, blocos encadeados. Mais seguro que ECB.</td></tr>
+                    <tr><td><strong>CFB</strong></td><td>Transforma block cipher em stream cipher. Usa IV.</td></tr>
+                    <tr><td><strong>CTR</strong></td><td>Usa nonce + contador, paralelizável.</td></tr>
+                    <tr><td><strong>GCM</strong></td><td>Criptografia + autenticação (MAC). Usado em TLS 1.3.</td></tr>
+                </table>
+
+                <h2>3️⃣ Hashing e Aplicações</h2>
+
+                <h3>Características do Hash</h3>
+                <ul>
+                    <li><strong>Determinístico:</strong> Mesmo input = mesmo hash</li>
+                    <li><strong>Efeito avalanche:</strong> Pequena mudança = hash completamente diferente</li>
+                    <li><strong>Resistente a colisões:</strong> Difícil encontrar dois inputs com mesmo hash</li>
+                </ul>
+
+                <h3>Usos do Hash</h3>
+                <ul>
+                    <li><strong>Integridade de arquivos:</strong> Verificar se arquivo foi alterado</li>
+                    <li><strong>Armazenamento de senhas:</strong> Com salt (nunca em texto claro!)</li>
+                    <li><strong>Assinaturas digitais:</strong> Hash é assinado, não o documento inteiro</li>
+                </ul>
+
+                <div class="tip-box">
+                    <strong>🧂 SALT E KEY STRETCHING:</strong>
+                    <ul>
+                        <li><strong>Salt:</strong> Valor aleatório adicionado à senha antes do hash. <strong>PREVINE RAINBOW TABLES!</strong></li>
+                        <li><strong>Key Stretching:</strong> Múltiplas rodadas de hashing (PBKDF2, bcrypt, Argon2) - dificulta brute force</li>
+                    </ul>
+                </div>
+
+                <h2>4️⃣ PKI (Public Key Infrastructure)</h2>
+
+                <h3>Cadeia de Confiança</h3>
+                <div class="pki-chain">
+                    <div class="chain-level root"><strong>🔒 Root CA</strong> (auto-assinado)</div>
+                    <div>⬇️ assina</div>
+                    <div class="chain-level intermediate"><strong>🔐 Intermediate CA</strong></div>
+                    <div>⬇️ assina</div>
+                    <div class="chain-level leaf"><strong>📜 Certificate (Leaf)</strong></div>
+                </div>
+
+                <h3>Componentes da PKI</h3>
+                <ul>
+                    <li><strong>CA (Certificate Authority):</strong> Emite certificados (Let's Encrypt, DigiCert)</li>
+                    <li><strong>RA (Registration Authority):</strong> Verifica identidade antes da emissão</li>
+                    <li><strong>Certificado Digital:</strong> Liga chave pública a uma identidade (padrão X.509)</li>
+                    <li><strong>CRL (Certificate Revocation List):</strong> Lista de certificados revogados</li>
+                    <li><strong>OCSP (Online Certificate Status Protocol):</strong> Verifica status em tempo real</li>
+                </ul>
+
+                <h3>Tipos de Certificados</h3>
+                <ul>
+                    <li><strong>Wildcard:</strong> *.dominio.com - cobre subdomínios</li>
+                    <li><strong>SAN (Subject Alternative Name):</strong> Múltiplos domínios no mesmo certificado</li>
+                    <li><strong>Code Signing:</strong> Assina software, prova autenticidade</li>
+                    <li><strong>Self-Signed:</strong> Não emitido por CA confiável</li>
+                </ul>
+
+                <h2>5️⃣ Cryptoprocessors</h2>
+
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#667eea; color:white;"></th><th style="background:#667eea; color:white;"><strong>TPM</strong></th><th style="background:#667eea; color:white;"><strong>HSM</strong></th></tr>
+                    <tr><td><strong>O que é</strong></td><td>Chip na placa-mãe</td><td>Dispositivo dedicado (rack, PCIe)</td></tr>
+                    <tr><td><strong>Funções</strong></td><td>Gera hash de boot, armazena chaves (BitLocker)</td><td>Gera/armazena chaves, assinaturas digitais</td></tr>
+                    <tr><td><strong>Uso</strong></td><td>Computadores pessoais</td><td>Bancos, CAs, grandes empresas</td></tr>
+                </table>
+
+                <h2>6️⃣ IAM - Identity & Access Management</h2>
+
+                <h3>Princípios Fundamentais</h3>
+                <ul>
+                    <li><strong>Menor Privilégio (PoLP):</strong> Conceder apenas as permissões mínimas necessárias</li>
+                    <li><strong>Need to Know:</strong> Acesso apenas a informações estritamente necessárias</li>
+                    <li><strong>Segregação de Funções (SoD):</strong> Dividir tarefas críticas entre múltiplas pessoas</li>
+                </ul>
+
+                <h3>Modelos de Controle de Acesso</h3>
+                <div class="model-grid">
+                    <div class="model-card"><strong>DAC</strong><p>Proprietário do recurso define permissões. Ex: NTFS.</p></div>
+                    <div class="model-card"><strong>MAC</strong><p>Sistema define por rótulos/clearance. Ex: SELinux.</p></div>
+                    <div class="model-card"><strong>RBAC</strong><p>Permissões por função/cargo. Mais comum.</p></div>
+                    <div class="model-card"><strong>ABAC</strong><p>Atributos (tempo, local, dispositivo). Mais granular.</p></div>
+                </div>
+
+                <h3>Fatores de Autenticação (MFA)</h3>
+                <div class="auth-factors">
+                    <div class="factor-card"><strong>Tipo 1</strong><p>Algo que você <strong>SABE</strong><br>Senha, PIN</p></div>
+                    <div class="factor-card"><strong>Tipo 2</strong><p>Algo que você <strong>TEM</strong><br>Token, smart card</p></div>
+                    <div class="factor-card"><strong>Tipo 3</strong><p>Algo que você <strong>É</strong><br>Biometria</p></div>
+                    <div class="factor-card"><strong>Tipo 4</strong><p>Algum lugar que você <strong>ESTÁ</strong><br>Geolocalização</p></div>
+                </div>
+
+                <h3>Biometria - Métricas</h3>
+                <ul>
+                    <li><strong>FAR (False Acceptance Rate):</strong> Taxa de aceitar impostores - <span style="color:#ef4444;">MAIS GRAVE!</span></li>
+                    <li><strong>FRR (False Rejection Rate):</strong> Taxa de rejeitar legítimos</li>
+                    <li><strong>CER (Crossover Error Rate):</strong> Ponto onde FAR = FRR. Quanto menor, melhor</li>
+                </ul>
+
+                <h2>7️⃣ Kerberos</h2>
+
+                <h3>Componentes</h3>
+                <ul>
+                    <li><strong>KDC (Key Distribution Center):</strong> Emite tickets</li>
+                    <li><strong>TGT (Ticket Granting Ticket):</strong> Ticket inicial após autenticação</li>
+                    <li><strong>Service Ticket:</strong> Acesso a recurso específico</li>
+                </ul>
+
+                <h3>Fluxo Kerberos</h3>
+                <ol>
+                    <li>Usuário solicita TGT ao AS (usa hash da senha)</li>
+                    <li>AS valida e retorna TGT + session key</li>
+                    <li>Usuário solicita Service Ticket ao TGS (apresenta TGT)</li>
+                    <li>TGS retorna Service Ticket</li>
+                    <li>Usuário apresenta Service Ticket ao servidor</li>
+                    <li>Acesso concedido</li>
+                </ol>
+
+                <div class="info-box">
+                    <strong>🔑 PONTOS CRÍTICOS DO KERBEROS:</strong>
+                    <ul>
+                        <li>Senha <strong>NÃO é transmitida</strong> pela rede</li>
+                        <li>Tickets têm timestamp e validade (tolerância de 5 min)</li>
+                    </ul>
+                </div>
+
+                <h2>8️⃣ Automação e Implementação</h2>
+
+                <h3>CI/CD e Automação</h3>
+                <ul>
+                    <li><strong>CI/CD:</strong> Continuous Integration/Continuous Deployment</li>
+                    <li><strong>Infrastructure as Code (IaC):</strong> Terraform, CloudFormation</li>
+                    <li><strong>SOAR:</strong> Security Orchestration, Automation and Response</li>
+                    <li><strong>Scripting:</strong> Python, PowerShell, Bash</li>
+                </ul>
+
+                <div class="golden-rule">
+                    <strong>🎯 DICAS FINAIS PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>AES</strong> é o padrão atual de criptografia simétrica</li>
+                        <li><strong>RSA 2048+</strong> ou <strong>ECC</strong> para assimétrica</li>
+                        <li><strong>MD5 e SHA-1</strong> são obsoletos - NÃO USAR!</li>
+                        <li><strong>Salt</strong> previne rainbow tables</li>
+                        <li><strong>TPM</strong> é chip na placa-mãe, <strong>HSM</strong> é dispositivo dedicado</li>
+                        <li><strong>CRL</strong> vs <strong>OCSP</strong>: OCSP é em tempo real</li>
+                        <li><strong>Kerberos:</strong> tickets, NÃO transmite senha</li>
+                        <li><strong>FAR</strong> (aceitar impostor) é MAIS GRAVE que FRR</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab2" class="content">
+            <div class="quiz-area" style="max-width: 1000px; margin:0 auto;">
+                <div class="quiz-header" style="text-align:center; color:white; margin-bottom:35px;">
+                    <h2>Quiz - 40 Questões</h2>
+                </div>
+                <div id="questions"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; padding:15px 40px;">Ver Resultados</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-modal" id="results-modal" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:1000;">
+        <div class="results-content" style="background:white; padding:50px; border-radius:25px; max-width:500px; text-align:center;">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle" style="width:180px; height:180px; border-radius:50%; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:bold; margin:30px auto;">0%</div>
+            <p id="score-text" style="font-size:1.2rem; margin-bottom:20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; padding:15px 40px;">Refazer Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const cards = [
+            // Criptografia Simétrica (1-10)
+            {f: "O que é criptografia simétrica?", b: "Utiliza a mesma chave para criptografar e descriptografar. É rápida e adequada para grandes volumes. Exemplos: AES, DES, 3DES."},
+            {f: "O que é AES (Advanced Encryption Standard)?", b: "Padrão de criptografia simétrica atual. Suporta chaves de 128, 192 e 256 bits. É rápido, seguro e amplamente utilizado."},
+            {f: "O que é DES (Data Encryption Standard)?", b: "Algoritmo simétrico antigo com chave de 56 bits. Hoje é considerado obsoleto e vulnerável a ataques de força bruta."},
+            {f: "O que é 3DES (Triple DES)?", b: "Versão melhorada do DES que aplica o algoritmo três vezes. Mais seguro que o DES original, mas está sendo substituído pelo AES."},
+            
+            // Criptografia Assimétrica (11-18)
+            {f: "O que é criptografia assimétrica?", b: "Utiliza um par de chaves: uma pública (compartilhável) e uma privada (secreta). É mais lenta que a simétrica. Exemplos: RSA, ECC."},
+            {f: "O que é RSA?", b: "Algoritmo assimétrico mais utilizado para criptografia e assinaturas digitais. Recomenda-se chaves de 2048 bits ou mais."},
+            {f: "O que é ECC (Elliptic Curve Cryptography)?", b: "Criptografia assimétrica baseada em curvas elípticas. Oferece o mesmo nível de segurança que o RSA com chaves muito menores."},
+            {f: "O que é Diffie-Hellman?", b: "Algoritmo de troca de chaves que permite que duas partes estabeleçam uma chave compartilhada sem transmiti-la diretamente."},
+            
+            // Hashing (19-25)
+            {f: "O que é hashing?", b: "Função matemática one-way (não reversível) que gera uma saída de tamanho fixo (hash). Usada para verificar integridade."},
+            {f: "O que é MD5?", b: "Algoritmo de hash que produz saída de 128 bits. Está obsoleto e vulnerável a colisões, portanto não deve ser usado para segurança."},
+            {f: "O que é SHA-1?", b: "Algoritmo de hash que produz saída de 160 bits. Está obsoleto e vulnerável a colisões. Deve ser substituído por SHA-2."},
+            {f: "O que é SHA-256?", b: "Algoritmo da família SHA-2 que produz hash de 256 bits. É o padrão atual e seguro, usado em SSL/TLS e Bitcoin."},
+            
+            // Salt e Key Stretching (26-30)
+            {f: "O que é salt em hashing de senhas?", b: "Valor aleatório adicionado à senha antes do hash para prevenir ataques de rainbow table. Deve ser único para cada senha."},
+            {f: "O que é um ataque de rainbow table?", b: "Técnica que usa tabelas pré-computadas de hashes para quebrar senhas sem salt. A contramedida é usar salt."},
+            {f: "O que é key stretching?", b: "Técnica que aumenta o tempo necessário para derivar um hash, aplicando múltiplas iterações. Ex: PBKDF2, bcrypt, Argon2."},
+            {f: "O que é PBKDF2?", b: "Password-Based Key Derivation Function 2. Aplica uma função hash milhares de vezes (iterações) para derivar uma chave."},
+            
+            // PKI (31-40)
+            {f: "O que é PKI (Public Key Infrastructure)?", b: "Infraestrutura de chaves públicas que gerencia certificados digitais através de CAs, CRLs e OCSP."},
+            {f: "O que é uma CA (Certificate Authority)?", b: "Autoridade Certificadora: entidade que emite e gerencia certificados digitais. Exemplos: Let's Encrypt, DigiCert."},
+            {f: "O que é um certificado digital?", b: "Documento eletrônico que liga uma chave pública a uma identidade, seguindo o padrão X.509."},
+            {f: "O que é CRL (Certificate Revocation List)?", b: "Lista de certificados revogados publicada periodicamente por uma CA."},
+            {f: "O que é OCSP (Online Certificate Status Protocol)?", b: "Protocolo que permite verificar em tempo real se um certificado foi revogado."},
+            {f: "O que é um certificado wildcard?", b: "Certificado que cobre um domínio e todos seus subdomínios (ex: *.dominio.com)."},
+            {f: "O que é um certificado SAN (Subject Alternative Name)?", b: "Certificado que permite especificar múltiplos domínios diferentes."},
+            
+            // Cryptoprocessors (41-45)
+            {f: "O que é TPM (Trusted Platform Module)?", b: "Chip de segurança presente na placa-mãe que armazena chaves criptográficas. Usado pelo BitLocker."},
+            {f: "O que é HSM (Hardware Security Module)?", b: "Dispositivo físico dedicado a gerenciar e proteger chaves criptográficas. Usado em bancos e CAs."},
+            
+            // IAM - Modelos de Acesso (46-55)
+            {f: "O que é DAC (Discretionary Access Control)?", b: "Modelo onde o proprietário do recurso define as permissões. Ex: NTFS."},
+            {f: "O que é MAC (Mandatory Access Control)?", b: "Modelo onde o sistema define permissões através de rótulos. Ex: SELinux."},
+            {f: "O que é RBAC (Role-Based Access Control)?", b: "Modelo onde as permissões são baseadas em funções ou cargos."},
+            {f: "O que é ABAC (Attribute-Based Access Control)?", b: "Modelo onde políticas são baseadas em atributos como horário e localização."},
+            {f: "O que é princípio do menor privilégio (Least Privilege)?", b: "Conceder apenas as permissões mínimas necessárias para realizar as tarefas."},
+            {f: "O que é segregação de funções (Separation of Duties)?", b: "Dividir tarefas críticas entre múltiplas pessoas para prevenir fraudes."},
+            
+            // Fatores de Autenticação (56-65)
+            {f: "O que é autenticação por algo que você sabe (Tipo 1)?", b: "Senha, PIN, resposta a pergunta secreta."},
+            {f: "O que é autenticação por algo que você tem (Tipo 2)?", b: "Smart card, token, celular."},
+            {f: "O que é autenticação por algo que você é (Tipo 3)?", b: "Biometria: impressão digital, íris, face."},
+            {f: "O que é MFA (Multi-Factor Authentication)?", b: "Combina dois ou mais fatores de categorias DIFERENTES. Ex: senha + biometria."},
+            {f: "O que é TOTP (Time-based One-Time Password)?", b: "Código temporário baseado em tempo. Ex: Google Authenticator."},
+            {f: "O que é FAR (False Acceptance Rate)?", b: "Taxa de aceitar um impostor como legítimo. É a métrica mais GRAVE."},
+            {f: "O que é FRR (False Rejection Rate)?", b: "Taxa de rejeitar um usuário legítimo."},
+            {f: "O que é CER (Crossover Error Rate)?", b: "Ponto onde FAR e FRR se igualam. Quanto menor, melhor o sistema."},
+            
+            // Kerberos (66-72)
+            {f: "O que é Kerberos?", b: "Protocolo de autenticação usado pelo Active Directory. Utiliza tickets em vez de transmitir senhas."},
+            {f: "O que é KDC (Key Distribution Center)?", b: "Componente central que emite tickets no Kerberos."},
+            {f: "O que é TGT (Ticket Granting Ticket)?", b: "Ticket inicial obtido após a autenticação do usuário no Kerberos."},
+            {f: "O que é Service Ticket no Kerberos?", b: "Ticket para acessar um serviço específico."},
+            
+            // Automação (73-80)
+            {f: "O que é CI/CD?", b: "Continuous Integration/Continuous Delivery. Commits frequentes, testes automatizados, deploy automatizado."},
+            {f: "O que é Infrastructure as Code (IaC)?", b: "Gerenciar infraestrutura através de código (Terraform, CloudFormation). Version control, reprodutível."},
+            {f: "O que é SOAR?", b: "Security Orchestration, Automation and Response. Automatiza resposta a incidentes com playbooks."},
+            
+            // SSL/TLS e Protocolos (81-85)
+            {f: "O que é TLS 1.3?", b: "Versão mais recente do TLS. Mais rápido (1-RTT), remove ciphers fracos, forward secrecy obrigatório."},
+            {f: "O que é HTTPS?", b: "HTTP + TLS. Porta 443. Criptografa comunicação web."},
+            {f: "O que é SFTP?", b: "FTP sobre SSH. Mais seguro que FTPS."}
+        ];
+
+        const quiz = [
+            // Criptografia
+            {q: "Qual tipo de criptografia usa a mesma chave para cifrar e decifrar?", o: ["Assimétrica", "Simétrica", "Hash", "PKI"], c: 1},
+            {q: "Qual é o algoritmo simétrico considerado padrão atual?", o: ["DES", "3DES", "AES", "RC4"], c: 2},
+            {q: "Qual algoritmo assimétrico é mais utilizado?", o: ["AES", "DES", "RSA", "MD5"], c: 2},
+            {q: "Qual técnica criptográfica é uma função one-way (não reversível)?", o: ["Simétrica", "Assimétrica", "Hash", "Criptografia"], c: 2},
+            {q: "Algoritmo de hash obsoleto de 128 bits:", o: ["SHA-256", "MD5", "SHA-512", "SHA-3"], c: 1},
+            
+            // Salt e Rainbow Tables
+            {q: "O que é adicionado à senha antes do hash para prevenir rainbow tables?", o: ["Criptografia", "IV", "Salt", "Nonce"], c: 2},
+            {q: "Técnica que aplica múltiplas iterações de hash:", o: ["Salt", "Key Stretching", "Encryption", "Hashing"], c: 1},
+            
+            // PKI
+            {q: "Entidade que emite certificados digitais:", o: ["RA", "CRL", "OCSP", "CA"], c: 3},
+            {q: "Protocolo que verifica status de certificado em tempo real:", o: ["CRL", "OCSP", "CA", "RA"], c: 1},
+            {q: "Certificado que cobre *.dominio.com:", o: ["Root", "Self-signed", "Wildcard", "SAN"], c: 2},
+            
+            // Cryptoprocessors
+            {q: "Chip na placa-mãe que armazena chaves:", o: ["HSM", "TPM", "Smart Card", "USB Token"], c: 1},
+            
+            // IAM
+            {q: "Modelo onde proprietário do recurso define permissões:", o: ["MAC", "DAC", "RBAC", "ABAC"], c: 1},
+            {q: "Senha é fator tipo:", o: ["Algo que você tem", "Algo que você sabe", "Algo que você é", "Algo que você faz"], c: 1},
+            {q: "Taxa de aceitar impostores em biometria (MAIS GRAVE):", o: ["FRR", "FAR", "CER", "FER"], c: 1},
+            
+            // Kerberos
+            {q: "Protocolo de autenticação do Active Directory:", o: ["LDAP", "RADIUS", "Kerberos", "TACACS+"], c: 2},
+            {q: "Ticket inicial no Kerberos:", o: ["Service Ticket", "TGT", "KDC", "Session Key"], c: 1},
+            
+            // Automação
+            {q: "Gerenciamento de infraestrutura via código:", o: ["SOAR", "CI/CD", "IaC", "DevOps"], c: 2},
+            {q: "Plataforma que automatiza resposta a incidentes:", o: ["SIEM", "SOAR", "DLP", "IDS"], c: 1}
+        ];
+
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
+
+        function loadProgress() {
+            const saved = localStorage.getItem('dominio3_mastered');
+            if (saved) mastered = new Set(JSON.parse(saved));
+        }
+        function saveProgress() {
+            localStorage.setItem('dominio3_mastered', JSON.stringify([...mastered]));
+        }
+        loadProgress();
+
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
+            document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+        }
+
+        function updateCard() {
+            if (filteredCards.length === 0) {
+                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                return;
+            }
+            const cardIndex = filteredCards[currentCard];
+            const card = cards[cardIndex];
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            const btn = document.getElementById('master-btn');
+            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+            
+            const progress = (mastered.size / cards.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
+        }
+
+        function flipCard() { flipped = !flipped; updateCard(); }
+        function nextCard() { currentCard = (currentCard + 1) % filteredCards.length; flipped = false; updateCard(); }
+        function prevCard() { currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length; flipped = false; updateCard(); }
+        
+        function toggleMaster() {
+            const cardIndex = filteredCards[currentCard];
+            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
+            else mastered.add(cardIndex);
+            saveProgress();
+            updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = filteredCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+            }
+            currentCard = 0; flipped = false; updateCard();
+        }
+
+        function filterCards(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') filteredCards = [...Array(cards.length).keys()];
+            else if (type === 'mastered') filteredCards = Array.from(mastered);
+            else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            
+            currentCard = 0; flipped = false; updateCard();
+        }
+
+        function loadQuiz() {
+            const container = document.getElementById('questions');
+            quiz.forEach((q, qi) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(qi, oi);
+                    odiv.id = `q${qi}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${qi}`;
+                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                div.appendChild(exp);
+                container.appendChild(div);
+            });
+        }
+
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            quiz[qi].o.forEach((_, i) => document.getElementById(`q${qi}o${i}`).classList.remove('selected'));
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+        }
+
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            quiz.forEach((q, qi) => {
+                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (correctAnswer.includes(oi)) el.classList.add('correct');
+                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                });
+                document.getElementById(`exp${qi}`).style.display = 'block';
+                if (correctAnswer.includes(answers[qi])) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').style.display = 'flex';
+        }
+
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('results-modal').style.display = 'none';
+            loadQuiz();
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>

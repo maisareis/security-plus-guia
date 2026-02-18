@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Cap 4 - Identity & Access Management (IAM)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.5);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.6);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: #333;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .summary {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .summary h1 {
+            color: #5dade2;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            border-bottom: 4px solid #5dade2;
+            padding-bottom: 15px;
+        }
+        .summary h2 {
+            color: #5dade2;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        .summary h3 {
+            color: #a8edea;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        .summary ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        .summary li {
+            margin-bottom: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #5dade2;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .info-box {
+            background: #e6f7ff;
+            border-left: 5px solid #5dade2;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box strong {
+            color: #5dade2;
+            font-size: 1.1rem;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule strong {
+            color: #f59e0b;
+            font-size: 1.1rem;
+        }
+        .tip-box {
+            background: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .auth-factors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 30px 0;
+            justify-content: center;
+        }
+        .factor-card {
+            flex: 1;
+            min-width: 180px;
+            padding: 20px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 5px solid #5dade2;
+        }
+        .factor-card strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #5dade2;
+            font-size: 1.1rem;
+        }
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .model-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #5dade2;
+        }
+        .model-card strong {
+            color: #5dade2;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .ad-hierarchy {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin: 30px 0;
+            align-items: center;
+        }
+        .ad-level {
+            padding: 15px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            width: 80%;
+            text-align: center;
+            position: relative;
+        }
+        .ad-level.forest {
+            background: #fecaca;
+            border: 2px solid #ef4444;
+        }
+        .ad-level.tree {
+            background: #fed7aa;
+            border: 2px solid #f97316;
+        }
+        .ad-level.domain {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+        }
+        .ad-level.ou {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+        }
+        .command-table {
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👤 Security+ Capítulo 4</h1>
+            <p>Identity & Access Management (IAM)</p>
+            <div class="stats-bar">
+                <div class="stat-card">🔑 Autenticação</div>
+                <div class="stat-card">📋 Autorização</div>
+                <div class="stat-card">🏢 Active Directory</div>
+                <div class="stat-card">🖥️ Linux</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">📖 Resumo</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="summary">
+                <h1>📖 Resumo - Capítulo 4: Identity & Access Management (IAM)</h1>
+                
+                <div class="info-box">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Autenticação vs Autorização:</strong> Autenticação = QUEM você é; Autorização = O QUE pode fazer</li>
+                        <li><strong>MFA:</strong> Combina fatores DIFERENTES (saber + ter + ser)</li>
+                        <li><strong>Modelos de Acesso:</strong> DAC (dono), MAC (rótulos), RBAC (funções), ABAC (atributos)</li>
+                        <li><strong>Kerberos:</strong> Protocolo do AD, usa tickets, NÃO transmite senha</li>
+                        <li><strong>RADIUS vs TACACS+:</strong> RADIUS (UDP, criptografa só senha), TACACS+ (TCP, criptografa tudo)</li>
+                    </ul>
+                </div>
+
+                <h2>1️⃣ Fundamentos de IAM</h2>
+
+                <h3>Tríade CIA vs IAM</h3>
+                <ul>
+                    <li><strong>Confidencialidade:</strong> Apenas usuários autorizados acessam</li>
+                    <li><strong>Integridade:</strong> Dados não alterados por não autorizados</li>
+                    <li><strong>Disponibilidade:</strong> Usuários legítimos acessam quando necessário</li>
+                    <li><strong>Non-repudiação:</strong> Impedir que usuário negue ação realizada</li>
+                </ul>
+
+                <h3>Princípios Fundamentais</h3>
+                <table>
+                    <tr>
+                        <th>Princípio</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Menor Privilégio (PoLP)</strong></td>
+                        <td>Conceder apenas as permissões mínimas necessárias</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Need to Know</strong></td>
+                        <td>Acesso apenas a informações estritamente necessárias</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Segregação de Funções (SoD)</strong></td>
+                        <td>Dividir tarefas críticas entre múltiplas pessoas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Job Rotation</strong></td>
+                        <td>Rodízio de funções para detectar fraudes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Férias Obrigatórias</strong></td>
+                        <td>Detecta fraudes que exigem presença constante</td>
+                    </tr>
+                </table>
+
+                <div class="golden-rule">
+                    <strong>⚠️ REGRA DE OURO:</strong> Menor Privilégio + Segregação de Funções são a base para prevenir fraudes internas e limitar danos de contas comprometidas.
+                </div>
+
+                <h2>2️⃣ Modelos de Controle de Acesso</h2>
+
+                <div class="model-grid">
+                    <div class="model-card">
+                        <strong>DAC (Discretionary Access Control)</strong>
+                        <p>Proprietário do recurso define permissões. Flexível, menos seguro. Ex: NTFS, Linux padrão.</p>
+                    </div>
+                    <div class="model-card">
+                        <strong>MAC (Mandatory Access Control)</strong>
+                        <p>Sistema define por rótulos/clearance. Alta segurança, rígido. Ex: SELinux, sistemas militares. "Write up, read down".</p>
+                    </div>
+                    <div class="model-card">
+                        <strong>RBAC (Role-Based Access Control)</strong>
+                        <p>Permissões por função/cargo. Mais comum em empresas. Ex: Admin, User, Manager.</p>
+                    </div>
+                    <div class="model-card">
+                        <strong>ABAC (Attribute-Based Access Control)</strong>
+                        <p>Políticas baseadas em atributos (tempo, local, dispositivo). Mais granular. Ex: role=manager AND department=dev.</p>
+                    </div>
+                    <div class="model-card">
+                        <strong>Rule-Based Access Control</strong>
+                        <p>Regras definidas pelo sistema. Ex: ACLs em roteadores, acesso condicional.</p>
+                    </div>
+                </div>
+
+                <h2>3️⃣ Fatores de Autenticação (MFA)</h2>
+
+                <div class="auth-factors">
+                    <div class="factor-card">
+                        <strong>🗝️ Tipo 1</strong>
+                        <p>Algo que você <strong>SABE</strong><br>Senha, PIN, pergunta secreta</p>
+                    </div>
+                    <div class="factor-card">
+                        <strong>📱 Tipo 2</strong>
+                        <p>Algo que você <strong>TEM</strong><br>Smart card, token, celular, YubiKey</p>
+                    </div>
+                    <div class="factor-card">
+                        <strong>👆 Tipo 3</strong>
+                        <p>Algo que você <strong>É</strong><br>Biometria (digital, íris, face)</p>
+                    </div>
+                    <div class="factor-card">
+                        <strong>🌍 Tipo 4</strong>
+                        <p>Algum lugar que você <strong>ESTÁ</strong><br>Geolocalização, IP, VLAN</p>
+                    </div>
+                    <div class="factor-card">
+                        <strong>✍️ Tipo 5</strong>
+                        <p>Algo que você <strong>FAZ</strong><br>Assinatura, padrão de digitação</p>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 MFA FORTE vs FRACO:</strong>
+                    <ul>
+                        <li><span style="color:#10b981;">✅ FORTE:</span> Senha (saber) + Biometria (ser) - fatores DIFERENTES</li>
+                        <li><span style="color:#ef4444;">❌ FRACO:</span> Senha + SMS - ambos "ter" (SMS é algo que você tem)</li>
+                    </ul>
+                </div>
+
+                <h3>Métodos de Autenticação</h3>
+                <table>
+                    <tr>
+                        <th>Método</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Senha/Passphrase</strong></td>
+                        <td>Mais comum, mais fraco se não houver complexidade</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TOTP (Time-based OTP)</strong></td>
+                        <td>Código temporário baseado em tempo. Ex: Google Authenticator, Microsoft Authenticator</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HOTP (HMAC-based OTP)</strong></td>
+                        <td>Código baseado em contador</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Push Notification</strong></td>
+                        <td>Aprovação no celular (Duo, Microsoft Authenticator)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Smart Card</strong></td>
+                        <td>Cartão com chip e certificado. MFA: tem + PIN (sabe)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FIDO2/WebAuthn</strong></td>
+                        <td>Passwordless: biometria/PIN libera chave privada</td>
+                    </tr>
+                </table>
+
+                <h2>4️⃣ Biometria - Métricas</h2>
+
+                <table>
+                    <tr>
+                        <th>Métrica</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>FAR (False Acceptance Rate)</strong></td>
+                        <td>Taxa de aceitar impostores - <span style="color:#ef4444; font-weight:bold;">MAIS GRAVE!</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>FRR (False Rejection Rate)</strong></td>
+                        <td>Taxa de rejeitar legítimos - frustrante, mas menos grave</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CER (Crossover Error Rate)</strong></td>
+                        <td>Ponto onde FAR = FRR. Quanto menor, melhor o sistema</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FER (Failure to Enroll Rate)</strong></td>
+                        <td>Falha no cadastro biométrico</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Throughput</strong></td>
+                        <td>Velocidade de autenticação</td>
+                    </tr>
+                </table>
+
+                <h3>Tipos de Biometria</h3>
+                <ul>
+                    <li><strong>Fisiológica:</strong> Impressão digital, íris, retina, face, veia da palma</li>
+                    <li><strong>Comportamental:</strong> Marcha (gait), padrão de digitação, voz</li>
+                </ul>
+
+                <h2>5️⃣ SSO e Federação</h2>
+
+                <h3>SSO (Single Sign-On)</h3>
+                <ul>
+                    <li>Autentica uma vez, acessa múltiplos sistemas</li>
+                    <li><strong>Vantagem:</strong> Conveniência, menos senhas</li>
+                    <li><strong>Risco:</strong> Se comprometido, acesso a tudo</li>
+                </ul>
+
+                <h3>Tecnologias de SSO</h3>
+                <table>
+                    <tr>
+                        <th>Tecnologia</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>SAML</strong></td>
+                        <td>XML-based, SSO corporativo. IdP + SP. Muito usado em cloud.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>OAuth 2.0</strong></td>
+                        <td>Framework de AUTORIZAÇÃO (não autenticação!). "Login com Google/Facebook". Access tokens.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>OpenID Connect (OIDC)</strong></td>
+                        <td>Camada de autenticação sobre OAuth 2.0. ID token em JWT. SSO moderno.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kerberos</strong></td>
+                        <td>Protocolo do AD, usa tickets. Porta 88.</td>
+                    </tr>
+                </table>
+
+                <h2>6️⃣ Kerberos</h2>
+
+                <h3>Componentes</h3>
+                <ul>
+                    <li><strong>KDC (Key Distribution Center):</strong> Emite tickets (Authentication Service + Ticket Granting Service)</li>
+                    <li><strong>Principal:</strong> Usuários e serviços</li>
+                    <li><strong>TGT (Ticket Granting Ticket):</strong> Ticket inicial após autenticação</li>
+                    <li><strong>Service Ticket:</strong> Acesso a recurso específico</li>
+                </ul>
+
+                <h3>Fluxo Kerberos</h3>
+                <ol>
+                    <li>Usuário solicita TGT ao AS (usa hash da senha)</li>
+                    <li>AS valida e retorna TGT + session key</li>
+                    <li>Usuário solicita Service Ticket ao TGS (apresenta TGT)</li>
+                    <li>TGS retorna Service Ticket</li>
+                    <li>Usuário apresenta Service Ticket ao Application Server</li>
+                    <li>Acesso concedido</li>
+                </ol>
+
+                <div class="info-box">
+                    <strong>🔑 PONTOS CRÍTICOS DO KERBEROS:</strong>
+                    <ul>
+                        <li>Senha <strong>NÃO é transmitida</strong> pela rede</li>
+                        <li>Tickets têm timestamp e validade (tolerância de 5 min)</li>
+                        <li>KDC é ponto único de falha (backup recomendado)</li>
+                    </ul>
+                </div>
+
+                <h2>7️⃣ LDAP e Active Directory</h2>
+
+                <h3>LDAP</h3>
+                <ul>
+                    <li><strong>Porta 389:</strong> sem segurança</li>
+                    <li><strong>LDAPS:</strong> porta 636, com SSL/TLS</li>
+                    <li><strong>DN (Distinguished Name):</strong> CN=Bobby,CN=Users,DC=dominio,DC=com</li>
+                </ul>
+
+                <h3>Active Directory - Hierarquia</h3>
+                <div class="ad-hierarchy">
+                    <div class="ad-level forest">
+                        <strong>🌳 Forest</strong> (coleção de árvores)
+                    </div>
+                    <div>⬇️</div>
+                    <div class="ad-level tree">
+                        <strong>🌲 Tree</strong> (domínios com namespace contíguo)
+                    </div>
+                    <div>⬇️</div>
+                    <div class="ad-level domain">
+                        <strong>🏢 Domain</strong> (unidade administrativa)
+                    </div>
+                    <div>⬇️</div>
+                    <div class="ad-level ou">
+                        <strong>📁 OU (Organizational Unit)</strong>
+                    </div>
+                </div>
+
+                <h3>Componentes do AD</h3>
+                <ul>
+                    <li><strong>Domain Controller (DC):</strong> Servidor que autentica usuários</li>
+                    <li><strong>Objetos:</strong> Usuários, grupos, computadores, pastas compartilhadas</li>
+                    <li><strong>GPO (Group Policy Object):</strong> Configurações centralizadas</li>
+                </ul>
+
+                <h3>Group Policy - Ordem LSDOU</h3>
+                <ol>
+                    <li><strong>L</strong>ocal</li>
+                    <li><strong>S</strong>ite</li>
+                    <li><strong>D</strong>omínio</li>
+                    <li><strong>OU</strong> (da mais alta à mais baixa)</li>
+                </ol>
+                <p><strong>Regra:</strong> Última aplicada prevalece. Deny sempre prevalece sobre Allow.</p>
+
+                <h2>8️⃣ RADIUS vs TACACS+</h2>
+
+                <table>
+                    <tr>
+                        <th></th>
+                        <th><strong>RADIUS</strong></th>
+                        <th><strong>TACACS+</strong></th>
+                    </tr>
+                    <tr>
+                        <td><strong>Protocolo</strong></td>
+                        <td>UDP (1812/1813)</td>
+                        <td>TCP (49)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Criptografia</strong></td>
+                        <td>Apenas senha</td>
+                        <td>Pacote inteiro</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AAA</strong></td>
+                        <td>Combinado</td>
+                        <td>Separado (mais granular)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Proprietário</strong></td>
+                        <td>Aberto</td>
+                        <td>Cisco</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Uso</strong></td>
+                        <td>Wi-Fi (802.1X), VPN</td>
+                        <td>Roteadores, switches Cisco</td>
+                    </tr>
+                </table>
+
+                <h3>802.1X e EAP</h3>
+                <ul>
+                    <li><strong>802.1X:</strong> Controle de acesso baseado em porta (Wi-Fi corporativo, switches)</li>
+                    <li><strong>EAP-TLS:</strong> Certificados cliente e servidor (mais seguro)</li>
+                    <li><strong>PEAP:</strong> Túnel TLS com autenticação interna</li>
+                </ul>
+
+                <h2>9️⃣ Linux - Usuários e Grupos</h2>
+
+                <h3>Arquivos de Configuração</h3>
+                <table class="command-table">
+                    <tr>
+                        <th>Arquivo</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>/etc/passwd</strong></td>
+                        <td>Informações da conta (username, UID, GID, home, shell)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>/etc/shadow</strong></td>
+                        <td>Hashes de senha + aging info. Apenas root lê.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>/etc/group</strong></td>
+                        <td>Informações de grupos (nome, GID, membros)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>/etc/skel</strong></td>
+                        <td>Modelos para diretório home</td>
+                    </tr>
+                </table>
+
+                <h3>Comandos de Usuário</h3>
+                <table class="command-table">
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>useradd -m -s /bin/bash nome</strong></td>
+                        <td>Criar usuário com home e shell</td>
+                    </tr>
+                    <tr>
+                        <td><strong>passwd nome</strong></td>
+                        <td>Definir/alterar senha</td>
+                    </tr>
+                    <tr>
+                        <td><strong>usermod -aG grupo nome</strong></td>
+                        <td>Adicionar usuário a grupo suplementar</td>
+                    </tr>
+                    <tr>
+                        <td><strong>userdel -r nome</strong></td>
+                        <td>Remover usuário e home</td>
+                    </tr>
+                    <tr>
+                        <td><strong>chage -M 90 nome</strong></td>
+                        <td>Expirar senha em 90 dias</td>
+                    </tr>
+                </table>
+
+                <h3>SELinux</h3>
+                <ul>
+                    <li><strong>Modos:</strong> Enforcing (aplica), Permissive (registra), Disabled</li>
+                    <li>Implementação de MAC no Linux</li>
+                </ul>
+
+                <h2>🔟 Hardening de Autenticação</h2>
+
+                <h3>Políticas de Senha</h3>
+                <ul>
+                    <li><strong>Comprimento mínimo:</strong> 12-16+ caracteres</li>
+                    <li><strong>Complexidade:</strong> Maiúscula, minúscula, número, símbolo</li>
+                    <li><strong>Histórico:</strong> 12-24 senhas anteriores</li>
+                    <li><strong>Idade máxima:</strong> 60-90 dias</li>
+                    <li><strong>Idade mínima:</strong> 1 dia (evita troca rápida)</li>
+                </ul>
+
+                <h3>Account Lockout</h3>
+                <ul>
+                    <li><strong>Threshold:</strong> Número de tentativas até bloquear</li>
+                    <li><strong>Duration:</strong> Minutos bloqueado</li>
+                    <li><strong>Reset counter:</strong> Minutos até resetar contador</li>
+                </ul>
+
+                <h3>Indicadores de Comprometimento</h3>
+                <ul>
+                    <li><strong>Account Lockout:</strong> Muitas falhas ou senha alterada</li>
+                    <li><strong>Concurrent Session:</strong> Mesma conta em múltiplos locais</li>
+                    <li><strong>Impossible Travel:</strong> Login em locais geograficamente impossíveis</li>
+                </ul>
+
+                <h3>Gerenciadores de Senha</h3>
+                <ul>
+                    <li>Armazenam senhas criptografadas</li>
+                    <li>Geram senhas fortes e únicas</li>
+                    <li><strong>Riscos:</strong> Senha mestra fraca, comprometimento do fornecedor</li>
+                </ul>
+
+                <h2>1️⃣1️⃣ Acesso Remoto</h2>
+
+                <table>
+                    <tr>
+                        <th>Protocolo</th>
+                        <th>Porta</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>SSH</strong></td>
+                        <td>22</td>
+                        <td>Acesso remoto criptografado, substitui Telnet</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RDP</strong></td>
+                        <td>3389</td>
+                        <td>Remote Desktop Protocol (Windows)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Telnet</strong></td>
+                        <td>23</td>
+                        <td>Texto claro - <span style="color:#ef4444;">INSEGURO!</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>VNC</strong></td>
+                        <td>5900+</td>
+                        <td>Multiplataforma</td>
+                    </tr>
+                </table>
+
+                <h3>VPN</h3>
+                <ul>
+                    <li><strong>Site-to-Site:</strong> Conecta redes (matriz-filial)</li>
+                    <li><strong>Remote Access:</strong> Usuários individuais</li>
+                    <li><strong>Split Tunnel:</strong> Só tráfego corporativo via VPN (risco de bypass)</li>
+                    <li><strong>Full Tunnel:</strong> Todo tráfego via VPN (mais seguro)</li>
+                </ul>
+
+                <div class="golden-rule">
+                    <strong>🎯 DICAS FINAIS PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Autenticação</strong> = quem é; <strong>Autorização</strong> = o que pode fazer</li>
+                        <li><strong>Kerberos:</strong> tickets, NÃO transmite senha, tolerância de 5 min</li>
+                        <li><strong>RADIUS:</strong> UDP, criptografa só senha; <strong>TACACS+:</strong> TCP, criptografa tudo</li>
+                        <li><strong>FAR</strong> (aceitar impostor) é MAIS GRAVE que FRR (rejeitar legítimo)</li>
+                        <li><strong>GPO:</strong> ordem LSDOU (Local, Site, Domain, OU) - última prevalece</li>
+                        <li><strong>Deny sempre prevalece</strong> sobre Allow no Windows</li>
+                        <li><strong>Linux:</strong> /etc/passwd (info), /etc/shadow (senhas), /etc/group (grupos)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+        }
+    </script>
+</body>
+</html>

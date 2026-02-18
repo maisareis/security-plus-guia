@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Cap 2 - Atores de Ameaças, Ataques e Malware</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: #333;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        .content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .summary {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .summary h1 {
+            color: #fa709a;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            border-bottom: 4px solid #fa709a;
+            padding-bottom: 15px;
+        }
+        .summary h2 {
+            color: #fa709a;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        .summary h3 {
+            color: #f59e0b;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        .summary ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        .summary li {
+            margin-bottom: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #fa709a;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box strong {
+            color: #ec4899;
+            font-size: 1.1rem;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule strong {
+            color: #f59e0b;
+            font-size: 1.1rem;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .attack-chain {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin: 30px 0;
+        }
+        .chain-item {
+            padding: 15px;
+            background: #f3f4f6;
+            border-left: 5px solid #fa709a;
+            border-radius: 5px;
+            display: flex;
+            gap: 15px;
+        }
+        .chain-number {
+            font-weight: bold;
+            color: #fa709a;
+            min-width: 30px;
+        }
+        .malware-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .malware-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #fa709a;
+        }
+        .malware-card strong {
+            color: #fa709a;
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚠️ Security+ Capítulo 2</h1>
+            <p>Atores de Ameaças, Ataques e Malware</p>
+            <div class="stats-bar">
+                <div class="stat-card">👥 Atores</div>
+                <div class="stat-card">🎣 Engenharia Social</div>
+                <div class="stat-card">🦠 Malware</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">📖 Resumo</button>
+        </div>
+
+        <div id="tab0" class="content active">
+            <div class="summary">
+                <h1>📖 Resumo - Capítulo 2: Atores de Ameaças, Ataques e Malware</h1>
+                
+                <div class="info-box">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Tipos de Atores:</strong> Nation-state (APT), Crime Organizado (financeiro), Hacktivists (político), Insider (interno)</li>
+                        <li><strong>Cyber Kill Chain:</strong> 7 fases do ataque - Reconhecimento → Weaponization → Delivery → Exploitation → Installation → C2 → Ações</li>
+                        <li><strong>Phishing vs Spear Phishing vs Whaling:</strong> Massa vs Direcionado vs Executivos</li>
+                        <li><strong>Ransomware:</strong> Criptografa dados e exige pagamento - BACKUP é a melhor defesa!</li>
+                    </ul>
+                </div>
+
+                <h2>1️⃣ Atores de Ameaças (Threat Actors)</h2>
+
+                <h3>Classificação por Atributos</h3>
+                <table>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Recursos</th>
+                        <th>Motivação</th>
+                        <th>Características</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Nation-state (Estado-nação)</strong></td>
+                        <td>Ilimitados (governo)</td>
+                        <td>Espionagem, guerra cibernética</td>
+                        <td>APTs, sofisticados, persistentes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Crime Organizado</strong></td>
+                        <td>Altos</td>
+                        <td>Financeira (lucro)</td>
+                        <td>Ransomware, fraudes, roubo de dados</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hacktivists</strong></td>
+                        <td>Baixos a médios</td>
+                        <td>Política/social</td>
+                        <td>DDoS, defacement, vazamentos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Insider Threat</strong></td>
+                        <td>Acesso legítimo</td>
+                        <td>Vingança, ganho financeiro</td>
+                        <td>Funcionários, contratados, parceiros</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Script Kiddies</strong></td>
+                        <td>Baixos</td>
+                        <td>Diversão, reconhecimento</td>
+                        <td>Ferramentas prontas, baixa habilidade</td>
+                    </tr>
+                </table>
+
+                <div class="golden-rule">
+                    <strong>⚠️ DIFERENÇA CRÍTICA:</strong>
+                    <ul>
+                        <li><strong>Ameaça Interna (Insider):</strong> Já tem acesso legítimo - mais difícil de detectar</li>
+                        <li><strong>Ameaça Externa:</strong> Precisa infiltrar - firewalls e perímetro ajudam</li>
+                    </ul>
+                </div>
+
+                <h3>Motivações vs Tríade CIA</h3>
+                <table>
+                    <tr>
+                        <th>Estratégia</th>
+                        <th>Afeta</th>
+                        <th>Exemplo</th>
+                    </tr>
+                    <tr>
+                        <td>Exfiltração de Dados</td>
+                        <td><strong>Confidencialidade</strong></td>
+                        <td>Roubo de segredos comerciais</td>
+                    </tr>
+                    <tr>
+                        <td>Desinformação</td>
+                        <td><strong>Integridade</strong></td>
+                        <td>Falsificação de websites</td>
+                    </tr>
+                    <tr>
+                        <td>Interrupção de Serviço</td>
+                        <td><strong>Disponibilidade</strong></td>
+                        <td>Ataques DDoS</td>
+                    </tr>
+                </table>
+
+                <h2>2️⃣ Cyber Kill Chain (Estratégia de Ataque)</h2>
+                
+                <div class="attack-chain">
+                    <div class="chain-item">
+                        <span class="chain-number">1.</span>
+                        <div><strong>Reconhecimento (Reconnaissance):</strong> Coletar informações sobre o alvo (OSINT, varreduras)</div>
+                    </div>
+                    <div class="chain-item">
+                        <span class="chain-number">2.</span>
+                        <div><strong>Weaponization (Preparação):</strong> Criar/preparar o exploit para vulnerabilidade</div>
+                    </div>
+                    <div class="chain-item">
+                        <span class="chain-number">3.</span>
+                        <div><strong>Delivery (Entrega):</strong> Entregar o exploit (email, USB, site comprometido)</div>
+                    </div>
+                    <div class="chain-item">
+                        <span class="chain-number">4.</span>
+                        <div><strong>Exploitation (Exploração):</strong> Executar o exploit, ganhar acesso inicial</div>
+                    </div>
+                    <div class="chain-item">
+                        <span class="chain-number">5.</span>
+                        <div><strong>Installation (Instalação):</strong> Instalar backdoor/malware persistente</div>
+                    </div>
+                    <div class="chain-item">
+                        <span class="chain-number">6.</span>
+                        <div><strong>C2 (Command & Control):</strong> Estabelecer comunicação com servidor atacante</div>
+                    </div>
+                    <div class="chain-item">
+                        <span class="chain-number">7.</span>
+                        <div><strong>Actions on Objectives:</strong> Roubar dados, destruir, espionar</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>💡 IMPORTANTE:</strong> Conhecer a Cyber Kill Chain ajuda a <strong>interromper o ataque em diferentes estágios</strong>. Quanto mais cedo, melhor!
+                </div>
+
+                <h2>3️⃣ Engenharia Social</h2>
+
+                <h3>Processo de Engenharia Social</h3>
+                <ol>
+                    <li><strong>Pesquisa (Research):</strong> Reunir informações sobre organização (footprinting, dumpster diving)</li>
+                    <li><strong>Desenvolvimento (Development):</strong> Selecionar alvos, construir relacionamento</li>
+                    <li><strong>Exploração (Exploitation):</strong> Tirar vantagem do relacionamento para obter acesso</li>
+                    <li><strong>Saída (Exit):</strong> Finalizar sem levantar suspeitas</li>
+                </ol>
+
+                <h3>Princípios de Manipulação</h3>
+                <table>
+                    <tr>
+                        <th>Princípio</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Autoridade (Authority)</strong></td>
+                        <td>Fingir ser chefe, polícia, suporte técnico</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Urgência (Urgency)</strong></td>
+                        <td>"Resolva agora ou sua conta será bloqueada"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Escassez (Scarcity)</strong></td>
+                        <td>"Oferta por tempo limitado, últimas vagas"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Prova Social (Social Proof)</strong></td>
+                        <td>"Todo mundo está fazendo"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Medo (Fear)</strong></td>
+                        <td>Ameaçar com consequências negativas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Simpatia (Likability)</strong></td>
+                        <td>Pessoas fazem mais para agradar quem gostam</td>
+                    </tr>
+                </table>
+
+                <h3>Técnicas de Engenharia Social</h3>
+                
+                <table>
+                    <tr>
+                        <th>Técnica</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Phishing</strong></td>
+                        <td>Email malicioso fingindo ser legítimo (em massa)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Spear Phishing</strong></td>
+                        <td>Phishing direcionado a pessoa/organização específica</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Whaling</strong></td>
+                        <td>Phishing para executivos (baleias)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vishing</strong></td>
+                        <td>Por telefone (voice)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Smishing</strong></td>
+                        <td>Por SMS</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pretexting</strong></td>
+                        <td>Criar cenário/história falsa</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Baiting</strong></td>
+                        <td>Oferecer algo atraente (USB infectada)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tailgating</strong></td>
+                        <td>Seguir pessoa autorizada por porta segura</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Shoulder Surfing</strong></td>
+                        <td>Olhar por cima do ombro para ver tela/teclado</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dumpster Diving</strong></td>
+                        <td>Procurar informações no lixo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pharming</strong></td>
+                        <td>Redirecionar DNS para site falso</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Typosquatting</strong></td>
+                        <td>Registrar domínios com erros de digitação (gooogle.com)</td>
+                    </tr>
+                </table>
+
+                <div class="golden-rule">
+                    <strong>⚠️ REGRA DE OURO:</strong>
+                    <ul>
+                        <li><strong>Phishing:</strong> Email em massa</li>
+                        <li><strong>Spear Phishing:</strong> Direcionado a pessoa específica</li>
+                        <li><strong>Whaling:</strong> Phishing para executivos</li>
+                        <li><strong>BEC (Business Email Compromise):</strong> Fraude financeira via email</li>
+                    </ul>
+                </div>
+
+                <h2>4️⃣ Malware</h2>
+
+                <h3>Classificação por Vetor</h3>
+                <div class="malware-grid">
+                    <div class="malware-card">
+                        <strong>Vírus</strong>
+                        <p>Infecta arquivos executáveis, precisa ser executado, se replica</p>
+                    </div>
+                    <div class="malware-card">
+                        <strong>Worm</strong>
+                        <p>Auto-replicante, não precisa de arquivo hospedeiro, explora rede</p>
+                    </div>
+                    <div class="malware-card">
+                        <strong>Trojan</strong>
+                        <p>Parece legítimo mas é malicioso, não se replica</p>
+                    </div>
+                    <div class="malware-card">
+                        <strong>Ransomware</strong>
+                        <p>Criptografa dados e exige pagamento</p>
+                    </div>
+                    <div class="malware-card">
+                        <strong>Spyware</strong>
+                        <p>Monitora atividades e rouba informações</p>
+                    </div>
+                    <div class="malware-card">
+                        <strong>Keylogger</strong>
+                        <p>Registra teclas digitadas</p>
+                    </div>
+                    <div class="malware-card">
+                        <strong>Rootkit</strong>
+                        <p>Esconde presença do malware, acesso privilegiado</p>
+                    </div>
+                    <div class="malware-card">
+                        <strong>Botnet</strong>
+                        <p>Rede de computadores infectados controlados remotamente</p>
+                    </div>
+                    <div class="malware-card">
+                        <strong>RAT</strong>
+                        <p>Remote Access Trojan - controle remoto completo</p>
+                    </div>
+                    <div class="malware-card">
+                        <strong>Fileless Malware</strong>
+                        <p>Executa na memória, não grava em disco</p>
+                    </div>
+                </div>
+
+                <h3>Tipos Específicos de Malware</h3>
+                
+                <table>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Adware</strong></td>
+                        <td>Exibe anúncios indesejados, pode rastrear hábitos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Logic Bomb</strong></td>
+                        <td>Dispara sob condições específicas (data, evento)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Backdoor</strong></td>
+                        <td>Acesso não autorizado que bypassa autenticação</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Scareware</strong></td>
+                        <td>Exibe mensagens alarmantes falsas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Crypto-ransomware</strong></td>
+                        <td>Criptografa arquivos de dados, não só bloqueia tela</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cryptojacking</strong></td>
+                        <td>Sequestra recursos para mineração de criptomoeda</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PUP/PUA</strong></td>
+                        <td>Programa potencialmente indesejado (grayware/bloatware)</td>
+                    </tr>
+                </table>
+
+                <div class="info-box">
+                    <strong>💡 DICA CRÍTICA:</strong>
+                    <ul>
+                        <li><strong>Rootkit de Firmware:</strong> Sobrevive formatação e reinstalação do SO (ex: UEFI rootkits)</li>
+                        <li><strong>Fileless Malware:</strong> Usa "live off the land" - PowerShell, WMI, scripts</li>
+                        <li><strong>C2 (Command & Control):</strong> Melhor forma de detectar RATs e bots</li>
+                    </ul>
+                </div>
+
+                <h2>5️⃣ Proteção e Recuperação</h2>
+
+                <h3>Prevenção de Malware</h3>
+                <table>
+                    <tr>
+                        <th>Método</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Patches</strong></td>
+                        <td>Manter sistemas, aplicações e firmware atualizados</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anti-Malware</strong></td>
+                        <td>Definições atualizadas, scans regulares, email/download scanning</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Firewall</strong></td>
+                        <td>Bloqueia conexões não autorizadas e C2</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Filtro Web</strong></td>
+                        <td>Bloqueia acesso a sites maliciosos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Treinamento</strong></td>
+                        <td>Educar usuários sobre anexos, pop-ups, URLs</td>
+                    </tr>
+                </table>
+
+                <h3>Recuperação de Infecção</h3>
+                <ol>
+                    <li><strong>Reparar:</strong> Remover vírus de arquivo válido</li>
+                    <li><strong>Quarentena:</strong> Mover arquivo infectado para pasta segura</li>
+                    <li><strong>Deletar:</strong> Remover worms, Trojans, spyware</li>
+                    <li><strong>Reinstalar/Re-imaginar:</strong> Mais rápido e eficaz que limpeza</li>
+                </ol>
+
+                <div class="golden-rule">
+                    <strong>🎯 DICAS FINAIS PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Insider Threat é o <strong>mais difícil de detectar</strong> (já tem acesso legítimo)</li>
+                        <li>Phishing (massa) vs Spear Phishing (direcionado) vs Whaling (executivos)</li>
+                        <li>Ransomware = BACKUP é a melhor defesa (regra 3-2-1)</li>
+                        <li>Rootkit de firmware sobrevive formatação</li>
+                        <li>Fileless malware usa PowerShell/WMI - difícil detecção</li>
+                        <li>Cyber Kill Chain: Reconhecimento é a primeira fase</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+        }
+    </script>
+</body>
+</html>

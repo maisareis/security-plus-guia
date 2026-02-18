@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo Security+ Capítulo 8 - Segurança de SO e Aplicações</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
+            padding: 50px;
+            border: 1px solid #e2e8f0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #ee9ca7;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .badge {
+            background: #ee9ca7;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box strong {
+            color: #ec4899;
+            font-size: 1.1rem;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule strong {
+            color: #f59e0b;
+            font-size: 1.1rem;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            font-size: 1.8rem;
+            color: #0f172a;
+            margin-bottom: 20px;
+            border-left: 5px solid #ee9ca7;
+            padding-left: 15px;
+        }
+        .section h3 {
+            font-size: 1.3rem;
+            color: #334155;
+            margin: 20px 0 10px;
+        }
+        .section h4 {
+            font-size: 1.1rem;
+            color: #ee9ca7;
+            margin: 15px 0 5px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .card h4 {
+            color: #ee9ca7;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .card ul {
+            list-style: none;
+        }
+        .card li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .card li:before {
+            content: "•";
+            color: #ee9ca7;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th {
+            background: #ee9ca7;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        tr:hover {
+            background: #f1f5f9;
+        }
+        .cmd-box {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px dashed #e2e8f0;
+            text-align: center;
+            color: #64748b;
+        }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📘 Capítulo 8: Segurança de SO e Aplicações</h1>
+            <span class="badge">Resumo Completo</span>
+        </div>
+
+        <div class="info-box">
+            <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>Hardening:</strong> princípio da menor funcionalidade, remover serviços desnecessários</li>
+                <li><strong>WPA3:</strong> SAE substitui PSK, Perfect Forward Secrecy</li>
+                <li><strong>802.1X:</strong> Autenticação por porta (RADIUS + EAP)</li>
+                <li><strong>SAST vs DAST:</strong> SAST analisa código (white box), DAST testa app rodando (black box)</li>
+                <li><strong>Code Signing:</strong> garante autenticidade, NÃO garante segurança do código</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣ Hardening de Sistemas Operacionais</h2>
+
+            <h3>Conceitos Fundamentais</h3>
+            <ul>
+                <li><strong>Hardening:</strong> processo de modificar SOs/aplicações para operarem de forma segura</li>
+                <li><strong>Baseia-se no princípio da menor funcionalidade</strong> (least functionality)</li>
+                <li>Utiliza baselines de melhores práticas para configuração segura</li>
+            </ul>
+
+            <h3>Áreas de Hardening</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>🔌 Interfaces e Portas</h4>
+                    <ul>
+                        <li>Desabilitar interfaces de rede não utilizadas</li>
+                        <li>Desabilitar serviços desnecessários</li>
+                        <li>Bloquear portas não utilizadas</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>💾 Armazenamento</h4>
+                    <ul>
+                        <li>Full Disk Encryption (BitLocker, FileVault)</li>
+                        <li>Criptografia de mídia removível</li>
+                        <li>VPNs para transmissão de dados</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Gerenciamento de Patches</h3>
+            <ul>
+                <li>Scanners automatizados de vulnerabilidades</li>
+                <li>Testes em ambientes de teste antes da produção</li>
+                <li>Ferramentas: Windows Update, SCCM/Endpoint Manager</li>
+                <li>Controles compensatórios para sistemas legados</li>
+            </ul>
+
+            <h3>Técnicas de Hardening</h3>
+            <ul>
+                <li><strong>Controles de Acesso (ACLs):</strong> gerenciar permissões de usuários e grupos</li>
+                <li><strong>Princípio do Menor Privilégio:</strong> conceder apenas permissões mínimas</li>
+                <li><strong>Allow Lists e Block Lists:</strong> controlar execução de aplicações</li>
+                <li><strong>Monitoramento:</strong> detectar mudanças nas configurações hardened</li>
+                <li><strong>Descomissionamento:</strong> apagar dados com segurança</li>
+                <li><strong>Mudança de Defaults:</strong> alterar senhas padrão, remover software desnecessário</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>2️⃣ Segurança de Sistema de Arquivos</h2>
+
+            <h3>Permissões Linux vs Windows</h3>
+            <table>
+                <tr>
+                    <th>Linux</th>
+                    <th>Windows</th>
+                </tr>
+                <tr>
+                    <td>Read (r), Write (w), Execute (x)</td>
+                    <td>Permissões Share (acesso via rede)</td>
+                </tr>
+                <tr>
+                    <td>Contextos: owner (u), group (g), others (o)</td>
+                    <td>Permissões NTFS (locais e rede, granulares)</td>
+                </tr>
+                <tr>
+                    <td>chmod 755 = rwxr-xr-x</td>
+                    <td>Permissões efetivas = mais restritiva entre Share e NTFS</td>
+                </tr>
+            </table>
+
+            <div class="cmd-box">
+                # Linux - Exemplos de chmod<br>
+                chmod 755 arquivo     # rwxr-xr-x<br>
+                chmod u+x arquivo     # adiciona execute para owner<br>
+                chmod g-w arquivo     # remove write do grupo
+            </div>
+
+            <h3>Protocolos de Transferência Segura</h3>
+            <table>
+                <tr>
+                    <th>Protocolo</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>FTP</strong></td>
+                    <td>Não seguro (cleartext), usar com IPSec ou VPN</td>
+                </tr>
+                <tr>
+                    <td><strong>TFTP</strong></td>
+                    <td>Sem autenticação ou criptografia</td>
+                </tr>
+                <tr>
+                    <td><strong>SCP</strong></td>
+                    <td>Usa SSH1 para transferências seguras</td>
+                </tr>
+                <tr>
+                    <td><strong>SFTP</strong></td>
+                    <td>Usa SSH2 (NÃO é FTP sobre SSH)</td>
+                </tr>
+                <tr>
+                    <td><strong>FTPS</strong></td>
+                    <td>FTP com SSL/TLS</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>3️⃣ Segurança de Host Linux</h2>
+
+            <h3>Proteção de Portas Físicas</h3>
+            <ul>
+                <li>Desabilitar portas USB, HDMI, serial não utilizadas</li>
+                <li>Software de controle de portas (baseado em identificadores)</li>
+                <li>Configurações de firmware/UEFI/BIOS</li>
+                <li><strong>Ameaças:</strong> BadUSB, O.MG cable (keyloggers em cabos)</li>
+                <li>Prevenir autorun em dispositivos USB</li>
+                <li>Sistemas sheep dip (sandboxed) para testar dispositivos suspeitos</li>
+            </ul>
+
+            <h3>Hardening de Sistema Linux</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>📦 Remover Software</h4>
+                    <div class="cmd-box">
+                        yum list installed<br>
+                        apt list --installed<br>
+                        yum erase pacote<br>
+                        apt remove pacote
+                    </div>
+                </div>
+                <div class="card">
+                    <h4>🔍 Serviços Ativos</h4>
+                    <div class="cmd-box">
+                        systemctl --type=service --state=active<br>
+                        systemctl disable servicename<br>
+                        systemctl stop servicename
+                    </div>
+                </div>
+            </div>
+
+            <h3>iptables (Firewall Linux)</h3>
+            <h4>Cadeias (Chains):</h4>
+            <ul>
+                <li><strong>Input:</strong> Conexões entrantes</li>
+                <li><strong>Forward:</strong> Pacotes atravessando o sistema</li>
+                <li><strong>Output:</strong> Conexões saindo</li>
+            </ul>
+
+            <h4>Ações:</h4>
+            <ul>
+                <li><strong>Accept:</strong> Permite conexão</li>
+                <li><strong>Drop:</strong> Descarta sem resposta</li>
+                <li><strong>Reject:</strong> Rejeita com resposta</li>
+            </ul>
+
+            <div class="cmd-box">
+                sudo iptables -L                    # Listar regras<br>
+                sudo iptables -F                    # Limpar regras<br>
+                sudo iptables -A INPUT -s 192.168.0.254 -j DROP  # Bloquear IP<br>
+                sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT # Permitir HTTP
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4️⃣ Segurança Wireless</h2>
+
+            <h3>Padrões de Segurança Wi-Fi</h3>
+            <table>
+                <tr>
+                    <th>Padrão</th>
+                    <th>Características</th>
+                </tr>
+                <tr>
+                    <td><strong>WPA1</strong></td>
+                    <td>RC4 com TKIP (substituiu WEP), vulnerável</td>
+                </tr>
+                <tr>
+                    <td><strong>WPA2</strong></td>
+                    <td>AES com CCMP (128-bit). Personal (PSK) e Enterprise (RADIUS). Vulnerável ao ataque de 4-way handshake</td>
+                </tr>
+                <tr>
+                    <td><strong>WPA3</strong></td>
+                    <td>SAE substitui PSK, Enhanced Open, AES GCMP, Perfect Forward Secrecy, Wi-Fi Easy Connect (QR code)</td>
+                </tr>
+            </table>
+
+            <div class="golden-rule">
+                <strong>⚠️ WPS (Wi-Fi Protected Setup):</strong> Vulnerável a ataques de força bruta. DESABILITAR!
+            </div>
+
+            <h3>Métodos de Autenticação</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>🔑 Personal</h4>
+                    <ul>
+                        <li><strong>PSK:</strong> Passphrase de 8-63 caracteres</li>
+                        <li><strong>SAE (WPA3):</strong> Password-Authenticated Key Exchange</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🏢 Enterprise (802.1X)</h4>
+                    <ul>
+                        <li>RADIUS + EAP</li>
+                        <li>PEAP: EAP em túnel SSL/TLS</li>
+                        <li>EAP-TLS: mais seguro (certificados cliente/servidor)</li>
+                        <li>EAP-TTLS: requer apenas certificado servidor</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>5️⃣ Ataques Wireless</h2>
+
+            <h3>Principais Ataques</h3>
+            <table>
+                <tr>
+                    <th>Ataque</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Evil Twin</strong></td>
+                    <td>Rogue AP imitando rede legítima, usa jamming/deauth para forçar reconexão</td>
+                </tr>
+                <tr>
+                    <td><strong>KRACK</strong></td>
+                    <td>Ataque ao 4-way handshake WPA/WPA2. Manter clientes/APs atualizados</td>
+                </tr>
+                <tr>
+                    <td><strong>Deauth/Disassociation</strong></td>
+                    <td>Exploita frames de gerenciamento não criptografados, desconecta usuários</td>
+                </tr>
+                <tr>
+                    <td><strong>IV Attack</strong></td>
+                    <td>WEP reutiliza IVs (24-bit), quebrado em minutos - NÃO USAR WEP</td>
+                </tr>
+                <tr>
+                    <td><strong>Jamming</strong></td>
+                    <td>Interferência em frequências de rádio (spark, random noise, random pulse)</td>
+                </tr>
+                <tr>
+                    <td><strong>Rogue AP</strong></td>
+                    <td>AP instalado sem autorização, cria backdoor. Detecção: WIPS, analisadores Wi-Fi</td>
+                </tr>
+            </table>
+
+            <h3>Ataques Bluetooth</h3>
+            <ul>
+                <li><strong>Bluejacking:</strong> envio de mensagens indesejadas (incômodo)</li>
+                <li><strong>Bluesnarfing:</strong> exploita OBEX, acessa calendário, emails, contatos</li>
+                <li><strong>Mitigação:</strong> habilitar Bluetooth apenas quando necessário, desabilitar modo discovery</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>6️⃣ Métodos de Autenticação e Acesso</h2>
+
+            <h3>802.1X (Port-based Network Access Control)</h3>
+            <ul>
+                <li><strong>Supplicant:</strong> dispositivo solicitando acesso</li>
+                <li><strong>Authenticator:</strong> switch/AP (cliente RADIUS)</li>
+                <li><strong>Authentication Server:</strong> servidor RADIUS</li>
+            </ul>
+
+            <h4>Funcionamento:</h4>
+            <ol>
+                <li>Host conecta a porta 802.1X</li>
+                <li>Switch abre porta apenas para EAPoL</li>
+                <li>Switch recebe EAP com credenciais (criptografadas)</li>
+                <li>Switch encapsula em RADIUS e envia ao servidor</li>
+                <li>Servidor valida credenciais</li>
+                <li>Se sucesso, servidor envia Access-Accept</li>
+                <li>Switch libera acesso completo à rede</li>
+            </ol>
+
+            <h3>Air-Gapped</h3>
+            <ul>
+                <li>Host ou rede fisicamente isolada (sem conexão cabeada ou wireless)</li>
+                <li>Exemplos: CA raiz PKI, análise de malware</li>
+                <li>Desafios: administração local, atualizações via USB (vetor de ataque)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>7️⃣ Protocolos Seguros</h2>
+
+            <h3>SSH (Secure Shell)</h3>
+            <ul>
+                <li>Administração remota via linha de comando</li>
+                <li>Transferência segura de arquivos (SFTP)</li>
+                <li><strong>Host Key:</strong> identifica servidor SSH (mudar se comprometido)</li>
+            </ul>
+
+            <div class="cmd-box">
+                ssh bobby@10.1.0.10                    # Conectar<br>
+                ssh-keygen -t rsa                       # Gerar par de chaves<br>
+                ssh-copy-id bobby@10.1.0.10             # Copiar chave pública<br>
+                scp bobby@10.1.0.10:/logs/audit.log .   # Copiar arquivo
+            </div>
+
+            <h3>HTTPS vs S-HTTP</h3>
+            <table>
+                <tr>
+                    <th>HTTPS</th>
+                    <th>S-HTTP</th>
+                </tr>
+                <tr>
+                    <td>HTTP + SSL/TLS</td>
+                    <td>Alternativa não amplamente usada</td>
+                </tr>
+                <tr>
+                    <td>Criptografa dados sensíveis</td>
+                    <td>Menos seguro que HTTPS</td>
+                </tr>
+                <tr>
+                    <td>Porta 443, stateful</td>
+                    <td>Connectionless</td>
+                </tr>
+                <tr>
+                    <td>Ícone de cadeado no navegador</td>
+                    <td>Apenas segurança de mensagem</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>8️⃣ IPsec e VPNs</h2>
+
+            <h3>Protocolos IPsec</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>🔐 AH (Authentication Header)</h4>
+                    <ul>
+                        <li>Hash criptográfico em todo pacote + chave secreta</li>
+                        <li>ICV (Integrity Check Value) no header</li>
+                        <li>NÃO fornece confidencialidade (payload não criptografado)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🔒 ESP (Encapsulating Security Payload)</h4>
+                    <ul>
+                        <li>Criptografa o pacote</li>
+                        <li>Header, Trailer, ICV</li>
+                        <li>ICV exclui IP header</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Modos de Operação</h3>
+            <ul>
+                <li><strong>Transport Mode:</strong> comunicações entre hosts em rede privada. ESP: IP header não criptografado</li>
+                <li><strong>Tunnel Mode:</strong> comunicações VPN entre sites. Todo pacote IP criptografado e encapsulado</li>
+            </ul>
+
+            <h3>IKE (Internet Key Exchange)</h3>
+            <ul>
+                <li><strong>Phase I:</strong> estabelece identidade, Diffie-Hellman, canal seguro</li>
+                <li><strong>Phase II:</strong> estabelece cifras para AH/ESP</li>
+                <li><strong>IKEv2:</strong> suporta EAP (RADIUS), NAT traversal, MOBIKE</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>9️⃣ Ataques a Aplicações Web</h2>
+
+            <h3>Tipos de Ataques</h3>
+            <table>
+                <tr>
+                    <th>Ataque</th>
+                    <th>Descrição</th>
+                </tr>
+                <tr>
+                    <td><strong>Buffer Overflow</strong></td>
+                    <td>Mais dados que o buffer suporta, acesso a áreas de memória desprotegidas</td>
+                </tr>
+                <tr>
+                    <td><strong>Race Condition (TOCTTOU)</strong></td>
+                    <td>Time-Of-Check to Time-Of-Use, atacante age entre check e use</td>
+                </tr>
+                <tr>
+                    <td><strong>Memory Leak</strong></td>
+                    <td>Memória alocada não liberada, causa DoS</td>
+                </tr>
+                <tr>
+                    <td><strong>Replay Attack</strong></td>
+                    <td>Tráfego interceptado e retransmitido. Mitigação: timestamps, nonces</td>
+                </tr>
+                <tr>
+                    <td><strong>Pass the Hash</strong></td>
+                    <td>Usa hash para acessar outras workstations. Mitigação: desabilitar RDP, contas separadas</td>
+                </tr>
+                <tr>
+                    <td><strong>SSL Stripping</strong></td>
+                    <td>Remove segurança de sites HTTPS. Mitigação: HSTS preload</td>
+                </tr>
+            </table>
+
+            <h3>Improper Input Handling</h3>
+            <p>Falta de validação, sanitização, filtragem pode levar a:</p>
+            <ul>
+                <li>Buffer overflows, XSS, Directory traversal, SQL injection</li>
+                <li>NULL byte injections, OS commanding, DoS</li>
+                <li><strong>Mitigação:</strong> definir parâmetros, validar, sanitizar</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🔟 SDLC e Desenvolvimento Seguro</h2>
+
+            <h3>Modelos de Desenvolvimento</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>💧 Waterfall (Cascata)</h4>
+                    <ul>
+                        <li>Requirements → Design → Implementation → Testing → Deployment → Maintenance</li>
+                        <li>Cada etapa completa antes da próxima</li>
+                        <li>Processo lento, pouca flexibilidade</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🔄 Agile (Ágil)</h4>
+                    <ul>
+                        <li>Sprints de 2-3 semanas</li>
+                        <li>Desenvolvimento contínuo e mutável</li>
+                        <li>Testes durante todo ciclo</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Métodos de Testes de Segurança</h3>
+            <table>
+                <tr>
+                    <th>Método</th>
+                    <th>Características</th>
+                </tr>
+                <tr>
+                    <td><strong>SAST</strong></td>
+                    <td>White box, analisa código fonte, início do processo, identifica causa exata, alto falso positivo</td>
+                </tr>
+                <tr>
+                    <td><strong>DAST</strong></td>
+                    <td>Black box, escaneia app em execução, não específico de linguagem, menos falso positivo</td>
+                </tr>
+                <tr>
+                    <td><strong>IAST</strong></td>
+                    <td>Interativo, combina SAST e DAST, identifica linha de código problemática em runtime</td>
+                </tr>
+                <tr>
+                    <td><strong>Fuzz Testing</strong></td>
+                    <td>Fornece dados inválidos/aleatórios aos inputs (mutation-based, generation-based)</td>
+                </tr>
+            </table>
+
+            <h3>Sandboxing</h3>
+            <ul>
+                <li>Isola processos em execução</li>
+                <li>Exemplos: Chrome (abas separadas), iOS/Android (apps isolados), Docker (containers)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣1️⃣ Codificação Segura</h2>
+
+            <h3>Técnicas</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>📦 Code Reuse</h4>
+                    <p>Reutilizar código testado, mas testar comprehensivamente antes de permitir</p>
+                </div>
+                <div class="card">
+                    <h4>💀 Dead Code</h4>
+                    <p>Código não executado ou obsoleto - REMOVER! Se não existe, não pode ser explorado</p>
+                </div>
+                <div class="card">
+                    <h4>🕵️ Code Obfuscation</h4>
+                    <p>Criar código difícil de entender, prevenir engenharia reversa (não é segurança forte)</p>
+                </div>
+                <div class="card">
+                    <h4>📝 Stored Procedures</h4>
+                    <p>Instruções SQL armazenadas, limitam ataques de injection</p>
+                </div>
+            </div>
+
+            <h3>Secure Cookies</h3>
+            <ul>
+                <li><strong>Secure:</strong> enviado apenas sobre HTTPS</li>
+                <li><strong>HttpOnly:</strong> previne acesso via JavaScript (XSS)</li>
+                <li><strong>SameSite:</strong> limita envio cross-site (CSRF)</li>
+                <li><strong>Expiration:</strong> limites de tempo de vida</li>
+            </ul>
+
+            <h3>Code Signing</h3>
+            <div class="golden-rule">
+                <strong>⚠️ IMPORTANTE:</strong> Code signing NÃO garante segurança do código! Apenas certifica origem e integridade.
+            </div>
+            <ul>
+                <li>Signer usa chave privada para criptografar hash do código</li>
+                <li>Requer certificado de CA confiável</li>
+                <li>Código assinado ainda pode conter bugs ou código malicioso</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣2️⃣ Hardening de Aplicações</h2>
+
+            <h3>Diretrizes Básicas</h3>
+            <ul>
+                <li>Assumir que todas aplicações instaladas têm falhas</li>
+                <li>Remover aplicações não utilizadas do sistema</li>
+                <li>Limitar privilégios administrativos</li>
+                <li>Instalar software de segurança (antivírus, anti-spyware)</li>
+                <li>Restringir acesso à aplicação (apenas quem precisa)</li>
+                <li>Atualizar com patches mais recentes</li>
+            </ul>
+
+            <h3>Técnicas Específicas</h3>
+            <ul>
+                <li><strong>Block Process Spawning:</strong> prevenir criação de processos filhos</li>
+                <li><strong>Control Access to Executable Files:</strong> remover permissões de Write</li>
+                <li><strong>Protect OS Components:</strong> proteger Registry, áreas sensíveis</li>
+                <li><strong>Use Exception Rules:</strong> contornar hardening quando necessário (com cautela)</li>
+                <li><strong>DEP (Data Execution Prevention):</strong> previne execução em áreas de memória usadas para dados</li>
+                <li><strong>AppArmor:</strong> hardening específico para Linux</li>
+            </ul>
+
+            <h3>Validação de Entrada</h3>
+            <ul>
+                <li><strong>Client-Side:</strong> identifica erros antes do envio, mas pode ser contornada</li>
+                <li><strong>Server-Side:</strong> ESSENCIAL, atacantes podem enviar dados fora da interface padrão</li>
+            </ul>
+        </div>
+
+        <div class="tip-box">
+            <strong>💡 DICAS FINAIS PARA PROVA:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>Hardening:</strong> menor funcionalidade, remover serviços, desabilitar portas</li>
+                <li><strong>WPA3 > WPA2 > WPA > WEP</strong> (SAE, Perfect Forward Secrecy)</li>
+                <li><strong>802.1X:</strong> Supplicant → Authenticator → Authentication Server (RADIUS)</li>
+                <li><strong>SAST:</strong> white box, código | <strong>DAST:</strong> black box, app rodando</li>
+                <li><strong>Code Signing:</strong> autenticidade, NÃO segurança</li>
+                <li><strong>Secure Cookies:</strong> Secure (HTTPS), HttpOnly (XSS), SameSite (CSRF)</li>
+                <li><strong>IPsec:</strong> AH (autenticação), ESP (criptografia)</li>
+                <li><strong>FTP</strong> inseguro, usar <strong>SFTP/FTPS</strong></li>
+                <li><strong>Deauth Attack:</strong> frames de gerenciamento não criptografados</li>
+                <li><strong>Pass the Hash:</strong> usar hash para acessar outras máquinas</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>📚 Resumo autoral para certificação CompTIA Security+ • Capítulo 8</p>
+        </div>
+    </div>
+</body>
+</html>

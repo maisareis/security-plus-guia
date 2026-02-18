@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guia de Estudos Security+</title>
+    <style>
+        /* ========== ESTILOS GLOBAIS ========== */
+        /* Reset básico para remover margens e paddings padrão */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilo principal do corpo da página */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;        /* Fundo cinza claro */
+            color: #0f172a;              /* Texto azul escuro */
+            line-height: 1.6;
+        }
+
+        /* ========== CABEÇALHO (HEADER) ========== */
+        header {
+            background: white;            /* Fundo branco */
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;  /* Linha cinza suave na parte inferior */
+        }
+
+        /* Título principal com gradiente azul-roxo */
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);  /* Gradiente azul para roxo */
+            -webkit-background-clip: text;           /* Faz o gradiente aparecer no texto */
+            -webkit-text-fill-color: transparent;    /* Torna o texto transparente para mostrar o gradiente */
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        /* Subtítulo do cabeçalho */
+        header p {
+            color: #475569;               /* Cinza médio */
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ========== BARRA DE ESTATÍSTICAS ========== */
+        /* Container flexível para os cards de estatísticas */
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;              /* Permite quebra em telas pequenas */
+        }
+
+        /* Cada card individual de estatística */
+        .stat-card {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
+            font-weight: 500;
+            color: #2563eb;                /* Texto azul */
+        }
+
+        /* Texto menor dentro do card (ex: "Capítulos", "Flashcards") */
+        .stat-card span {
+            display: block;
+            font-size: 0.9rem;
+            color: #64748b;                /* Cinza mais claro */
+            margin-bottom: 5px;
+        }
+
+        /* ========== MENU DE NAVEGAÇÃO ========== */
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            padding: 0 20px;
+        }
+
+        /* Links do menu */
+        nav a {
+            text-decoration: none;
+            background: white;
+            padding: 10px 18px;
+            border-radius: 30px;            /* Bordas arredondadas */
+            color: #475569;
+            transition: all 0.3s ease;      /* Transição suave no hover */
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* Efeito ao passar o mouse sobre os links */
+        nav a:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            transform: translateY(-1px);     /* Leve elevação */
+        }
+
+        /* ========== CONTEÚDO PRINCIPAL ========== */
+        main {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        /* Cada seção da página (capítulos, domínios, resumos, etc.) */
+        section {
+            margin-bottom: 60px;
+        }
+
+        /* Cabeçalho de cada seção (ícone + título) */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        /* Título da seção */
+        .section-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #0f172a;
+            border-bottom: 3px solid #e2e8f0;  /* Linha abaixo do título */
+            padding-bottom: 8px;
+            flex: 1;                            /* Ocupa o espaço restante */
+        }
+
+        /* Ícone da seção (📖, 🎯, 📝, etc.) */
+        .section-icon {
+            font-size: 2rem;
+        }
+
+        /* ========== GRID DE CARDS ========== */
+        /* Layout em grade responsivo para os cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));  /* Mínimo 300px, máximo flexível */
+            gap: 20px;
+        }
+
+        /* Card individual (usado para flashcards e resumos) */
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-decoration: none;          /* Remove sublinhado de links */
+            color: inherit;                 /* Mantém a cor do texto */
+            display: block;
+        }
+
+        /* Efeito hover nos cards */
+        .card:hover {
+            transform: translateY(-4px);     /* Elevação */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #94a3b8;
+        }
+
+        /* Número do capítulo (ex: "Capítulo 01") */
+        .card-number {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2563eb;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Título do card */
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        /* Descrição do card */
+        .card-desc {
+            color: #475569;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Metadados do card (quantidade de flashcards, questões) */
+        .card-meta {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;   /* Linha separadora acima */
+            padding-top: 15px;
+        }
+
+        /* Badges (pequenas tags coloridas) */
+        .badge {
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        /* ========== GRID DE DOMÍNIOS ========== */
+        .domains-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        /* Card de domínio (ligeiramente diferente do card padrão) */
+        .domain-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .domain-card:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+        }
+
+        .domain-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #0f172a;
+        }
+
+        .domain-card p {
+            color: #475569;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        /* Link dentro do card de domínio */
+        .domain-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .domain-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== RODAPÉ (FOOTER) ========== */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #64748b;
+            background: white;
+            margin-top: 60px;
+        }
+
+        /* Links do rodapé */
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #475569;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: #2563eb;
+        }
+
+        /* ========== CAIXA DE BOAS-VINDAS ========== */
+        .welcome-box {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .welcome-box h2 {
+            font-size: 2rem;
+            color: #0f172a;
+            margin-bottom: 20px;
+        }
+
+        .welcome-box p {
+            color: #475569;
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* ========== MEDIA QUERIES (RESPONSIVIDADE) ========== */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;            /* Título menor em celular */
+            }
+            .card-grid {
+                grid-template-columns: 1fr;  /* Cards em coluna única */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ========== CABEÇALHO ========== -->
+    <header>
+        <h1>📚 Security+ Guia de Estudos</h1>
+        <p>Flashcards, resumos e simulados autorais para sua certificação</p>
+        
+        <!-- BARRA DE ESTATÍSTICAS -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <span>Capítulos</span>
+                13
+            </div>
+            <div class="stat-card">
+                <span>Flashcards</span>
+                630+
+            </div>
+            <div class="stat-card">
+                <span>Questões</span>
+                340+
+            </div>
+            <div class="stat-card">
+                <span>Domínios</span>
+                5
+            </div>
+        </div>
+
+        <!-- MENU DE NAVEGAÇÃO (âncoras para as seções) -->
+        <nav>
+            <a href="#capitulos">📖 Capítulos</a>
+            <a href="#dominios">🎯 Domínios</a>
+            <a href="#resumos">📝 Resumos</a>
+            <a href="#simulados">❓ Simulados</a>
+            <a href="#sobre">ℹ️ Sobre</a>
+        </nav>
+    </header>
+
+    <!-- ========== CONTEÚDO PRINCIPAL ========== -->
+    <main>
+        <!-- SEÇÃO DE BOAS-VINDAS (âncora "sobre") -->
+        <div class="welcome-box" id="sobre">
+            <h2>Bem-vindo(a) ao seu guia de estudos! 👋</h2>
+            <p>Este material foi desenvolvido com base nos objetivos da certificação CompTIA Security+. Aqui você encontra flashcards organizados por capítulo, resumos detalhados e questões autorais para fixar o conteúdo.</p>
+        </div>
+
+        <!-- ========== SEÇÃO DE FLASHCARDS POR CAPÍTULO ========== -->
+        <section id="capitulos">
+            <div class="section-header">
+                <span class="section-icon">📖</span>
+                <h2>Flashcards por Capítulo</h2>
+            </div>
+            
+            <!-- GRADE DE CARDS DOS 13 CAPÍTULOS -->
+            <div class="card-grid">
+                <!-- Capítulo 1 - Rosa -->
+                <a href="flash cards capitulo 1.html" class="card" style="border-left: 5px solid #f093fb;">
+                    <div class="card-number">Capítulo 01</div>
+                    <div class="card-title">Security Concepts</div>
+                    <div class="card-desc">Tríade CIA, controles de segurança, fundamentos</div>
+                    <div class="card-meta">
+                        <span class="badge">40 flashcards</span>
+                        <span class="badge">20 questões</span>
+                    </div>
+                </a>
+
+                <!-- Capítulo 2 - Laranja -->
+                <a href="flash cards capitulo 2.html" class="card" style="border-left: 5px solid #fa709a;">
+                    <div class="card-number">Capítulo 02</div>
+                    <div class="card-title">Threats & Vulnerabilities</div>
+                    <div class="card-desc">Atores de ameaça, engenharia social, malware</div>
+                    <div class="card-meta">
+                        <span class="badge">60 flashcards</span>
+                        <span class="badge">30 questões</span>
+                    </div>
+                </a>
+
+                <!-- Capítulo 3 - Azul -->
+                <a href="flash cards capitulo 3.html" class="card" style="border-left: 5px solid #00c6ff;">
+                    <div class="card-number">Capítulo 03</div>
+                    <div class="card-title">Criptografia</div>
+                    <div class="card-desc">Simétrica, assimétrica, hashing, PKI, certificados</div>
+                    <div class="card-meta">
+                        <span class="badge">65 flashcards</span>
+                        <span class="badge">30 questões</span>
+                    </div>
+                </a>
+
+                <!-- Capítulo 4 - Verde/rosa -->
+                <a href="flash cards capitulo 4.html" class="card" style="border-left: 5px solid #a8edea;">
+                    <div class="card-number">Capítulo 04</div>
+                    <div class="card-title">IAM - Identity & Access Management</div>
+                    <div class="card-desc">Autenticação, autorização, MFA, Kerberos, LDAP</div>
+                    <div class="card-meta">
+                        <span class="badge">70 flashcards</span>
+                        <span class="badge">35 questões</span>
+                    </div>
+                </a>
+
+                <!-- Capítulo 5 - Roxo -->
+                <a href="flash cards capitulo 5.html" class="card" style="border-left: 5px solid #667eea;">
+                    <div class="card-number">Capítulo 05</div>
+                    <div class="card-title">Arquitetura de Redes</div>
+                    <div class="card-desc">DMZ, firewalls, VPN, NAC, segmentação</div>
+                    <div class="card-meta">
+                        <span class="badge">70 flashcards</span>
+                        <span class="badge">35 questões</span>
+                    </div>
+                </a>
+
+                <!-- Capítulo 6 - Vermelho -->
+                <a href="flash cards capitulo 6.html" class="card" style="border-left: 5px solid #ff6b6b;">
+                    <div class="card-number">Capítulo 06</div>
+                    <div class="card-title">Security Assessment</div>
+                    <div class="card-desc">Reconhecimento, scans, IDS/IPS, ataques de senha</div>
+                    <div class="card-meta">
+                        <span class="badge">75 flashcards</span>
+                        <span class="badge">35 questões</span>
+                    </div>
+                </a>
+
+                <!-- Capítulo 7 - Verde escuro -->
+                <a href="flash cards capitulo 7.html" class="card" style="border-left: 5px solid #11998e;">
+                    <div class="card-number">Capítulo 07</div>
+                    <div class="card-title">Vulnerability Management</div>
+                    <div class="card-desc">CVSS, CVE, SIEM, SOAR, pentest, remediação</div>
+                    <div class="card-meta">
+                        <span class="badge">70 flashcards</span>
+                        <span class="badge">35 questões</span>
+                    </div>
+                </a>
+
+                <!-- Capítulo 8 - Rosa claro -->
+                <a href="flash cards capitulo 8.html" class="card" style="border-left: 5px solid #ee9ca7;">
+                    <div class="card-number">Capítulo 08</div>
+                    <div class="card-title">Network & Endpoint</div>
+                    <div class="card-desc">Hardening, Wi-Fi, protocolos seguros, SDLC</div>
+                    <div class="card-meta">
+                        <span class="badge">80 flashcards</span>
+                        <span class="badge">40 questões</span>
+                    </div>
+                </a>
+
+                <!-- Capítulo 9 - Azul claro -->
+                <a href="flash cards capitulo 9.html" class="card" style="border-left: 5px solid #4facfe;">
+                    <div class="card-number">Capítulo 09</div>
+                    <div class="card-title">Incident Response</div>
+                    <div class="card-desc">Fases do IR, forense, backup, RAID, DR</div>
+                    <div class="card-meta">
+                        <span class="badge">50 flashcards</span>
+                        <span class="badge">25 questões</span>
+                    </div>
+                </a>
+
+                <!-- Capítulo 10 - Roxo escuro -->
+                <a href="flash cards capitulo 10.html" class="card" style="border-left: 5px solid #764ba2;">
+                    <div class="card-number">Capítulo 10</div>
+                    <div class="card-title">Virtualização & Cloud</div>
+                    <div class="card-desc">Hypervisors, containers, cloud services, MDM</div>
+                    <div class="card-meta">
+                        <span class="badge">30 flashcards</span>
+                        <span class="badge">15 questões</span>
+                    </div>
+                </a>
+
+                <!-- Capítulo 11 - Verde -->
+                <a href="flash cards capitulo 11.html" class="card" style="border-left: 5px solid #0ba360;">
+                    <div class="card-number">Capítulo 11</div>
+                    <div class="card-title">Security Governance</div>
+                    <div class="card-desc">Policies, standards, change management, SOAR</div>
+                    <div class="card-meta">
+                        <span class="badge">15 flashcards</span>
+                        <span class="badge">8 questões</span>
+                    </div>
+                </a>
+
+                <!-- Capítulo 12 - Laranja/vermelho -->
+                <a href="flash cards capitulo 12.html" class="card" style="border-left: 5px solid #ff7e5f;">
+                    <div class="card-number">Capítulo 12</div>
+                    <div class="card-title">Risk Management</div>
+                    <div class="card-desc">ALE, SLE, RTO, RPO, vendor management</div>
+                    <div class="card-meta">
+                        <span class="badge">20 flashcards</span>
+                        <span class="badge">10 questões</span>
+                    </div>
+                </a>
+
+                <!-- Capítulo 13 - Azul escuro -->
+                <a href="flash cards capitulo 13.html" class="card" style="border-left: 5px solid #2c3e50;">
+                    <div class="card-number">Capítulo 13</div>
+                    <div class="card-title">Data Protection</div>
+                    <div class="card-desc">Classificação de dados, LGPD, GDPR, destruição</div>
+                    <div class="card-meta">
+                        <span class="badge">20 flashcards</span>
+                        <span class="badge">10 questões</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- ========== SEÇÃO DE FLASHCARDS POR DOMÍNIO ========== -->
+        <section id="dominios">
+            <div class="section-header">
+                <span class="section-icon">🎯</span>
+                <h2>Flashcards por Domínio</h2>
+            </div>
+
+            <div class="domains-grid">
+                <div class="domain-card">
+                    <h3>Ameaças, Ataques e Vulnerabilidades</h3>
+                    <p>Malware, engenharia social, ataques de rede e aplicação</p>
+                    <a href="dominio 1.html" class="domain-link">Acessar flashcards →</a>
+                </div>
+                <div class="domain-card">
+                    <h3>Arquitetura e Design</h3>
+                    <p>Defesa em profundidade, segmentação, cloud, virtualização</p>
+                    <a href="dominio 2.html" class="domain-link">Acessar flashcards →</a>
+                </div>
+                <div class="domain-card">
+                    <h3>Implementação</h3>
+                    <p>Criptografia, PKI, IAM, autenticação, controles de acesso</p>
+                    <a href="dominio 3.html" class="domain-link">Acessar flashcards →</a>
+                </div>
+                <div class="domain-card">
+                    <h3>Operações e Resposta a Incidentes</h3>
+                    <p>Monitoramento, forense, DRP, backup, resposta a incidentes</p>
+                    <a href="dominio 4.html" class="domain-link">Acessar flashcards →</a>
+                </div>
+                <div class="domain-card">
+                    <h3>Governança, Risco e Conformidade</h3>
+                    <p>Políticas, compliance, gestão de risco, privacidade</p>
+                    <a href="dominio 5.html" class="domain-link">Acessar flashcards →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== SEÇÃO DE RESUMOS ========== -->
+        <section id="resumos">
+            <div class="section-header">
+                <span class="section-icon">📝</span>
+                <h2>Resumos de Estudo</h2>
+            </div>
+
+            <!-- GRADE DE CARDS DOS RESUMOS (13 CAPÍTULOS) -->
+            <div class="card-grid">
+                <!-- Resumo Capítulo 1 - Rosa -->
+                <a href="resumo capitulo 1.html" class="card" style="border-left: 5px solid #f093fb;">
+                    <div class="card-number">Resumo Capítulo 01</div>
+                    <div class="card-title">Security Concepts</div>
+                    <div class="card-desc">Tríade CIA, tipos de controles, fundamentos de segurança</div>
+                    <div class="card-meta">
+                        <span class="badge">PDF interativo</span>
+                        <span class="badge">6 seções</span>
+                    </div>
+                </a>
+
+                <!-- Resumo Capítulo 2 - Laranja -->
+                <a href="resumo capitulo 2.html" class="card" style="border-left: 5px solid #fa709a;">
+                    <div class="card-number">Resumo Capítulo 02</div>
+                    <div class="card-title">Threats & Vulnerabilities</div>
+                    <div class="card-desc">Atores de ameaça, engenharia social, malware, ataques</div>
+                    <div class="card-meta">
+                        <span class="badge">PDF interativo</span>
+                        <span class="badge">6 seções</span>
+                    </div>
+                </a>
+
+                <!-- Resumo Capítulo 3 - Azul -->
+                <a href="resumo capitulo 3.html" class="card" style="border-left: 5px solid #00c6ff;">
+                    <div class="card-number">Resumo Capítulo 03</div>
+                    <div class="card-title">Criptografia</div>
+                    <div class="card-desc">Simétrica, assimétrica, hashing, PKI, certificados</div>
+                    <div class="card-meta">
+                        <span class="badge">PDF interativo</span>
+                        <span class="badge">10 seções</span>
+                    </div>
+                </a>
+
+                <!-- Resumo Capítulo 4 - Verde/rosa -->
+                <a href="resumo capitulo 4.html" class="card" style="border-left: 5px solid #a8edea;">
+                    <div class="card-number">Resumo Capítulo 04</div>
+                    <div class="card-title">IAM - Identity & Access Management</div>
+                    <div class="card-desc">Autenticação, autorização, MFA, Kerberos, LDAP</div>
+                    <div class="card-meta">
+                        <span class="badge">PDF interativo</span>
+                        <span class="badge">11 seções</span>
+                    </div>
+                </a>
+
+                <!-- Resumo Capítulo 5 - Roxo -->
+                <a href="resumo capitulo 5.html" class="card" style="border-left: 5px solid #667eea;">
+                    <div class="card-number">Resumo Capítulo 05</div>
+                    <div class="card-title">Arquitetura de Redes</div>
+                    <div class="card-desc">DMZ, firewalls, VPN, NAC, segmentação</div>
+                    <div class="card-meta">
+                        <span class="badge">PDF interativo</span>
+                        <span class="badge">11 seções</span>
+                    </div>
+                </a>
+
+                <!-- Resumo Capítulo 6 - Vermelho -->
+                <a href="resumo capitulo 6.html" class="card" style="border-left: 5px solid #ff6b6b;">
+                    <div class="card-number">Resumo Capítulo 06</div>
+                    <div class="card-title">Security Assessment</div>
+                    <div class="card-desc">Reconhecimento, scans, IDS/IPS, ataques de senha</div>
+                    <div class="card-meta">
+                        <span class="badge">PDF interativo</span>
+                        <span class="badge">6 seções</span>
+                    </div>
+                </a>
+
+                <!-- Resumo Capítulo 7 - Verde escuro -->
+                <a href="resumo capitulo 7.html" class="card" style="border-left: 5px solid #11998e;">
+                    <div class="card-number">Resumo Capítulo 07</div>
+                    <div class="card-title">Vulnerability Management</div>
+                    <div class="card-desc">CVSS, CVE, SIEM, SOAR, pentest, remediação</div>
+                    <div class="card-meta">
+                        <span class="badge">PDF interativo</span>
+                        <span class="badge">8 seções</span>
+                    </div>
+                </a>
+
+                <!-- Resumo Capítulo 8 - Rosa claro -->
+                <a href="resumo capitulo 8.html" class="card" style="border-left: 5px solid #ee9ca7;">
+                    <div class="card-number">Resumo Capítulo 08</div>
+                    <div class="card-title">Network & Endpoint</div>
+                    <div class="card-desc">Hardening, Wi-Fi, protocolos seguros, SDLC</div>
+                    <div class="card-meta">
+                        <span class="badge">PDF interativo</span>
+                        <span class="badge">12 seções</span>
+                    </div>
+                </a>
+
+                <!-- Resumo Capítulo 9 - Azul claro -->
+                <a href="resumo capitulo 9.html" class="card" style="border-left: 5px solid #4facfe;">
+                    <div class="card-number">Resumo Capítulo 09</div>
+                    <div class="card-title">Incident Response</div>
+                    <div class="card-desc">Fases do IR, forense, backup, RAID, DR</div>
+                    <div class="card-meta">
+                        <span class="badge">PDF interativo</span>
+                        <span class="badge">13 seções</span>
+                    </div>
+                </a>
+
+                <!-- Resumo Capítulo 10 - Roxo escuro -->
+                <a href="resumo capitulo 10.html" class="card" style="border-left: 5px solid #764ba2;">
+                    <div class="card-number">Resumo Capítulo 10</div>
+                    <div class="card-title">Virtualização & Cloud</div>
+                    <div class="card-desc">Hypervisors, containers, cloud services, MDM</div>
+                    <div class="card-meta">
+                        <span class="badge">PDF interativo</span>
+                        <span class="badge">12 seções</span>
+                    </div>
+                </a>
+
+                <!-- Resumo Capítulo 11 - Verde -->
+                <a href="resumo capitulo 11.html" class="card" style="border-left: 5px solid #0ba360;">
+                    <div class="card-number">Resumo Capítulo 11</div>
+                    <div class="card-title">Security Governance</div>
+                    <div class="card-desc">Policies, standards, change management, SOAR</div>
+                    <div class="card-meta">
+                        <span class="badge">PDF interativo</span>
+                        <span class="badge">9 seções</span>
+                    </div>
+                </a>
+
+                <!-- Resumo Capítulo 12 - Laranja/vermelho -->
+                <a href="resumo capitulo 12.html" class="card" style="border-left: 5px solid #ff7e5f;">
+                    <div class="card-number">Resumo Capítulo 12</div>
+                    <div class="card-title">Risk Management</div>
+                    <div class="card-desc">ALE, SLE, RTO, RPO, vendor management</div>
+                    <div class="card-meta">
+                        <span class="badge">PDF interativo</span>
+                        <span class="badge">10 seções</span>
+                    </div>
+                </a>
+
+                <!-- Resumo Capítulo 13 - Azul escuro -->
+                <a href="resumo capitulo 13.html" class="card" style="border-left: 5px solid #2c3e50;">
+                    <div class="card-number">Resumo Capítulo 13</div>
+                    <div class="card-title">Data Protection</div>
+                    <div class="card-desc">Classificação de dados, LGPD, GDPR, destruição</div>
+                    <div class="card-meta">
+                        <span class="badge">PDF interativo</span>
+                        <span class="badge">9 seções</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- ========== SEÇÃO DE SIMULADOS ========== -->
+        <section id="simulados">
+            <div class="section-header">
+                <span class="section-icon">❓</span>
+                <h2>Simulados Autorais</h2>
+            </div>
+
+            <div class="card-grid">
+                <!-- Simulado Geral #1 -->
+                <a href="simulado-geral-1.html" class="card" style="border-left: 5px solid #2563eb;">
+                    <div class="card-number">📝 Simulado Geral</div>
+                    <div class="card-title">Simulado Geral #1</div>
+                    <div class="card-desc">70 questões cobrindo todos os domínios</div>
+                    <div class="card-meta">
+                        <span class="badge">70 questões</span>
+                        <span class="badge">Comentadas</span>
+                    </div>
+                </a>
+
+                <!-- Domínio 1 -->
+                <a href="simulado-dominio-1.html" class="card" style="border-left: 5px solid #f093fb;">
+                    <div class="card-number">🎯 Domínio 1</div>
+                    <div class="card-title">Ameaças, Ataques e Vulnerabilidades</div>
+                    <div class="card-desc">35 questões sobre malware, engenharia social e ataques</div>
+                    <div class="card-meta">
+                        <span class="badge">35 questões</span>
+                        <span class="badge">Comentadas</span>
+                    </div>
+                </a>
+
+                <!-- Domínio 2 -->
+                <a href="simulado-dominio-2.html" class="card" style="border-left: 5px solid #0ba360;">
+                    <div class="card-number">🏛️ Domínio 2</div>
+                    <div class="card-title">Arquitetura e Design</div>
+                    <div class="card-desc">35 questões sobre DMZ, firewalls, VPN, segmentação</div>
+                    <div class="card-meta">
+                        <span class="badge">35 questões</span>
+                        <span class="badge">Comentadas</span>
+                    </div>
+                </a>
+
+                <!-- Domínio 3 -->
+                <a href="simulado-dominio-3.html" class="card" style="border-left: 5px solid #667eea;">
+                    <div class="card-number">⚙️ Domínio 3</div>
+                    <div class="card-title">Implementação</div>
+                    <div class="card-desc">35 questões sobre criptografia, IAM, automação</div>
+                    <div class="card-meta">
+                        <span class="badge">35 questões</span>
+                        <span class="badge">Comentadas</span>
+                    </div>
+                </a>
+
+                <!-- Domínio 4 -->
+                <a href="simulado-dominio-4.html" class="card" style="border-left: 5px solid #ff6b6b;">
+                    <div class="card-number">🛡️ Domínio 4</div>
+                    <div class="card-title">Operações e Resposta a Incidentes</div>
+                    <div class="card-desc">35 questões sobre IR, forense, backup, DR</div>
+                    <div class="card-meta">
+                        <span class="badge">35 questões</span>
+                        <span class="badge">Comentadas</span>
+                    </div>
+                </a>
+
+                <!-- Domínio 5 -->
+                <a href="simulado-dominio-5.html" class="card" style="border-left: 5px solid #2c3e50;">
+                    <div class="card-number">⚖️ Domínio 5</div>
+                    <div class="card-title">Governança, Risco e Conformidade</div>
+                    <div class="card-desc">35 questões sobre políticas, LGPD, GDPR, gestão de risco</div>
+                    <div class="card-meta">
+                        <span class="badge">35 questões</span>
+                        <span class="badge">Comentadas</span>
+                    </div>
+                </a>
+
+                <!-- Desafio Rápido -->
+                <a href="desafio-rapido.html" class="card" style="border-left: 5px solid #f59e0b;">
+                    <div class="card-number">⚡ Desafio</div>
+                    <div class="card-title">Desafio Rápido</div>
+                    <div class="card-desc">20 questões aleatórias com timer de 15 minutos</div>
+                    <div class="card-meta">
+                        <span class="badge">20 questões</span>
+                        <span class="badge">Timer</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========== RODAPÉ ========== -->
+    <footer>
+        <p>📚 Projeto de estudos pessoal - Material educacional autoral para certificação CompTIA Security+</p>
+        <div class="footer-links">
+            <a href="#capitulos">Capítulos</a>
+            <a href="#dominios">Domínios</a>
+            <a href="#resumos">Resumos</a>
+            <a href="#simulados">Simulados</a>
+            <a href="#sobre">Sobre</a>
+        </div>
+        <p style="margin-top: 20px; font-size: 0.85rem;">✨ 13 capítulos • 630+ flashcards • 340+ questões</p>
+    </footer>
+</body>
+</html>
