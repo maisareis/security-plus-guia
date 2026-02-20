@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Security+ Cap 3 - Criptografia e PKI</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -224,6 +224,115 @@
             background: #d1fae5;
             border: 2px solid #10b981;
         }
+
+        /* ===== RESPONSIVIDADE MOBILE - TABELAS EM CARDS ===== */
+        @media (max-width: 768px) {
+            .summary { padding: 20px; }
+            .summary h1 { font-size: 1.8rem; }
+            .summary h2 { font-size: 1.4rem; }
+
+            /* Reset das tabelas para modo cards */
+            table, thead, tbody, th, td, tr { 
+                display: block; 
+                width: 100%;
+            }
+            
+            thead tr { 
+                display: none; 
+            }
+            
+            tr {
+                background: white;
+                border: 1px solid #0072ff;
+                border-radius: 12px;
+                margin-bottom: 20px;
+                padding: 15px;
+                box-shadow: 0 4px 10px rgba(0, 114, 255, 0.2);
+                position: relative;
+            }
+            
+            td {
+                border: none;
+                padding: 15px 10px 15px 38%;
+                position: relative;
+                border-bottom: 1px dashed #f0f0f0;
+                min-height: 70px;
+                word-break: break-word;
+                white-space: normal;
+                line-height: 1.4;
+            }
+            
+            td:last-child {
+                border-bottom: none;
+            }
+            
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                top: 15px;
+                width: 33%;
+                font-weight: 700;
+                color: #0072ff;
+                font-size: 0.8rem;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+                line-height: 1.2;
+                word-break: break-word;
+                white-space: normal;
+            }
+            
+            /* CORREÇÃO ESPECÍFICA PARA PALAVRAS LONGAS */
+            td[data-label="Características"]::before,
+            td[data-label="Termo"]::before,
+            td[data-label="Definição"]::before,
+            td[data-label="Ataque"]::before,
+            td[data-label="Descrição"]::before,
+            td[data-label="Defesa"]::before,
+            td[data-label="Tipo"]::before {
+                font-size: 0.7rem;
+                letter-spacing: -0.2px;
+                white-space: normal;
+                word-break: keep-all;
+            }
+            
+            /* Destaque para a primeira célula (título) */
+            td:first-child {
+                font-weight: 600;
+                color: #00c6ff;
+            }
+            
+            td:first-child::before {
+                color: #00c6ff;
+                font-weight: 800;
+            }
+            
+            /* Ajuste para células vazias */
+            td:empty::before {
+                content: attr(data-label);
+            }
+            
+            /* Tabela de comparação TPM/HSM */
+            table table, table tr, table td {
+                all: revert;
+            }
+        }
+
+        /* Ajuste para telas muito pequenas */
+        @media (max-width: 480px) {
+            td {
+                padding-left: 40%;
+                font-size: 0.85rem;
+                min-height: 80px;
+            }
+            
+            td::before {
+                font-size: 0.65rem;
+                width: 35%;
+                left: 6px;
+                top: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -266,24 +375,24 @@
                         <th>Definição</th>
                     </tr>
                     <tr>
-                        <td><strong>Plaintext/Cleartext</strong></td>
-                        <td>Mensagem não criptografada</td>
+                        <td data-label="Termo"><strong>Plaintext/Cleartext</strong></td>
+                        <td data-label="Definição">Mensagem não criptografada</td>
                     </tr>
                     <tr>
-                        <td><strong>Ciphertext</strong></td>
-                        <td>Mensagem criptografada</td>
+                        <td data-label="Termo"><strong>Ciphertext</strong></td>
+                        <td data-label="Definição">Mensagem criptografada</td>
                     </tr>
                     <tr>
-                        <td><strong>Algorithm (Algoritmo)</strong></td>
-                        <td>Processo usado para criptografar/descriptografar</td>
+                        <td data-label="Termo"><strong>Algorithm (Algoritmo)</strong></td>
+                        <td data-label="Definição">Processo usado para criptografar/descriptografar</td>
                     </tr>
                     <tr>
-                        <td><strong>Cryptanalysis (Criptoanálise)</strong></td>
-                        <td>Arte de quebrar sistemas criptográficos</td>
+                        <td data-label="Termo"><strong>Cryptanalysis (Criptoanálise)</strong></td>
+                        <td data-label="Definição">Arte de quebrar sistemas criptográficos</td>
                     </tr>
                     <tr>
-                        <td><strong>Key (Chave)</strong></td>
-                        <td>String de bits gerada aleatoriamente</td>
+                        <td data-label="Termo"><strong>Key (Chave)</strong></td>
+                        <td data-label="Definição">String de bits gerada aleatoriamente</td>
                     </tr>
                 </table>
 
@@ -362,14 +471,14 @@
                         <th>Exemplos</th>
                     </tr>
                     <tr>
-                        <td><strong>Stream Cipher</strong></td>
-                        <td>Criptografa um bit por vez (como OTP)</td>
-                        <td>RC4 (inseguro), ChaCha20</td>
+                        <td data-label="Tipo"><strong>Stream Cipher</strong></td>
+                        <td data-label="Descrição">Criptografa um bit por vez (como OTP)</td>
+                        <td data-label="Exemplos">RC4 (inseguro), ChaCha20</td>
                     </tr>
                     <tr>
-                        <td><strong>Block Cipher</strong></td>
-                        <td>Criptografa blocos (64/128/256 bits)</td>
-                        <td>AES, DES, 3DES, Blowfish</td>
+                        <td data-label="Tipo"><strong>Block Cipher</strong></td>
+                        <td data-label="Descrição">Criptografa blocos (64/128/256 bits)</td>
+                        <td data-label="Exemplos">AES, DES, 3DES, Blowfish</td>
                     </tr>
                 </table>
 
@@ -434,24 +543,24 @@
                         <th>Descrição</th>
                     </tr>
                     <tr>
-                        <td><strong>Rainbow Table</strong></td>
-                        <td>Tabela pré-computada de hashes. Contramedida: salt</td>
+                        <td data-label="Ataque"><strong>Rainbow Table</strong></td>
+                        <td data-label="Descrição">Tabela pré-computada de hashes. Contramedida: salt</td>
                     </tr>
                     <tr>
-                        <td><strong>Colisão (Collision)</strong></td>
-                        <td>Encontrar dois inputs com mesmo hash. MD5 e SHA-1 são vulneráveis</td>
+                        <td data-label="Ataque"><strong>Colisão (Collision)</strong></td>
+                        <td data-label="Descrição">Encontrar dois inputs com mesmo hash. MD5 e SHA-1 são vulneráveis</td>
                     </tr>
                     <tr>
-                        <td><strong>Aniversário (Birthday)</strong></td>
-                        <td>Explora probabilidade de colisões. Requer menos tentativas que brute force</td>
+                        <td data-label="Ataque"><strong>Aniversário (Birthday)</strong></td>
+                        <td data-label="Descrição">Explora probabilidade de colisões. Requer menos tentativas que brute force</td>
                     </tr>
                     <tr>
-                        <td><strong>Força Bruta</strong></td>
-                        <td>Testar todas combinações possíveis</td>
+                        <td data-label="Ataque"><strong>Força Bruta</strong></td>
+                        <td data-label="Descrição">Testar todas combinações possíveis</td>
                     </tr>
                     <tr>
-                        <td><strong>Dicionário</strong></td>
-                        <td>Testar palavras comuns e senhas prováveis</td>
+                        <td data-label="Ataque"><strong>Dicionário</strong></td>
+                        <td data-label="Descrição">Testar palavras comuns e senhas prováveis</td>
                     </tr>
                 </table>
 
@@ -503,24 +612,24 @@
                         <th><strong>HSM</strong></th>
                     </tr>
                     <tr>
-                        <td><strong>O que é</strong></td>
-                        <td>Chip na placa-mãe</td>
-                        <td>Dispositivo dedicado (rack, PCIe, USB)</td>
+                        <td data-label="Item"><strong>O que é</strong></td>
+                        <td data-label="TPM">Chip na placa-mãe</td>
+                        <td data-label="HSM">Dispositivo dedicado (rack, PCIe, USB)</td>
                     </tr>
                     <tr>
-                        <td><strong>Funções</strong></td>
-                        <td>Gera hash de boot, armazena chaves (BitLocker)</td>
-                        <td>Gera/armazena chaves, assinaturas digitais, alta performance</td>
+                        <td data-label="Item"><strong>Funções</strong></td>
+                        <td data-label="TPM">Gera hash de boot, armazena chaves (BitLocker)</td>
+                        <td data-label="HSM">Gera/armazena chaves, assinaturas digitais, alta performance</td>
                     </tr>
                     <tr>
-                        <td><strong>Uso</strong></td>
-                        <td>Computadores pessoais</td>
-                        <td>Bancos, CAs, grandes empresas</td>
+                        <td data-label="Item"><strong>Uso</strong></td>
+                        <td data-label="TPM">Computadores pessoais</td>
+                        <td data-label="HSM">Bancos, CAs, grandes empresas</td>
                     </tr>
                     <tr>
-                        <td><strong>Segurança</strong></td>
-                        <td>Protege contra acesso físico</td>
-                        <td>Tamper-resistant, certificação FIPS 140-2</td>
+                        <td data-label="Item"><strong>Segurança</strong></td>
+                        <td data-label="TPM">Protege contra acesso físico</td>
+                        <td data-label="HSM">Tamper-resistant, certificação FIPS 140-2</td>
                     </tr>
                 </table>
 
@@ -557,28 +666,28 @@
                         <th>Descrição</th>
                     </tr>
                     <tr>
-                        <td><strong>Root Certificate</strong></td>
-                        <td>Auto-assinado, topo da hierarquia, pré-instalado no SO/navegador</td>
+                        <td data-label="Tipo"><strong>Root Certificate</strong></td>
+                        <td data-label="Descrição">Auto-assinado, topo da hierarquia, pré-instalado no SO/navegador</td>
                     </tr>
                     <tr>
-                        <td><strong>Wildcard</strong></td>
-                        <td>*.dominio.com - cobre subdomínios</td>
+                        <td data-label="Tipo"><strong>Wildcard</strong></td>
+                        <td data-label="Descrição">*.dominio.com - cobre subdomínios</td>
                     </tr>
                     <tr>
-                        <td><strong>SAN (Subject Alternative Name)</strong></td>
-                        <td>Múltiplos domínios no mesmo certificado</td>
+                        <td data-label="Tipo"><strong>SAN (Subject Alternative Name)</strong></td>
+                        <td data-label="Descrição">Múltiplos domínios no mesmo certificado</td>
                     </tr>
                     <tr>
-                        <td><strong>Code Signing</strong></td>
-                        <td>Assina software, prova autenticidade</td>
+                        <td data-label="Tipo"><strong>Code Signing</strong></td>
+                        <td data-label="Descrição">Assina software, prova autenticidade</td>
                     </tr>
                     <tr>
-                        <td><strong>Self-Signed</strong></td>
-                        <td>Não emitido por CA confiável, navegador mostra aviso</td>
+                        <td data-label="Tipo"><strong>Self-Signed</strong></td>
+                        <td data-label="Descrição">Não emitido por CA confiável, navegador mostra aviso</td>
                     </tr>
                     <tr>
-                        <td><strong>Email Certificate</strong></td>
-                        <td>Para S/MIME - criptografia de email</td>
+                        <td data-label="Tipo"><strong>Email Certificate</strong></td>
+                        <td data-label="Descrição">Para S/MIME - criptografia de email</td>
                     </tr>
                 </table>
 
@@ -638,24 +747,24 @@
                         <th>Defesa</th>
                     </tr>
                     <tr>
-                        <td><strong>Downgrade Attack</strong></td>
-                        <td>Forçar uso de protocolo antigo/inseguro (ex: SSL)</td>
-                        <td>Desabilitar protocolos antigos</td>
+                        <td data-label="Ataque"><strong>Downgrade Attack</strong></td>
+                        <td data-label="Descrição">Forçar uso de protocolo antigo/inseguro (ex: SSL)</td>
+                        <td data-label="Defesa">Desabilitar protocolos antigos</td>
                     </tr>
                     <tr>
-                        <td><strong>Known Plaintext</strong></td>
-                        <td>Atacante tem pares de plaintext/ciphertext</td>
-                        <td>Chaves fortes, algoritmos seguros</td>
+                        <td data-label="Ataque"><strong>Known Plaintext</strong></td>
+                        <td data-label="Descrição">Atacante tem pares de plaintext/ciphertext</td>
+                        <td data-label="Defesa">Chaves fortes, algoritmos seguros</td>
                     </tr>
                     <tr>
-                        <td><strong>Chosen Plaintext</strong></td>
-                        <td>Atacante escolhe plaintext para criptografar</td>
-                        <td>Algoritmos resistentes (ex: AES)</td>
+                        <td data-label="Ataque"><strong>Chosen Plaintext</strong></td>
+                        <td data-label="Descrição">Atacante escolhe plaintext para criptografar</td>
+                        <td data-label="Defesa">Algoritmos resistentes (ex: AES)</td>
                     </tr>
                     <tr>
-                        <td><strong>Brute Force</strong></td>
-                        <td>Testar todas combinações de chaves</td>
-                        <td>Chaves longas (AES-256)</td>
+                        <td data-label="Ataque"><strong>Brute Force</strong></td>
+                        <td data-label="Descrição">Testar todas combinações de chaves</td>
+                        <td data-label="Defesa">Chaves longas (AES-256)</td>
                     </tr>
                 </table>
 
