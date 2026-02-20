@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Security+ Cap 2 - Atores de Ameaças, Ataques e Malware</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -192,6 +192,94 @@
             display: block;
             margin-bottom: 5px;
         }
+
+        /* ===== RESPONSIVIDADE MOBILE - TABELAS EM CARDS ===== */
+        @media (max-width: 768px) {
+            .summary { padding: 20px; }
+            .summary h1 { font-size: 1.8rem; }
+            .summary h2 { font-size: 1.4rem; }
+
+            /* Reset das tabelas para modo cards */
+            table, thead, tbody, th, td, tr { 
+                display: block; 
+                width: 100%;
+            }
+            
+            thead tr { 
+                display: none; 
+            }
+            
+            tr {
+                background: white;
+                border: 1px solid #fa709a;
+                border-radius: 12px;
+                margin-bottom: 20px;
+                padding: 15px;
+                box-shadow: 0 4px 10px rgba(250, 112, 154, 0.2);
+                position: relative;
+            }
+            
+            td {
+                border: none;
+                padding: 12px 10px 12px 40%;
+                position: relative;
+                border-bottom: 1px dashed #f0f0f0;
+                min-height: 50px;
+            }
+            
+            td:last-child {
+                border-bottom: none;
+            }
+            
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 35%;
+                font-weight: 700;
+                color: #fa709a;
+                font-size: 0.9rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            /* Destaque para a primeira célula (título) */
+            td:first-child {
+                font-weight: 600;
+                color: #f59e0b;
+            }
+            
+            td:first-child::before {
+                color: #f59e0b;
+                font-weight: 800;
+            }
+            
+            /* Ajuste para células vazias */
+            td:empty::before {
+                content: attr(data-label);
+            }
+            
+            /* Cards mais bonitos para as tabelas */
+            .summary table {
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+        }
+
+        /* Ajuste para telas muito pequenas */
+        @media (max-width: 480px) {
+            td {
+                padding-left: 35%;
+                font-size: 0.95rem;
+            }
+            
+            td::before {
+                font-size: 0.8rem;
+                width: 30%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -235,34 +323,34 @@
                         <th>Características</th>
                     </tr>
                     <tr>
-                        <td><strong>Nation-state (Estado-nação)</strong></td>
-                        <td>Ilimitados (governo)</td>
-                        <td>Espionagem, guerra cibernética</td>
-                        <td>APTs, sofisticados, persistentes</td>
+                        <td data-label="Tipo"><strong>Nation-state (Estado-nação)</strong></td>
+                        <td data-label="Recursos">Ilimitados (governo)</td>
+                        <td data-label="Motivação">Espionagem, guerra cibernética</td>
+                        <td data-label="Características">APTs, sofisticados, persistentes</td>
                     </tr>
                     <tr>
-                        <td><strong>Crime Organizado</strong></td>
-                        <td>Altos</td>
-                        <td>Financeira (lucro)</td>
-                        <td>Ransomware, fraudes, roubo de dados</td>
+                        <td data-label="Tipo"><strong>Crime Organizado</strong></td>
+                        <td data-label="Recursos">Altos</td>
+                        <td data-label="Motivação">Financeira (lucro)</td>
+                        <td data-label="Características">Ransomware, fraudes, roubo de dados</td>
                     </tr>
                     <tr>
-                        <td><strong>Hacktivists</strong></td>
-                        <td>Baixos a médios</td>
-                        <td>Política/social</td>
-                        <td>DDoS, defacement, vazamentos</td>
+                        <td data-label="Tipo"><strong>Hacktivists</strong></td>
+                        <td data-label="Recursos">Baixos a médios</td>
+                        <td data-label="Motivação">Política/social</td>
+                        <td data-label="Características">DDoS, defacement, vazamentos</td>
                     </tr>
                     <tr>
-                        <td><strong>Insider Threat</strong></td>
-                        <td>Acesso legítimo</td>
-                        <td>Vingança, ganho financeiro</td>
-                        <td>Funcionários, contratados, parceiros</td>
+                        <td data-label="Tipo"><strong>Insider Threat</strong></td>
+                        <td data-label="Recursos">Acesso legítimo</td>
+                        <td data-label="Motivação">Vingança, ganho financeiro</td>
+                        <td data-label="Características">Funcionários, contratados, parceiros</td>
                     </tr>
                     <tr>
-                        <td><strong>Script Kiddies</strong></td>
-                        <td>Baixos</td>
-                        <td>Diversão, reconhecimento</td>
-                        <td>Ferramentas prontas, baixa habilidade</td>
+                        <td data-label="Tipo"><strong>Script Kiddies</strong></td>
+                        <td data-label="Recursos">Baixos</td>
+                        <td data-label="Motivação">Diversão, reconhecimento</td>
+                        <td data-label="Características">Ferramentas prontas, baixa habilidade</td>
                     </tr>
                 </table>
 
@@ -282,19 +370,19 @@
                         <th>Exemplo</th>
                     </tr>
                     <tr>
-                        <td>Exfiltração de Dados</td>
-                        <td><strong>Confidencialidade</strong></td>
-                        <td>Roubo de segredos comerciais</td>
+                        <td data-label="Estratégia">Exfiltração de Dados</td>
+                        <td data-label="Afeta"><strong>Confidencialidade</strong></td>
+                        <td data-label="Exemplo">Roubo de segredos comerciais</td>
                     </tr>
                     <tr>
-                        <td>Desinformação</td>
-                        <td><strong>Integridade</strong></td>
-                        <td>Falsificação de websites</td>
+                        <td data-label="Estratégia">Desinformação</td>
+                        <td data-label="Afeta"><strong>Integridade</strong></td>
+                        <td data-label="Exemplo">Falsificação de websites</td>
                     </tr>
                     <tr>
-                        <td>Interrupção de Serviço</td>
-                        <td><strong>Disponibilidade</strong></td>
-                        <td>Ataques DDoS</td>
+                        <td data-label="Estratégia">Interrupção de Serviço</td>
+                        <td data-label="Afeta"><strong>Disponibilidade</strong></td>
+                        <td data-label="Exemplo">Ataques DDoS</td>
                     </tr>
                 </table>
 
@@ -352,28 +440,28 @@
                         <th>Descrição</th>
                     </tr>
                     <tr>
-                        <td><strong>Autoridade (Authority)</strong></td>
-                        <td>Fingir ser chefe, polícia, suporte técnico</td>
+                        <td data-label="Princípio"><strong>Autoridade (Authority)</strong></td>
+                        <td data-label="Descrição">Fingir ser chefe, polícia, suporte técnico</td>
                     </tr>
                     <tr>
-                        <td><strong>Urgência (Urgency)</strong></td>
-                        <td>"Resolva agora ou sua conta será bloqueada"</td>
+                        <td data-label="Princípio"><strong>Urgência (Urgency)</strong></td>
+                        <td data-label="Descrição">"Resolva agora ou sua conta será bloqueada"</td>
                     </tr>
                     <tr>
-                        <td><strong>Escassez (Scarcity)</strong></td>
-                        <td>"Oferta por tempo limitado, últimas vagas"</td>
+                        <td data-label="Princípio"><strong>Escassez (Scarcity)</strong></td>
+                        <td data-label="Descrição">"Oferta por tempo limitado, últimas vagas"</td>
                     </tr>
                     <tr>
-                        <td><strong>Prova Social (Social Proof)</strong></td>
-                        <td>"Todo mundo está fazendo"</td>
+                        <td data-label="Princípio"><strong>Prova Social (Social Proof)</strong></td>
+                        <td data-label="Descrição">"Todo mundo está fazendo"</td>
                     </tr>
                     <tr>
-                        <td><strong>Medo (Fear)</strong></td>
-                        <td>Ameaçar com consequências negativas</td>
+                        <td data-label="Princípio"><strong>Medo (Fear)</strong></td>
+                        <td data-label="Descrição">Ameaçar com consequências negativas</td>
                     </tr>
                     <tr>
-                        <td><strong>Simpatia (Likability)</strong></td>
-                        <td>Pessoas fazem mais para agradar quem gostam</td>
+                        <td data-label="Princípio"><strong>Simpatia (Likability)</strong></td>
+                        <td data-label="Descrição">Pessoas fazem mais para agradar quem gostam</td>
                     </tr>
                 </table>
 
@@ -385,52 +473,52 @@
                         <th>Descrição</th>
                     </tr>
                     <tr>
-                        <td><strong>Phishing</strong></td>
-                        <td>Email malicioso fingindo ser legítimo (em massa)</td>
+                        <td data-label="Técnica"><strong>Phishing</strong></td>
+                        <td data-label="Descrição">Email malicioso fingindo ser legítimo (em massa)</td>
                     </tr>
                     <tr>
-                        <td><strong>Spear Phishing</strong></td>
-                        <td>Phishing direcionado a pessoa/organização específica</td>
+                        <td data-label="Técnica"><strong>Spear Phishing</strong></td>
+                        <td data-label="Descrição">Phishing direcionado a pessoa/organização específica</td>
                     </tr>
                     <tr>
-                        <td><strong>Whaling</strong></td>
-                        <td>Phishing para executivos (baleias)</td>
+                        <td data-label="Técnica"><strong>Whaling</strong></td>
+                        <td data-label="Descrição">Phishing para executivos (baleias)</td>
                     </tr>
                     <tr>
-                        <td><strong>Vishing</strong></td>
-                        <td>Por telefone (voice)</td>
+                        <td data-label="Técnica"><strong>Vishing</strong></td>
+                        <td data-label="Descrição">Por telefone (voice)</td>
                     </tr>
                     <tr>
-                        <td><strong>Smishing</strong></td>
-                        <td>Por SMS</td>
+                        <td data-label="Técnica"><strong>Smishing</strong></td>
+                        <td data-label="Descrição">Por SMS</td>
                     </tr>
                     <tr>
-                        <td><strong>Pretexting</strong></td>
-                        <td>Criar cenário/história falsa</td>
+                        <td data-label="Técnica"><strong>Pretexting</strong></td>
+                        <td data-label="Descrição">Criar cenário/história falsa</td>
                     </tr>
                     <tr>
-                        <td><strong>Baiting</strong></td>
-                        <td>Oferecer algo atraente (USB infectada)</td>
+                        <td data-label="Técnica"><strong>Baiting</strong></td>
+                        <td data-label="Descrição">Oferecer algo atraente (USB infectada)</td>
                     </tr>
                     <tr>
-                        <td><strong>Tailgating</strong></td>
-                        <td>Seguir pessoa autorizada por porta segura</td>
+                        <td data-label="Técnica"><strong>Tailgating</strong></td>
+                        <td data-label="Descrição">Seguir pessoa autorizada por porta segura</td>
                     </tr>
                     <tr>
-                        <td><strong>Shoulder Surfing</strong></td>
-                        <td>Olhar por cima do ombro para ver tela/teclado</td>
+                        <td data-label="Técnica"><strong>Shoulder Surfing</strong></td>
+                        <td data-label="Descrição">Olhar por cima do ombro para ver tela/teclado</td>
                     </tr>
                     <tr>
-                        <td><strong>Dumpster Diving</strong></td>
-                        <td>Procurar informações no lixo</td>
+                        <td data-label="Técnica"><strong>Dumpster Diving</strong></td>
+                        <td data-label="Descrição">Procurar informações no lixo</td>
                     </tr>
                     <tr>
-                        <td><strong>Pharming</strong></td>
-                        <td>Redirecionar DNS para site falso</td>
+                        <td data-label="Técnica"><strong>Pharming</strong></td>
+                        <td data-label="Descrição">Redirecionar DNS para site falso</td>
                     </tr>
                     <tr>
-                        <td><strong>Typosquatting</strong></td>
-                        <td>Registrar domínios com erros de digitação (gooogle.com)</td>
+                        <td data-label="Técnica"><strong>Typosquatting</strong></td>
+                        <td data-label="Descrição">Registrar domínios com erros de digitação (gooogle.com)</td>
                     </tr>
                 </table>
 
@@ -498,32 +586,32 @@
                         <th>Descrição</th>
                     </tr>
                     <tr>
-                        <td><strong>Adware</strong></td>
-                        <td>Exibe anúncios indesejados, pode rastrear hábitos</td>
+                        <td data-label="Tipo"><strong>Adware</strong></td>
+                        <td data-label="Descrição">Exibe anúncios indesejados, pode rastrear hábitos</td>
                     </tr>
                     <tr>
-                        <td><strong>Logic Bomb</strong></td>
-                        <td>Dispara sob condições específicas (data, evento)</td>
+                        <td data-label="Tipo"><strong>Logic Bomb</strong></td>
+                        <td data-label="Descrição">Dispara sob condições específicas (data, evento)</td>
                     </tr>
                     <tr>
-                        <td><strong>Backdoor</strong></td>
-                        <td>Acesso não autorizado que bypassa autenticação</td>
+                        <td data-label="Tipo"><strong>Backdoor</strong></td>
+                        <td data-label="Descrição">Acesso não autorizado que bypassa autenticação</td>
                     </tr>
                     <tr>
-                        <td><strong>Scareware</strong></td>
-                        <td>Exibe mensagens alarmantes falsas</td>
+                        <td data-label="Tipo"><strong>Scareware</strong></td>
+                        <td data-label="Descrição">Exibe mensagens alarmantes falsas</td>
                     </tr>
                     <tr>
-                        <td><strong>Crypto-ransomware</strong></td>
-                        <td>Criptografa arquivos de dados, não só bloqueia tela</td>
+                        <td data-label="Tipo"><strong>Crypto-ransomware</strong></td>
+                        <td data-label="Descrição">Criptografa arquivos de dados, não só bloqueia tela</td>
                     </tr>
                     <tr>
-                        <td><strong>Cryptojacking</strong></td>
-                        <td>Sequestra recursos para mineração de criptomoeda</td>
+                        <td data-label="Tipo"><strong>Cryptojacking</strong></td>
+                        <td data-label="Descrição">Sequestra recursos para mineração de criptomoeda</td>
                     </tr>
                     <tr>
-                        <td><strong>PUP/PUA</strong></td>
-                        <td>Programa potencialmente indesejado (grayware/bloatware)</td>
+                        <td data-label="Tipo"><strong>PUP/PUA</strong></td>
+                        <td data-label="Descrição">Programa potencialmente indesejado (grayware/bloatware)</td>
                     </tr>
                 </table>
 
@@ -545,24 +633,24 @@
                         <th>Descrição</th>
                     </tr>
                     <tr>
-                        <td><strong>Patches</strong></td>
-                        <td>Manter sistemas, aplicações e firmware atualizados</td>
+                        <td data-label="Método"><strong>Patches</strong></td>
+                        <td data-label="Descrição">Manter sistemas, aplicações e firmware atualizados</td>
                     </tr>
                     <tr>
-                        <td><strong>Anti-Malware</strong></td>
-                        <td>Definições atualizadas, scans regulares, email/download scanning</td>
+                        <td data-label="Método"><strong>Anti-Malware</strong></td>
+                        <td data-label="Descrição">Definições atualizadas, scans regulares, email/download scanning</td>
                     </tr>
                     <tr>
-                        <td><strong>Firewall</strong></td>
-                        <td>Bloqueia conexões não autorizadas e C2</td>
+                        <td data-label="Método"><strong>Firewall</strong></td>
+                        <td data-label="Descrição">Bloqueia conexões não autorizadas e C2</td>
                     </tr>
                     <tr>
-                        <td><strong>Filtro Web</strong></td>
-                        <td>Bloqueia acesso a sites maliciosos</td>
+                        <td data-label="Método"><strong>Filtro Web</strong></td>
+                        <td data-label="Descrição">Bloqueia acesso a sites maliciosos</td>
                     </tr>
                     <tr>
-                        <td><strong>Treinamento</strong></td>
-                        <td>Educar usuários sobre anexos, pop-ups, URLs</td>
+                        <td data-label="Método"><strong>Treinamento</strong></td>
+                        <td data-label="Descrição">Educar usuários sobre anexos, pop-ups, URLs</td>
                     </tr>
                 </table>
 
