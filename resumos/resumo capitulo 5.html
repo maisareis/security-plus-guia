@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Resumo Security+ Capítulo 5 - Arquitetura e Segurança de Redes</title>
     <style>
         * {
@@ -175,9 +175,115 @@
             text-align: center;
             color: #64748b;
         }
+
+        /* ===== RESPONSIVIDADE MOBILE - TABELAS EM CARDS ===== */
         @media (max-width: 768px) {
-            .grid-2, .grid-3 {
-                grid-template-columns: 1fr;
+            .container { padding: 20px; }
+            .header { flex-direction: column; gap: 15px; text-align: center; }
+            .header h1 { font-size: 1.8rem; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+
+            /* Reset das tabelas para modo cards */
+            table, thead, tbody, th, td, tr { 
+                display: block; 
+                width: 100%;
+            }
+            
+            thead tr { 
+                display: none; 
+            }
+            
+            tr {
+                background: white;
+                border: 1px solid #667eea;
+                border-radius: 12px;
+                margin-bottom: 20px;
+                padding: 15px;
+                box-shadow: 0 4px 10px rgba(102, 126, 234, 0.2);
+                position: relative;
+            }
+            
+            td {
+                border: none;
+                padding: 15px 10px 15px 38%;
+                position: relative;
+                border-bottom: 1px dashed #f0f0f0;
+                min-height: 70px;
+                word-break: break-word;
+                white-space: normal;
+                line-height: 1.4;
+            }
+            
+            td:last-child {
+                border-bottom: none;
+            }
+            
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                top: 15px;
+                width: 33%;
+                font-weight: 700;
+                color: #667eea;
+                font-size: 0.8rem;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+                line-height: 1.2;
+                word-break: break-word;
+                white-space: normal;
+            }
+            
+            /* CORREÇÃO ESPECÍFICA PARA PALAVRAS LONGAS */
+            td[data-label="Modo"]::before,
+            td[data-label="Descrição"]::before,
+            td[data-label="Risco"]::before,
+            td[data-label="Abordagem"]::before,
+            td[data-label="Vantagens"]::before,
+            td[data-label="Tipo"]::before,
+            td[data-label="Ataque"]::before,
+            td[data-label="Proteção"]::before {
+                font-size: 0.7rem;
+                letter-spacing: -0.2px;
+                white-space: normal;
+                word-break: keep-all;
+            }
+            
+            /* Destaque para a primeira célula (título) */
+            td:first-child {
+                font-weight: 600;
+                color: #764ba2;
+            }
+            
+            td:first-child::before {
+                color: #764ba2;
+                font-weight: 800;
+            }
+            
+            /* Ajuste para células vazias */
+            td:empty::before {
+                content: attr(data-label);
+            }
+            
+            /* Tabela de comparação Agente vs Agentless */
+            table table, table tr, table td {
+                all: revert;
+            }
+        }
+
+        /* Ajuste para telas muito pequenas */
+        @media (max-width: 480px) {
+            td {
+                padding-left: 40%;
+                font-size: 0.85rem;
+                min-height: 80px;
+            }
+            
+            td::before {
+                font-size: 0.65rem;
+                width: 35%;
+                left: 6px;
+                top: 12px;
             }
         }
     </style>
@@ -258,14 +364,14 @@
                     <th>Risco</th>
                 </tr>
                 <tr>
-                    <td><strong>Fail-Open</strong></td>
-                    <td>Preserva acesso à rede/host. Prioriza <strong>DISPONIBILIDADE</strong>.</td>
-                    <td>Atacante pode forçar falha para contornar controle</td>
+                    <td data-label="Modo"><strong>Fail-Open</strong></td>
+                    <td data-label="Descrição">Preserva acesso à rede/host. Prioriza <strong>DISPONIBILIDADE</strong>.</td>
+                    <td data-label="Risco">Atacante pode forçar falha para contornar controle</td>
                 </tr>
                 <tr>
-                    <td><strong>Fail-Closed</strong></td>
-                    <td>Bloqueia acesso ou entra em estado mais seguro. Prioriza <strong>CONFIDENCIALIDADE</strong>.</td>
-                    <td>Downtime do sistema</td>
+                    <td data-label="Modo"><strong>Fail-Closed</strong></td>
+                    <td data-label="Descrição">Bloqueia acesso ou entra em estado mais seguro. Prioriza <strong>CONFIDENCIALIDADE</strong>.</td>
+                    <td data-label="Risco">Downtime do sistema</td>
                 </tr>
             </table>
         </div>
@@ -287,14 +393,14 @@
                     <th>Vantagens</th>
                 </tr>
                 <tr>
-                    <td><strong>Baseada em Agente</strong></td>
-                    <td>Software instalado em cada endpoint</td>
-                    <td>Funciona fora da rede corporativa, controle granular (HTTPS)</td>
+                    <td data-label="Abordagem"><strong>Baseada em Agente</strong></td>
+                    <td data-label="Descrição">Software instalado em cada endpoint</td>
+                    <td data-label="Vantagens">Funciona fora da rede corporativa, controle granular (HTTPS)</td>
                 </tr>
                 <tr>
-                    <td><strong>Centralizada (Proxy)</strong></td>
-                    <td>Servidor proxy centralizado</td>
-                    <td>Escaneamento URL, categorização, reputação</td>
+                    <td data-label="Abordagem"><strong>Centralizada (Proxy)</strong></td>
+                    <td data-label="Descrição">Servidor proxy centralizado</td>
+                    <td data-label="Vantagens">Escaneamento URL, categorização, reputação</td>
                 </tr>
             </table>
 
@@ -356,28 +462,28 @@
                     <th>Descrição</th>
                 </tr>
                 <tr>
-                    <td><strong>Honeypot</strong></td>
-                    <td>Sistema isca que imita sistemas reais. Tipos: pesquisa (governo/militar) e produção (organizações)</td>
+                    <td data-label="Tipo"><strong>Honeypot</strong></td>
+                    <td data-label="Descrição">Sistema isca que imita sistemas reais. Tipos: pesquisa (governo/militar) e produção (organizações)</td>
                 </tr>
                 <tr>
-                    <td><strong>Honeynet</strong></td>
-                    <td>Rede isca com múltiplos honeypots</td>
+                    <td data-label="Tipo"><strong>Honeynet</strong></td>
+                    <td data-label="Descrição">Rede isca com múltiplos honeypots</td>
                 </tr>
                 <tr>
-                    <td><strong>Honeyfile</strong></td>
-                    <td>Arquivo único (passwords.txt) que dispara alarme ao ser acessado</td>
+                    <td data-label="Tipo"><strong>Honeyfile</strong></td>
+                    <td data-label="Descrição">Arquivo único (passwords.txt) que dispara alarme ao ser acessado</td>
                 </tr>
                 <tr>
-                    <td><strong>Honeytoken</strong></td>
-                    <td>Credenciais falsas para distrair atacantes</td>
+                    <td data-label="Tipo"><strong>Honeytoken</strong></td>
+                    <td data-label="Descrição">Credenciais falsas para distrair atacantes</td>
                 </tr>
                 <tr>
-                    <td><strong>DNS Sinkhole</strong></td>
-                    <td>Redireciona tráfego malicioso para IP controlado. Limitação: malware deve usar DNS da organização</td>
+                    <td data-label="Tipo"><strong>DNS Sinkhole</strong></td>
+                    <td data-label="Descrição">Redireciona tráfego malicioso para IP controlado. Limitação: malware deve usar DNS da organização</td>
                 </tr>
                 <tr>
-                    <td><strong>Fake Telemetry</strong></td>
-                    <td>Retorna dados falsos (IPs, credenciais) para rastrear atacantes</td>
+                    <td data-label="Tipo"><strong>Fake Telemetry</strong></td>
+                    <td data-label="Descrição">Retorna dados falsos (IPs, credenciais) para rastrear atacantes</td>
                 </tr>
             </table>
         </div>
@@ -413,40 +519,40 @@
                     <th>Descrição</th>
                 </tr>
                 <tr>
-                    <td><strong>Host-Based</strong></td>
-                    <td>Inspeciona tráfego do host. Proteção quando não há firewall de rede</td>
+                    <td data-label="Tipo"><strong>Host-Based</strong></td>
+                    <td data-label="Descrição">Inspeciona tráfego do host. Proteção quando não há firewall de rede</td>
                 </tr>
                 <tr>
-                    <td><strong>Network-Based</strong></td>
-                    <td>Hardware na borda da rede privada</td>
+                    <td data-label="Tipo"><strong>Network-Based</strong></td>
+                    <td data-label="Descrição">Hardware na borda da rede privada</td>
                 </tr>
                 <tr>
-                    <td><strong>WAF</strong></td>
-                    <td>Protege servidores web contra SQLi, XSS, DoS</td>
+                    <td data-label="Tipo"><strong>WAF</strong></td>
+                    <td data-label="Descrição">Protege servidores web contra SQLi, XSS, DoS</td>
                 </tr>
                 <tr>
-                    <td><strong>NGFW</strong></td>
-                    <td>Layer 7 + TLS inspection + IPS + integração diretórios</td>
+                    <td data-label="Tipo"><strong>NGFW</strong></td>
+                    <td data-label="Descrição">Layer 7 + TLS inspection + IPS + integração diretórios</td>
                 </tr>
                 <tr>
-                    <td><strong>UTM</strong></td>
-                    <td>Tudo-em-um: firewall + antimalware + IPS + spam + VPN</td>
+                    <td data-label="Tipo"><strong>UTM</strong></td>
+                    <td data-label="Descrição">Tudo-em-um: firewall + antimalware + IPS + spam + VPN</td>
                 </tr>
                 <tr>
-                    <td><strong>Stateless</strong></td>
-                    <td>Filtra pacotes independentes, não rastreia sessões</td>
+                    <td data-label="Tipo"><strong>Stateless</strong></td>
+                    <td data-label="Descrição">Filtra pacotes independentes, não rastreia sessões</td>
                 </tr>
                 <tr>
-                    <td><strong>Stateful</strong></td>
-                    <td>Rastreia sessões em state table. Todos firewalls modernos</td>
+                    <td data-label="Tipo"><strong>Stateful</strong></td>
+                    <td data-label="Descrição">Rastreia sessões em state table. Todos firewalls modernos</td>
                 </tr>
                 <tr>
-                    <td><strong>Layer 4</strong></td>
-                    <td>Examina handshake TCP, rastreia UDP</td>
+                    <td data-label="Tipo"><strong>Layer 4</strong></td>
+                    <td data-label="Descrição">Examina handshake TCP, rastreia UDP</td>
                 </tr>
                 <tr>
-                    <td><strong>Layer 7</strong></td>
-                    <td>Inspeciona headers + payload, verifica protocolo × porta</td>
+                    <td data-label="Tipo"><strong>Layer 7</strong></td>
+                    <td data-label="Descrição">Inspeciona headers + payload, verifica protocolo × porta</td>
                 </tr>
             </table>
 
@@ -475,20 +581,20 @@
                     <th>Descrição</th>
                 </tr>
                 <tr>
-                    <td><strong>Host-to-Host</strong></td>
-                    <td>Host individual conecta a outro host</td>
+                    <td data-label="Tipo"><strong>Host-to-Host</strong></td>
+                    <td data-label="Descrição">Host individual conecta a outro host</td>
                 </tr>
                 <tr>
-                    <td><strong>Site-to-Site</strong></td>
-                    <td>Roteadores nas bordas, hosts não sabem da VPN</td>
+                    <td data-label="Tipo"><strong>Site-to-Site</strong></td>
+                    <td data-label="Descrição">Roteadores nas bordas, hosts não sabem da VPN</td>
                 </tr>
                 <tr>
-                    <td><strong>Remote Access</strong></td>
-                    <td>Concentrador VPN aceita múltiplas conexões</td>
+                    <td data-label="Tipo"><strong>Remote Access</strong></td>
+                    <td data-label="Descrição">Concentrador VPN aceita múltiplas conexões</td>
                 </tr>
                 <tr>
-                    <td><strong>Always-On</strong></td>
-                    <td>Usuário sempre na VPN, não desliga</td>
+                    <td data-label="Tipo"><strong>Always-On</strong></td>
+                    <td data-label="Descrição">Usuário sempre na VPN, não desliga</td>
                 </tr>
             </table>
 
@@ -539,16 +645,16 @@
                     <th>Agentless</th>
                 </tr>
                 <tr>
-                    <td>Software instalado</td>
-                    <td>Controle por porta/scan</td>
+                    <td data-label="Baseado em Agente">Software instalado</td>
+                    <td data-label="Agentless">Controle por porta/scan</td>
                 </tr>
                 <tr>
-                    <td>Informações detalhadas</td>
-                    <td>Menos detalhado</td>
+                    <td data-label="Baseado em Agente">Informações detalhadas</td>
+                    <td data-label="Agentless">Menos detalhado</td>
                 </tr>
                 <tr>
-                    <td>Remediação automática</td>
-                    <td>Funciona com guests/IoT</td>
+                    <td data-label="Baseado em Agente">Remediação automática</td>
+                    <td data-label="Agentless">Funciona com guests/IoT</td>
                 </tr>
             </table>
         </div>
@@ -586,19 +692,19 @@
                     <th>Proteção</th>
                 </tr>
                 <tr>
-                    <td><strong>MAC Flooding</strong></td>
-                    <td>Inunda tabela CAM, switch vira hub</td>
-                    <td>Port Security</td>
+                    <td data-label="Ataque"><strong>MAC Flooding</strong></td>
+                    <td data-label="Descrição">Inunda tabela CAM, switch vira hub</td>
+                    <td data-label="Proteção">Port Security</td>
                 </tr>
                 <tr>
-                    <td><strong>ARP Spoofing</strong></td>
-                    <td>Associa MAC atacante ao IP vítima</td>
-                    <td>DAI</td>
+                    <td data-label="Ataque"><strong>ARP Spoofing</strong></td>
+                    <td data-label="Descrição">Associa MAC atacante ao IP vítima</td>
+                    <td data-label="Proteção">DAI</td>
                 </tr>
                 <tr>
-                    <td><strong>MAC Spoofing</strong></td>
-                    <td>Muda MAC de origem</td>
-                    <td>802.1X</td>
+                    <td data-label="Ataque"><strong>MAC Spoofing</strong></td>
+                    <td data-label="Descrição">Muda MAC de origem</td>
+                    <td data-label="Proteção">802.1X</td>
                 </tr>
             </table>
 
