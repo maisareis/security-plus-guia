@@ -1,5 +1,5 @@
 # security-plus-guia
-🚀 Guia completo pra passar na Security+!  ✅ Flashcards por capítulo (13 no total) ✅ Resumos com dicas essenciais pra prova ✅ 5 domínios da certificação organizados ✅ 340+ questões comentadas pra treinar ✅ Desafio rápido com timer de 15 min  Criado por alguém que também está estudando. Bora estudar junto? 💜
+🔐 Guia de estudos autoral para a CompTIA Security+ | 630+ flashcards, 340+ questões comentadas e resumos por capítulo | Feito por uma estudante, para estudantes. Bora estudar junto? 💜
 
 # 📚 Security+ Guia de Estudos
 
