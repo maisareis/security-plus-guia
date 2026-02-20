@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Security+ Cap 1 - Introdução à Segurança</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -189,37 +189,92 @@
         .pyramid-level.operational { background: #10b981; width: 80%; }
         .pyramid-level.physical { background: #3b82f6; width: 70%; }
 
-        /* ===== RESPONSIVIDADE MOBILE - TABELAS EM CARDS ===== */
+        /* ===== CORREÇÃO DA RESPONSIVIDADE MOBILE ===== */
         @media (max-width: 768px) {
             .summary { padding: 20px; }
             .summary h1 { font-size: 1.8rem; }
             .summary h2 { font-size: 1.4rem; }
             .timeline { flex-direction: column; gap: 10px; }
 
-            table, thead, tbody, th, td, tr { display: block; }
-            thead tr { display: none; }
+            /* Reset das tabelas para modo cards */
+            table, thead, tbody, th, td, tr { 
+                display: block; 
+                width: 100%;
+            }
+            
+            thead tr { 
+                display: none; 
+            }
+            
             tr {
                 background: white;
                 border: 1px solid #f093fb;
                 border-radius: 12px;
-                margin-bottom: 15px;
-                padding: 10px;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+                margin-bottom: 20px;
+                padding: 15px;
+                box-shadow: 0 4px 10px rgba(240, 147, 251, 0.2);
+                position: relative;
             }
+            
             td {
                 border: none;
-                padding: 8px 10px;
+                padding: 12px 10px 12px 40%;
                 position: relative;
-                padding-left: 45%;
+                border-bottom: 1px dashed #f0f0f0;
+                min-height: 50px;
             }
+            
+            td:last-child {
+                border-bottom: none;
+            }
+            
             td::before {
                 content: attr(data-label);
                 position: absolute;
-                left: 10px;
-                width: 40%;
-                font-weight: bold;
+                left: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 35%;
+                font-weight: 700;
                 color: #f093fb;
-                font-size: 0.85rem;
+                font-size: 0.9rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            /* Destaque para a primeira célula (título) */
+            td:first-child {
+                font-weight: 600;
+                color: #f5576c;
+            }
+            
+            td:first-child::before {
+                color: #f5576c;
+                font-weight: 800;
+            }
+            
+            /* Ajuste para células vazias */
+            td:empty::before {
+                content: attr(data-label);
+            }
+            
+            /* Cards mais bonitos para a tabela de tipos de controle */
+            .summary table {
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+        }
+
+        /* Ajuste para telas muito pequenas */
+        @media (max-width: 480px) {
+            td {
+                padding-left: 35%;
+                font-size: 0.95rem;
+            }
+            
+            td::before {
+                font-size: 0.8rem;
+                width: 30%;
             }
         }
     </style>
@@ -278,19 +333,19 @@
                         <th>Exemplos</th>
                     </tr>
                     <tr>
-                        <td><strong>Confidencialidade</strong></td>
-                        <td>Garantir que dados não sejam divulgados a pessoas não autorizadas</td>
-                        <td>Criptografia, controle de acesso, classificação de dados</td>
+                        <td data-label="Objetivo"><strong>Confidencialidade</strong></td>
+                        <td data-label="Descrição">Garantir que dados não sejam divulgados a pessoas não autorizadas</td>
+                        <td data-label="Exemplos">Criptografia, controle de acesso, classificação de dados</td>
                     </tr>
                     <tr>
-                        <td><strong>Integridade</strong></td>
-                        <td>Garantir que dados não sejam modificados ou adulterados</td>
-                        <td>Hashing, assinaturas digitais, checksums</td>
+                        <td data-label="Objetivo"><strong>Integridade</strong></td>
+                        <td data-label="Descrição">Garantir que dados não sejam modificados ou adulterados</td>
+                        <td data-label="Exemplos">Hashing, assinaturas digitais, checksums</td>
                     </tr>
                     <tr>
-                        <td><strong>Disponibilidade</strong></td>
-                        <td>Garantir que dados estejam acessíveis quando necessário</td>
-                        <td>Redundância, backups, balanceamento de carga</td>
+                        <td data-label="Objetivo"><strong>Disponibilidade</strong></td>
+                        <td data-label="Descrição">Garantir que dados estejam acessíveis quando necessário</td>
+                        <td data-label="Exemplos">Redundância, backups, balanceamento de carga</td>
                     </tr>
                 </table>
 
@@ -308,24 +363,24 @@
                         <th>Exemplos</th>
                     </tr>
                     <tr>
-                        <td><strong>Gerenciais (Managerial)</strong></td>
-                        <td>Supervisão do sistema de informação</td>
-                        <td>Identificação de riscos, avaliação e seleção de controles</td>
+                        <td data-label="Tipo"><strong>Gerenciais (Managerial)</strong></td>
+                        <td data-label="Descrição">Supervisão do sistema de informação</td>
+                        <td data-label="Exemplos">Identificação de riscos, avaliação e seleção de controles</td>
                     </tr>
                     <tr>
-                        <td><strong>Operacionais (Operational)</strong></td>
-                        <td>Implementados principalmente por pessoas</td>
-                        <td>Guardas de segurança, programas de treinamento</td>
+                        <td data-label="Tipo"><strong>Operacionais (Operational)</strong></td>
+                        <td data-label="Descrição">Implementados principalmente por pessoas</td>
+                        <td data-label="Exemplos">Guardas de segurança, programas de treinamento</td>
                     </tr>
                     <tr>
-                        <td><strong>Técnicos (Technical)</strong></td>
-                        <td>Implementados como hardware/software/firmware</td>
-                        <td>Firewalls, antivírus, controle de acesso do SO</td>
+                        <td data-label="Tipo"><strong>Técnicos (Technical)</strong></td>
+                        <td data-label="Descrição">Implementados como hardware/software/firmware</td>
+                        <td data-label="Exemplos">Firewalls, antivírus, controle de acesso do SO</td>
                     </tr>
                     <tr>
-                        <td><strong>Físicos (Physical)</strong></td>
-                        <td>Impedem e detectam acesso a instalações e hardware</td>
-                        <td>Alarmes, portões, fechaduras, câmeras</td>
+                        <td data-label="Tipo"><strong>Físicos (Physical)</strong></td>
+                        <td data-label="Descrição">Impedem e detectam acesso a instalações e hardware</td>
+                        <td data-label="Exemplos">Alarmes, portões, fechaduras, câmeras</td>
                     </tr>
                 </table>
 
