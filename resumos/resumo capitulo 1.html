@@ -188,6 +188,40 @@
         .pyramid-level.technical { background: #f59e0b; width: 90%; }
         .pyramid-level.operational { background: #10b981; width: 80%; }
         .pyramid-level.physical { background: #3b82f6; width: 70%; }
+
+        /* ===== RESPONSIVIDADE MOBILE - TABELAS EM CARDS ===== */
+        @media (max-width: 768px) {
+            .summary { padding: 20px; }
+            .summary h1 { font-size: 1.8rem; }
+            .summary h2 { font-size: 1.4rem; }
+            .timeline { flex-direction: column; gap: 10px; }
+
+            table, thead, tbody, th, td, tr { display: block; }
+            thead tr { display: none; }
+            tr {
+                background: white;
+                border: 1px solid #f093fb;
+                border-radius: 12px;
+                margin-bottom: 15px;
+                padding: 10px;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            }
+            td {
+                border: none;
+                padding: 8px 10px;
+                position: relative;
+                padding-left: 45%;
+            }
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: 40%;
+                font-weight: bold;
+                color: #f093fb;
+                font-size: 0.85rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -328,22 +362,22 @@
                         <th>Exemplos</th>
                     </tr>
                     <tr>
-                        <td><strong>Preventivo</strong></td>
-                        <td>Elimina ou reduz probabilidade de ataque ter sucesso</td>
-                        <td>ANTES</td>
-                        <td>ACLs em firewalls, ACLs em objetos de sistema de arquivos, antimalware bloqueando, gerenciamento de patches</td>
+                        <td data-label="Tipo"><strong>Preventivo</strong></td>
+                        <td data-label="Função">Elimina ou reduz probabilidade de ataque ter sucesso</td>
+                        <td data-label="Quando">ANTES</td>
+                        <td data-label="Exemplos">ACLs em firewalls, ACLs em objetos de sistema de arquivos, antimalware bloqueando, gerenciamento de patches</td>
                     </tr>
                     <tr>
-                        <td><strong>Detectivo</strong></td>
-                        <td>Identifica e registra intrusão (não impede)</td>
-                        <td>DURANTE</td>
-                        <td>Logs de sistema, IDS, monitoramento de rede, câmeras</td>
+                        <td data-label="Tipo"><strong>Detectivo</strong></td>
+                        <td data-label="Função">Identifica e registra intrusão (não impede)</td>
+                        <td data-label="Quando">DURANTE</td>
+                        <td data-label="Exemplos">Logs de sistema, IDS, monitoramento de rede, câmeras</td>
                     </tr>
                     <tr>
-                        <td><strong>Corretivo</strong></td>
-                        <td>Elimina ou reduz impacto de violação</td>
-                        <td>APÓS</td>
-                        <td>Backups, patches após descoberta, recuperação de desastres</td>
+                        <td data-label="Tipo"><strong>Corretivo</strong></td>
+                        <td data-label="Função">Elimina ou reduz impacto de violação</td>
+                        <td data-label="Quando">APÓS</td>
+                        <td data-label="Exemplos">Backups, patches após descoberta, recuperação de desastres</td>
                     </tr>
                 </table>
 
@@ -355,19 +389,19 @@
                         <th>Exemplos</th>
                     </tr>
                     <tr>
-                        <td><strong>Diretivo</strong></td>
-                        <td>Impõe regra de comportamento</td>
-                        <td>Políticas, SOPs, treinamento, contratos</td>
+                        <td data-label="Tipo"><strong>Diretivo</strong></td>
+                        <td data-label="Descrição">Impõe regra de comportamento</td>
+                        <td data-label="Exemplos">Políticas, SOPs, treinamento, contratos</td>
                     </tr>
                     <tr>
-                        <td><strong>Dissuasivo</strong></td>
-                        <td>Desencoraja psicologicamente atacante</td>
-                        <td>Placas de aviso, avisos de penalidades legais</td>
+                        <td data-label="Tipo"><strong>Dissuasivo</strong></td>
+                        <td data-label="Descrição">Desencoraja psicologicamente atacante</td>
+                        <td data-label="Exemplos">Placas de aviso, avisos de penalidades legais</td>
                     </tr>
                     <tr>
-                        <td><strong>Compensatório</strong></td>
-                        <td>Substituto para controle principal, mesmo nível de proteção</td>
-                        <td>MFA compensando senhas fracas, isolamento quando patch não disponível</td>
+                        <td data-label="Tipo"><strong>Compensatório</strong></td>
+                        <td data-label="Descrição">Substituto para controle principal, mesmo nível de proteção</td>
+                        <td data-label="Exemplos">MFA compensando senhas fracas, isolamento quando patch não disponível</td>
                     </tr>
                 </table>
 
@@ -431,32 +465,32 @@
                         <th>Descrição</th>
                     </tr>
                     <tr>
-                        <td><strong>Avaliação e Testes</strong></td>
-                        <td>Participar de avaliações de risco, testar sistemas, fazer recomendações</td>
+                        <td data-label="Atividade"><strong>Avaliação e Testes</strong></td>
+                        <td data-label="Descrição">Participar de avaliações de risco, testar sistemas, fazer recomendações</td>
                     </tr>
                     <tr>
-                        <td><strong>Aquisição e Configuração</strong></td>
-                        <td>Especificar dispositivos seguros, sourcing, instalação e configuração</td>
+                        <td data-label="Atividade"><strong>Aquisição e Configuração</strong></td>
+                        <td data-label="Descrição">Especificar dispositivos seguros, sourcing, instalação e configuração</td>
                     </tr>
                     <tr>
-                        <td><strong>Gerenciamento de Acesso</strong></td>
-                        <td>Configurar controle de acesso, manter perfis de privilégios</td>
+                        <td data-label="Atividade"><strong>Gerenciamento de Acesso</strong></td>
+                        <td data-label="Descrição">Configurar controle de acesso, manter perfis de privilégios</td>
                     </tr>
                     <tr>
-                        <td><strong>Monitoramento e Auditoria</strong></td>
-                        <td>Monitorar logs, revisar privilégios, documentar controles, analisar eventos</td>
+                        <td data-label="Atividade"><strong>Monitoramento e Auditoria</strong></td>
+                        <td data-label="Descrição">Monitorar logs, revisar privilégios, documentar controles, analisar eventos</td>
                     </tr>
                     <tr>
-                        <td><strong>Resposta a Incidentes</strong></td>
-                        <td>Gerenciar resposta, relatar incidentes, documentar e analisar</td>
+                        <td data-label="Atividade"><strong>Resposta a Incidentes</strong></td>
+                        <td data-label="Descrição">Gerenciar resposta, relatar incidentes, documentar e analisar</td>
                     </tr>
                     <tr>
-                        <td><strong>Continuidade de Negócios</strong></td>
-                        <td>Criar planos de continuidade e recuperação, testar procedimentos</td>
+                        <td data-label="Atividade"><strong>Continuidade de Negócios</strong></td>
+                        <td data-label="Descrição">Criar planos de continuidade e recuperação, testar procedimentos</td>
                     </tr>
                     <tr>
-                        <td><strong>Educação e Treinamento</strong></td>
-                        <td>Participar de treinamentos, desenvolver materiais, conduzir conscientização</td>
+                        <td data-label="Atividade"><strong>Educação e Treinamento</strong></td>
+                        <td data-label="Descrição">Participar de treinamentos, desenvolver materiais, conduzir conscientização</td>
                     </tr>
                 </table>
 
