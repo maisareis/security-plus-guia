@@ -1,5 +1,5 @@
 # security-plus-guia
-🚀 Guia completo pra passar na Security+!  ✅ Flashcards por capítulo (13 no total) ✅ Resumos com dicas essenciais pra prova ✅ 5 domínios da certificação organizados ✅ 340+ questões comentadas pra treinar ✅ Desafio rápido com timer de 15 min  Criado por alguém que também está estudando. Bora estudar junto? 💜
+🔐 Guia de estudos autoral para a CompTIA Security+ | 630+ flashcards, 340+ questões comentadas e resumos por capítulo | Feito por uma estudante, para estudantes. Bora estudar junto? 💜
 
 # 📚 Security+ Guia de Estudos
 
@@ -38,10 +38,13 @@ Todo o conteúdo foi desenvolvido com base nos objetivos do exame, utilizando:
 - CSS3 (com gradientes e design responsivo)
 - JavaScript vanilla (sem frameworks)
 
-## 📄 Licença
+## ⚖️ Aviso Legal
 
-Este projeto é de uso pessoal e educacional. Sinta-se à vontade para estudar e compartilhar!
+CompTIA Security+ é marca registrada da CompTIA. Este projeto é independente e não possui vínculo oficial com a CompTIA. Todo o conteúdo é autoral e desenvolvido para fins educacionais.
 
 ---
+
+📄 **Licença**  
+Este projeto é de uso pessoal e educacional. Sinta-se à vontade para estudar e compartilhar!
 
 ✨ *Feito com 💜 por uma estudante de cibersegurança*
