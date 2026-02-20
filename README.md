@@ -38,10 +38,13 @@ Todo o conteúdo foi desenvolvido com base nos objetivos do exame, utilizando:
 - CSS3 (com gradientes e design responsivo)
 - JavaScript vanilla (sem frameworks)
 
-## 📄 Licença
+## ⚖️ Aviso Legal
 
-Este projeto é de uso pessoal e educacional. Sinta-se à vontade para estudar e compartilhar!
+CompTIA Security+ é marca registrada da CompTIA. Este projeto é independente e não possui vínculo oficial com a CompTIA. Todo o conteúdo é autoral e desenvolvido para fins educacionais.
 
 ---
+
+📄 **Licença**  
+Este projeto é de uso pessoal e educacional. Sinta-se à vontade para estudar e compartilhar!
 
 ✨ *Feito com 💜 por uma estudante de cibersegurança*
