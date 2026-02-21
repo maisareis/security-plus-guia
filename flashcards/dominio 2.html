@@ -162,6 +162,9 @@
             font-size: 1.5rem;
             width: 55px;
             height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-master {
             background: #e5e7eb;
@@ -174,6 +177,12 @@
         .btn-shuffle {
             background: #f59e0b;
             color: white;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
         }
         
         .filter-buttons {
@@ -197,6 +206,104 @@
             color: #0ba360;
         }
 
+        .quiz-area { max-width: 1000px; margin: 0 auto; }
+        .quiz-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+        }
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+        .option:hover {
+            background: #d1fae5;
+            border-color: #0ba360;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            border-color: #0ba360;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #d1fae5;
+            border-left: 5px solid #0ba360;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .results-modal.show { display: flex; }
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+        
         .summary {
             max-width: 1100px;
             margin: 0 auto;
@@ -582,10 +689,6 @@
                     <li><strong>Disable WPS:</strong> WPS é vulnerável.</li>
                 </ul>
 
-                <div class="tip-box">
-                    <strong>💡 DICA DE PROVA:</strong> WPA3 é o padrão mais seguro. 802.1X é usado em ambientes corporativos com RADIUS.
-                </div>
-
                 <h2>9️⃣ Hardening de SO</h2>
 
                 <ul>
@@ -626,184 +729,403 @@
         </div>
 
         <div id="tab2" class="content">
-            <div class="quiz-area" style="max-width: 1000px; margin:0 auto;">
-                <div class="quiz-header" style="text-align:center; color:white; margin-bottom:35px;">
+            <div class="quiz-area">
+                <div class="quiz-header">
                     <h2>Quiz - 40 Questões</h2>
+                    <p>Passing Score: 70% (28/40 corretas)</p>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn btn-primary" onclick="checkAnswers()" style="background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%); color:white; padding:15px 40px;">Ver Resultados</button>
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="results-modal" id="results-modal" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:1000;">
-        <div class="results-content" style="background:white; padding:50px; border-radius:25px; max-width:500px; text-align:center;">
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
             <h2>Resultado</h2>
-            <div class="score-circle" id="score-circle" style="width:180px; height:180px; border-radius:50%; background:linear-gradient(135deg, #0ba360 0%, #3cba92 100%); color:white; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:bold; margin:30px auto;">0%</div>
-            <p id="score-text" style="font-size:1.2rem; margin-bottom:20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()" style="background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%); color:white; padding:15px 40px;">Refazer Quiz</button>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
         </div>
     </div>
 
     <script>
+        // ========== CARDS DO DOMÍNIO 2 - 85 CARDS COMPLETOS ==========
         const cards = [
             // Arquitetura de Rede e OSI (1-10)
-            {f: "O que é arquitetura de três camadas (Three-Tier Architecture)?", b: "Core Layer (backbone alta velocidade) + Distribution Layer (políticas, ACLs) + Access Layer (usuários finais, switches de acesso)"},
-            {f: "Quais são as camadas do modelo OSI e seus dispositivos principais?", b: "L1 Física: cabos. L2 Enlace: switches/APs + MAC. L3 Rede: roteadores + IP. L4 Transporte: TCP/UDP + portas. L7 Aplicação: HTTP, DNS, FTP"},
-            {f: "O que é Defense in Depth (Defesa em Profundidade)?", b: "Múltiplas camadas de controles preventivos, detectivos e corretivos em diferentes pontos da rede. Se uma camada falhar, as outras protegem."},
-            {f: "Qual a diferença entre Fail-Open e Fail-Closed?", b: "Fail-Open: mantém acesso em caso de falha, prioriza DISPONIBILIDADE. Fail-Closed: bloqueia acesso, prioriza CONFIDENCIALIDADE."},
-            {f: "Qual a diferença entre controle Active e Passive?", b: "Passive: sem configuração no cliente, transparente (TAP, porta espelhada). Active: requer configuração, credenciais (firewall como gateway)."},
+            {f: "O que é arquitetura de três camadas (Three-Tier Architecture)?", 
+             b: "Core Layer (backbone alta velocidade) + Distribution Layer (políticas, ACLs) + Access Layer (usuários finais, switches de acesso)"},
+            {f: "Quais são as camadas do modelo OSI e seus dispositivos principais?", 
+             b: "L1 Física: cabos. L2 Enlace: switches/APs + MAC. L3 Rede: roteadores + IP. L4 Transporte: TCP/UDP + portas. L7 Aplicação: HTTP, DNS, FTP"},
+            {f: "O que é Defense in Depth (Defesa em Profundidade)?", 
+             b: "Múltiplas camadas de controles preventivos, detectivos e corretivos em diferentes pontos da rede. Se uma camada falhar, as outras protegem."},
+            {f: "Qual a diferença entre Fail-Open e Fail-Closed?", 
+             b: "Fail-Open: mantém acesso em caso de falha, prioriza DISPONIBILIDADE. Fail-Closed: bloqueia acesso, prioriza CONFIDENCIALIDADE."},
+            {f: "Qual a diferença entre controle Active e Passive?", 
+             b: "Passive: sem configuração no cliente, transparente (TAP, porta espelhada). Active: requer configuração, credenciais (firewall como gateway)."},
+            {f: "O que é um bastion host?", 
+             b: "Servidor fortificado exposto diretamente à internet, com hardening contra ataques."},
+            {f: "O que é um jump server?", 
+             b: "Servidor intermediário para acessar recursos internos, com MFA e logging obrigatórios."},
+            {f: "O que é um honeypot?", 
+             b: "Sistema isca configurado para atrair atacantes e estudar suas técnicas."},
+            {f: "O que é um honeynet?", 
+             b: "Rede completa de honeypots para simular um ambiente real e atrair atacantes."},
+            {f: "O que é um DNS sinkhole?", 
+             b: "DNS que redireciona tráfego malicioso para um IP controlado, fornecendo informação falsa."},
 
             // DMZ (11-18)
-            {f: "Qual a configuração de uma Screened Subnet (DMZ)?", b: "2 firewalls: Externo (internet → DMZ) + Interno (DMZ → LAN). A DMZ contém servidores públicos (web, FTP, email, DNS público)"},
-            {f: "O que acontece se o firewall EXTERNO da DMZ falhar?", b: "Apenas os servidores na DMZ são comprometidos. A LAN permanece protegida pelo firewall interno!"},
-            {f: "O que é um Bastion Host?", b: "Servidor fortificado exposto diretamente à internet, sem proteção de firewall. É hardening contra ataques."},
-            {f: "O que é um Dual-Homed Gateway?", b: "Sistema com 3 interfaces de rede: Internet + DMZ + LAN privada."},
-            {f: "O que é um Screening Router?", b: "Roteador que acumula função de firewall com ACLs. É o dispositivo mais externo da rede."},
-            {f: "Onde colocar um web server público e um database?", b: "Web server na DMZ (público). Database na LAN privada. Firewall interno permite apenas tráfego do web server."},
-            {f: "O que é um honeypot?", b: "Sistema isca configurado para atrair atacantes e estudar suas técnicas."},
-            {f: "O que é DNS Sinkhole?", b: "DNS que redireciona tráfego malicioso para um IP controlado. Fornece informação falsa para consultas DNS."},
+            {f: "Qual a configuração de uma Screened Subnet (DMZ)?", 
+             b: "2 firewalls: Externo (internet → DMZ) + Interno (DMZ → LAN). A DMZ contém servidores públicos (web, FTP, email, DNS público)"},
+            {f: "O que acontece se o firewall EXTERNO da DMZ falhar?", 
+             b: "Apenas os servidores na DMZ são comprometidos. A LAN permanece protegida pelo firewall interno!"},
+            {f: "O que é um Bastion Host?", 
+             b: "Servidor fortificado exposto diretamente à internet, sem proteção de firewall. É hardening contra ataques."},
+            {f: "O que é um Dual-Homed Gateway?", 
+             b: "Sistema com 3 interfaces de rede: Internet + DMZ + LAN privada."},
+            {f: "O que é um Screening Router?", 
+             b: "Roteador que acumula função de firewall com ACLs. É o dispositivo mais externo da rede."},
+            {f: "Onde colocar um web server público e um database?", 
+             b: "Web server na DMZ (público). Database na LAN privada. Firewall interno permite apenas tráfego do web server."},
+            {f: "O que é um Screened-Host Gateway?", 
+             b: "Host na DMZ que requer autenticação para acessar a DMZ ou a intranet."},
+            {f: "O que é um Padded Cell?", 
+             b: "Contramedida de IDS que retarda intrusos para coletar informações para investigação."},
 
             // Firewalls (19-25)
-            {f: "Quais são os tipos de firewall?", b: "Host-based (no endpoint), Network-based (hardware na borda), Stateless (filtro de pacotes), Stateful (rastreia sessões), NGFW, WAF, UTM."},
-            {f: "O que é WAF (Web Application Firewall)?", b: "Protege aplicações web contra SQL Injection, XSS, CSRF. Examina camada 7 HTTP."},
-            {f: "O que é NGFW (Next-Gen Firewall)?", b: "Firewall de próxima geração: filtragem camada 7 + IPS + inspeção TLS + inteligência de ameaças."},
-            {f: "O que é UTM (Unified Threat Management)?", b: "Tudo-em-um: firewall + antimalware + IPS + filtro de spam + filtro de conteúdo + VPN."},
-            {f: "Qual a diferença entre firewall de camada 4 e camada 7?", b: "Camada 4: examina handshake TCP. Camada 7: inspeciona headers + payload, verifica se protocolo corresponde à porta."},
-            {f: "Como funcionam as regras de firewall?", b: "Processadas top-down sequencialmente. Regras específicas ANTES das gerais. Implicit Deny ao final."},
-            {f: "Qual a melhor prática para portas em firewall?", b: "Fechar TODAS as portas, abrir apenas as necessárias para aplicações internas."},
+            {f: "Quais são os tipos de firewall?", 
+             b: "Host-based (no endpoint), Network-based (hardware na borda), Stateless (filtro de pacotes), Stateful (rastreia sessões), NGFW, WAF, UTM."},
+            {f: "O que é WAF (Web Application Firewall)?", 
+             b: "Protege aplicações web contra SQL Injection, XSS, CSRF. Examina camada 7 HTTP."},
+            {f: "O que é NGFW (Next-Gen Firewall)?", 
+             b: "Firewall de próxima geração: filtragem camada 7 + IPS + inspeção TLS + inteligência de ameaças."},
+            {f: "O que é UTM (Unified Threat Management)?", 
+             b: "Tudo-em-um: firewall + antimalware + IPS + filtro de spam + filtro de conteúdo + VPN."},
+            {f: "Qual a diferença entre firewall de camada 4 e camada 7?", 
+             b: "Camada 4: examina handshake TCP. Camada 7: inspeciona headers + payload, verifica se protocolo corresponde à porta."},
+            {f: "Como funcionam as regras de firewall?", 
+             b: "Processadas top-down sequencialmente. Regras específicas ANTES das gerais. Implicit Deny ao final."},
+            {f: "Qual a melhor prática para portas em firewall?", 
+             b: "Fechar TODAS as portas, abrir apenas as necessárias para aplicações internas."},
 
             // VPN (26-32)
-            {f: "Qual a melhor solução para acesso remoto seguro?", b: "VPN é a MELHOR solução para acessar recursos privados da internet. Servidor VPN pode ficar na DMZ."},
-            {f: "O que é VPN Site-to-Site?", b: "Conecta redes inteiras (matriz-filial). Roteadores nas bordas. Sempre ativa. Hosts não sabem que a VPN existe."},
-            {f: "O que é Split Tunnel VPN?", b: "Tráfego corporativo vai pela VPN, o resto vai pela internet local. RISCO: pode bypassar políticas de segurança."},
-            {f: "O que é Full Tunnel VPN?", b: "Todo o tráfego vai pela VPN. Mais seguro, mas pode ser mais lento."},
-            {f: "Qual a diferença entre os modos Transport e Tunnel do IPSec?", b: "Transport: host-to-host, apenas payload criptografado. Tunnel: site-to-site, pacote inteiro criptografado."},
-            {f: "Qual a diferença entre AH e ESP no IPSec?", b: "AH (Authentication Header): autenticação, sem criptografia. ESP (Encapsulating Security Payload): criptografa o payload."},
-            {f: "O que é L2TP/IPSec?", b: "L2TP faz o tunelamento + IPSec faz a criptografia. Recomendado para VPN dial-up."},
+            {f: "Qual a melhor solução para acesso remoto seguro?", 
+             b: "VPN é a MELHOR solução para acessar recursos privados da internet. Servidor VPN pode ficar na DMZ."},
+            {f: "O que é VPN Site-to-Site?", 
+             b: "Conecta redes inteiras (matriz-filial). Roteadores nas bordas. Sempre ativa. Hosts não sabem que a VPN existe."},
+            {f: "O que é Split Tunnel VPN?", 
+             b: "Tráfego corporativo vai pela VPN, o resto vai pela internet local. RISCO: pode bypassar políticas de segurança."},
+            {f: "O que é Full Tunnel VPN?", 
+             b: "Todo o tráfego vai pela VPN. Mais seguro, mas pode ser mais lento."},
+            {f: "Qual a diferença entre os modos Transport e Tunnel do IPSec?", 
+             b: "Transport: host-to-host, apenas payload criptografado. Tunnel: site-to-site, pacote inteiro criptografado."},
+            {f: "Qual a diferença entre AH e ESP no IPSec?", 
+             b: "AH (Authentication Header): autenticação, sem criptografia. ESP (Encapsulating Security Payload): criptografa o payload."},
+            {f: "O que é L2TP/IPSec?", 
+             b: "L2TP faz o tunelamento + IPSec faz a criptografia. Recomendado para VPN dial-up."},
 
             // Switch Security (33-40)
-            {f: "O que é ataque de MAC Flooding?", b: "Inunda a tabela CAM do switch. O switch vira um hub (fail open). Proteção: Port Security."},
-            {f: "O que é ARP Spoofing/Poisoning?", b: "Atacante associa seu MAC com o IP da vítima. Proteção: DAI (Dynamic ARP Inspection)."},
-            {f: "O que é VLAN Hopping?", b: "Atacante salta entre VLANs não autorizadas (double tagging). Proteção: desabilitar DTP."},
-            {f: "O que é DHCP Snooping?", b: "Identifica portas com servidores DHCP legítimos. Previne DHCP spoofing."},
-            {f: "O que é Port Security?", b: "Limita o número de endereços MAC por porta. Previne MAC flooding."},
-            {f: "O que é 802.1X?", b: "Autenticação baseada em porta. EAP + RADIUS. Usado em Wi-Fi Enterprise."},
-            {f: "O que é VLAN?", b: "Rede local virtual: segmentação lógica. Cada porta = 1 VLAN (exceto trunk)."},
-            {f: "O que é Spanning Tree Protocol (STP)?", b: "Previne loops de switching. Mantém apenas 1 caminho ativo."},
+            {f: "O que é ataque de MAC Flooding?", 
+             b: "Inunda a tabela CAM do switch. O switch vira um hub (fail open). Proteção: Port Security."},
+            {f: "O que é ARP Spoofing/Poisoning?", 
+             b: "Atacante associa seu MAC com o IP da vítima. Proteção: DAI (Dynamic ARP Inspection)."},
+            {f: "O que é VLAN Hopping?", 
+             b: "Atacante salta entre VLANs não autorizadas (double tagging). Proteção: desabilitar DTP."},
+            {f: "O que é DHCP Snooping?", 
+             b: "Identifica portas com servidores DHCP legítimos. Previne DHCP spoofing."},
+            {f: "O que é Port Security?", 
+             b: "Limita o número de endereços MAC por porta. Previne MAC flooding."},
+            {f: "O que é 802.1X?", 
+             b: "Autenticação baseada em porta. EAP + RADIUS. Usado em Wi-Fi Enterprise."},
+            {f: "O que é VLAN?", 
+             b: "Rede local virtual: segmentação lógica. Cada porta = 1 VLAN (exceto trunk)."},
+            {f: "O que é Spanning Tree Protocol (STP)?", 
+             b: "Previne loops de switching. Mantém apenas 1 caminho ativo."},
 
             // Router Security (41-45)
-            {f: "O que é ACL Standard (1-99)?", b: "Filtra apenas por IP de origem. Posicionar PERTO DO DESTINO."},
-            {f: "O que é ACL Extended (100-199)?", b: "Filtra por IP origem/destino + portas + protocolo. Posicionar PERTO DA ORIGEM."},
-            {f: "O que é Implicit Deny em ACL?", b: "Por padrão, uma nova ACL BLOQUEIA TODO o tráfego. Precisa criar regras de permissão."},
-            {f: "SSH vs Telnet para gerenciamento?", b: "SSH: criptografa tudo, seguro. Telnet: texto claro, INSEGURO."},
-            {f: "O que é segmentação de rede?", b: "Divide a rede em segmentos/sub-redes separadas. Limita propagação de ataques."},
+            {f: "O que é ACL Standard (1-99)?", 
+             b: "Filtra apenas por IP de origem. Posicionar PERTO DO DESTINO."},
+            {f: "O que é ACL Extended (100-199)?", 
+             b: "Filtra por IP origem/destino + portas + protocolo. Posicionar PERTO DA ORIGEM."},
+            {f: "O que é Implicit Deny em ACL?", 
+             b: "Por padrão, uma nova ACL BLOQUEIA TODO o tráfego. Precisa criar regras de permissão."},
+            {f: "SSH vs Telnet para gerenciamento?", 
+             b: "SSH: criptografa tudo, seguro. Telnet: texto claro, INSEGURO."},
+            {f: "O que é segmentação de rede?", 
+             b: "Divide a rede em segmentos/sub-redes separadas. Limita propagação de ataques."},
 
             // Virtualização (46-55)
-            {f: "O que é um Hypervisor Type 1 (bare metal)?", b: "Hypervisor que executa diretamente no hardware. Exemplos: VMware ESXi, Microsoft Hyper-V, Xen."},
-            {f: "O que é um Hypervisor Type 2 (hosted)?", b: "Hypervisor que executa sobre um sistema operacional. Ex: VirtualBox, VMware Workstation."},
-            {f: "O que é VM Sprawl?", b: "Proliferação descontrolada de VMs sem gerenciamento. Dificulta inventário e patches."},
-            {f: "O que é VM Escape?", b: "Ataque onde um processo dentro da VM compromete o hypervisor."},
-            {f: "O que são Containers?", b: "Compartilham o kernel do host. Mais leves que VMs. Docker, Kubernetes."},
-            {f: "O que é segurança em containers?", b: "Image scanning, menor privilégio, segmentação de rede, runtime protection."},
-            {f: "O que é um vSwitch?", b: "Switch virtual que conecta VMs entre si e com a rede física."},
-            {f: "O que é NIC Teaming?", b: "Agregação de múltiplas NICs para balanceamento de carga e failover."},
-            {f: "O que é SDN Control Plane?", b: "Plano de controle: toma decisões sobre roteamento. Centralizado."},
-            {f: "O que é SDN Data Plane?", b: "Plano de dados: executa o encaminhamento de pacotes."},
+            {f: "O que é um Hypervisor Type 1 (bare metal)?", 
+             b: "Hypervisor que executa diretamente no hardware. Exemplos: VMware ESXi, Microsoft Hyper-V, Xen."},
+            {f: "O que é um Hypervisor Type 2 (hosted)?", 
+             b: "Hypervisor que executa sobre um sistema operacional. Ex: VirtualBox, VMware Workstation."},
+            {f: "O que é VM Sprawl?", 
+             b: "Proliferação descontrolada de VMs sem gerenciamento. Dificulta inventário e patches."},
+            {f: "O que é VM Escape?", 
+             b: "Ataque onde um processo dentro da VM compromete o hypervisor."},
+            {f: "O que são Containers?", 
+             b: "Compartilham o kernel do host. Mais leves que VMs. Docker, Kubernetes."},
+            {f: "O que é segurança em containers?", 
+             b: "Image scanning, menor privilégio, segmentação de rede, runtime protection."},
+            {f: "O que é um vSwitch?", 
+             b: "Switch virtual que conecta VMs entre si e com a rede física."},
+            {f: "O que é NIC Teaming?", 
+             b: "Agregação de múltiplas NICs para balanceamento de carga e failover."},
+            {f: "O que é SDN Control Plane?", 
+             b: "Plano de controle: toma decisões sobre roteamento. Centralizado."},
+            {f: "O que é SDN Data Plane?", 
+             b: "Plano de dados: executa o encaminhamento de pacotes."},
 
             // Cloud (56-65)
-            {f: "O que é SaaS (Software as a Service)?", b: "Software como Serviço. Cliente usa o software sem gerenciar infra. Ex: Gmail, Office 365."},
-            {f: "O que é PaaS (Platform as a Service)?", b: "Plataforma como Serviço. Cliente gerencia apenas aplicação e dados. Ex: Heroku, Google App Engine."},
-            {f: "O que é IaaS (Infrastructure as a Service)?", b: "Infraestrutura como Serviço. Cliente gerencia SO, aplicação e dados. Ex: AWS EC2, Azure VMs."},
-            {f: "O que é Public Cloud?", b: "Recursos compartilhados (multi-tenant). AWS, Azure, Google Cloud."},
-            {f: "O que é Private Cloud?", b: "Nuvem privada da organização. Mais controle, mais cara."},
-            {f: "O que é Hybrid Cloud?", b: "Combinação de nuvem pública e privada."},
-            {f: "O que é Community Cloud?", b: "Compartilhada por organizações com interesses comuns (governo, saúde)."},
-            {f: "O que é MDM (Mobile Device Management)?", b: "Gerenciamento centralizado de dispositivos móveis: políticas, remote wipe."},
-            {f: "O que é BYOD?", b: "Bring Your Own Device. Funcionário usa dispositivo pessoal."},
-            {f: "O que é COPE?", b: "Corporate Owned, Personally Enabled. Dispositivo da empresa com uso pessoal."},
+            {f: "O que é SaaS (Software as a Service)?", 
+             b: "Software como Serviço. Cliente usa o software sem gerenciar infra. Ex: Gmail, Office 365."},
+            {f: "O que é PaaS (Platform as a Service)?", 
+             b: "Plataforma como Serviço. Cliente gerencia apenas aplicação e dados. Ex: Heroku, Google App Engine."},
+            {f: "O que é IaaS (Infrastructure as a Service)?", 
+             b: "Infraestrutura como Serviço. Cliente gerencia SO, aplicação e dados. Ex: AWS EC2, Azure VMs."},
+            {f: "O que é Public Cloud?", 
+             b: "Recursos compartilhados (multi-tenant). AWS, Azure, Google Cloud."},
+            {f: "O que é Private Cloud?", 
+             b: "Nuvem privada da organização. Mais controle, mais cara."},
+            {f: "O que é Hybrid Cloud?", 
+             b: "Combinação de nuvem pública e privada."},
+            {f: "O que é Community Cloud?", 
+             b: "Compartilhada por organizações com interesses comuns (governo, saúde)."},
+            {f: "O que é MDM (Mobile Device Management)?", 
+             b: "Gerenciamento centralizado de dispositivos móveis: políticas, remote wipe."},
+            {f: "O que é BYOD?", 
+             b: "Bring Your Own Device. Funcionário usa dispositivo pessoal."},
+            {f: "O que é COPE?", 
+             b: "Corporate Owned, Personally Enabled. Dispositivo da empresa com uso pessoal."},
 
             // NAC e Zero Trust (66-70)
-            {f: "O que é NAC (Network Access Control)?", b: "Autentica usuários/dispositivos E verifica conformidade antes de permitir acesso."},
-            {f: "Qual a diferença entre NAC Agent-based e Agentless?", b: "Agent-based: software no dispositivo. Agentless: baseado em porta/scan."},
-            {f: "O que é Zero-Trust Security?", b: "'Nunca confie, sempre verifique'. Microsegmentação, least privilege, MFA."},
-            {f: "O que é microsegmentação?", b: "Firewall entre workloads individuais, não apenas entre subnets."},
-            {f: "O que é um Jump Server (Bastion Host)?", b: "Servidor fortificado usado como ponto de entrada para acessar recursos internos."},
+            {f: "O que é NAC (Network Access Control)?", 
+             b: "Autentica usuários/dispositivos E verifica conformidade antes de permitir acesso."},
+            {f: "Qual a diferença entre NAC Agent-based e Agentless?", 
+             b: "Agent-based: software no dispositivo. Agentless: baseado em porta/scan."},
+            {f: "O que é Zero-Trust Security?", 
+             b: "'Nunca confie, sempre verifique'. Microsegmentação, least privilege, MFA."},
+            {f: "O que é microsegmentação?", 
+             b: "Firewall entre workloads individuais, não apenas entre subnets."},
+            {f: "O que é um Jump Server (Bastion Host)?", 
+             b: "Servidor fortificado usado como ponto de entrada para acessar recursos internos."},
 
             // Wireless (71-80)
-            {f: "Qual o padrão Wi-Fi mais seguro?", b: "WPA3 com SAE (Simultaneous Authentication of Equals)."},
-            {f: "O que é WPA2?", b: "AES-CCMP. Vulnerável a KRACK, mas ainda amplamente usado."},
-            {f: "O que é Evil Twin?", b: "Access Point falso com mesmo SSID do legítimo. MITM."},
-            {f: "O que é Rogue AP?", b: "Access Point não autorizado conectado à rede."},
-            {f: "O que é Deauth Attack?", b: "Envia frames de desautenticação, forçando clientes a se desconectarem."},
-            {f: "O que é WPS Attack?", b: "PIN de 8 dígitos vulnerável a brute force. Desabilitar WPS."},
-            {f: "O que é WIPS?", b: "Wireless IPS. Detecta rogue APs e evil twins."},
-            {f: "O que é 802.1X em Wi-Fi?", b: "Autenticação corporativa com RADIUS + EAP."},
-            {f: "O que é MAC filtering?", b: "Lista de MACs autorizados. Fraco (MAC spoofing fácil)."},
-            {f: "Ocultar SSID é seguro?", b: "Não. É security by obscurity, facilmente descoberto."},
+            {f: "Qual o padrão Wi-Fi mais seguro?", 
+             b: "WPA3 com SAE (Simultaneous Authentication of Equals)."},
+            {f: "O que é WPA2?", 
+             b: "AES-CCMP. Vulnerável a KRACK, mas ainda amplamente usado."},
+            {f: "O que é Evil Twin?", 
+             b: "Access Point falso com mesmo SSID do legítimo. MITM."},
+            {f: "O que é Rogue AP?", 
+             b: "Access Point não autorizado conectado à rede."},
+            {f: "O que é Deauth Attack?", 
+             b: "Envia frames de desautenticação, forçando clientes a se desconectarem."},
+            {f: "O que é WPS Attack?", 
+             b: "PIN de 8 dígitos vulnerável a brute force. Desabilitar WPS."},
+            {f: "O que é WIPS?", 
+             b: "Wireless IPS. Detecta rogue APs e evil twins."},
+            {f: "O que é 802.1X em Wi-Fi?", 
+             b: "Autenticação corporativa com RADIUS + EAP."},
+            {f: "O que é MAC filtering?", 
+             b: "Lista de MACs autorizados. Fraco (MAC spoofing fácil)."},
+            {f: "Ocultar SSID é seguro?", 
+             b: "Não. É security by obscurity, facilmente descoberto."},
 
             // Hardening (81-85)
-            {f: "O que é OS Hardening?", b: "Remover software desnecessário, desabilitar serviços, patches, firewall, least privilege."},
-            {f: "Quais são as permissões NTFS?", b: "Read, Write, Execute, Modify, Full Control. Deny > Allow."},
-            {f: "O que é iptables?", b: "Firewall do Linux. Chains: INPUT, OUTPUT, FORWARD."},
-            {f: "O que é SELinux?", b: "Security-Enhanced Linux. Implementação de MAC no Linux."},
-            {f: "O que é AppLocker?", b: "Application whitelisting no Windows. Permite apenas apps aprovados."}
+            {f: "O que é OS Hardening?", 
+             b: "Remover software desnecessário, desabilitar serviços, patches, firewall, least privilege."},
+            {f: "Quais são as permissões NTFS?", 
+             b: "Read, Write, Execute, Modify, Full Control. Deny > Allow."},
+            {f: "O que é iptables?", 
+             b: "Firewall do Linux. Chains: INPUT, OUTPUT, FORWARD. Ações: ACCEPT, DROP, REJECT."},
+            {f: "O que é SELinux?", 
+             b: "Security-Enhanced Linux. Implementação de MAC no Linux. Modos: Enforcing, Permissive, Disabled."},
+            {f: "O que é AppLocker?", 
+             b: "Application whitelisting no Windows. Permite apenas apps aprovados baseado em publisher, caminho ou hash."}
         ];
 
+        // ========== QUIZ DO DOMÍNIO 2 (40 QUESTÕES COM EXPLICAÇÕES) ==========
         const quiz = [
-            // Arquitetura
-            {q: "Modelo de 3 camadas: Core, Distribution e...", o: ["Access", "Edge", "Perimeter", "Border"], c: 0},
-            {q: "Camada OSI de switches e MAC address:", o: ["Física", "Enlace", "Rede", "Transporte"], c: 1},
-            {q: "Em caso de falha, mantém acesso (prioriza disponibilidade):", o: ["Fail-Open", "Fail-Closed", "Fail-Safe", "Fail-Block"], c: 0},
-            
-            // DMZ
-            {q: "Se o firewall EXTERNO da DMZ falhar:", o: ["Tudo comprometido", "Só DMZ comprometida", "Só LAN comprometida", "Nada acontece"], c: 1},
-            {q: "Servidor fortificado exposto à internet:", o: ["Bastion Host", "Jump Server", "Proxy", "Gateway"], c: 0},
-            {q: "Web server público deve ficar:", o: ["LAN", "DMZ", "Internet", "Extranet"], c: 1},
-            
-            // Firewalls
-            {q: "Firewall que rastreia estado de conexões:", o: ["Stateless", "Stateful", "Packet Filter", "Proxy"], c: 1},
-            {q: "WAF protege contra:", o: ["DDoS", "SQL Injection", "ARP Spoofing", "MAC Flooding"], c: 1},
-            {q: "UTM significa:", o: ["Unified Threat Management", "Universal Traffic Monitor", "User Terminal Module", "Unified Testing Method"], c: 0},
-            
-            // VPN
-            {q: "VPN que roteia só tráfego corporativo:", o: ["Full Tunnel", "Split Tunnel", "Site-to-Site", "Remote Access"], c: 1},
-            {q: "Modo IPSec que criptografa pacote inteiro:", o: ["Transport", "Tunnel", "AH", "ESP"], c: 1},
-            {q: "Componente IPSec que criptografa payload:", o: ["AH", "ESP", "IKE", "ISAKMP"], c: 1},
-            
-            // Switch
-            {q: "Proteção contra MAC Flooding:", o: ["DAI", "Port Security", "DHCP Snooping", "BPDU Guard"], c: 1},
-            {q: "Proteção contra ARP Spoofing:", o: ["Port Security", "DAI", "DHCP Snooping", "Root Guard"], c: 1},
-            {q: "802.1X usa qual servidor de autenticação?", o: ["LDAP", "RADIUS", "Kerberos", "TACACS+"], c: 1},
-            
-            // Router
-            {q: "ACL Standard filtra por:", o: ["IP origem", "IP destino", "Porta", "Protocolo"], c: 0},
-            {q: "Por padrão, nova ACL:", o: ["Permite tudo", "Bloqueia tudo", "Permite HTTP", "Bloqueia FTP"], c: 1},
-            {q: "Protocolo seguro para gerenciamento:", o: ["Telnet", "SSH", "FTP", "TFTP"], c: 1},
-            
-            // Virtualização
-            {q: "Hypervisor Type 1 exemplo:", o: ["VirtualBox", "VMware ESXi", "VMware Workstation", "Parallels"], c: 1},
-            {q: "Ataque onde VM compromete hypervisor:", o: ["VM Sprawl", "VM Escape", "Container Escape", "Hyperjacking"], c: 1},
-            
-            // Cloud
-            {q: "Gmail é exemplo de:", o: ["IaaS", "PaaS", "SaaS", "DaaS"], c: 2},
-            {q: "AWS EC2 é exemplo de:", o: ["SaaS", "PaaS", "IaaS", "FaaS"], c: 2},
-            {q: "Nuvem multi-tenant pública:", o: ["Private", "Public", "Hybrid", "Community"], c: 1},
-            
-            // NAC
-            {q: "NAC verifica:", o: ["Só autenticação", "Só autorização", "Autenticação E autorização", "Só compliance"], c: 2},
-            {q: "'Nunca confie, sempre verifique':", o: ["Defense in Depth", "Zero Trust", "Least Privilege", "Need to Know"], c: 1},
-            
-            // Wireless
-            {q: "Padrão Wi-Fi mais seguro:", o: ["WEP", "WPA", "WPA2", "WPA3"], c: 3},
-            {q: "AP falso com mesmo SSID:", o: ["Rogue AP", "Evil Twin", "Deauth AP", "WPS AP"], c: 1},
-            {q: "Sistema que detecta rogue APs:", o: ["IDS", "IPS", "WIPS", "Firewall"], c: 2},
-            
-            // Hardening
-            {q: "Permissão NTFS que sempre prevalece:", o: ["Read", "Write", "Allow", "Deny"], c: 3},
-            {q: "Firewall do Linux:", o: ["UFW", "iptables", "firewalld", "Todas"], c: 3}
+            // Arquitetura (1-5)
+            {q: "Qual a terceira camada da arquitetura Three-Tier?", 
+             o: ["Core", "Distribution", "Access", "Edge"], 
+             c: 2,
+             e: "Three-Tier Architecture: Core (backbone), Distribution (políticas, ACLs), Access (conecta usuários finais)."},
+            {q: "Em caso de falha, mantém acesso (prioriza disponibilidade):", 
+             o: ["Fail-Open", "Fail-Closed", "Fail-Safe", "Fail-Block"], 
+             c: 0,
+             e: "Fail-Open mantém acesso em caso de falha, priorizando AVAILABILITY. Fail-Closed bloqueia acesso, priorizando CONFIDENTIALITY."},
+            {q: "Camada OSI de switches e endereços MAC:", 
+             o: ["Física", "Enlace", "Rede", "Transporte"], 
+             c: 1,
+             e: "Camada 2 (Enlace) opera com switches, APs e endereços MAC."},
+            {q: "Camada OSI de roteadores e endereços IP:", 
+             o: ["Física", "Enlace", "Rede", "Transporte"], 
+             c: 2,
+             e: "Camada 3 (Rede) opera com roteadores e endereçamento IP."},
+            {q: "Camada OSI do protocolo HTTP:", 
+             o: ["Rede", "Transporte", "Sessão", "Aplicação"], 
+             c: 3,
+             e: "HTTP é protocolo da camada 7 (Aplicação)."},
+
+            // DMZ (6-10)
+            {q: "Se o firewall EXTERNO da DMZ falhar:", 
+             o: ["Tudo comprometido", "Só DMZ comprometida", "Só LAN comprometida", "Nada acontece"], 
+             c: 1,
+             e: "Se o firewall EXTERNO falha, apenas a DMZ é comprometida. A LAN permanece protegida pelo firewall interno."},
+            {q: "Servidor fortificado exposto à internet:", 
+             o: ["Bastion Host", "Jump Server", "Proxy", "Gateway"], 
+             c: 0,
+             e: "Bastion Host é um servidor fortificado exposto à internet, com hardening contra ataques."},
+            {q: "Web server público deve ficar:", 
+             o: ["LAN", "DMZ", "Internet", "Extranet"], 
+             c: 1,
+             e: "Web server público → DMZ. Database → LAN privada. Firewall interno permite apenas tráfego do web."},
+            {q: "Quantas interfaces tem um Dual-Homed Gateway?", 
+             o: ["2", "3", "4", "5"], 
+             c: 1,
+             e: "Dual-Homed Gateway tem 3 interfaces: Internet, DMZ e LAN privada."},
+            {q: "Sistema isca para atrair atacantes:", 
+             o: ["Honeypot", "Bastion", "Proxy", "Firewall"], 
+             c: 0,
+             e: "Honeypot é um sistema isca configurado para atrair atacantes e estudar suas técnicas."},
+
+            // Firewalls (11-15)
+            {q: "Firewall que rastreia estado de conexões:", 
+             o: ["Stateless", "Stateful", "Packet Filter", "Proxy"], 
+             c: 1,
+             e: "Stateful firewall mantém state table rastreando conexões ativas."},
+            {q: "WAF protege contra:", 
+             o: ["DDoS", "SQL Injection", "ARP Spoofing", "MAC Flooding"], 
+             c: 1,
+             e: "WAF (Web Application Firewall) protege contra SQL Injection, XSS e CSRF na camada 7."},
+            {q: "UTM significa:", 
+             o: ["Unified Threat Management", "Universal Traffic Monitor", "User Terminal Module", "Unified Testing Method"], 
+             c: 0,
+             e: "UTM (Unified Threat Management) é um appliance all-in-one: firewall + IPS + antimalware + VPN."},
+            {q: "Por padrão, nova ACL:", 
+             o: ["Permite tudo", "Bloqueia tudo", "Permite HTTP", "Bloqueia FTP"], 
+             c: 1,
+             e: "Nova ACL tem Implicit Deny: bloqueia todo tráfego por padrão. É preciso criar regras de permissão."},
+            {q: "Protocolo seguro para gerenciamento:", 
+             o: ["Telnet", "SSH", "FTP", "TFTP"], 
+             c: 1,
+             e: "SSH criptografa tudo. Telnet, FTP e TFTP transmitem em texto claro."},
+
+            // VPN (16-20)
+            {q: "VPN que roteia só tráfego corporativo:", 
+             o: ["Full Tunnel", "Split Tunnel", "Site-to-Site", "Remote Access"], 
+             c: 1,
+             e: "Split Tunnel: tráfego corporativo vai pela VPN, resto pela internet. RISCO de bypass de políticas."},
+            {q: "Modo IPSec que criptografa pacote inteiro:", 
+             o: ["Transport", "Tunnel", "AH", "ESP"], 
+             c: 1,
+             e: "Tunnel mode criptografa o pacote inteiro (incluindo headers). Transport mode criptografa apenas payload."},
+            {q: "Componente IPSec que criptografa payload:", 
+             o: ["AH", "ESP", "IKE", "ISAKMP"], 
+             c: 1,
+             e: "ESP (Encapsulating Security Payload) criptografa o payload. AH (Authentication Header) só autentica."},
+            {q: "VPN que conecta matriz e filial:", 
+             o: ["Remote Access", "Site-to-Site", "Split Tunnel", "Full Tunnel"], 
+             c: 1,
+             e: "Site-to-Site VPN conecta redes inteiras (matriz-filial) com roteadores nas bordas."},
+            {q: "VPN mais segura (todo tráfego):", 
+             o: ["Split Tunnel", "Full Tunnel", "Site-to-Site", "Remote Access"], 
+             c: 1,
+             e: "Full Tunnel: todo tráfego vai pela VPN. Mais seguro que Split Tunnel."},
+
+            // Switch Security (21-25)
+            {q: "Proteção contra MAC Flooding:", 
+             o: ["DAI", "Port Security", "DHCP Snooping", "BPDU Guard"], 
+             c: 1,
+             e: "Port Security limita número de MACs por porta, prevenindo MAC flooding."},
+            {q: "Proteção contra ARP Spoofing:", 
+             o: ["Port Security", "DAI", "DHCP Snooping", "Root Guard"], 
+             c: 1,
+             e: "DAI (Dynamic ARP Inspection) valida ARPs contra tabela DHCP snooping."},
+            {q: "802.1X usa qual servidor de autenticação?", 
+             o: ["LDAP", "RADIUS", "Kerberos", "TACACS+"], 
+             c: 1,
+             e: "802.1X usa RADIUS como servidor de autenticação (Authentication Server)."},
+            {q: "Ataque que inunda tabela CAM do switch:", 
+             o: ["ARP Spoofing", "MAC Flooding", "DHCP Spoofing", "VLAN Hopping"], 
+             c: 1,
+             e: "MAC Flooding inunda a tabela CAM. O switch vira um hub, permitindo sniffing."},
+            {q: "DHCP Snooping previne:", 
+             o: ["ARP Spoofing", "DHCP Spoofing", "MAC Flooding", "VLAN Hopping"], 
+             c: 1,
+             e: "DHCP Snooping identifica portas com DHCP legítimo, prevenindo DHCP spoofing."},
+
+            // Virtualização (26-30)
+            {q: "Hypervisor Type 1 exemplo:", 
+             o: ["VirtualBox", "VMware ESXi", "VMware Workstation", "Parallels"], 
+             c: 1,
+             e: "Type 1 (bare metal): ESXi, Hyper-V, Xen. Type 2 (hosted): VirtualBox, Workstation."},
+            {q: "Ataque onde VM compromete hypervisor:", 
+             o: ["VM Sprawl", "VM Escape", "Container Escape", "Hyperjacking"], 
+             c: 1,
+             e: "VM Escape: processo dentro da VM consegue comprometer o hypervisor."},
+            {q: "Proliferação descontrolada de VMs:", 
+             o: ["VM Escape", "VM Sprawl", "VM Hopping", "VM Spoofing"], 
+             c: 1,
+             e: "VM Sprawl: muitas VMs sem gerenciamento, dificultando inventário e patches."},
+            {q: "Tecnologia mais leve que VM (compartilha kernel):", 
+             o: ["Hypervisor", "Container", "vSwitch", "SDN"], 
+             c: 1,
+             e: "Containers compartilham o kernel do host, sendo mais leves que VMs."},
+            {q: "Plano SDN que toma decisões de roteamento:", 
+             o: ["Data Plane", "Control Plane", "Management Plane", "Forwarding Plane"], 
+             c: 1,
+             e: "Control Plane: decisões. Data Plane: encaminhamento."},
+
+            // Cloud (31-35)
+            {q: "Gmail é exemplo de:", 
+             o: ["IaaS", "PaaS", "SaaS", "DaaS"], 
+             c: 2,
+             e: "SaaS (Software as a Service): cliente usa o software, não gerencia infra."},
+            {q: "AWS EC2 é exemplo de:", 
+             o: ["SaaS", "PaaS", "IaaS", "FaaS"], 
+             c: 2,
+             e: "IaaS (Infrastructure as a Service): cliente gerencia SO + app + dados."},
+            {q: "Nuvem multi-tenant pública:", 
+             o: ["Private", "Public", "Hybrid", "Community"], 
+             c: 1,
+             e: "Public Cloud: recursos compartilhados (multi-tenant). Ex: AWS, Azure."},
+            {q: "Heroku é exemplo de:", 
+             o: ["IaaS", "PaaS", "SaaS", "CaaS"], 
+             c: 1,
+             e: "PaaS (Platform as a Service): cliente gerencia app + dados, provedor gerencia plataforma."},
+            {q: "Funcionário usa dispositivo pessoal:", 
+             o: ["COPE", "BYOD", "CYOD", "MDM"], 
+             c: 1,
+             e: "BYOD (Bring Your Own Device): funcionário usa dispositivo pessoal."},
+
+            // NAC e Zero Trust (36-38)
+            {q: "NAC verifica:", 
+             o: ["Só autenticação", "Só autorização", "Autenticação E autorização", "Só compliance"], 
+             c: 2,
+             e: "NAC (Network Access Control) verifica autenticação E autorização (compliance: antivirus, patches)."},
+            {q: "'Nunca confie, sempre verifique':", 
+             o: ["Defense in Depth", "Zero Trust", "Least Privilege", "Need to Know"], 
+             c: 1,
+             e: "Zero Trust: 'never trust, always verify'. Microsegmentação, MFA everywhere."},
+            {q: "Firewall entre workloads individuais:", 
+             o: ["VLAN", "Microsegmentation", "Subnet", "DMZ"], 
+             c: 1,
+             e: "Microsegmentação aplica firewall entre cargas de trabalho, não apenas entre subnets."},
+
+            // Wireless (39-40)
+            {q: "Padrão Wi-Fi mais seguro:", 
+             o: ["WEP", "WPA", "WPA2", "WPA3"], 
+             c: 3,
+             e: "WPA3 com SAE é o padrão mais seguro."},
+            {q: "AP falso com mesmo SSID:", 
+             o: ["Rogue AP", "Evil Twin", "Deauth AP", "WPS AP"], 
+             c: 1,
+             e: "Evil Twin: AP falso com mesmo SSID do legítimo para MITM."}
         ];
 
         let currentCard = 0;
@@ -816,7 +1138,9 @@
 
         function loadProgress() {
             const saved = localStorage.getItem('dominio2_mastered');
-            if (saved) mastered = new Set(JSON.parse(saved));
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
         }
         function saveProgress() {
             localStorage.setItem('dominio2_mastered', JSON.stringify([...mastered]));
@@ -824,14 +1148,22 @@
         loadProgress();
 
         function showTab(n) {
-            document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
-            document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
-            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) {
+                loadQuiz();
+            }
         }
 
         function updateCard() {
             if (filteredCards.length === 0) {
                 document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                document.getElementById('card-counter').textContent = 'Card 0 de 0';
+                document.getElementById('side-indicator').textContent = 'FRENTE';
                 return;
             }
             const cardIndex = filteredCards[currentCard];
@@ -840,10 +1172,10 @@
             document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
             document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
             const btn = document.getElementById('master-btn');
-            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
-            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            const isMastered = mastered.has(cardIndex);
+            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', isMastered);
             document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
-            
             const progress = (mastered.size / cards.length) * 100;
             document.getElementById('progress-fill').style.width = progress + '%';
             document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
@@ -873,11 +1205,9 @@
             currentFilter = type;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
             if (type === 'all') filteredCards = [...Array(cards.length).keys()];
             else if (type === 'mastered') filteredCards = Array.from(mastered);
             else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
-            
             currentCard = 0; flipped = false; updateCard();
         }
 
@@ -898,7 +1228,7 @@
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
                 exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
                 div.appendChild(exp);
                 container.appendChild(div);
             });
@@ -906,7 +1236,9 @@
 
         function selectOpt(qi, oi) {
             if (checked) return;
-            quiz[qi].o.forEach((_, i) => document.getElementById(`q${qi}o${i}`).classList.remove('selected'));
+            quiz[qi].o.forEach((_, i) => {
+                document.getElementById(`q${qi}o${i}`).classList.remove('selected');
+            });
             document.getElementById(`q${qi}o${oi}`).classList.add('selected');
             answers[qi] = oi;
         }
@@ -918,24 +1250,26 @@
                 const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
                 q.o.forEach((_, oi) => {
                     const el = document.getElementById(`q${qi}o${oi}`);
-                    if (correctAnswer.includes(oi)) el.classList.add('correct');
-                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
                 });
                 document.getElementById(`exp${qi}`).style.display = 'block';
                 if (correctAnswer.includes(answers[qi])) correct++;
             });
-            
             const pct = Math.round((correct / quiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
             document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
-            document.getElementById('results-modal').style.display = 'flex';
+            document.getElementById('results-modal').classList.add('show');
         }
 
         function resetQuiz() {
             checked = false;
             answers = {};
             document.getElementById('questions').innerHTML = '';
-            document.getElementById('results-modal').style.display = 'none';
+            document.getElementById('results-modal').classList.remove('show');
             loadQuiz();
         }
 

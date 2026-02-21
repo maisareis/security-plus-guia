@@ -75,7 +75,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* FLASHCARDS */
         .flashcard-area { max-width: 900px; margin: 0 auto; }
         .card-info {
             background: rgba(255,255,255,0.25);
@@ -163,6 +162,9 @@
             font-size: 1.5rem;
             width: 55px;
             height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-master {
             background: #e5e7eb;
@@ -176,8 +178,34 @@
             background: #f59e0b;
             color: white;
         }
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+        }
         
-        /* QUIZ */
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .filter-btn.active {
+            background: white;
+            color: #4facfe;
+        }
+
         .quiz-area { max-width: 1000px; margin: 0 auto; }
         .quiz-header {
             text-align: center;
@@ -236,6 +264,7 @@
             display: none;
             line-height: 1.6;
         }
+        
         .results-modal {
             position: fixed;
             top: 0;
@@ -274,31 +303,114 @@
             font-weight: bold;
             margin: 30px auto;
         }
-        .btn-primary {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 18px 45px;
-            font-size: 1.1rem;
-        }
-        .filter-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .filter-btn {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.3);
-            border: 2px solid white;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-        .filter-btn.active {
+        
+        .summary {
+            max-width: 1100px;
+            margin: 0 auto;
             background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .summary h1 {
             color: #4facfe;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            border-bottom: 4px solid #4facfe;
+            padding-bottom: 15px;
+        }
+        .summary h2 {
+            color: #00f2fe;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        .summary h3 {
+            color: #4facfe;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .summary ul, .summary ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .ir-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0;
+        }
+        .ir-step {
+            flex: 1;
+            min-width: 150px;
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 5px solid #4facfe;
+        }
+        .ir-step strong {
+            display: block;
+            color: #4facfe;
+            margin-bottom: 5px;
+        }
+        .forensics-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin: 30px 0;
+        }
+        .forensics-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background: #f3f4f6;
+            border-left: 5px solid #4facfe;
+            border-radius: 5px;
+        }
+        .forensics-number {
+            font-weight: bold;
+            color: #4facfe;
+            min-width: 30px;
+        }
+        .raid-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .raid-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4facfe;
+        }
+        .raid-card strong {
+            color: #4facfe;
+            display: block;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -329,9 +441,9 @@
                             <div id="mastered-count">0 dominados</div>
                         </div>
                         <div class="filter-buttons">
-                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
-                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
-                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                            <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered', event)">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered', event)">Dominados</button>
                         </div>
                     </div>
                     <div class="progress-bar">
@@ -355,10 +467,10 @@
         </div>
 
         <div id="tab1" class="content">
-            <div class="summary" style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-                <h1 style="color: #4facfe; margin-bottom: 30px; font-size: 2.5rem; border-bottom: 4px solid #4facfe; padding-bottom: 15px;">📖 Resumo - Capítulo 9</h1>
+            <div class="summary">
+                <h1>📖 Resumo - Capítulo 9</h1>
                 
-                <div style="background: #e0f7ff; border-left: 5px solid #4facfe; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                <div class="info-box">
                     <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
                     <ul style="margin-top: 10px; margin-left: 20px;">
                         <li><strong>6 fases do Incident Response:</strong> Preparation → Identification → Containment → Eradication → Recovery → Lessons Learned</li>
@@ -369,54 +481,42 @@
                     </ul>
                 </div>
 
-                <h2 style="color: #00f2fe; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">1️⃣ Processo de Resposta a Incidentes</h2>
+                <h2>1️⃣ Processo de Resposta a Incidentes</h2>
                 
-                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0;">
-                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #4facfe;">
-                        <strong>1. Preparation</strong><br>Planos, ferramentas
-                    </div>
-                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #4facfe;">
-                        <strong>2. Identification</strong><br>Detectar
-                    </div>
-                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #4facfe;">
-                        <strong>3. Containment</strong><br>Isolar
-                    </div>
-                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #4facfe;">
-                        <strong>4. Eradication</strong><br>Remover causa
-                    </div>
-                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #4facfe;">
-                        <strong>5. Recovery</strong><br>Restaurar
-                    </div>
-                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #4facfe;">
-                        <strong>6. Lessons Learned</strong><br>Melhorias
-                    </div>
+                <div class="ir-steps">
+                    <div class="ir-step"><strong>1. Preparation</strong>Planos, ferramentas</div>
+                    <div class="ir-step"><strong>2. Identification</strong>Detectar</div>
+                    <div class="ir-step"><strong>3. Containment</strong>Isolar</div>
+                    <div class="ir-step"><strong>4. Eradication</strong>Remover causa</div>
+                    <div class="ir-step"><strong>5. Recovery</strong>Restaurar</div>
+                    <div class="ir-step"><strong>6. Lessons Learned</strong>Melhorias</div>
                 </div>
 
-                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Containment (Contenção)</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                <h3>Containment (Contenção)</h3>
+                <ul>
                     <li><strong>Isolation:</strong> Desconectar sistema da rede para prevenir propagação, mas mantendo evidências.</li>
                     <li><strong>Segmentation:</strong> Mover sistema para uma VLAN isolada (quarentena).</li>
                     <li><strong>Removal:</strong> Desligar sistema (último caso, pois perde dados voláteis).</li>
                 </ul>
 
-                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Eradication e Recovery</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                <h3>Eradication e Recovery</h3>
+                <ul>
                     <li><strong>Eradication:</strong> Remover causa raiz: deletar malware, fechar vulnerabilidade, revogar credenciais comprometidas.</li>
                     <li><strong>Recovery:</strong> Restaurar sistemas à operação normal: restore de backup, rebuild, aplicar patches, monitorar.</li>
                 </ul>
 
-                <h2 style="color: #00f2fe; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ Log Management</h2>
+                <h2>2️⃣ Log Management</h2>
 
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                <ul>
                     <li><strong>SIEM:</strong> Coleta, agrega e correlaciona logs de múltiplas fontes para detecção de ameaças.</li>
                     <li><strong>Retention:</strong> Armazenar logs conforme requisitos de compliance (ex: 1 ano).</li>
                     <li><strong>ELK Stack:</strong> Elasticsearch (busca), Logstash (coleta/processamento), Kibana (visualização). Solução open source de log management.</li>
                 </ul>
 
-                <h2 style="color: #00f2fe; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Digital Forensics</h2>
+                <h2>3️⃣ Digital Forensics</h2>
 
-                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Ordem de Volatilidade (coletar do mais volátil para o menos volátil)</h3>
-                <ol style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                <h3>Ordem de Volatilidade (coletar do mais volátil para o menos volátil)</h3>
+                <ol>
                     <li><strong>CPU registers, cache</strong> - extremamente volátil</li>
                     <li><strong>RAM (memória volátil)</strong> - se desligar, perde</li>
                     <li><strong>Swap/Page file</strong> - memória virtual</li>
@@ -425,14 +525,14 @@
                     <li><strong>Backups</strong> - menos volátil</li>
                 </ol>
 
-                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Chain of Custody (Cadeia de Custódia)</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                <h3>Chain of Custody (Cadeia de Custódia)</h3>
+                <ul>
                     <li>Documentar quem teve acesso à evidência, quando, onde e por quê.</li>
                     <li>Essencial para admissibilidade da evidência em tribunal.</li>
                     <li>Cada transferência deve ser registrada.</li>
                 </ul>
 
-                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Ferramentas Forenses</h3>
+                <h3>Ferramentas Forenses</h3>
                 <table style="width:100%; border-collapse:collapse; margin:20px 0;">
                     <tr><th style="background:#4facfe; color:white;">Ferramenta</th><th style="background:#4facfe; color:white;">Uso</th></tr>
                     <tr><td><strong>FTK Imager</strong></td><td>Criar imagens forenses (E01, raw). GUI, Windows.</td></tr>
@@ -443,7 +543,7 @@
                     <tr><td><strong>NetworkMiner</strong></td><td>Network forensics passiva. Extrai arquivos e credenciais de PCAPs.</td></tr>
                 </table>
 
-                <div style="background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                <div class="golden-rule">
                     <strong>⚠️ REGRAS DE OURO DA FORENSE:</strong>
                     <ul style="margin-top: 10px;">
                         <li><strong>Write Blocker:</strong> Usar hardware ou software para prevenir modificação da evidência durante análise.</li>
@@ -453,81 +553,69 @@
                     </ul>
                 </div>
 
-                <h2 style="color: #00f2fe; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">4️⃣ Redundância</h2>
+                <h2>4️⃣ Redundância</h2>
 
-                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">RAID (Redundant Array of Independent Disks)</h3>
-                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-                    <tr><th style="background:#4facfe; color:white;">Nível</th><th style="background:#4facfe; color:white;">Descrição</th><th style="background:#4facfe; color:white;">Tolerância</th></tr>
-                    <tr><td><strong>RAID 0</strong></td><td>Striping (distribuição). Alta performance. <span style="color:#ef4444;">SEM REDUNDÂNCIA!</span></td><td>0 falhas</td></tr>
-                    <tr><td><strong>RAID 1</strong></td><td>Mirroring (espelhamento). 50% capacidade.</td><td>1 falha</td></tr>
-                    <tr><td><strong>RAID 5</strong></td><td>Striping + parity. Mínimo 3 discos.</td><td>1 falha</td></tr>
-                    <tr><td><strong>RAID 6</strong></td><td>Striping + double parity. Mínimo 4 discos.</td><td>2 falhas</td></tr>
-                    <tr><td><strong>RAID 10 (1+0)</strong></td><td>Mirror de stripes. Alto custo, alta performance.</td><td>Múltiplas falhas</td></tr>
-                </table>
+                <h3>RAID (Redundant Array of Independent Disks)</h3>
+                <div class="raid-grid">
+                    <div class="raid-card"><strong>RAID 0</strong><p>Striping. Performance, SEM REDUNDÂNCIA</p></div>
+                    <div class="raid-card"><strong>RAID 1</strong><p>Mirroring. 50% capacidade, tolera 1 falha</p></div>
+                    <div class="raid-card"><strong>RAID 5</strong><p>Striping + parity. Mínimo 3 discos, tolera 1 falha</p></div>
+                    <div class="raid-card"><strong>RAID 6</strong><p>Double parity. Mínimo 4 discos, tolera 2 falhas</p></div>
+                    <div class="raid-card"><strong>RAID 10</strong><p>Mirror de stripes. Performance + redundância</p></div>
+                </div>
 
-                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Alta Disponibilidade</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                <h3>Alta Disponibilidade</h3>
+                <ul>
                     <li><strong>Clustering:</strong> Múltiplos servidores atuando como um. Active-active ou active-passive. Failover automático.</li>
                     <li><strong>Load Balancing:</strong> Distribui tráfego entre servidores (round-robin, least connections). Aumenta performance e disponibilidade.</li>
                     <li><strong>Failover:</strong> Troca automática para servidor/componente de backup quando o primário falha.</li>
                 </ul>
 
-                <h2 style="color: #00f2fe; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">5️⃣ Backup</h2>
+                <h2>5️⃣ Backup</h2>
 
-                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Tipos de Backup</h3>
+                <h3>Tipos de Backup</h3>
                 <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-                    <tr><th style="background:#4facfe; color:white;">Tipo</th><th style="background:#4facfe; color:white;">Descrição</th><th style="background:#4facfe; color:white;">Backup</th><th style="background:#4facfe; color:white;">Restore</th></tr>
-                    <tr><td><strong>Full</strong></td><td>Cópia completa de todos os dados</td><td>Lento</td><td>Rápido (1 fita)</td></tr>
-                    <tr><td><strong>Incremental</strong></td><td>Mudanças desde o ÚLTIMO backup (qualquer tipo)</td><td>Rápido</td><td>Lento (full + todos incrementais)</td></tr>
-                    <tr><td><strong>Differential</strong></td><td>Mudanças desde o último FULL</td><td>Médio</td><td>Médio (full + último differential)</td></tr>
+                    <tr><th style="background:#4facfe; color:white;">Tipo</th><th style="background:#4facfe; color:white;">Descrição</th><th style="background:#4facfe; color:white;">Restore</th></tr>
+                    <tr><td><strong>Full</strong></td><td>Cópia completa</td><td>Rápido</td></tr>
+                    <tr><td><strong>Incremental</strong></td><td>Mudanças desde último backup</td><td>Lento (full + todos incrementais)</td></tr>
+                    <tr><td><strong>Differential</strong></td><td>Mudanças desde último full</td><td>Médio (full + último differential)</td></tr>
                 </table>
 
-                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Regra 3-2-1</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>3</strong> cópias dos dados (original + 2 backups)</li>
-                    <li><strong>2</strong> tipos de mídia diferentes (ex: disco + fita)</li>
-                    <li><strong>1</strong> cópia offsite (fora do local físico) ou offline (air gap)</li>
+                <h3>Conceitos Importantes</h3>
+                <ul>
+                    <li><strong>3-2-1 Rule:</strong> 3 cópias, 2 mídias, 1 offsite</li>
+                    <li><strong>RPO (Recovery Point Objective):</strong> Quanto dado pode perder</li>
+                    <li><strong>RTO (Recovery Time Objective):</strong> Tempo para recuperar</li>
+                    <li><strong>MTBF (Mean Time Between Failures):</strong> Confiabilidade</li>
+                    <li><strong>MTTR (Mean Time To Repair):</strong> Tempo médio para reparo</li>
                 </ul>
 
-                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Conceitos Importantes</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>RPO (Recovery Point Objective):</strong> Quanto dado pode ser perdido (em tempo). Ex: RPO 24h = backup diário.</li>
-                    <li><strong>RTO (Recovery Time Objective):</strong> Tempo máximo para recuperar o serviço.</li>
-                    <li><strong>MTBF (Mean Time Between Failures):</strong> Confiabilidade. Tempo médio entre falhas.</li>
-                    <li><strong>MTTR (Mean Time To Repair):</strong> Tempo médio para consertar. Impacta o RTO.</li>
+                <h3>DR Sites</h3>
+                <ul>
+                    <li><strong>Hot Site:</strong> Totalmente equipado, failover imediato (RTO minutos)</li>
+                    <li><strong>Warm Site:</strong> Equipado mas sem dados atuais (RTO horas)</li>
+                    <li><strong>Cold Site:</strong> Apenas espaço físico (RTO dias)</li>
                 </ul>
 
-                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">DR Sites (Disaster Recovery)</h3>
-                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-                    <tr><th style="background:#4facfe; color:white;">Tipo</th><th style="background:#4facfe; color:white;">Descrição</th><th style="background:#4facfe; color:white;">RTO</th><th style="background:#4facfe; color:white;">Custo</th></tr>
-                    <tr><td><strong>Hot Site</strong></td><td>Totalmente equipado, dados sincronizados, failover imediato</td><td>Minutos</td><td>💰💰💰</td></tr>
-                    <tr><td><strong>Warm Site</strong></td><td>Equipado mas sem dados atuais. Setup em horas/dias</td><td>Horas/dias</td><td>💰💰</td></tr>
-                    <tr><td><strong>Cold Site</strong></td><td>Apenas espaço físico. Setup em semanas</td><td>Semanas</td><td>💰</td></tr>
-                </table>
+                <h3>Backup Moderno</h3>
+                <ul>
+                    <li><strong>Immutable Backup:</strong> Backup que não pode ser modificado/deletado (WORM). Protege contra ransomware.</li>
+                    <li><strong>Air Gap Backup:</strong> Backup fisicamente desconectado da rede.</li>
+                    <li><strong>Snapshot:</strong> Estado de VM/storage em momento. Rápido mas NÃO é backup.</li>
+                    <li><strong>Replication:</strong> Cópia contínua para outro local (síncrona/assíncrona).</li>
+                </ul>
 
-                <div style="background: #e0f7ff; border-left: 5px solid #4facfe; padding: 20px; margin: 20px 0; border-radius: 8px;">
-                    <strong>💡 BACKUP MODERNO:</strong>
+                <div class="golden-rule">
+                    <strong>🎯 DICAS FINAIS PARA PROVA:</strong>
                     <ul style="margin-top: 10px;">
-                        <li><strong>Immutable Backup:</strong> Backup que não pode ser modificado/deletado (WORM). Protege contra ransomware.</li>
-                        <li><strong>Air Gap Backup:</strong> Backup fisicamente desconectado da rede (fita, disco removido).</li>
-                        <li><strong>Snapshot:</strong> Estado de VM/storage em momento. Rápido mas NÃO é backup (mesmo storage).</li>
-                        <li><strong>Replication:</strong> Cópia contínua para outro local (síncrona/assíncrona).</li>
-                        <li><strong>Backup Testing:</strong> Testar restore regularmente. Backup não testado = sem backup.</li>
-                    </ul>
-                </div>
-
-                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 30px 0; border-radius: 8px;">
-                    <h3 style="color: #ec4899; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
-                    <ul style="margin-left: 20px; line-height: 1.8;">
                         <li><strong>6 fases IR:</strong> Preparation, Identification, Containment, Eradication, Recovery, Lessons Learned</li>
-                        <li><strong>Ordem de volatilidade:</strong> CPU/RAM > Disco > Logs > Backups</li>
+                        <li><strong>Ordem de volatilidade:</strong> RAM > Disco > Logs > Backups</li>
                         <li><strong>Chain of Custody</strong> = documentar tudo</li>
                         <li><strong>Write Blocker</strong> = não modificar evidência</li>
-                        <li><strong>RAID 0</strong> = performance, <strong>RAID 1</strong> = mirror, <strong>RAID 5</strong> = parity, <strong>RAID 6</strong> = double parity, <strong>RAID 10</strong> = mirror+stripe</li>
+                        <li><strong>RAID 0</strong> = performance, <strong>RAID 1</strong> = mirror, <strong>RAID 5</strong> = parity</li>
                         <li><strong>3-2-1 rule:</strong> 3 cópias, 2 mídias, 1 offsite</li>
-                        <li><strong>Incremental</strong> = desde último backup, <strong>Differential</strong> = desde último full</li>
                         <li><strong>RPO</strong> = quanto dado perder, <strong>RTO</strong> = tempo recuperar</li>
-                        <li><strong>Hot site</strong> = RTO minutos, <strong>Cold site</strong> = RTO dias/semanas</li>
+                        <li><strong>Backup não testado = sem backup</strong></li>
                     </ul>
                 </div>
             </div>
@@ -537,6 +625,7 @@
             <div class="quiz-area">
                 <div class="quiz-header">
                     <h2>Quiz - 25 Questões</h2>
+                    <p>Passing Score: 70% (18/25 corretas)</p>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
@@ -556,93 +645,278 @@
     </div>
 
     <script>
-        // ========== CARDS TRADUZIDOS PARA PORTUGUÊS ==========
+        // ========== CARDS DO CAPÍTULO 9 - 50 CARDS COMPLETOS ==========
         const cards = [
             // Incident Response Steps (1-6)
-            {f: "Quais são as 6 fases do processo de resposta a incidentes (Incident Response)?", b: "1) Preparation (preparação) 2) Identification (identificação) 3) Containment (contenção) 4) Eradication (erradicação) 5) Recovery (recuperação) 6) Lessons Learned (lições aprendidas)."},
-            {f: "O que é a fase de Containment (contenção)?", b: "Isolar a ameaça para evitar propagação. Short-term: ação rápida mas temporária. Long-term: solução permanente. Previne o spread do ataque."},
-            {f: "O que é a fase de Eradication (erradicação)?", b: "Remover a causa raiz do incidente: deletar malware, fechar vulnerabilidades exploradas, revogar credenciais comprometidas."},
-            {f: "O que é a fase de Recovery (recuperação)?", b: "Restaurar sistemas à operação normal. Restaurar backups, rebuild de servidores, aplicar patches, monitorar para garantir que não há resquícios."},
-            {f: "O que é a fase de Lessons Learned (lições aprendidas)?", b: "Post-mortem do incidente. Documentar o que funcionou, o que falhou, e propor melhorias no plano de resposta. Realizado após a recuperação."},
-            {f: "O que é Isolation em resposta a incidentes?", b: "Desconectar o sistema comprometido da rede para prevenir propagação, mas mantendo o sistema ligado para preservar evidências voláteis (RAM)."},
+            {f: "Quais são as 6 fases do processo de resposta a incidentes (Incident Response)?", 
+             b: "1) Preparation (preparação) 2) Identification (identificação) 3) Containment (contenção) 4) Eradication (erradicação) 5) Recovery (recuperação) 6) Lessons Learned (lições aprendidas)."},
+             
+            {f: "O que é a fase de Containment (contenção)?", 
+             b: "Isolar a ameaça para evitar propagação. Short-term: ação rápida mas temporária. Long-term: solução permanente. Previne o spread do ataque."},
+             
+            {f: "O que é a fase de Eradication (erradicação)?", 
+             b: "Remover a causa raiz do incidente: deletar malware, fechar vulnerabilidades exploradas, revogar credenciais comprometidas."},
+             
+            {f: "O que é a fase de Recovery (recuperação)?", 
+             b: "Restaurar sistemas à operação normal. Restaurar backups, rebuild de servidores, aplicar patches, monitorar para garantir que não há resquícios."},
+             
+            {f: "O que é a fase de Lessons Learned (lições aprendidas)?", 
+             b: "Post-mortem do incidente. Documentar o que funcionou, o que falhou, e propor melhorias no plano de resposta. Realizado após a recuperação."},
+             
+            {f: "O que é Isolation em resposta a incidentes?", 
+             b: "Desconectar o sistema comprometido da rede para prevenir propagação, mas mantendo o sistema ligado para preservar evidências voláteis (RAM)."},
 
             // Forensics (7-15)
-            {f: "O que é Chain of Custody (cadeia de custódia)?", b: "Documentação detalhada de quem teve acesso à evidência, quando, onde e por quê. Essencial para garantir a integridade da evidência e sua admissibilidade em tribunal."},
-            {f: "O que é Ordem de Volatilidade (Order of Volatility)?", b: "Princípio forense de coletar as evidências mais voláteis primeiro: 1) CPU/registradores, 2) RAM, 3) Swap, 4) Disco, 5) Logs remotos, 6) Backups."},
-            {f: "O que é um Write Blocker?", b: "Dispositivo (hardware) ou software que previne qualquer modificação na evidência durante a coleta ou análise forense. Garante a integridade dos dados."},
-            {f: "Por que calcular hash da evidência em forense?", b: "Para provar a integridade da evidência. Calcula-se o hash (MD5, SHA-256) antes e depois da análise. Se os hashes coincidirem, a evidência não foi alterada."},
-            {f: "O que é Live Acquisition em forense?", b: "Coleta de dados voláteis (como RAM) enquanto o sistema está ligado. Usa ferramentas como FTK Imager ou Volatility. Captura informações que seriam perdidas ao desligar."},
-            {f: "O que é Dead Acquisition em forense?", b: "Criação de imagem forense do disco com o sistema desligado. Usa ferramentas como dd, dcfldd ou FTK Imager. Preserva o estado do disco."},
-            {f: "O que é FTK Imager?", b: "Ferramenta forense da AccessData para criar imagens de disco (E01, raw). Interface gráfica fácil de usar no Windows. Pode também visualizar arquivos."},
-            {f: "O que é dd/dcfldd?", b: "Comandos Linux para disk imaging. dd faz cópia bit-a-bit. dcfldd é uma versão melhorada com hash integrado e progresso."},
-            {f: "O que é Autopsy?", b: "Ferramenta forense de código aberto com interface gráfica. Analisa imagens de disco, timeline, recuperação de arquivos, busca por palavras-chave."},
-            {f: "O que é Volatility?", b: "Framework para análise de memória RAM (memory forensics). Analisa dumps de memória para encontrar processos, conexões de rede, drivers e malware."},
-            {f: "O que é NetworkMiner?", b: "Ferramenta de network forensics passiva. Analisa arquivos PCAP e extrai arquivos, credenciais, certificados e metadados sem gerar tráfego."},
-            {f: "O que é ELK Stack?", b: "Conjunto de ferramentas para log management: Elasticsearch (busca e armazenamento), Logstash (coleta e processamento), Kibana (visualização e dashboards). Usado como SIEM."},
+            {f: "O que é Chain of Custody (cadeia de custódia)?", 
+             b: "Documentação detalhada de quem teve acesso à evidência, quando, onde e por quê. Essencial para garantir a integridade da evidência e sua admissibilidade em tribunal."},
+             
+            {f: "O que é Ordem de Volatilidade (Order of Volatility)?", 
+             b: "Princípio forense de coletar as evidências mais voláteis primeiro: 1) CPU/registradores, 2) RAM, 3) Swap, 4) Disco, 5) Logs remotos, 6) Backups."},
+             
+            {f: "O que é um Write Blocker?", 
+             b: "Dispositivo (hardware) ou software que previne qualquer modificação na evidência durante a coleta ou análise forense. Garante a integridade dos dados."},
+             
+            {f: "Por que calcular hash da evidência em forense?", 
+             b: "Para provar a integridade da evidência. Calcula-se o hash (MD5, SHA-256) antes e depois da análise. Se os hashes coincidirem, a evidência não foi alterada."},
+             
+            {f: "O que é Live Acquisition em forense?", 
+             b: "Coleta de dados voláteis (como RAM) enquanto o sistema está ligado. Usa ferramentas como FTK Imager ou Volatility. Captura informações que seriam perdidas ao desligar."},
+             
+            {f: "O que é Dead Acquisition em forense?", 
+             b: "Criação de imagem forense do disco com o sistema desligado. Usa ferramentas como dd, dcfldd ou FTK Imager. Preserva o estado do disco."},
+             
+            {f: "O que é FTK Imager?", 
+             b: "Ferramenta forense da AccessData para criar imagens de disco (E01, raw). Interface gráfica fácil de usar no Windows. Pode também visualizar arquivos."},
+             
+            {f: "O que é dd/dcfldd?", 
+             b: "Comandos Linux para disk imaging. dd faz cópia bit-a-bit. dcfldd é uma versão melhorada com hash integrado e progresso."},
+             
+            {f: "O que é Autopsy?", 
+             b: "Ferramenta forense de código aberto com interface gráfica. Analisa imagens de disco, timeline, recuperação de arquivos, busca por palavras-chave."},
+             
+            {f: "O que é Volatility?", 
+             b: "Framework para análise de memória RAM (memory forensics). Analisa dumps de memória para encontrar processos, conexões de rede, drivers e malware."},
+             
+            {f: "O que é NetworkMiner?", 
+             b: "Ferramenta de network forensics passiva. Analisa arquivos PCAP e extrai arquivos, credenciais, certificados e metadados sem gerar tráfego."},
+             
+            {f: "O que é ELK Stack?", 
+             b: "Conjunto de ferramentas para log management: Elasticsearch (busca e armazenamento), Logstash (coleta e processamento), Kibana (visualização e dashboards). Usado como SIEM."},
 
             // RAID (16-21)
-            {f: "O que é RAID 0?", b: "Striping (distribuição de dados entre discos). Alta performance. SEM REDUNDÂNCIA: se um disco falhar, todos os dados são perdidos."},
-            {f: "O que é RAID 1?", b: "Mirroring (espelhamento). Dados idênticos em dois ou mais discos. 50% da capacidade útil. Tolerância a 1 falha."},
-            {f: "O que é RAID 5?", b: "Striping com paridade distribuída. Mínimo 3 discos. Tolerância a 1 falha. Bom custo/benefício."},
-            {f: "O que é RAID 6?", b: "Striping com dupla paridade. Mínimo 4 discos. Tolerância a 2 falhas simultâneas. Mais seguro que RAID 5."},
-            {f: "O que é RAID 10 (1+0)?", b: "Striping de mirrors (RAID 1 + RAID 0). Alta performance e redundância. Tolerância a múltiplas falhas (desde que não no mesmo mirror). Alto custo."},
-            {f: "O que é Clustering?", b: "Agrupamento de múltiplos servidores que atuam como um único sistema. Alta disponibilidade com failover automático. Pode ser active-active ou active-passive."},
-            {f: "O que é Load Balancing?", b: "Distribuição de tráfego entre múltiplos servidores. Aumenta performance e disponibilidade. Algoritmos: round-robin, least connections, IP hash."},
+            {f: "O que é RAID 0?", 
+             b: "Striping (distribuição de dados entre discos). Alta performance. SEM REDUNDÂNCIA: se um disco falhar, todos os dados são perdidos."},
+             
+            {f: "O que é RAID 1?", 
+             b: "Mirroring (espelhamento). Dados idênticos em dois ou mais discos. 50% da capacidade útil. Tolerância a 1 falha."},
+             
+            {f: "O que é RAID 5?", 
+             b: "Striping com paridade distribuída. Mínimo 3 discos. Tolerância a 1 falha. Bom custo/benefício."},
+             
+            {f: "O que é RAID 6?", 
+             b: "Striping com dupla paridade. Mínimo 4 discos. Tolerância a 2 falhas simultâneas. Mais seguro que RAID 5."},
+             
+            {f: "O que é RAID 10 (1+0)?", 
+             b: "Striping de mirrors (RAID 1 + RAID 0). Alta performance e redundância. Tolerância a múltiplas falhas (desde que não no mesmo mirror). Alto custo."},
+             
+            {f: "O que é Clustering?", 
+             b: "Agrupamento de múltiplos servidores que atuam como um único sistema. Alta disponibilidade com failover automático. Pode ser active-active ou active-passive."},
+             
+            {f: "O que é Load Balancing?", 
+             b: "Distribuição de tráfego entre múltiplos servidores. Aumenta performance e disponibilidade. Algoritmos: round-robin, least connections, IP hash."},
 
             // Backup (22-30)
-            {f: "O que é Full Backup?", b: "Backup completo de todos os dados selecionados. É lento de executar, mas o restore é rápido (apenas uma fita/conjunto). O archive bit é limpo."},
-            {f: "O que é Incremental Backup?", b: "Backup apenas das mudanças desde o ÚLTIMO backup (seja full ou incremental). É rápido de executar, mas o restore é lento (precisa do full + todos incrementais em ordem)."},
-            {f: "O que é Differential Backup?", b: "Backup das mudanças desde o último FULL. É mais rápido que full, mais lento que incremental. Restore: full + último differential."},
-            {f: "O que é a regra 3-2-1 de backup?", b: "Estratégia de backup resiliente: 3 cópias dos dados (original + 2 backups), armazenadas em 2 tipos de mídia diferentes, com 1 cópia offsite (fora do local) ou offline (air gap)."},
-            {f: "O que é RPO (Recovery Point Objective)?", b: "Objetivo de ponto de recuperação. Define quanto dado pode ser perdido, medido em tempo. Ex: RPO de 24h significa que pode perder até 24h de dados (backup diário)."},
-            {f: "O que é RTO (Recovery Time Objective)?", b: "Objetivo de tempo de recuperação. Define quanto tempo o serviço pode ficar indisponível após um desastre."},
-            {f: "O que é MTBF (Mean Time Between Failures)?", b: "Tempo médio entre falhas. Medida de confiabilidade de um componente. Quanto maior, melhor."},
-            {f: "O que é MTTR (Mean Time To Repair)?", b: "Tempo médio para reparo. Impacta diretamente o RTO. Quanto menor, melhor."},
-            {f: "O que é um Hot Site?", b: "Site de recuperação de desastres totalmente equipado e com dados sincronizados. Failover imediato (RTO minutos). É a opção mais cara."},
-            {f: "O que é um Warm Site?", b: "Site com equipamentos mas sem dados atuais. Requer setup de horas/dias. Custo médio."},
-            {f: "O que é um Cold Site?", b: "Apenas espaço físico (energia, refrigeração). Todo equipamento precisa ser instalado. RTO de dias/semanas. Opção mais barata."},
-            {f: "O que é Snapshot?", b: "Instantâneo do estado de uma VM ou storage em um momento. Restore rápido, mas NÃO é backup (geralmente no mesmo storage). Se o storage falhar, snapshots são perdidos."},
-            {f: "O que é Replication?", b: "Cópia contínua de dados para outro local. Pode ser síncrona (confirma após replicar) ou assíncrona (confirma depois). Near real-time."},
-            {f: "O que é Immutable Backup?", b: "Backup que não pode ser modificado, deletado ou criptografado por um período. Usa tecnologia WORM (Write Once Read Many). Protege contra ransomware."},
-            {f: "O que é Air Gap Backup?", b: "Backup fisicamente desconectado da rede (ex: fita guardada em cofre, disco externo removido). Malware não consegue alcançar."},
-            {f: "Por que testar backups regularmente?", b: "Para verificar a integridade dos dados e garantir que o restore funciona. Backup não testado = sem backup."},
+            {f: "O que é Full Backup?", 
+             b: "Backup completo de todos os dados selecionados. É lento de executar, mas o restore é rápido (apenas uma fita/conjunto). O archive bit é limpo."},
+             
+            {f: "O que é Incremental Backup?", 
+             b: "Backup apenas das mudanças desde o ÚLTIMO backup (seja full ou incremental). É rápido de executar, mas o restore é lento (precisa do full + todos incrementais em ordem)."},
+             
+            {f: "O que é Differential Backup?", 
+             b: "Backup das mudanças desde o último FULL. É mais rápido que full, mais lento que incremental. Restore: full + último differential."},
+             
+            {f: "O que é a regra 3-2-1 de backup?", 
+             b: "Estratégia de backup resiliente: 3 cópias dos dados (original + 2 backups), armazenadas em 2 tipos de mídia diferentes, com 1 cópia offsite (fora do local) ou offline (air gap)."},
+             
+            {f: "O que é RPO (Recovery Point Objective)?", 
+             b: "Objetivo de ponto de recuperação. Define quanto dado pode ser perdido, medido em tempo. Ex: RPO de 24h significa que pode perder até 24h de dados (backup diário)."},
+             
+            {f: "O que é RTO (Recovery Time Objective)?", 
+             b: "Objetivo de tempo de recuperação. Define quanto tempo o serviço pode ficar indisponível após um desastre."},
+             
+            {f: "O que é MTBF (Mean Time Between Failures)?", 
+             b: "Tempo médio entre falhas. Medida de confiabilidade de um componente. Quanto maior, melhor."},
+             
+            {f: "O que é MTTR (Mean Time To Repair)?", 
+             b: "Tempo médio para reparo. Impacta diretamente o RTO. Quanto menor, melhor."},
+             
+            {f: "O que é um Hot Site?", 
+             b: "Site de recuperação de desastres totalmente equipado e com dados sincronizados. Failover imediato (RTO minutos). É a opção mais cara."},
+             
+            {f: "O que é um Warm Site?", 
+             b: "Site com equipamentos mas sem dados atuais. Requer setup de horas/dias. Custo médio."},
+             
+            {f: "O que é um Cold Site?", 
+             b: "Apenas espaço físico (energia, refrigeração). Todo equipamento precisa ser instalado. RTO de dias/semanas. Opção mais barata."},
+             
+            {f: "O que é Snapshot?", 
+             b: "Instantâneo do estado de uma VM ou storage em um momento. Restore rápido, mas NÃO é backup (geralmente no mesmo storage). Se o storage falhar, snapshots são perdidos."},
+             
+            {f: "O que é Replication?", 
+             b: "Cópia contínua de dados para outro local. Pode ser síncrona (confirma após replicar) ou assíncrona (confirma depois). Near real-time."},
+             
+            {f: "O que é Immutable Backup?", 
+             b: "Backup que não pode ser modificado, deletado ou criptografado por um período. Usa tecnologia WORM (Write Once Read Many). Protege contra ransomware."},
+             
+            {f: "O que é Air Gap Backup?", 
+             b: "Backup fisicamente desconectado da rede (ex: fita guardada em cofre, disco externo removido). Malware não consegue alcançar."},
+             
+            {f: "Por que testar backups regularmente?", 
+             b: "Para verificar a integridade dos dados e garantir que o restore funciona. Backup não testado = sem backup."},
 
-            // Backup Rotation (31-35)
-            {f: "O que é backup rotation (GFS)?", b: "Grandfather-Father-Son: esquema de rotação com retenção diária (son), semanal (father) e mensal (grandfather). Balanceia storage e retenção."},
-            {f: "O que é journaling em sistemas de arquivos?", b: "Registro de mudanças antes de serem aplicadas (write-ahead logging). Permite recuperação consistente após falha e rollback."},
-            {f: "O que é versioning de arquivos?", b: "Manter múltiplas versões de um arquivo ao longo do tempo. Permite restaurar versões anteriores em caso de alteração acidental ou ransomware."},
-            {f: "O que é backup encryption?", b: "Criptografar backups para proteger dados em trânsito e em repouso. Gerenciamento de chaves é crítico."},
-            {f: "O que é um Incident Response Plan?", b: "Documento formal com procedimentos, contatos de emergência, ferramentas e responsabilidades para resposta a incidentes. Deve ser testado regularmente (tabletop exercises)."},
-            {f: "O que é um Incident Response Team (CSIRT/CIRT)?", b: "Equipe responsável por responder a incidentes: coordenador, analistas, suporte legal, comunicação, gestão. Treinamento regular."},
-            {f: "O que é Tabletop Exercise?", b: "Simulação de incidente em sala de reunião, sem sistemas reais. Discute-se o plano, papéis e decisões. Testa comunicação e procedimentos."}
+            // Backup Rotation (31-44)
+            {f: "O que é backup rotation (GFS)?", 
+             b: "Grandfather-Father-Son: esquema de rotação com retenção diária (son), semanal (father) e mensal (grandfather). Balanceia storage e retenção."},
+             
+            {f: "O que é journaling em sistemas de arquivos?", 
+             b: "Registro de mudanças antes de serem aplicadas (write-ahead logging). Permite recuperação consistente após falha e rollback."},
+             
+            {f: "O que é versioning de arquivos?", 
+             b: "Manter múltiplas versões de um arquivo ao longo do tempo. Permite restaurar versões anteriores em caso de alteração acidental ou ransomware."},
+             
+            {f: "O que é backup encryption?", 
+             b: "Criptografar backups para proteger dados em trânsito e em repouso. Gerenciamento de chaves é crítico."},
+             
+            {f: "O que é um Incident Response Plan?", 
+             b: "Documento formal com procedimentos, contatos de emergência, ferramentas e responsabilidades para resposta a incidentes. Deve ser testado regularmente (tabletop exercises)."},
+             
+            {f: "O que é um Incident Response Team (CSIRT/CIRT)?", 
+             b: "Equipe responsável por responder a incidentes: coordenador, analistas, suporte legal, comunicação, gestão. Treinamento regular."},
+             
+            {f: "O que é Tabletop Exercise?", 
+             b: "Simulação de incidente em sala de reunião, sem sistemas reais. Discute-se o plano, papéis e decisões. Testa comunicação e procedimentos."},
+
+            // Backup Avançado (45-50)
+            {f: "O que é backup incremental eterno?", 
+             b: "Estratégia onde apenas um full é feito, seguido de infinitos incrementais. Restore requer full + todos incrementais."},
+
+            {f: "O que é backup sintético completo?", 
+             b: "Backup completo criado pela combinação de um full antigo com incrementais, sem impactar o servidor de produção."},
+
+            {f: "O que é backup em fita (tape backup)?", 
+             b: "Backup em mídia magnética. Lento, mas durável e de baixo custo. Bom para arquivamento de longo prazo e air gap."},
+
+            {f: "O que é backup em nuvem (cloud backup)?", 
+             b: "Backup armazenado em provedores cloud (AWS, Azure, Backblaze). Escalável, mas depende de conectividade."},
+
+            {f: "O que é a regra de backup 3-2-1-1-0?", 
+             b: "Extensão da 3-2-1: 3 cópias, 2 mídias, 1 offsite, 1 offline/air gap, 0 erros após verificação."},
+
+            {f: "O que é ransomware e sua relação com backups?", 
+             b: "Malware que criptografa dados. Backups imutáveis e air gap são a principal defesa contra ransomware."}
         ];
 
+        // ========== QUIZ DO CAPÍTULO 9 (25 QUESTÕES) ==========
         const quiz = [
-            {q: "Primeira fase do processo de resposta a incidentes:", o: ["Identification", "Preparation", "Containment", "Recovery"], c: 1},
-            {q: "Fase onde a ameaça é isolada para não se propagar:", o: ["Identification", "Containment", "Eradication", "Recovery"], c: 1},
-            {q: "Fase onde a causa raiz é removida (malware deletado, vulnerabilidade corrigida):", o: ["Containment", "Eradication", "Recovery", "Lessons Learned"], c: 1},
-            {q: "Fase de post-mortem e melhorias após o incidente:", o: ["Recovery", "Eradication", "Lessons Learned", "Preparation"], c: 2},
-            {q: "Documentação que registra quem teve acesso à evidência forense:", o: ["Chain of custody", "Hash", "Write blocker", "Timeline"], c: 0},
-            {q: "Qual item é o MAIS volátil na ordem de volatilidade forense?", o: ["Disco rígido", "RAM", "Backup em fita", "Logs remotos"], c: 1},
-            {q: "Dispositivo que previne modificação da evidência durante análise:", o: ["Hash", "Write blocker", "Encryption", "Backup"], c: 1},
-            {q: "Ferramenta de análise de memória RAM (memory forensics):", o: ["Autopsy", "Volatility", "FTK Imager", "dd"], c: 1},
-            {q: "Comando Linux para disk imaging (cópia bit-a-bit):", o: ["FTK Imager", "Autopsy", "dd", "Wireshark"], c: 2},
-            {q: "Ferramenta forense com GUI para análise de disco:", o: ["dd", "Volatility", "Autopsy", "tcpdump"], c: 2},
-            {q: "Nível RAID que oferece apenas performance, SEM redundância:", o: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"], c: 0},
-            {q: "Nível RAID que usa mirroring (espelhamento):", o: ["RAID 0", "RAID 1", "RAID 5", "RAID 6"], c: 1},
-            {q: "Nível RAID que tolera 2 falhas simultâneas (dupla paridade):", o: ["RAID 1", "RAID 5", "RAID 6", "RAID 10"], c: 2},
-            {q: "Tipo de backup que copia TODOS os dados selecionados:", o: ["Full", "Incremental", "Differential", "Snapshot"], c: 0},
-            {q: "Tipo de backup que copia mudanças desde o ÚLTIMO backup (qualquer tipo):", o: ["Full", "Incremental", "Differential", "Mirror"], c: 1},
-            {q: "Tipo de backup que copia mudanças desde o último FULL:", o: ["Full", "Incremental", "Differential", "Clone"], c: 2},
-            {q: "Regra de backup: 3 cópias, 2 mídias, 1 offsite:", o: ["RAID", "Cluster", "3-2-1 rule", "Snapshot"], c: 2},
-            {q: "Métrica que define quanto dado pode ser perdido (em tempo):", o: ["RTO", "RPO", "MTBF", "MTTR"], c: 1},
-            {q: "Métrica que define tempo máximo de recuperação do serviço:", o: ["RPO", "RTO", "MTBF", "MTTR"], c: 1},
-            {q: "Site de DR totalmente equipado com failover imediato:", o: ["Cold site", "Warm site", "Hot site", "Backup site"], c: 2},
-            {q: "Site de DR que leva dias/semanas para ficar operacional:", o: ["Hot site", "Warm site", "Cold site", "Active site"], c: 2},
-            {q: "Cópia contínua de dados para outro local (quase em tempo real):", o: ["Backup", "Snapshot", "Replication", "Mirror"], c: 2},
-            {q: "Backup que não pode ser modificado/deletado (protege ransomware):", o: ["Encrypted", "Compressed", "Immutable", "Offsite"], c: 2},
-            {q: "Simulação de incidente em sala de reunião, sem sistemas reais:", o: ["Pentest", "Red team", "Tabletop exercise", "Drill"], c: 2},
-            {q: "Componentes da ELK Stack:", o: ["Elastic, Log, Kibana", "Elasticsearch, Logstash, Kibana", "Event, LDAP, Key", "Elk, Logstash, Kafka"], c: 1}
+            {q: "Primeira fase do processo de resposta a incidentes:", 
+             o: ["Identification", "Preparation", "Containment", "Recovery"], 
+             c: 1},
+             
+            {q: "Fase onde a ameaça é isolada para não se propagar:", 
+             o: ["Identification", "Containment", "Eradication", "Recovery"], 
+             c: 1},
+             
+            {q: "Fase onde a causa raiz é removida (malware deletado, vulnerabilidade corrigida):", 
+             o: ["Containment", "Eradication", "Recovery", "Lessons Learned"], 
+             c: 1},
+             
+            {q: "Fase de post-mortem e melhorias após o incidente:", 
+             o: ["Recovery", "Eradication", "Lessons Learned", "Preparation"], 
+             c: 2},
+             
+            {q: "Documentação que registra quem teve acesso à evidência forense:", 
+             o: ["Chain of custody", "Hash", "Write blocker", "Timeline"], 
+             c: 0},
+             
+            {q: "Qual item é o MAIS volátil na ordem de volatilidade forense?", 
+             o: ["Disco rígido", "RAM", "Backup em fita", "Logs remotos"], 
+             c: 1},
+             
+            {q: "Dispositivo que previne modificação da evidência durante análise:", 
+             o: ["Hash", "Write blocker", "Encryption", "Backup"], 
+             c: 1},
+             
+            {q: "Ferramenta de análise de memória RAM (memory forensics):", 
+             o: ["Autopsy", "Volatility", "FTK Imager", "dd"], 
+             c: 1},
+             
+            {q: "Comando Linux para disk imaging (cópia bit-a-bit):", 
+             o: ["FTK Imager", "Autopsy", "dd", "Wireshark"], 
+             c: 2},
+             
+            {q: "Ferramenta forense com GUI para análise de disco:", 
+             o: ["dd", "Volatility", "Autopsy", "tcpdump"], 
+             c: 2},
+             
+            {q: "Nível RAID que oferece apenas performance, SEM redundância:", 
+             o: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"], 
+             c: 0},
+             
+            {q: "Nível RAID que usa mirroring (espelhamento):", 
+             o: ["RAID 0", "RAID 1", "RAID 5", "RAID 6"], 
+             c: 1},
+             
+            {q: "Nível RAID que tolera 2 falhas simultâneas (dupla paridade):", 
+             o: ["RAID 1", "RAID 5", "RAID 6", "RAID 10"], 
+             c: 2},
+             
+            {q: "Tipo de backup que copia TODOS os dados selecionados:", 
+             o: ["Full", "Incremental", "Differential", "Snapshot"], 
+             c: 0},
+             
+            {q: "Tipo de backup que copia mudanças desde o ÚLTIMO backup (qualquer tipo):", 
+             o: ["Full", "Incremental", "Differential", "Mirror"], 
+             c: 1},
+             
+            {q: "Tipo de backup que copia mudanças desde o último FULL:", 
+             o: ["Full", "Incremental", "Differential", "Clone"], 
+             c: 2},
+             
+            {q: "Regra de backup: 3 cópias, 2 mídias, 1 offsite:", 
+             o: ["RAID", "Cluster", "3-2-1 rule", "Snapshot"], 
+             c: 2},
+             
+            {q: "Métrica que define quanto dado pode ser perdido (em tempo):", 
+             o: ["RTO", "RPO", "MTBF", "MTTR"], 
+             c: 1},
+             
+            {q: "Métrica que define tempo máximo de recuperação do serviço:", 
+             o: ["RPO", "RTO", "MTBF", "MTTR"], 
+             c: 1},
+             
+            {q: "Site de DR totalmente equipado com failover imediato:", 
+             o: ["Cold site", "Warm site", "Hot site", "Backup site"], 
+             c: 2},
+             
+            {q: "Site de DR que leva dias/semanas para ficar operacional:", 
+             o: ["Hot site", "Warm site", "Cold site", "Active site"], 
+             c: 2},
+             
+            {q: "Cópia contínua de dados para outro local (quase em tempo real):", 
+             o: ["Backup", "Snapshot", "Replication", "Mirror"], 
+             c: 2},
+             
+            {q: "Backup que não pode ser modificado/deletado (protege ransomware):", 
+             o: ["Encrypted", "Compressed", "Immutable", "Offsite"], 
+             c: 2},
+             
+            {q: "Simulação de incidente em sala de reunião, sem sistemas reais:", 
+             o: ["Pentest", "Red team", "Tabletop exercise", "Drill"], 
+             c: 2},
+             
+            {q: "Componentes da ELK Stack:", 
+             o: ["Elastic, Log, Kibana", "Elasticsearch, Logstash, Kibana", "Event, LDAP, Key", "Elk, Logstash, Kafka"], 
+             c: 1}
         ];
 
         let currentCard = 0;
@@ -653,21 +927,15 @@
         let filteredCards = [...Array(cards.length).keys()];
         let currentFilter = 'all';
 
-        // ========== LOCALSTORAGE ==========
-        // Carregar progresso salvo
         function loadProgress() {
             const saved = localStorage.getItem('security_plus_cap9_mastered');
             if (saved) {
                 mastered = new Set(JSON.parse(saved));
             }
         }
-
-        // Salvar progresso
         function saveProgress() {
             localStorage.setItem('security_plus_cap9_mastered', JSON.stringify([...mastered]));
         }
-
-        // Chamar loadProgress assim que o script carregar
         loadProgress();
 
         function showTab(n) {
@@ -677,12 +945,16 @@
             document.querySelectorAll('.tab-btn').forEach((b, i) => {
                 b.classList.toggle('active', i === n);
             });
-            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+            if (n === 2 && !document.getElementById('questions').innerHTML) {
+                loadQuiz();
+            }
         }
 
         function updateCard() {
             if (filteredCards.length === 0) {
                 document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                document.getElementById('card-counter').textContent = 'Card 0 de 0';
+                document.getElementById('side-indicator').textContent = 'FRENTE';
                 return;
             }
             const cardIndex = filteredCards[currentCard];
@@ -691,40 +963,24 @@
             document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
             document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
             const btn = document.getElementById('master-btn');
-            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
-            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            const isMastered = mastered.has(cardIndex);
+            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', isMastered);
             document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
-            
             const progress = (mastered.size / cards.length) * 100;
             document.getElementById('progress-fill').style.width = progress + '%';
             document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
         }
 
-        function flipCard() {
-            flipped = !flipped;
-            updateCard();
-        }
-
-        function nextCard() {
-            currentCard = (currentCard + 1) % filteredCards.length;
-            flipped = false;
-            updateCard();
-        }
-
-        function prevCard() {
-            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
-            flipped = false;
-            updateCard();
-        }
-
+        function flipCard() { flipped = !flipped; updateCard(); }
+        function nextCard() { currentCard = (currentCard + 1) % filteredCards.length; flipped = false; updateCard(); }
+        function prevCard() { currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length; flipped = false; updateCard(); }
+        
         function toggleMaster() {
             const cardIndex = filteredCards[currentCard];
             if (mastered.has(cardIndex)) mastered.delete(cardIndex);
             else mastered.add(cardIndex);
-            
-            // ========== SALVAR PROGRESSO ==========
             saveProgress();
-            
             updateCard();
         }
 
@@ -733,27 +989,23 @@
                 const j = Math.floor(Math.random() * (i + 1));
                 [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
             }
-            currentCard = 0;
-            flipped = false;
-            updateCard();
+            currentCard = 0; flipped = false; updateCard();
+            
+            const shuffleBtn = document.querySelector('.btn-shuffle');
+            shuffleBtn.style.transform = 'rotate(180deg)';
+            setTimeout(() => {
+                shuffleBtn.style.transform = 'rotate(0deg)';
+            }, 300);
         }
 
-        function filterCards(type) {
+        function filterCards(type, event) {
             currentFilter = type;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
-            if (type === 'all') {
-                filteredCards = [...Array(cards.length).keys()];
-            } else if (type === 'mastered') {
-                filteredCards = Array.from(mastered);
-            } else {
-                filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
-            }
-            
-            currentCard = 0;
-            flipped = false;
-            updateCard();
+            if (type === 'all') filteredCards = [...Array(cards.length).keys()];
+            else if (type === 'mastered') filteredCards = Array.from(mastered);
+            else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            currentCard = 0; flipped = false; updateCard();
         }
 
         function loadQuiz() {
@@ -782,8 +1034,7 @@
         function selectOpt(qi, oi) {
             if (checked) return;
             quiz[qi].o.forEach((_, i) => {
-                const el = document.getElementById(`q${qi}o${i}`);
-                el.classList.remove('selected');
+                document.getElementById(`q${qi}o${i}`).classList.remove('selected');
             });
             document.getElementById(`q${qi}o${oi}`).classList.add('selected');
             answers[qi] = oi;
@@ -805,7 +1056,6 @@
                 document.getElementById(`exp${qi}`).style.display = 'block';
                 if (correctAnswer.includes(answers[qi])) correct++;
             });
-            
             const pct = Math.round((correct / quiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
             document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;

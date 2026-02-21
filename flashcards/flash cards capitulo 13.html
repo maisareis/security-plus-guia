@@ -5,25 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Security+ Cap 13 - Data Protection and Compliance</title>
     <style>
+        /* ===== RESET CSS ===== */
+        /* Remove todas as margens e paddings padrão do navegador */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Gradiente azul escuro - tema do capítulo 13 (Data Protection) */
             background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; /* Centraliza horizontalmente */
+        }
+        
+        /* ===== CABEÇALHO ===== */
         .header {
             text-align: center;
             color: white;
             margin-bottom: 40px;
             animation: fadeIn 0.5s;
         }
+        
         .header h1 {
             font-size: 2.8rem;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
+        
+        /* Barra de estatísticas */
         .stats-bar {
             display: flex;
             gap: 20px;
@@ -31,14 +44,17 @@
             margin-top: 20px;
             flex-wrap: wrap;
         }
+        
         .stat-card {
             background: rgba(255,255,255,0.2);
             padding: 15px 25px;
             border-radius: 12px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px); /* Efeito vidro fosco */
             color: white;
             font-weight: bold;
         }
+        
+        /* ===== ABAS (TABS) ===== */
         .tabs {
             display: flex;
             gap: 12px;
@@ -46,6 +62,7 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
         }
+        
         .tab-btn {
             padding: 15px 30px;
             background: white;
@@ -57,26 +74,32 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        
         .tab-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
+        
         .tab-btn.active {
             background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
             color: white;
         }
+        
+        /* Controle de visibilidade das abas */
         .content { 
             display: none;
             animation: fadeIn 0.4s;
         }
         .content.active { display: block; }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* FLASHCARDS */
+        /* ===== FLASHCARDS ===== */
         .flashcard-area { max-width: 900px; margin: 0 auto; }
+        
         .card-info {
             background: rgba(255,255,255,0.25);
             padding: 20px;
@@ -85,6 +108,8 @@
             margin-bottom: 25px;
             backdrop-filter: blur(10px);
         }
+        
+        /* Barra de progresso */
         .progress-bar {
             width: 100%;
             height: 8px;
@@ -93,11 +118,14 @@
             overflow: hidden;
             margin-top: 10px;
         }
+        
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #10b981, #34d399);
             transition: width 0.3s ease;
         }
+        
+        /* O flashcard */
         .flashcard {
             background: white;
             border-radius: 20px;
@@ -113,7 +141,9 @@
             position: relative;
             margin-bottom: 30px;
         }
+        
         .flashcard:hover { transform: scale(1.02); }
+        
         .side-indicator {
             position: absolute;
             top: 20px;
@@ -125,18 +155,22 @@
             font-size: 0.9rem;
             font-weight: 600;
         }
+        
         .flashcard-text {
             font-size: 1.4rem;
             line-height: 1.8;
             text-align: center;
             color: #1f2937;
         }
+        
         .flip-hint {
             margin-top: 20px;
             font-size: 0.9rem;
             color: #6b7280;
             font-style: italic;
         }
+        
+        /* ===== CONTROLES ===== */
         .controls {
             display: flex;
             gap: 15px;
@@ -144,6 +178,7 @@
             align-items: center;
             flex-wrap: wrap;
         }
+        
         .btn {
             padding: 15px 30px;
             border: none;
@@ -154,36 +189,46 @@
             font-size: 1rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
+        
         .btn-nav {
             background: white;
             font-size: 1.5rem;
             width: 55px;
             height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        
         .btn-master {
             background: #e5e7eb;
             color: #1f2937;
         }
+        
         .btn-master.mastered {
             background: #10b981;
             color: white;
         }
+        
         .btn-shuffle {
             background: #f59e0b;
             color: white;
         }
         
-        /* QUIZ */
+        /* ===== QUIZ ===== */
         .quiz-area { max-width: 1000px; margin: 0 auto; }
+        
         .quiz-header {
             text-align: center;
             color: white;
             margin-bottom: 35px;
         }
+        
         .question {
             background: white;
             border-radius: 18px;
@@ -191,12 +236,14 @@
             margin-bottom: 25px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
+        
         .question h3 {
             color: #1f2937;
             margin-bottom: 20px;
             font-size: 1.25rem;
             line-height: 1.6;
         }
+        
         .option {
             padding: 18px 20px;
             border: 3px solid #e5e7eb;
@@ -207,26 +254,31 @@
             background: white;
             font-size: 1.05rem;
         }
+        
         .option:hover {
             background: #e0f7ff;
             border-color: #2c3e50;
             transform: translateX(5px);
         }
+        
         .option.selected {
             border-color: #2c3e50;
             background: #e0f7ff;
             font-weight: 600;
         }
+        
         .option.correct {
             border-color: #10b981;
             background: #d1fae5;
             font-weight: 600;
         }
+        
         .option.incorrect {
             border-color: #ef4444;
             background: #fee2e2;
             font-weight: 600;
         }
+        
         .explanation {
             margin-top: 20px;
             padding: 20px;
@@ -236,6 +288,8 @@
             display: none;
             line-height: 1.6;
         }
+        
+        /* ===== MODAL DE RESULTADOS ===== */
         .results-modal {
             position: fixed;
             top: 0;
@@ -248,7 +302,9 @@
             justify-content: center;
             z-index: 1000;
         }
+        
         .results-modal.show { display: flex; }
+        
         .results-content {
             background: white;
             padding: 50px;
@@ -257,10 +313,12 @@
             text-align: center;
             animation: scaleIn 0.3s ease;
         }
+        
         @keyframes scaleIn {
             from { transform: scale(0.9); }
             to { transform: scale(1); }
         }
+        
         .score-circle {
             width: 180px;
             height: 180px;
@@ -274,18 +332,22 @@
             font-weight: bold;
             margin: 30px auto;
         }
+        
         .btn-primary {
             background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
             color: white;
             padding: 18px 45px;
             font-size: 1.1rem;
         }
+        
+        /* ===== BOTÕES DE FILTRO ===== */
         .filter-buttons {
             display: flex;
             gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
         }
+        
         .filter-btn {
             padding: 10px 20px;
             background: rgba(255,255,255,0.3);
@@ -296,6 +358,7 @@
             transition: all 0.3s ease;
             font-weight: 600;
         }
+        
         .filter-btn.active {
             background: white;
             color: #2c3e50;
@@ -304,6 +367,7 @@
 </head>
 <body>
     <div class="container">
+        <!-- ===== CABEÇALHO ===== -->
         <div class="header">
             <h1>🔒 Security+ Capítulo 13</h1>
             <p>Data Protection and Compliance - 20 Cards | 10 Questões</p>
@@ -314,12 +378,14 @@
             </div>
         </div>
 
+        <!-- ===== ABAS ===== -->
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
             <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
             <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
         </div>
 
+        <!-- ===== ABA 0: FLASHCARDS ===== -->
         <div id="tab0" class="content active">
             <div class="flashcard-area">
                 <div class="card-info">
@@ -354,10 +420,12 @@
             </div>
         </div>
 
+        <!-- ===== ABA 1: RESUMO ===== -->
         <div id="tab1" class="content">
             <div class="summary" style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
                 <h1 style="color: #2c3e50; margin-bottom: 30px; font-size: 2.5rem; border-bottom: 4px solid #2c3e50; padding-bottom: 15px;">📖 Resumo - Capítulo 13</h1>
                 
+                <!-- Destaque com conceitos críticos -->
                 <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 20px 0; border-radius: 8px;">
                     <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
                     <ul style="margin-top: 10px; margin-left: 20px;">
@@ -419,6 +487,7 @@
                     </div>
                 </div>
 
+                <!-- Destaque importante sobre SSDs -->
                 <div style="background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px;">
                     <strong>⚠️ IMPORTANTE:</strong> Apenas o degaussing e a incineração garantem que dados em SSDs não podem ser recuperados. Wiping em SSDs pode não ser eficaz devido ao wear leveling.
                 </div>
@@ -469,6 +538,7 @@
                     </div>
                 </div>
 
+                <!-- Dicas finais para a prova -->
                 <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 30px 0; border-radius: 8px;">
                     <h3 style="color: #ec4899; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
                     <ul style="margin-left: 20px; line-height: 1.8;">
@@ -483,6 +553,7 @@
             </div>
         </div>
 
+        <!-- ===== ABA 2: QUIZ ===== -->
         <div id="tab2" class="content">
             <div class="quiz-area">
                 <div class="quiz-header">
@@ -496,6 +567,7 @@
         </div>
     </div>
 
+    <!-- ===== MODAL DE RESULTADOS ===== -->
     <div class="results-modal" id="results-modal">
         <div class="results-content">
             <h2>Resultado</h2>
@@ -506,53 +578,130 @@
     </div>
 
     <script>
-        // ========== CARDS TRADUZIDOS PARA PORTUGUÊS ==========
+        // ========== CARDS DO CAPÍTULO 13 ==========
+        /**
+         * ARRAY cards: armazena TODOS os flashcards do capítulo
+         * Cada card tem:
+         * - f: frente (a pergunta/conceito)
+         * - b: verso (a resposta/definição)
+         */
         const cards = [
-            {f: "O que é Data Classification (Classificação de Dados)?", b: "Processo de categorizar dados baseado em sensibilidade e impacto. Níveis comuns: Public, Internal, Confidential, Restricted. Cada categoria define controles de proteção específicos."},
-            {f: "O que são dados Public (Públicos)?", b: "Informações que podem ser divulgadas publicamente sem causar danos à organização. Ex: site público, materiais de marketing, press releases. Sem impacto se divulgado."},
-            {f: "O que são dados Internal (Internos)?", b: "Informações de uso interno da organização, não destinadas ao público. Ex: manuais, políticas internas, organogramas. Impacto moderado se divulgado."},
-            {f: "O que são dados Confidential (Confidenciais)?", b: "Dados sensíveis que requerem proteção. Ex: PII (dados pessoais), informações financeiras, dados de saúde. Impacto significativo se divulgado."},
-            {f: "O que são dados Restricted (Restritos)?", b: "Dados altamente sensíveis. Ex: segredos comerciais, propriedade intelectual, planos de fusão. Impacto máximo se divulgado. Controles rigorosos."},
-            {f: "O que é GDPR?", b: "General Data Protection Regulation. Regulamentação de proteção de dados da União Europeia. Direitos: consentimento explícito, right to be forgotten, portabilidade de dados. Multas de até €20M ou 4% do faturamento global."},
-            {f: "O que é LGPD?", b: "Lei Geral de Proteção de Dados. Lei brasileira baseada no GDPR. Fiscalizada pela ANPD. Multas de até 2% do faturamento (limitado a R$50 milhões por infração)."},
-            {f: "O que é HIPAA?", b: "Health Insurance Portability and Accountability Act. Regulamentação dos EUA para proteção de dados de saúde (PHI - Protected Health Information). Inclui regras de privacidade e segurança."},
-            {f: "O que é PCI DSS?", b: "Payment Card Industry Data Security Standard. Padrão de segurança para organizações que processam, armazenam ou transmitem dados de cartões de crédito. 12 requisitos principais."},
-            {f: "O que é Data Retention (Retenção de Dados)?", b: "Política que define por quanto tempo os dados devem ser mantidos, baseada em requisitos legais (compliance) e necessidades de negócio."},
-            {f: "O que é Data Destruction (Destruição de Dados)?", b: "Processos para garantir que dados não possam ser recuperados após descarte. Métodos: Shredding (físico), Wiping (sobrescrita), Degaussing (magnético), Incineração."},
-            {f: "O que é Shredding em segurança?", b: "Destruição física de mídias de papel ou discos ópticos. Cross-cut shredding (tritura em partículas) é mais seguro que strip-cut. Para papel e mídias sensíveis."},
-            {f: "O que é Wiping (Sobrescrita) de dados?", b: "Processo de sobrescrever dados em discos magnéticos ou SSDs com padrões de bits para impedir recuperação. 1 pass geralmente suficiente; padrões como DoD 5220.22-M para alta segurança."},
-            {f: "O que é Degaussing?", b: "Uso de campo magnético extremamente forte para apagar dados em mídias magnéticas (HDDs, fitas). Torna a mídia inutilizável. Eficaz, mas não funciona em SSDs."},
-            {f: "O que são Personnel Policies (Políticas de Pessoal)?", b: "Conjunto de políticas de RH relacionadas à segurança: Background checks (verificação de antecedentes), NDAs (acordos de confidencialidade), treinamento de segurança, política de uso aceitável, procedimentos de offboarding."},
-            {f: "O que é Background Check?", b: "Verificação de antecedentes de candidatos a emprego: criminal, histórico profissional, educação, crédito (para cargos financeiros). Realizada antes da contratação."},
-            {f: "O que é NDA (Non-Disclosure Agreement)?", b: "Acordo de confidencialidade. Contrato legal que impede funcionários, contratados ou parceiros de divulgar informações confidenciais da empresa."},
-            {f: "O que é AUP (Acceptable Use Policy)?", b: "Política de uso aceitável. Define como os recursos corporativos (email, internet, dispositivos) podem ser utilizados. Inclui monitoramento e consequências."},
-            {f: "O que é o Princípio do Menor Privilégio (PoLP)?", b: "Principle of Least Privilege. Usuários recebem apenas as permissões mínimas necessárias para realizar suas funções. Reduz o impacto de contas comprometidas e insider threats."},
-            {f: "O que é Segregação de Funções (SoD)?", b: "Separation of Duties. Divide tarefas críticas entre múltiplas pessoas para prevenir fraudes e erros. Ex: quem autoriza um pagamento não pode executá-lo. Requer conluio para burlar."}
+            {f: "O que é Data Classification (Classificação de Dados)?", 
+             b: "Processo de categorizar dados baseado em sensibilidade e impacto. Níveis comuns: Public, Internal, Confidential, Restricted. Cada categoria define controles de proteção específicos."},
+             
+            {f: "O que são dados Public (Públicos)?", 
+             b: "Informações que podem ser divulgadas publicamente sem causar danos à organização. Ex: site público, materiais de marketing, press releases. Sem impacto se divulgado."},
+             
+            {f: "O que são dados Internal (Internos)?", 
+             b: "Informações de uso interno da organização, não destinadas ao público. Ex: manuais, políticas internas, organogramas. Impacto moderado se divulgado."},
+             
+            {f: "O que são dados Confidential (Confidenciais)?", 
+             b: "Dados sensíveis que requerem proteção. Ex: PII (dados pessoais), informações financeiras, dados de saúde. Impacto significativo se divulgado."},
+             
+            {f: "O que são dados Restricted (Restritos)?", 
+             b: "Dados altamente sensíveis. Ex: segredos comerciais, propriedade intelectual, planos de fusão. Impacto máximo se divulgado. Controles rigorosos."},
+             
+            {f: "O que é GDPR?", 
+             b: "General Data Protection Regulation. Regulamentação de proteção de dados da União Europeia. Direitos: consentimento explícito, right to be forgotten, portabilidade de dados. Multas de até €20M ou 4% do faturamento global."},
+             
+            {f: "O que é LGPD?", 
+             b: "Lei Geral de Proteção de Dados. Lei brasileira baseada no GDPR. Fiscalizada pela ANPD. Multas de até 2% do faturamento (limitado a R$50 milhões por infração)."},
+             
+            {f: "O que é HIPAA?", 
+             b: "Health Insurance Portability and Accountability Act. Regulamentação dos EUA para proteção de dados de saúde (PHI - Protected Health Information). Inclui regras de privacidade e segurança."},
+             
+            {f: "O que é PCI DSS?", 
+             b: "Payment Card Industry Data Security Standard. Padrão de segurança para organizações que processam, armazenam ou transmitem dados de cartões de crédito. 12 requisitos principais."},
+             
+            {f: "O que é Data Retention (Retenção de Dados)?", 
+             b: "Política que define por quanto tempo os dados devem ser mantidos, baseada em requisitos legais (compliance) e necessidades de negócio."},
+             
+            {f: "O que é Data Destruction (Destruição de Dados)?", 
+             b: "Processos para garantir que dados não possam ser recuperados após descarte. Métodos: Shredding (físico), Wiping (sobrescrita), Degaussing (magnético), Incineração."},
+             
+            {f: "O que é Shredding em segurança?", 
+             b: "Destruição física de mídias de papel ou discos ópticos. Cross-cut shredding (tritura em partículas) é mais seguro que strip-cut. Para papel e mídias sensíveis."},
+             
+            {f: "O que é Wiping (Sobrescrita) de dados?", 
+             b: "Processo de sobrescrever dados em discos magnéticos ou SSDs com padrões de bits para impedir recuperação. 1 pass geralmente suficiente; padrões como DoD 5220.22-M para alta segurança."},
+             
+            {f: "O que é Degaussing?", 
+             b: "Uso de campo magnético extremamente forte para apagar dados em mídias magnéticas (HDDs, fitas). Torna a mídia inutilizável. Eficaz, mas não funciona em SSDs."},
+             
+            {f: "O que são Personnel Policies (Políticas de Pessoal)?", 
+             b: "Conjunto de políticas de RH relacionadas à segurança: Background checks (verificação de antecedentes), NDAs (acordos de confidencialidade), treinamento de segurança, política de uso aceitável, procedimentos de offboarding."},
+             
+            {f: "O que é Background Check?", 
+             b: "Verificação de antecedentes de candidatos a emprego: criminal, histórico profissional, educação, crédito (para cargos financeiros). Realizada antes da contratação."},
+             
+            {f: "O que é NDA (Non-Disclosure Agreement)?", 
+             b: "Acordo de confidencialidade. Contrato legal que impede funcionários, contratados ou parceiros de divulgar informações confidenciais da empresa."},
+             
+            {f: "O que é AUP (Acceptable Use Policy)?", 
+             b: "Política de uso aceitável. Define como os recursos corporativos (email, internet, dispositivos) podem ser utilizados. Inclui monitoramento e consequências."},
+             
+            {f: "O que é o Princípio do Menor Privilégio (PoLP)?", 
+             b: "Principle of Least Privilege. Usuários recebem apenas as permissões mínimas necessárias para realizar suas funções. Reduz o impacto de contas comprometidas e insider threats."},
+             
+            {f: "O que é Segregação de Funções (SoD)?", 
+             b: "Separation of Duties. Divide tarefas críticas entre múltiplas pessoas para prevenir fraudes e erros. Ex: quem autoriza um pagamento não pode executá-lo. Requer conluio para burlar."}
         ];
 
+        // ========== QUIZ DO CAPÍTULO 13 (10 QUESTÕES) ==========
         const quiz = [
-            {q: "Processo de categorizar dados por sensibilidade:", o: ["Data Retention", "Data Classification", "Data Destruction", "Data Masking"], c: 1},
-            {q: "Nível de classificação para dados de uso interno (manuais, políticas):", o: ["Public", "Internal", "Confidential", "Restricted"], c: 1},
-            {q: "Nível de classificação para dados altamente sensíveis como segredos comerciais:", o: ["Internal", "Confidential", "Restricted", "Private"], c: 2},
-            {q: "Regulamentação de proteção de dados da União Europeia:", o: ["LGPD", "HIPAA", "GDPR", "PCI DSS"], c: 2},
-            {q: "Lei brasileira de proteção de dados pessoais:", o: ["GDPR", "HIPAA", "LGPD", "SOX"], c: 2},
-            {q: "Método de destruição de dados que usa campo magnético (HDDs, fitas):", o: ["Shredding", "Degaussing", "Wiping", "Pulping"], c: 1},
-            {q: "Método de destruição que sobrescreve dados em disco:", o: ["Shredding", "Degaussing", "Wiping", "Incineration"], c: 2},
-            {q: "Verificação de antecedentes pré-contratação:", o: ["NDA", "Background Check", "AUP", "PoLP"], c: 1},
-            {q: "Acordo de confidencialidade para proteger segredos comerciais:", o: ["AUP", "NDA", "SLA", "BIA"], c: 1},
-            {q: "Princípio que determina que usuários tenham apenas as permissões mínimas necessárias:", o: ["SoD (Separation of Duties)", "PoLP (Principle of Least Privilege)", "RBAC", "ABAC"], c: 1}
+            {q: "Processo de categorizar dados por sensibilidade:", 
+             o: ["Data Retention", "Data Classification", "Data Destruction", "Data Masking"], 
+             c: 1},
+             
+            {q: "Nível de classificação para dados de uso interno (manuais, políticas):", 
+             o: ["Public", "Internal", "Confidential", "Restricted"], 
+             c: 1},
+             
+            {q: "Nível de classificação para dados altamente sensíveis como segredos comerciais:", 
+             o: ["Internal", "Confidential", "Restricted", "Private"], 
+             c: 2},
+             
+            {q: "Regulamentação de proteção de dados da União Europeia:", 
+             o: ["LGPD", "HIPAA", "GDPR", "PCI DSS"], 
+             c: 2},
+             
+            {q: "Lei brasileira de proteção de dados pessoais:", 
+             o: ["GDPR", "HIPAA", "LGPD", "SOX"], 
+             c: 2},
+             
+            {q: "Método de destruição de dados que usa campo magnético (HDDs, fitas):", 
+             o: ["Shredding", "Degaussing", "Wiping", "Pulping"], 
+             c: 1},
+             
+            {q: "Método de destruição que sobrescreve dados em disco:", 
+             o: ["Shredding", "Degaussing", "Wiping", "Incineration"], 
+             c: 2},
+             
+            {q: "Verificação de antecedentes pré-contratação:", 
+             o: ["NDA", "Background Check", "AUP", "PoLP"], 
+             c: 1},
+             
+            {q: "Acordo de confidencialidade para proteger segredos comerciais:", 
+             o: ["AUP", "NDA", "SLA", "BIA"], 
+             c: 1},
+             
+            {q: "Princípio que determina que usuários tenham apenas as permissões mínimas necessárias:", 
+             o: ["SoD (Separation of Duties)", "PoLP (Principle of Least Privilege)", "RBAC", "ABAC"], 
+             c: 1}
         ];
 
-        let currentCard = 0;
-        let flipped = false;
-        let mastered = new Set();
-        let answers = {};
-        let checked = false;
-        let filteredCards = [...Array(cards.length).keys()];
-        let currentFilter = 'all';
+        // ========== VARIÁVEIS DE ESTADO ==========
+        
+        let currentCard = 0;        // POSIÇÃO no array filteredCards
+        let flipped = false;        // false = frente, true = verso
+        let mastered = new Set();   // Índices originais dos cards dominados
+        let answers = {};           // Respostas do quiz
+        let checked = false;        // Quiz já foi verificado?
+        let filteredCards = [...Array(cards.length).keys()]; // Índices na ordem atual
+        let currentFilter = 'all';  // Filtro atual
 
-        // ========== LOCALSTORAGE ==========
-        // Carregar progresso salvo
+        // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
+        
         function loadProgress() {
             const saved = localStorage.getItem('security_plus_cap13_mastered');
             if (saved) {
@@ -560,37 +709,51 @@
             }
         }
 
-        // Salvar progresso
         function saveProgress() {
             localStorage.setItem('security_plus_cap13_mastered', JSON.stringify([...mastered]));
         }
 
-        // Chamar loadProgress assim que o script carregar
-        loadProgress();
+        loadProgress(); // Carrega progresso ao iniciar
 
+        // ========== FUNÇÕES DAS ABAS ==========
+        
         function showTab(n) {
             document.querySelectorAll('.content').forEach((c, i) => {
                 c.classList.toggle('active', i === n);
             });
+            
             document.querySelectorAll('.tab-btn').forEach((b, i) => {
                 b.classList.toggle('active', i === n);
             });
-            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+            
+            if (n === 2 && !document.getElementById('questions').innerHTML) {
+                loadQuiz();
+            }
         }
 
+        // ========== FUNÇÕES DOS FLASHCARDS ==========
+        
         function updateCard() {
             if (filteredCards.length === 0) {
                 document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                document.getElementById('card-counter').textContent = 'Card 0 de 0';
+                document.getElementById('side-indicator').textContent = 'FRENTE';
                 return;
             }
+            
             const cardIndex = filteredCards[currentCard];
             const card = cards[cardIndex];
+            
             document.getElementById('card-text').textContent = flipped ? card.b : card.f;
-            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            document.getElementById('card-counter').textContent = 
+                `Card ${currentCard + 1} de ${filteredCards.length}`;
             document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            
             const btn = document.getElementById('master-btn');
-            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
-            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            const isMastered = mastered.has(cardIndex);
+            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', isMastered);
+            
             document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
             
             const progress = (mastered.size / cards.length) * 100;
@@ -604,28 +767,36 @@
         }
 
         function nextCard() {
+            if (filteredCards.length === 0) return;
             currentCard = (currentCard + 1) % filteredCards.length;
             flipped = false;
             updateCard();
         }
 
         function prevCard() {
+            if (filteredCards.length === 0) return;
             currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
             flipped = false;
             updateCard();
         }
 
         function toggleMaster() {
+            if (filteredCards.length === 0) return;
+            
             const cardIndex = filteredCards[currentCard];
-            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
-            else mastered.add(cardIndex);
             
-            // ========== SALVAR PROGRESSO ==========
+            if (mastered.has(cardIndex)) {
+                mastered.delete(cardIndex);
+            } else {
+                mastered.add(cardIndex);
+            }
+            
             saveProgress();
-            
             updateCard();
         }
 
+        // ========== FUNÇÃO DE EMBARALHAR ==========
+        
         function shuffleCards() {
             for (let i = filteredCards.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -636,8 +807,11 @@
             updateCard();
         }
 
+        // ========== FUNÇÕES DE FILTRO ==========
+        
         function filterCards(type) {
             currentFilter = type;
+            
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
@@ -654,6 +828,8 @@
             updateCard();
         }
 
+        // ========== FUNÇÕES DO QUIZ ==========
+        
         function loadQuiz() {
             const container = document.getElementById('questions');
             quiz.forEach((q, qi) => {
@@ -706,7 +882,8 @@
             
             const pct = Math.round((correct / quiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('score-text').textContent = 
+                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
             document.getElementById('results-modal').classList.add('show');
         }
 
@@ -718,6 +895,7 @@
             loadQuiz();
         }
 
+        // ========== INICIALIZAÇÃO ==========
         updateCard();
     </script>
 </body>

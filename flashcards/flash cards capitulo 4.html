@@ -5,22 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Security+ Cap 4 - Identity & Access Management</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ===== ESTILOS GLOBAIS ===== */
+        /* O seletor * aplica a todos os elementos da página */
+        * { margin: 0; padding: 0; box-sizing: border-box; } 
+        /* Reset CSS: remove margens e paddings padrão que os navegadores aplicam */
+        /* box-sizing: border-box faz com que padding e bordas sejam incluídos na largura/altura total */
+        
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); /* Gradiente verde/rosa - tema do cap4 */
             padding: 20px;
+            min-height: 100vh;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .header { text-align: center; color: white; margin-bottom: 30px; }
-        .header h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .tabs {
+        
+        .container { max-width: 1200px; margin: 0 auto; } /* Container centralizado com largura máxima */
+        
+        .header { 
+            text-align: center; 
+            color: #333; 
+            margin-bottom: 30px; 
+            background: rgba(255,255,255,0.3);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .header h1 { 
+            font-size: 2.5rem; 
+            margin-bottom: 10px; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1); 
+        }
+        
+        /* Estatísticas no cabeçalho */
+        .stats-bar {
             display: flex;
-            gap: 10px;
+            gap: 20px;
             justify-content: center;
-            margin-bottom: 30px;
+            margin-top: 15px;
             flex-wrap: wrap;
         }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.8);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* ===== ABAS (TABS) ===== */
+        /* As abas permitem alternar entre Flashcards, Resumo e Quiz */
+        .tabs {
+            display: flex;
+            gap: 10px; /* Espaçamento entre os botões */
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap; /* Em telas pequenas, quebra para a linha de baixo */
+        }
+        
         .tab-btn {
             padding: 15px 30px;
             background: white;
@@ -29,21 +72,70 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s ease; /* Transição suave para hover */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .tab-btn.active { background: #a8edea; color: #333; }
-        .content { display: none; }
-        .content.active { display: block; }
         
+        .tab-btn:hover {
+            transform: translateY(-2px); /* Efeito de elevação ao passar mouse */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .tab-btn.active { 
+            background: #a8edea; /* Verde água - tema do cap4 */
+            color: #333; 
+        }
+        
+        .content { display: none; } /* Por padrão, todos os conteúdos ficam ocultos */
+        .content.active { display: block; } /* Apenas o conteúdo com classe active aparece */
+        
+        /* ===== ÁREA DE FLASHCARDS ===== */
         .flashcard-area { max-width: 800px; margin: 0 auto; }
+        
         .card-info {
-            background: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.3); /* Fundo semi-transparente para efeito vidro */
             padding: 15px;
             border-radius: 10px;
             color: #333;
             margin-bottom: 20px;
             text-align: center;
+            backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
             font-weight: bold;
         }
+        
+        /* ===== BOTÕES DE FILTRO ===== */
+        /* Permitem filtrar cards por "Todos", "Não Dominados" e "Dominados" */
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.5);
+            border: 2px solid #333;
+            border-radius: 8px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(255,255,255,0.8);
+            transform: scale(1.05);
+        }
+        
+        .filter-btn.active {
+            background: #333;
+            color: white;
+            border-color: #333;
+        }
+        
+        /* ===== O CARD EM SI ===== */
         .flashcard {
             background: white;
             border-radius: 20px;
@@ -52,102 +144,398 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            cursor: pointer; /* Mãozinha indicando que é clicável */
             margin-bottom: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative; /* Para posicionar o indicador de frente/verso */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .flashcard:hover { transform: translateY(-5px); transition: 0.3s; }
-        .flashcard-text { font-size: 1.3rem; line-height: 1.8; text-align: center; }
-        .controls { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        
+        .flashcard:hover { 
+            transform: translateY(-5px); /* Efeito de elevação */
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .flashcard-text { 
+            font-size: 1.3rem; 
+            line-height: 1.8; 
+            text-align: center; 
+            color: #1f2937;
+        }
+        
+        /* Indicador que mostra se é FRENTE ou VERSO */
+        .side-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 5px 10px;
+            background: #a8edea; /* Verde água do tema */
+            color: #333;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        /* Dica para virar o card */
+        .flip-hint {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+        
+        /* ===== CONTROLES (BOTÕES) ===== */
+        .controls { 
+            display: flex; 
+            gap: 15px; 
+            justify-content: center; 
+            flex-wrap: wrap; 
+            margin-top: 20px;
+        }
+        
         .btn {
             padding: 15px 30px;
             border: none;
             border-radius: 10px;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        .btn-nav { background: white; font-size: 1.5rem; width: 50px; height: 50px; }
         
+        .btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-shuffle { 
+            background: #f59e0b; /* Laranja - botão de embaralhar */
+            color: white; 
+        }
+        
+        .btn-nav { 
+            background: white; 
+            font-size: 1.5rem; 
+            width: 60px; 
+            height: 60px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Botão "Marcar Dominado" - muda quando o card está dominado */
+        .btn-master {
+            background: #e5e7eb;
+            color: #1f2937;
+            min-width: 160px;
+        }
+        
+        .btn-master.mastered {
+            background: #10b981; /* Verde quando dominado */
+            color: white;
+        }
+        
+        /* ===== RESUMO ===== */
         .summary {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
             padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        .summary h2 { color: #5dade2; margin-top: 30px; margin-bottom: 15px; }
-        .summary h3 { margin-top: 20px; margin-bottom: 10px; }
-        .summary ul { margin-left: 20px; margin-bottom: 15px; }
-        .summary li { margin-bottom: 8px; line-height: 1.6; }
         
-        .quiz-area { max-width: 900px; margin: 0 auto; }
-        .quiz-header { text-align: center; color: #333; margin-bottom: 30px; }
-        .question { background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; }
-        .option {
+        .summary h1 {
+            color: #333;
+            border-bottom: 3px solid #a8edea;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .summary h2 { 
+            color: #5dade2; 
+            margin-top: 30px; 
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .summary h3 { 
+            margin-top: 20px; 
+            margin-bottom: 10px; 
+            color: #333;
+            font-size: 1.4rem;
+        }
+        
+        .summary ul { 
+            margin-left: 20px; 
+            margin-bottom: 15px; 
+        }
+        
+        .summary li { 
+            margin-bottom: 8px; 
+            line-height: 1.6;
+        }
+        
+        .summary strong {
+            color: #5dade2;
+        }
+        
+        /* Destaque para informações importantes */
+        .highlight {
+            background: #e8f8f5;
+            border-left: 5px solid #a8edea;
             padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        /* ===== QUIZ ===== */
+        .quiz-area { max-width: 900px; margin: 0 auto; }
+        
+        .quiz-header { 
+            text-align: center; 
+            color: #333; 
+            margin-bottom: 30px; 
+            background: rgba(255,255,255,0.3);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .quiz-header h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .question { 
+            background: white; 
+            border-radius: 15px; 
+            padding: 30px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .question:hover {
+            transform: translateX(5px);
+        }
+        
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        .option {
+            padding: 15px 20px;
             border: 2px solid #e5e7eb;
             border-radius: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
         }
-        .option:hover { background: #e8f8f5; }
-        .option.selected { border-color: #a8edea; background: #e8f8f5; }
-        .option.correct { border-color: #10b981; background: #d1fae5; }
-        .option.incorrect { border-color: #ef4444; background: #fee2e2; }
+        
+        .option:hover { 
+            background: #e8f8f5; 
+            border-color: #a8edea;
+            transform: translateX(5px);
+        }
+        
+        .option.selected { 
+            border-color: #a8edea; 
+            background: #e8f8f5; 
+            font-weight: 600;
+        }
+        
+        .option.correct { 
+            border-color: #10b981; 
+            background: #d1fae5; 
+            font-weight: 600;
+        }
+        
+        .option.incorrect { 
+            border-color: #ef4444; 
+            background: #fee2e2; 
+            font-weight: 600;
+        }
+        
         .explanation {
-            margin-top: 15px;
-            padding: 15px;
+            margin-top: 20px;
+            padding: 20px;
             background: #e8f8f5;
-            border-left: 4px solid #a8edea;
+            border-left: 5px solid #a8edea;
+            border-radius: 8px;
+            display: none; /* Explicação fica oculta até verificar */
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+        
+        /* Modal de resultados */
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
             display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .results-modal.show { display: flex; }
+        
+        .results-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 20px auto;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        /* Responsividade para telas pequenas */
+        @media (max-width: 768px) {
+            .flashcard {
+                padding: 30px 20px;
+                min-height: 250px;
+            }
+            
+            .flashcard-text {
+                font-size: 1.1rem;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+            }
+            
+            .btn-nav {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- ===== CABEÇALHO ===== -->
         <div class="header">
             <h1>👤 Security+ Capítulo 4</h1>
             <p>Identity & Access Management (IAM) - 70 Cards | 35 Questões</p>
+            <div class="stats-bar">
+                <div class="stat-card">📚 70 Flashcards</div>
+                <div class="stat-card">❓ 35 Questões</div>
+                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+            </div>
         </div>
 
+        <!-- ===== ABAS DE NAVEGAÇÃO ===== -->
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
             <button class="tab-btn" onclick="showTab(1)">📝 Resumo</button>
             <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
         </div>
 
+        <!-- ===== ABA 0: FLASHCARDS ===== -->
         <div id="tab0" class="content active">
             <div class="flashcard-area">
+                <!-- INFO DO CARD E FILTROS -->
                 <div class="card-info">
-                    <div id="card-counter">Card 1 de 70</div>
-                    <div id="mastered-count">0 dominados</div>
+                    <div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span id="card-counter">Card 1 de 70</span>
+                        <span id="mastered-count">0 dominados</span>
+                    </div>
+                    
+                    <!-- BOTÕES DE FILTRO -->
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
+                        <button class="filter-btn" onclick="filterCards('unmastered', event)">Não Dominados</button>
+                        <button class="filter-btn" onclick="filterCards('mastered', event)">Dominados</button>
+                    </div>
                 </div>
                 
-                <div class="flashcard" onclick="flipCard()">
+                <!-- O FLASHCARD PROPRIAMENTE DITO -->
+                <div class="flashcard" onclick="flipCard()"> <!-- Clica no card para virar -->
+                    <div class="side-indicator" id="side-indicator">FRENTE</div>
                     <div class="flashcard-text" id="card-text"></div>
+                    <div class="flip-hint">👆 Clique para virar</div>
                 </div>
 
+                <!-- BOTÕES DE CONTROLE -->
                 <div class="controls">
-                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
-                    <button class="btn" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
-                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button> <!-- Anterior -->
+                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button> <!-- Próximo -->
                 </div>
             </div>
         </div>
 
+        <!-- ===== ABA 1: RESUMO ===== -->
         <div id="tab1" class="content">
             <div class="summary">
                 <h1>Capítulo 4: Identity & Access Management (IAM)</h1>
+                
+                <div class="highlight">
+                    <strong>🎯 CONCEITOS CRÍTICOS PARA A PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Menor Privilégio:</strong> Conceder apenas o mínimo necessário</li>
+                        <li><strong>MFA:</strong> Usar fatores diferentes (saber + ter + ser)</li>
+                        <li><strong>Kerberos:</strong> Protocolo de tickets do Active Directory</li>
+                        <li><strong>RADIUS vs TACACS+:</strong> UDP vs TCP, criptografia parcial vs total</li>
+                        <li><strong>SAML vs OAuth:</strong> Autenticação vs Autorização</li>
+                    </ul>
+                </div>
                 
                 <h2>4.1 Modelos de Controle de Acesso</h2>
                 
                 <h3>Princípios Fundamentais</h3>
                 <ul>
-                    <li><strong>Menor Privilégio (Least Privilege):</strong> Conceder apenas as permissões mínimas necessárias para realizar as tarefas</li>
-                    <li><strong>Segregação de Funções (Separation of Duties):</strong> Dividir tarefas críticas entre múltiplas pessoas para prevenir fraudes</li>
-                    <li><strong>Need to Know:</strong> Acesso apenas às informações necessárias para a função</li>
-                    <li><strong>Job Rotation:</strong> Rotação periódica de funções para detectar irregularidades</li>
-                    <li><strong>Férias Obrigatórias (Mandatory Vacation):</strong> Detecta fraudes que exigem presença constante do fraudador</li>
+                    <li><strong>Menor Privilégio (Least Privilege):</strong> Conceder apenas as permissões mínimas necessárias para realizar as tarefas. Minimiza danos em caso de comprometimento.</li>
+                    <li><strong>Segregação de Funções (Separation of Duties):</strong> Dividir tarefas críticas entre múltiplas pessoas para prevenir fraudes e erros. Ex: quem aprova um pagamento não pode executá-lo.</li>
+                    <li><strong>Need to Know:</strong> Conceder acesso apenas às informações estritamente necessárias para a função do usuário, mesmo que ele tenha autorização de acesso mais ampla.</li>
+                    <li><strong>Job Rotation:</strong> Prática de rotacionar periodicamente as funções dos funcionários para prevenir fraudes, detectar irregularidades e promover treinamento cruzado.</li>
+                    <li><strong>Férias Obrigatórias (Mandatory Vacation):</strong> Exigir que funcionários tirem férias consecutivas para detectar fraudes que exigem a presença constante do fraudador.</li>
                 </ul>
 
                 <h3>Modelos de Controle de Acesso</h3>
@@ -169,10 +557,10 @@
                     <li><strong>Algo que você faz (Tipo 5):</strong> Padrão de comportamento (digitação, assinatura)</li>
                 </ul>
 
-                <h3>Autenticação Multifator (MFA - Multi-Factor Authentication)</h3>
+                <h3>Autenticação Multifator (MFA)</h3>
                 <ul>
                     <li>Combina 2 ou mais fatores de categorias DIFERENTES</li>
-                    <li>Senha + SMS NÃO é MFA forte (ambos são algo que você sabe/tem? Na verdade SMS é algo que você tem)</li>
+                    <li>Senha + SMS NÃO é MFA forte? (SMS é algo que você tem, senha é algo que você sabe → são fatores diferentes ✓)</li>
                     <li>Senha + biometria = MFA forte (fatores diferentes: conhecimento + inerência)</li>
                 </ul>
 
@@ -253,8 +641,7 @@
                     <li>Define configurações centralizadas para usuários e computadores</li>
                     <li>Aplicado a sites, domínios e OUs</li>
                     <li>Configuração de Usuário + Configuração de Computador</li>
-                    <li>Ordem de aplicação: Local → Site → Domínio → OU</li>
-                    <li>A última política aplicada prevalece (por padrão)</li>
+                    <li>Ordem de aplicação: Local → Site → Domínio → OU (a última prevalece)</li>
                 </ul>
 
                 <h2>4.5 Hardening de Autenticação</h2>
@@ -289,15 +676,6 @@
                     <li>Armazenam senhas de forma criptografada</li>
                     <li>Geram senhas fortes e únicas para cada serviço</li>
                     <li>Protegidos por uma senha mestra (master password)</li>
-                    <li>Exemplos: LastPass, 1Password, BitWarden, KeePass</li>
-                </ul>
-
-                <h3>Autenticação com Smart Card</h3>
-                <ul>
-                    <li>Cartão com chip que armazena certificado digital</li>
-                    <li>Requer leitor de cartão</li>
-                    <li>MFA: algo que você tem (cartão) + algo que você sabe (PIN)</li>
-                    <li>Usado em ambientes de alta segurança</li>
                 </ul>
 
                 <h2>4.6 e 4.7 Linux - Usuários e Grupos</h2>
@@ -325,15 +703,12 @@
                     <li><strong>groupmod:</strong> Modificar grupo</li>
                     <li><strong>groupdel:</strong> Remover grupo</li>
                     <li><strong>usermod -aG:</strong> Adicionar usuário a um grupo suplementar</li>
-                    <li><strong>gpasswd -d:</strong> Remover usuário de um grupo</li>
                 </ul>
 
-                <h3>SELinux (Security-Enhanced Linux)</h3>
+                <h3>SELinux</h3>
                 <ul>
                     <li>Implementação de MAC (Mandatory Access Control) no Linux</li>
-                    <li>Aplica políticas de segurança rígidas</li>
                     <li><strong>Modos:</strong> Enforcing (aplica), Permissive (apenas registra), Disabled (desativado)</li>
-                    <li>Utiliza contextos de segurança para arquivos e processos</li>
                 </ul>
 
                 <h2>4.8 Acesso Remoto</h2>
@@ -346,7 +721,7 @@
                     <li><strong>VNC:</strong> Multi-plataforma, várias portas</li>
                 </ul>
 
-                <h3>RADIUS (Remote Authentication Dial-In User Service)</h3>
+                <h3>RADIUS</h3>
                 <ul>
                     <li>Protocolo AAA (Autenticação, Autorização e Auditoria) centralizado</li>
                     <li>UDP portas 1812 (autenticação) e 1813 (auditoria)</li>
@@ -354,7 +729,7 @@
                     <li>Usado em: Wi-Fi corporativo (802.1X), VPN, acesso discado</li>
                 </ul>
 
-                <h3>TACACS+ (Terminal Access Controller Access-Control System Plus)</h3>
+                <h3>TACACS+</h3>
                 <ul>
                     <li>Protocolo AAA proprietário da Cisco</li>
                     <li>TCP porta 49</li>
@@ -376,7 +751,7 @@
                     <li>Requer sincronização de tempo (tolerância de 5 minutos)</li>
                 </ul>
 
-                <h3>LDAP (Lightweight Directory Access Protocol)</h3>
+                <h3>LDAP</h3>
                 <ul>
                     <li>Protocolo para acessar e manter diretórios (Active Directory, OpenLDAP)</li>
                     <li>Porta 389 (não seguro)</li>
@@ -384,13 +759,12 @@
                     <li>Estrutura hierárquica: DC (Domain Component), OU (Organizational Unit), CN (Common Name)</li>
                 </ul>
 
-                <h3>SAML (Security Assertion Markup Language)</h3>
+                <h3>SAML</h3>
                 <ul>
                     <li>Padrão baseado em XML para SSO (Single Sign-On)</li>
                     <li>Permite federação de identidades</li>
                     <li><strong>IdP (Identity Provider):</strong> Provedor de identidade que autentica o usuário</li>
                     <li><strong>SP (Service Provider):</strong> Provedor de serviço que confia no IdP</li>
-                    <li>Usado em: SSO corporativo, aplicações em nuvem</li>
                 </ul>
 
                 <h3>OAuth 2.0</h3>
@@ -398,7 +772,6 @@
                     <li>Framework de AUTORIZAÇÃO (NÃO é autenticação!)</li>
                     <li>Permite delegação de acesso sem compartilhar senha</li>
                     <li>"Login com Google/Facebook" usa OAuth</li>
-                    <li>Utiliza access tokens com escopo limitado</li>
                 </ul>
 
                 <h3>OpenID Connect (OIDC)</h3>
@@ -410,287 +783,903 @@
             </div>
         </div>
 
+        <!-- ===== ABA 2: QUIZ ===== -->
         <div id="tab2" class="content">
             <div class="quiz-area">
                 <div class="quiz-header">
                     <h2>Quiz - 35 Questões</h2>
+                    <p>Teste seus conhecimentos sobre Identity & Access Management</p>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn" onclick="checkAnswers()" style="background: #5dade2; color: white; padding: 15px 40px;">Ver Resultados</button>
-                </div>
-                <div id="results" style="display: none; text-align: center; margin-top: 20px;">
-                    <div style="background: white; padding: 30px; border-radius: 15px;">
-                        <h2 id="score"></h2>
-                        <button class="btn" onclick="resetQuiz()" style="margin-top: 15px;">Refazer</button>
-                    </div>
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal de Resultados do Quiz -->
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+        </div>
+    </div>
+
     <script>
+        // ========== CARDS DO CAPÍTULO 4 ==========
+        /**
+         * ARRAY cards: armazena TODOS os flashcards do capítulo
+         * Cada card tem:
+         * - f: frente (a pergunta/conceito)
+         * - b: verso (a resposta/definição)
+         * 
+         * IMPORTANTE: Este array NUNCA é modificado durante a execução.
+         * Ele é a fonte original dos dados.
+         */
         const cards = [
             // Princípios Fundamentais (1-5)
-            {f: "O que é o princípio do menor privilégio (Least Privilege)?", b: "Conceder a cada usuário apenas as permissões mínimas necessárias para realizar suas tarefas. Minimiza os danos em caso de comprometimento."},
-            {f: "O que é segregação de funções (Separation of Duties)?", b: "Dividir tarefas críticas entre múltiplas pessoas para prevenir fraudes e erros. Ex: quem aprova um pagamento não pode executá-lo."},
-            {f: "O que é o princípio de need to know?", b: "Conceder acesso apenas às informações estritamente necessárias para a função do usuário, mesmo que ele tenha autorização de acesso mais ampla."},
-            {f: "O que é job rotation (rotação de funções)?", b: "Prática de rotacionar periodicamente as funções dos funcionários para prevenir fraudes, detectar irregularidades e promover treinamento cruzado."},
-            {f: "O que são férias obrigatórias (mandatory vacation)?", b: "Exigir que funcionários tirem férias consecutivas para detectar fraudes que exigem a presença constante do fraudador para serem mantidas."},
+            {f: "O que é o princípio do menor privilégio (Least Privilege)?", 
+             b: "Conceder a cada usuário apenas as permissões mínimas necessárias para realizar suas tarefas. Minimiza os danos em caso de comprometimento."},
+             
+            {f: "O que é segregação de funções (Separation of Duties)?", 
+             b: "Dividir tarefas críticas entre múltiplas pessoas para prevenir fraudes e erros. Ex: quem aprova um pagamento não pode executá-lo."},
+             
+            {f: "O que é o princípio de need to know?", 
+             b: "Conceder acesso apenas às informações estritamente necessárias para a função do usuário, mesmo que ele tenha autorização de acesso mais ampla."},
+             
+            {f: "O que é job rotation (rotação de funções)?", 
+             b: "Prática de rotacionar periodicamente as funções dos funcionários para prevenir fraudes, detectar irregularidades e promover treinamento cruzado."},
+             
+            {f: "O que são férias obrigatórias (mandatory vacation)?", 
+             b: "Exigir que funcionários tirem férias consecutivas para detectar fraudes que exigem a presença constante do fraudador para serem mantidas."},
 
             // Modelos de Controle de Acesso (6-10)
-            {f: "O que é DAC (Discretionary Access Control)?", b: "Modelo onde o proprietário do recurso define as permissões. É flexível mas menos seguro. Exemplo: permissões NTFS do Windows."},
-            {f: "O que é MAC (Mandatory Access Control)?", b: "Modelo onde o sistema define permissões através de rótulos (labels) e níveis de autorização (clearance). Alta segurança. Ex: SELinux, sistemas militares."},
-            {f: "O que é RBAC (Role-Based Access Control)?", b: "Modelo onde as permissões são baseadas em funções ou cargos. É o mais comum em empresas. Ex: Admin, Usuário, Gerente."},
-            {f: "O que é ABAC (Attribute-Based Access Control)?", b: "Modelo onde políticas de acesso são baseadas em atributos como horário, localização, dispositivo e cargo. É mais granular e dinâmico."},
-            {f: "Qual a diferença entre RBAC e ABAC?", b: "RBAC usa funções fixas (ex: gerente). ABAC usa atributos dinâmicos (ex: horário comercial + localização no escritório + cargo de gerente)."},
+            {f: "O que é DAC (Discretionary Access Control)?", 
+             b: "Modelo onde o proprietário do recurso define as permissões. É flexível mas menos seguro. Exemplo: permissões NTFS do Windows."},
+             
+            {f: "O que é MAC (Mandatory Access Control)?", 
+             b: "Modelo onde o sistema define permissões através de rótulos (labels) e níveis de autorização (clearance). Alta segurança. Ex: SELinux, sistemas militares."},
+             
+            {f: "O que é RBAC (Role-Based Access Control)?", 
+             b: "Modelo onde as permissões são baseadas em funções ou cargos. É o mais comum em empresas. Ex: Admin, Usuário, Gerente."},
+             
+            {f: "O que é ABAC (Attribute-Based Access Control)?", 
+             b: "Modelo onde políticas de acesso são baseadas em atributos como horário, localização, dispositivo e cargo. É mais granular e dinâmico."},
+             
+            {f: "Qual a diferença entre RBAC e ABAC?", 
+             b: "RBAC usa funções fixas (ex: gerente). ABAC usa atributos dinâmicos (ex: horário comercial + localização no escritório + cargo de gerente)."},
 
             // Fatores de Autenticação (11-15)
-            {f: "O que é autenticação por algo que você sabe (Tipo 1)?", o: ["Senha, PIN, resposta a pergunta secreta. É o fator mais comum, mas pode ser fraco se não houver complexidade."]},
-            {f: "O que é autenticação por algo que você tem (Tipo 2)?", o: ["Smart card, token, celular, token USB. É um fator físico que pode ser perdido ou roubado."]},
-            {f: "O que é autenticação por algo que você é (Tipo 3)?", o: ["Biometria: impressão digital, íris, retina, face, voz. Não pode ser perdido, mas é difícil de trocar se comprometido."]},
-            {f: "O que é autenticação por algum lugar onde você está (Tipo 4)?", o: ["Localização geográfica, geofencing. Ex: bloquear acesso fora do país ou do escritório."]},
-            {f: "O que é autenticação por algo que você faz (Tipo 5)?", o: ["Padrão de comportamento: ritmo de digitação, padrão de assinatura, movimentos do mouse."]},
+            {f: "O que é autenticação por algo que você sabe (Tipo 1)?", 
+             b: "Senha, PIN, resposta a pergunta secreta. É o fator mais comum, mas pode ser fraco se não houver complexidade."},
+             
+            {f: "O que é autenticação por algo que você tem (Tipo 2)?", 
+             b: "Smart card, token, celular, token USB. É um fator físico que pode ser perdido ou roubado."},
+             
+            {f: "O que é autenticação por algo que você é (Tipo 3)?", 
+             b: "Biometria: impressão digital, íris, retina, face, voz. Não pode ser perdido, mas é difícil de trocar se comprometido."},
+             
+            {f: "O que é autenticação por algum lugar onde você está (Tipo 4)?", 
+             b: "Localização geográfica, geofencing. Ex: bloquear acesso fora do país ou do escritório."},
+             
+            {f: "O que é autenticação por algo que você faz (Tipo 5)?", 
+             b: "Padrão de comportamento: ritmo de digitação, padrão de assinatura, movimentos do mouse."},
 
             // MFA e Métodos (16-25)
-            {f: "O que é MFA (Multi-Factor Authentication)?", b: "Autenticação que combina dois ou mais fatores de categorias DIFERENTES. Ex: senha (saber) + biometria (ser) = MFA forte."},
-            {f: "O que é TOTP (Time-based One-Time Password)?", b: "Código temporário baseado em tempo, gerado por algoritmos como Google Authenticator e Microsoft Authenticator. Muda a cada 30 segundos."},
-            {f: "O que é HOTP (HMAC-based One-Time Password)?", b: "Código baseado em contador, que muda apenas quando usado. Menos comum que TOTP atualmente."},
-            {f: "O que é um token de hardware?", b: "Dispositivo físico que gera códigos temporários. Ex: RSA SecureID. Pode ser usado mesmo sem conexão com a internet."},
-            {f: "O que é autenticação por notificação push?", b: "Método onde um aplicativo no celular recebe uma notificação para aprovar ou negar uma tentativa de login. Ex: Duo, Microsoft Authenticator."},
-            {f: "O que é FAR (False Acceptance Rate) em biometria?", b: "Taxa de aceitar um impostor como legítimo. É a métrica mais GRAVE em sistemas biométricos."},
-            {f: "O que é FRR (False Rejection Rate) em biometria?", b: "Taxa de rejeitar um usuário legítimo. É frustrante para o usuário, mas menos grave que FAR."},
-            {f: "O que é CER (Crossover Error Rate) em biometria?", b: "Ponto onde FAR e FRR se igualam. Quanto menor o CER, melhor e mais preciso é o sistema biométrico."},
-            {f: "O que é SSO (Single Sign-On)?", b: "Tecnologia que permite ao usuário autenticar-se uma única vez e ganhar acesso a múltiplos sistemas. Vantagem: conveniência. Risco: acesso total se comprometido."},
-            {f: "O que é federação de identidades?", b: "Compartilhamento de identidades entre organizações com relação de confiança. Ex: funcionário de uma empresa acessar sistema de parceiro com suas credenciais corporativas."},
+            {f: "O que é MFA (Multi-Factor Authentication)?", 
+             b: "Autenticação que combina dois ou mais fatores de categorias DIFERENTES. Ex: senha (saber) + biometria (ser) = MFA forte."},
+             
+            {f: "O que é TOTP (Time-based One-Time Password)?", 
+             b: "Código temporário baseado em tempo, gerado por algoritmos como Google Authenticator e Microsoft Authenticator. Muda a cada 30 segundos."},
+             
+            {f: "O que é HOTP (HMAC-based One-Time Password)?", 
+             b: "Código baseado em contador, que muda apenas quando usado. Menos comum que TOTP atualmente."},
+             
+            {f: "O que é um token de hardware?", 
+             b: "Dispositivo físico que gera códigos temporários. Ex: RSA SecureID. Pode ser usado mesmo sem conexão com a internet."},
+             
+            {f: "O que é autenticação por notificação push?", 
+             b: "Método onde um aplicativo no celular recebe uma notificação para aprovar ou negar uma tentativa de login. Ex: Duo, Microsoft Authenticator."},
+             
+            {f: "O que é FAR (False Acceptance Rate) em biometria?", 
+             b: "Taxa de aceitar um impostor como legítimo. É a métrica mais GRAVE em sistemas biométricos."},
+             
+            {f: "O que é FRR (False Rejection Rate) em biometria?", 
+             b: "Taxa de rejeitar um usuário legítimo. É frustrante para o usuário, mas menos grave que FAR."},
+             
+            {f: "O que é CER (Crossover Error Rate) em biometria?", 
+             b: "Ponto onde FAR e FRR se igualam. Quanto menor o CER, melhor e mais preciso é o sistema biométrico."},
+             
+            {f: "O que é SSO (Single Sign-On)?", 
+             b: "Tecnologia que permite ao usuário autenticar-se uma única vez e ganhar acesso a múltiplos sistemas. Vantagem: conveniência. Risco: acesso total se comprometido."},
+             
+            {f: "O que é federação de identidades?", 
+             b: "Compartilhamento de identidades entre organizações com relação de confiança. Ex: funcionário de uma empresa acessar sistema de parceiro com suas credenciais corporativas."},
 
             // Autorização (26-28)
-            {f: "Qual a diferença entre autenticação e autorização?", b: "Autenticação verifica QUEM você é. Autorização define O QUE você pode fazer após autenticado."},
-            {f: "Como funcionam as permissões cumulativas no Windows?", b: "A permissão efetiva é a soma das permissões do usuário + todos os grupos. Negar (Deny) sempre prevalece sobre Permitir (Allow)."},
-            {f: "O que é um token de acesso no Windows?", b: "Objeto criado após a autenticação que contém a identidade do usuário e todos os seus grupos. É usado para verificar permissões."},
+            {f: "Qual a diferença entre autenticação e autorização?", 
+             b: "Autenticação verifica QUEM você é. Autorização define O QUE você pode fazer após autenticado."},
+             
+            {f: "Como funcionam as permissões cumulativas no Windows?", 
+             b: "A permissão efetiva é a soma das permissões do usuário + todos os grupos. Negar (Deny) sempre prevalece sobre Permitir (Allow)."},
+             
+            {f: "O que é um token de acesso no Windows?", 
+             b: "Objeto criado após a autenticação que contém a identidade do usuário e todos os seus grupos. É usado para verificar permissões."},
 
             // Active Directory (29-35)
-            {f: "O que é um domínio no Active Directory?", b: "Unidade administrativa principal que compartilha um banco de dados de diretório e políticas de segurança."},
-            {f: "O que é uma OU (Organizational Unit) no AD?", b: "Container usado para organizar objetos como usuários, grupos e computadores. Permite delegar administração e aplicar GPOs."},
-            {f: "O que é uma floresta (forest) no AD?", b: "Conjunto de um ou mais domínios que compartilham um esquema, catálogo global e relações de confiança."},
-            {f: "O que é um Domain Controller (DC)?", b: "Servidor que armazena o banco de dados do Active Directory e autentica usuários e computadores no domínio."},
-            {f: "O que é uma GPO (Group Policy Object)?", b: "Objeto que define configurações centralizadas para usuários e computadores. Pode ser aplicado a sites, domínios e OUs."},
-            {f: "Quais são os tipos de escopo de grupos no AD?", b: "Domínio Local (permissões no domínio local), Global (membros de um domínio, usado em qualquer domínio) e Universal (membros de qualquer domínio, usado em qualquer domínio)."},
-            {f: "Qual a diferença entre grupo de segurança e grupo de distribuição no AD?", b: "Grupo de segurança é usado para atribuir permissões. Grupo de distribuição é usado para listas de email (Exchange)."},
+            {f: "O que é um domínio no Active Directory?", 
+             b: "Unidade administrativa principal que compartilha um banco de dados de diretório e políticas de segurança."},
+             
+            {f: "O que é uma OU (Organizational Unit) no AD?", 
+             b: "Container usado para organizar objetos como usuários, grupos e computadores. Permite delegar administração e aplicar GPOs."},
+             
+            {f: "O que é uma floresta (forest) no AD?", 
+             b: "Conjunto de um ou mais domínios que compartilham um esquema, catálogo global e relações de confiança."},
+             
+            {f: "O que é um Domain Controller (DC)?", 
+             b: "Servidor que armazena o banco de dados do Active Directory e autentica usuários e computadores no domínio."},
+             
+            {f: "O que é uma GPO (Group Policy Object)?", 
+             b: "Objeto que define configurações centralizadas para usuários e computadores. Pode ser aplicado a sites, domínios e OUs."},
+             
+            {f: "Quais são os tipos de escopo de grupos no AD?", 
+             b: "Domínio Local (permissões no domínio local), Global (membros de um domínio, usado em qualquer domínio) e Universal (membros de qualquer domínio, usado em qualquer domínio)."},
+             
+            {f: "Qual a diferença entre grupo de segurança e grupo de distribuição no AD?", 
+             b: "Grupo de segurança é usado para atribuir permissões. Grupo de distribuição é usado para listas de email (Exchange)."},
 
             // Hardening (36-42)
-            {f: "Quais são os componentes de uma política de senhas forte?", b: "Comprimento mínimo (12-16+), complexidade, histórico, idade máxima (60-90 dias), idade mínima (1 dia) e bloqueio após tentativas."},
-            {f: "O que é account lockout?", b: "Mecanismo que bloqueia a conta após um número X de tentativas de login com senha errada. Previne ataques de força bruta."},
-            {f: "O que é restrição por horário (time-of-day restriction)?", b: "Permitir que usuários acessem sistemas apenas em horários específicos. Ex: funcionário só pode logar das 8h às 18h."},
-            {f: "O que é geofencing?", b: "Restrição de acesso baseada na localização geográfica do usuário. Ex: bloquear acessos de fora do país."},
-            {f: "O que é impossible travel (viagem impossível)?", b: "Detecção de logins em locais geograficamente distantes em um curto intervalo de tempo, indicando possível comprometimento."},
-            {f: "O que é UAC (User Account Control) no Windows?", b: "Recurso que separa usuário padrão de administrador, solicitando elevação para ações administrativas. Reduz risco de malware."},
-            {f: "O que é um gerenciador de senhas (password manager)?", b: "Software que armazena senhas criptografadas e gera senhas fortes únicas para cada serviço. Protegido por senha mestra."},
+            {f: "Quais são os componentes de uma política de senhas forte?", 
+             b: "Comprimento mínimo (12-16+), complexidade, histórico, idade máxima (60-90 dias), idade mínima (1 dia) e bloqueio após tentativas."},
+             
+            {f: "O que é account lockout?", 
+             b: "Mecanismo que bloqueia a conta após um número X de tentativas de login com senha errada. Previne ataques de força bruta."},
+             
+            {f: "O que é restrição por horário (time-of-day restriction)?", 
+             b: "Permitir que usuários acessem sistemas apenas em horários específicos. Ex: funcionário só pode logar das 8h às 18h."},
+             
+            {f: "O que é geofencing?", 
+             b: "Restrição de acesso baseada na localização geográfica do usuário. Ex: bloquear acessos de fora do país."},
+             
+            {f: "O que é impossible travel (viagem impossível)?", 
+             b: "Detecção de logins em locais geograficamente distantes em um curto intervalo de tempo, indicando possível comprometimento."},
+             
+            {f: "O que é UAC (User Account Control) no Windows?", 
+             b: "Recurso que separa usuário padrão de administrador, solicitando elevação para ações administrativas. Reduz risco de malware."},
+             
+            {f: "O que é um gerenciador de senhas (password manager)?", 
+             b: "Software que armazena senhas criptografadas e gera senhas fortes únicas para cada serviço. Protegido por senha mestra."},
 
             // Linux (43-50)
-            {f: "Qual a função do arquivo /etc/passwd no Linux?", b: "Armazena informações básicas dos usuários: nome de usuário, UID, GID, diretório home, shell padrão. As senhas ficam em /etc/shadow."},
-            {f: "Qual a função do arquivo /etc/shadow no Linux?", b: "Armazena hashes das senhas e informações de expiração. Apenas root pode ler este arquivo."},
-            {f: "Qual comando cria um novo usuário no Linux?", b: "useradd. Ex: useradd -m -s /bin/bash maria (cria com home directory e shell bash)."},
-            {f: "Qual comando modifica um usuário no Linux?", b: "usermod. Ex: usermod -aG sudo maria (adiciona ao grupo sudo)."},
-            {f: "Qual comando altera a senha no Linux?", b: "passwd. Ex: passwd maria (altera senha do usuário maria)."},
-            {f: "Qual comando adiciona um usuário a um grupo no Linux?", b: "usermod -aG grupo usuario. O -a (append) é importante para não remover outros grupos."},
-            {f: "O que é SELinux?", b: "Security-Enhanced Linux: implementação de MAC no Linux que aplica políticas rígidas de segurança. Modos: Enforcing, Permissive, Disabled."},
-            {f: "Quais são os modos de operação do SELinux?", b: "Enforcing (aplica políticas), Permissive (apenas registra violações) e Disabled (desativado)."},
+            {f: "Qual a função do arquivo /etc/passwd no Linux?", 
+             b: "Armazena informações básicas dos usuários: nome de usuário, UID, GID, diretório home, shell padrão. As senhas ficam em /etc/shadow."},
+             
+            {f: "Qual a função do arquivo /etc/shadow no Linux?", 
+             b: "Armazena hashes das senhas e informações de expiração. Apenas root pode ler este arquivo."},
+             
+            {f: "Qual comando cria um novo usuário no Linux?", 
+             b: "useradd. Ex: useradd -m -s /bin/bash maria (cria com home directory e shell bash)."},
+             
+            {f: "Qual comando modifica um usuário no Linux?", 
+             b: "usermod. Ex: usermod -aG sudo maria (adiciona ao grupo sudo)."},
+             
+            {f: "Qual comando altera a senha no Linux?", 
+             b: "passwd. Ex: passwd maria (altera senha do usuário maria)."},
+             
+            {f: "Qual comando adiciona um usuário a um grupo no Linux?", 
+             b: "usermod -aG grupo usuario. O -a (append) é importante para não remover outros grupos."},
+             
+            {f: "O que é SELinux?", 
+             b: "Security-Enhanced Linux: implementação de MAC no Linux que aplica políticas rígidas de segurança. Modos: Enforcing, Permissive, Disabled."},
+             
+            {f: "Quais são os modos de operação do SELinux?", 
+             b: "Enforcing (aplica políticas), Permissive (apenas registra violações) e Disabled (desativado)."},
 
             // Acesso Remoto (51-55)
-            {f: "O que é SSH e qual porta utiliza?", b: "Secure Shell: protocolo de acesso remoto criptografado, padrão em Linux/Unix. Porta 22. Substitui o inseguro Telnet."},
-            {f: "O que é RDP e qual porta utiliza?", b: "Remote Desktop Protocol: protocolo de acesso remoto do Windows. Porta 3389. Deve usar NLA e criptografia."},
-            {f: "Por que Telnet é inseguro?", b: "Porque transmite todos os dados, incluindo senhas, em texto claro (sem criptografia). Deve ser substituído por SSH."},
-            {f: "O que é RADIUS?", b: "Protocolo AAA centralizado que usa UDP (1812/1813). Criptografa apenas a senha. Usado em Wi-Fi corporativo (802.1X) e VPN."},
-            {f: "O que é TACACS+?", b: "Protocolo AAA proprietário da Cisco. Usa TCP porta 49 e criptografa toda a comunicação. Mais granular que RADIUS."},
+            {f: "O que é SSH e qual porta utiliza?", 
+             b: "Secure Shell: protocolo de acesso remoto criptografado, padrão em Linux/Unix. Porta 22. Substitui o inseguro Telnet."},
+             
+            {f: "O que é RDP e qual porta utiliza?", 
+             b: "Remote Desktop Protocol: protocolo de acesso remoto do Windows. Porta 3389. Deve usar NLA e criptografia."},
+             
+            {f: "Por que Telnet é inseguro?", 
+             b: "Porque transmite todos os dados, incluindo senhas, em texto claro (sem criptografia). Deve ser substituído por SSH."},
+             
+            {f: "O que é RADIUS?", 
+             b: "Protocolo AAA centralizado que usa UDP (1812/1813). Criptografa apenas a senha. Usado em Wi-Fi corporativo (802.1X) e VPN."},
+             
+            {f: "O que é TACACS+?", 
+             b: "Protocolo AAA proprietário da Cisco. Usa TCP porta 49 e criptografa toda a comunicação. Mais granular que RADIUS."},
 
             // Kerberos e LDAP (56-60)
-            {f: "O que é Kerberos?", b: "Protocolo de autenticação usado pelo Active Directory. Utiliza tickets em vez de transmitir senhas. Porta 88. Requer sincronização de tempo."},
-            {f: "O que é KDC (Key Distribution Center) no Kerberos?", b: "Componente central que emite tickets. No Active Directory, o Domain Controller faz o papel de KDC."},
-            {f: "O que é TGT (Ticket Granting Ticket) no Kerberos?", b: "Ticket inicial obtido após a autenticação do usuário. É usado para solicitar tickets de serviço."},
-            {f: "O que é LDAP e qual porta utiliza?", b: "Lightweight Directory Access Protocol: acessa diretórios como Active Directory. Porta 389 (não seguro) e 636 (LDAPS com SSL/TLS)."},
-            {f: "O que significam DC, OU e CN no LDAP?", b: "DC = Domain Component (componente do domínio), OU = Organizational Unit (unidade organizacional), CN = Common Name (nome comum)."},
+            {f: "O que é Kerberos?", 
+             b: "Protocolo de autenticação usado pelo Active Directory. Utiliza tickets em vez de transmitir senhas. Porta 88. Requer sincronização de tempo."},
+             
+            {f: "O que é KDC (Key Distribution Center) no Kerberos?", 
+             b: "Componente central que emite tickets. No Active Directory, o Domain Controller faz o papel de KDC."},
+             
+            {f: "O que é TGT (Ticket Granting Ticket) no Kerberos?", 
+             b: "Ticket inicial obtido após a autenticação do usuário. É usado para solicitar tickets de serviço."},
+             
+            {f: "O que é LDAP e qual porta utiliza?", 
+             b: "Lightweight Directory Access Protocol: acessa diretórios como Active Directory. Porta 389 (não seguro) e 636 (LDAPS com SSL/TLS)."},
+             
+            {f: "O que significam DC, OU e CN no LDAP?", 
+             b: "DC = Domain Component (componente do domínio), OU = Organizational Unit (unidade organizacional), CN = Common Name (nome comum)."},
 
             // SAML, OAuth, OpenID (61-66)
-            {f: "O que é SAML?", b: "Security Assertion Markup Language: padrão baseado em XML para SSO e federação de identidades. Muito usado em aplicações corporativas."},
-            {f: "O que são IdP e SP no SAML?", b: "IdP (Identity Provider): provedor que autentica o usuário. SP (Service Provider): serviço que confia no IdP."},
-            {f: "O que é OAuth 2.0?", b: "Framework de AUTORIZAÇÃO (não autenticação) que permite delegação de acesso sem compartilhar senha. Ex: 'Login com Google'."},
-            {f: "O que é OpenID Connect (OIDC)?", b: "Camada de autenticação construída sobre OAuth 2.0. Adiciona um ID token no formato JWT. SSO moderno para web/mobile."},
-            {f: "O que é JWT (JSON Web Token)?", b: "Token no formato JSON, auto-contido e assinado digitalmente. Usado em OAuth/OpenID Connect para transmitir claims."},
-            {f: "Qual a diferença entre autenticação e autorização?", b: "Autenticação: 'Quem é você?' (identidade). Autorização: 'O que você pode fazer?' (permissões)."},
+            {f: "O que é SAML?", 
+             b: "Security Assertion Markup Language: padrão baseado em XML para SSO e federação de identidades. Muito usado em aplicações corporativas."},
+             
+            {f: "O que são IdP e SP no SAML?", 
+             b: "IdP (Identity Provider): provedor que autentica o usuário. SP (Service Provider): serviço que confia no IdP."},
+             
+            {f: "O que é OAuth 2.0?", 
+             b: "Framework de AUTORIZAÇÃO (não autenticação) que permite delegação de acesso sem compartilhar senha. Ex: 'Login com Google'."},
+             
+            {f: "O que é OpenID Connect (OIDC)?", 
+             b: "Camada de autenticação construída sobre OAuth 2.0. Adiciona um ID token no formato JWT. SSO moderno para web/mobile."},
+             
+            {f: "O que é JWT (JSON Web Token)?", 
+             b: "Token no formato JSON, auto-contido e assinado digitalmente. Usado em OAuth/OpenID Connect para transmitir claims."},
+             
+            {f: "Qual a diferença entre autenticação e autorização?", 
+             b: "Autenticação: 'Quem é você?' (identidade). Autorização: 'O que você pode fazer?' (permissões)."},
 
             // 802.1X e EAP (67-70)
-            {f: "O que é 802.1X?", b: "Padrão de controle de acesso à rede baseado em portas. Usado em Wi-Fi corporativo e switches. Requer supplicant, authenticator e authentication server (RADIUS)."},
-            {f: "O que é EAP (Extensible Authentication Protocol)?", b: "Framework de autenticação usado em 802.1X. Vários métodos: EAP-TLS (certificados), PEAP (túnel TLS), EAP-TTLS."},
-            {f: "O que é EAP-TLS?", b: "Método EAP que usa certificados tanto no servidor quanto no cliente. É o mais seguro, mas requer PKI."},
-            {f: "O que é PEAP (Protected EAP)?", b: "Método EAP que cria um túnel TLS protegido, onde a autenticação do cliente ocorre dentro do túnel. Usa certificado apenas no servidor."}
+            {f: "O que é 802.1X?", 
+             b: "Padrão de controle de acesso à rede baseado em portas. Usado em Wi-Fi corporativo e switches. Requer supplicant, authenticator e authentication server (RADIUS)."},
+             
+            {f: "O que é EAP (Extensible Authentication Protocol)?", 
+             b: "Framework de autenticação usado em 802.1X. Vários métodos: EAP-TLS (certificados), PEAP (túnel TLS), EAP-TTLS."},
+             
+            {f: "O que é EAP-TLS?", 
+             b: "Método EAP que usa certificados tanto no servidor quanto no cliente. É o mais seguro, mas requer PKI."},
+             
+            {f: "O que é PEAP (Protected EAP)?", 
+             b: "Método EAP que cria um túnel TLS protegido, onde a autenticação do cliente ocorre dentro do túnel. Usa certificado apenas no servidor."}
         ];
 
+        // ========== QUIZ DO CAPÍTULO 4 (35 QUESTÕES) ==========
         const quiz = [
-            {q: "Qual princípio de segurança determina que cada usuário deve ter apenas as permissões mínimas necessárias?", o: ["Segregação de Funções", "Menor Privilégio", "Need to Know", "Job Rotation"], c: 1},
-            {q: "Qual princípio divide tarefas críticas entre múltiplas pessoas para prevenir fraudes?", o: ["Menor Privilégio", "Segregação de Funções", "Job Rotation", "Férias Obrigatórias"], c: 1},
-            {q: "Em qual modelo de controle de acesso o proprietário do recurso define as permissões?", o: ["MAC", "DAC", "RBAC", "ABAC"], c: 1},
-            {q: "Em qual modelo de controle de acesso o sistema define permissões através de rótulos (labels)?", o: ["DAC", "MAC", "RBAC", "ABAC"], c: 1},
-            {q: "Qual modelo de controle de acesso baseia permissões em funções ou cargos?", o: ["DAC", "MAC", "RBAC", "ABAC"], c: 2},
-            {q: "Uma senha se enquadra em qual fator de autenticação?", o: ["Algo que você tem", "Algo que você sabe", "Algo que você é", "Algum lugar onde você está"], c: 1},
-            {q: "Um smart card se enquadra em qual fator de autenticação?", o: ["Algo que você sabe", "Algo que você tem", "Algo que você é", "Algo que você faz"], c: 1},
-            {q: "A biometria se enquadra em qual fator de autenticação?", o: ["Algo que você sabe", "Algo que você tem", "Algo que você é", "Algum lugar onde você está"], c: 2},
-            {q: "Qual métrica biométrica mede a taxa de aceitar um impostor (mais grave)?", o: ["FRR", "FAR", "CER", "EER"], c: 1},
-            {q: "Qual métrica biométrica mede a taxa de rejeitar um usuário legítimo?", o: ["FAR", "FRR", "CER", "EER"], c: 1},
-            {q: "Qual é o ponto onde FAR e FRR se igualam em um sistema biométrico?", o: ["MFA", "SSO", "CER", "TOTP"], c: 2},
-            {q: "Qual tecnologia gera códigos temporários baseados em tempo (ex: Google Authenticator)?", o: ["HOTP", "TOTP", "SMS", "Push"], c: 1},
-            {q: "Qual tecnologia permite autenticar uma vez e acessar múltiplos sistemas?", o: ["MFA", "SSO", "TOTP", "Kerberos"], c: 1},
-            {q: "Qual é o protocolo de autenticação padrão do Active Directory?", o: ["LDAP", "RADIUS", "Kerberos", "TACACS+"], c: 2},
-            {q: "Qual protocolo acessa diretórios como Active Directory na porta 389?", o: ["Kerberos", "LDAP", "RADIUS", "TACACS+"], c: 1},
-            {q: "Qual protocolo AAA usa UDP e criptografa apenas a senha?", o: ["TACACS+", "RADIUS", "Kerberos", "LDAP"], c: 1},
-            {q: "Qual protocolo AAA da Cisco usa TCP e criptografa toda a comunicação?", o: ["RADIUS", "TACACS+", "Kerberos", "LDAP"], c: 1},
-            {q: "Qual servidor armazena o banco de dados do Active Directory e autentica usuários?", o: ["Member Server", "Domain Controller", "RODC", "File Server"], c: 1},
-            {q: "Qual container do Active Directory é usado para organizar objetos e aplicar GPOs?", o: ["Domínio", "Floresta", "OU", "Árvore"], c: 2},
-            {q: "Qual objeto do Active Directory define configurações centralizadas?", o: ["ACL", "GPO", "DACL", "SACL"], c: 1},
-            {q: "Qual tipo de grupo no Active Directory é usado para atribuir permissões?", o: ["Distribuição", "Segurança", "Universal", "Built-in"], c: 1},
-            {q: "Qual recurso do Windows separa usuário padrão de administrador e pede elevação?", o: ["GPO", "ACL", "UAC", "RBAC"], c: 2},
-            {q: "Qual mecanismo bloqueia uma conta após várias tentativas de login com senha errada?", o: ["Complexidade de senha", "Account Lockout", "Histórico de senhas", "Idade máxima"], c: 1},
-            {q: "Qual ferramenta armazena senhas de forma criptografada e gera senhas fortes?", o: ["Navegador", "Gerenciador de senhas", "Bloco de notas", "Email"], c: 1},
-            {q: "Qual dispositivo armazena um certificado digital em um chip e requer PIN?", o: ["Token", "Smart Card", "USB Key", "RFID"], c: 1},
-            {q: "Qual arquivo no Linux armazena os hashes das senhas dos usuários?", o: ["/etc/passwd", "/etc/shadow", "/etc/group", "/etc/sudoers"], c: 1},
-            {q: "Qual comando no Linux é usado para criar um novo usuário?", o: ["adduser", "useradd", "newuser", "mkuser"], c: 1},
-            {q: "Qual comando no Linux adiciona um usuário a um grupo suplementar?", o: ["groupadd", "addgroup", "usermod -aG", "useradd -G"], c: 2},
-            {q: "Qual implementação de MAC (Mandatory Access Control) é comum no Linux?", o: ["AppArmor", "SELinux", "PAM", "sudo"], c: 1},
-            {q: "Qual protocolo de acesso remoto criptografado usa a porta 22?", o: ["Telnet", "RDP", "SSH", "VNC"], c: 2},
-            {q: "Qual protocolo de acesso remoto do Windows usa a porta 3389?", o: ["SSH", "Telnet", "RDP", "VNC"], c: 2},
-            {q: "Qual padrão baseado em XML é usado para SSO e federação de identidades?", o: ["OAuth", "OpenID", "SAML", "JWT"], c: 2},
-            {q: "Qual framework é usado para AUTORIZAÇÃO e delegação de acesso (ex: Login com Google)?", o: ["SAML", "OAuth", "Kerberos", "LDAP"], c: 1},
-            {q: "Qual camada de autenticação é construída sobre OAuth 2.0 e usa ID tokens?", o: ["SAML", "JWT", "OpenID Connect", "Kerberos"], c: 2},
-            {q: "Qual é a regra sobre permissões Deny e Allow no Windows?", o: ["Allow prevalece", "Deny prevalece", "São iguais", "Depende do administrador"], c: 1}
+            // Princípios Fundamentais (1-5)
+            {q: "Qual princípio de segurança determina que cada usuário deve ter apenas as permissões mínimas necessárias?", 
+             o: ["Segregação de Funções", "Menor Privilégio", "Need to Know", "Job Rotation"], 
+             c: 1,
+             e: "Menor Privilégio (Least Privilege) concede apenas as permissões mínimas necessárias. Minimiza danos em caso de comprometimento."},
+             
+            {q: "Qual princípio divide tarefas críticas entre múltiplas pessoas para prevenir fraudes?", 
+             o: ["Menor Privilégio", "Segregação de Funções", "Job Rotation", "Férias Obrigatórias"], 
+             c: 1,
+             e: "Segregação de Funções (Separation of Duties) divide tarefas críticas para prevenir fraudes. Ex: quem aprova não pode executar."},
+             
+            {q: "Qual princípio concede acesso apenas às informações necessárias para a função?", 
+             o: ["Menor Privilégio", "Segregação de Funções", "Need to Know", "Job Rotation"], 
+             c: 2,
+             e: "Need to Know concede acesso apenas às informações estritamente necessárias para a função, mesmo com autorização mais ampla."},
+             
+            {q: "Qual prática de segurança exige que funcionários tirem férias consecutivas?", 
+             o: ["Job Rotation", "Férias Obrigatórias", "Segregação de Funções", "Menor Privilégio"], 
+             c: 1,
+             e: "Férias Obrigatórias (Mandatory Vacation) detectam fraudes que exigem presença constante do fraudador para serem mantidas."},
+             
+            {q: "Qual prática rotaciona periodicamente as funções dos funcionários?", 
+             o: ["Job Rotation", "Férias Obrigatórias", "Segregação de Funções", "Need to Know"], 
+             c: 0,
+             e: "Job Rotation (rotação de funções) previne fraudes, detecta irregularidades e promove treinamento cruzado."},
+
+            // Modelos de Controle de Acesso (6-10)
+            {q: "Em qual modelo de controle de acesso o proprietário do recurso define as permissões?", 
+             o: ["MAC", "DAC", "RBAC", "ABAC"], 
+             c: 1,
+             e: "DAC (Discretionary Access Control): o proprietário define permissões. Flexível mas menos seguro. Ex: NTFS do Windows."},
+             
+            {q: "Em qual modelo de controle de acesso o sistema define permissões através de rótulos (labels)?", 
+             o: ["DAC", "MAC", "RBAC", "ABAC"], 
+             c: 1,
+             e: "MAC (Mandatory Access Control): sistema define permissões via rótulos e níveis de autorização. Alta segurança. Ex: SELinux."},
+             
+            {q: "Qual modelo de controle de acesso baseia permissões em funções ou cargos?", 
+             o: ["DAC", "MAC", "RBAC", "ABAC"], 
+             c: 2,
+             e: "RBAC (Role-Based Access Control): permissões baseadas em funções. Mais comum em empresas. Ex: Admin, Usuário, Gerente."},
+             
+            {q: "Qual modelo de controle de acesso usa atributos como horário, localização e dispositivo?", 
+             o: ["DAC", "MAC", "RBAC", "ABAC"], 
+             c: 3,
+             e: "ABAC (Attribute-Based Access Control): políticas baseadas em atributos como horário, localização, dispositivo. Mais granular."},
+             
+            {q: "Qual a principal diferença entre RBAC e ABAC?", 
+             o: ["RBAC é mais granular", "ABAC usa funções fixas", "RBAC usa funções fixas, ABAC usa atributos dinâmicos", "São iguais"], 
+             c: 2,
+             e: "RBAC usa funções fixas (ex: gerente). ABAC usa atributos dinâmicos (ex: horário + localização + cargo)."},
+
+            // Fatores de Autenticação (11-15)
+            {q: "Uma senha se enquadra em qual fator de autenticação?", 
+             o: ["Algo que você tem", "Algo que você sabe", "Algo que você é", "Algum lugar onde você está"], 
+             c: 1,
+             e: "Senha é 'algo que você sabe' (Tipo 1). É o fator mais comum."},
+             
+            {q: "Um smart card se enquadra em qual fator de autenticação?", 
+             o: ["Algo que você sabe", "Algo que você tem", "Algo que você é", "Algo que você faz"], 
+             c: 1,
+             e: "Smart card é 'algo que você tem' (Tipo 2). É um fator físico."},
+             
+            {q: "A biometria se enquadra em qual fator de autenticação?", 
+             o: ["Algo que você sabe", "Algo que você tem", "Algo que você é", "Algum lugar onde você está"], 
+             c: 2,
+             e: "Biometria é 'algo que você é' (Tipo 3). Não pode ser perdido, mas difícil de trocar."},
+             
+            {q: "A localização geográfica se enquadra em qual fator de autenticação?", 
+             o: ["Algo que você sabe", "Algo que você tem", "Algo que você é", "Algum lugar onde você está"], 
+             c: 3,
+             e: "Localização é 'algum lugar onde você está' (Tipo 4). Ex: geofencing."},
+             
+            {q: "O padrão de digitação se enquadra em qual fator de autenticação?", 
+             o: ["Algo que você sabe", "Algo que você tem", "Algo que você é", "Algo que você faz"], 
+             c: 3,
+             e: "Padrão de comportamento é 'algo que você faz' (Tipo 5). Ex: ritmo de digitação."},
+
+            // MFA e Métricas (16-20)
+            {q: "O que é MFA (Multi-Factor Authentication)?", 
+             o: ["Usar múltiplas senhas", "Combinar fatores de categorias diferentes", "Usar biometria", "Usar token"], 
+             c: 1,
+             e: "MFA combina fatores de categorias DIFERENTES. Ex: senha (saber) + biometria (ser) = MFA forte."},
+             
+            {q: "Qual métrica biométrica mede a taxa de aceitar um impostor (mais grave)?", 
+             o: ["FRR", "FAR", "CER", "EER"], 
+             c: 1,
+             e: "FAR (False Acceptance Rate): aceitar impostor como legítimo. É a métrica mais GRAVE."},
+             
+            {q: "Qual métrica biométrica mede a taxa de rejeitar um usuário legítimo?", 
+             o: ["FAR", "FRR", "CER", "EER"], 
+             c: 1,
+             e: "FRR (False Rejection Rate): rejeitar usuário legítimo. Frustrante mas menos grave que FAR."},
+             
+            {q: "Qual é o ponto onde FAR e FRR se igualam em um sistema biométrico?", 
+             o: ["MFA", "SSO", "CER", "TOTP"], 
+             c: 2,
+             e: "CER (Crossover Error Rate): ponto onde FAR = FRR. Quanto menor o CER, melhor o sistema."},
+             
+            {q: "Qual tecnologia gera códigos temporários baseados em tempo (ex: Google Authenticator)?", 
+             o: ["HOTP", "TOTP", "SMS", "Push"], 
+             c: 1,
+             e: "TOTP (Time-based One-Time Password): código baseado em tempo, muda a cada 30 segundos."},
+
+            // SSO e Tecnologias (21-25)
+            {q: "Qual tecnologia permite autenticar uma vez e acessar múltiplos sistemas?", 
+             o: ["MFA", "SSO", "TOTP", "Kerberos"], 
+             c: 1,
+             e: "SSO (Single Sign-On): autentica uma vez e ganha acesso a múltiplos sistemas."},
+             
+            {q: "Qual é o protocolo de autenticação padrão do Active Directory?", 
+             o: ["LDAP", "RADIUS", "Kerberos", "TACACS+"], 
+             c: 2,
+             e: "Kerberos é o protocolo de autenticação padrão do Active Directory. Usa tickets."},
+             
+            {q: "Qual protocolo acessa diretórios como Active Directory na porta 389?", 
+             o: ["Kerberos", "LDAP", "RADIUS", "TACACS+"], 
+             c: 1,
+             e: "LDAP (Lightweight Directory Access Protocol) acessa diretórios. Porta 389 (não seguro) ou 636 (LDAPS)."},
+             
+            {q: "Qual protocolo AAA usa UDP e criptografa apenas a senha?", 
+             o: ["TACACS+", "RADIUS", "Kerberos", "LDAP"], 
+             c: 1,
+             e: "RADIUS usa UDP (1812/1813) e criptografa apenas a senha. Usado em Wi-Fi corporativo."},
+             
+            {q: "Qual protocolo AAA da Cisco usa TCP e criptografa toda a comunicação?", 
+             o: ["RADIUS", "TACACS+", "Kerberos", "LDAP"], 
+             c: 1,
+             e: "TACACS+ é proprietário da Cisco, usa TCP porta 49 e criptografa toda comunicação."},
+
+            // Active Directory (26-30)
+            {q: "Qual servidor armazena o banco de dados do Active Directory e autentica usuários?", 
+             o: ["Member Server", "Domain Controller", "RODC", "File Server"], 
+             c: 1,
+             e: "Domain Controller (DC) armazena o AD e autentica usuários no domínio."},
+             
+            {q: "Qual container do Active Directory é usado para organizar objetos e aplicar GPOs?", 
+             o: ["Domínio", "Floresta", "OU", "Árvore"], 
+             c: 2,
+             e: "OU (Organizational Unit) organiza objetos e permite aplicar GPOs e delegar administração."},
+             
+            {q: "Qual objeto do Active Directory define configurações centralizadas?", 
+             o: ["ACL", "GPO", "DACL", "SACL"], 
+             c: 1,
+             e: "GPO (Group Policy Object) define configurações centralizadas para usuários e computadores."},
+             
+            {q: "Qual tipo de grupo no Active Directory é usado para atribuir permissões?", 
+             o: ["Distribuição", "Segurança", "Universal", "Built-in"], 
+             c: 1,
+             e: "Grupo de Segurança é usado para atribuir permissões. Grupo de Distribuição é para listas de email."},
+             
+            {q: "O que é uma floresta (forest) no AD?", 
+             o: ["Um servidor", "Um container de OUs", "Conjunto de domínios com relações de confiança", "Uma política de grupo"], 
+             c: 2,
+             e: "Floresta é um conjunto de domínios que compartilham esquema, catálogo global e relações de confiança."},
+
+            // Hardening e Linux (31-35)
+            {q: "Qual recurso do Windows separa usuário padrão de administrador e pede elevação?", 
+             o: ["GPO", "ACL", "UAC", "RBAC"], 
+             c: 2,
+             e: "UAC (User Account Control) separa usuário padrão de administrador, solicitando elevação."},
+             
+            {q: "Qual mecanismo bloqueia uma conta após várias tentativas de login com senha errada?", 
+             o: ["Complexidade de senha", "Account Lockout", "Histórico de senhas", "Idade máxima"], 
+             c: 1,
+             e: "Account Lockout bloqueia a conta após X tentativas erradas, prevenindo força bruta."},
+             
+            {q: "Qual arquivo no Linux armazena os hashes das senhas dos usuários?", 
+             o: ["/etc/passwd", "/etc/shadow", "/etc/group", "/etc/sudoers"], 
+             c: 1,
+             e: "/etc/shadow armazena hashes das senhas e informações de expiração. Apenas root pode ler."},
+             
+            {q: "Qual comando no Linux é usado para criar um novo usuário?", 
+             o: ["adduser", "useradd", "newuser", "mkuser"], 
+             c: 1,
+             e: "useradd cria novo usuário. Ex: useradd -m -s /bin/bash maria."},
+             
+            {q: "Qual implementação de MAC (Mandatory Access Control) é comum no Linux?", 
+             o: ["AppArmor", "SELinux", "PAM", "sudo"], 
+             c: 1,
+             e: "SELinux (Security-Enhanced Linux) é implementação de MAC no Linux. Modos: Enforcing, Permissive, Disabled."}
         ];
 
+        // ========== VARIÁVEIS DE ESTADO ==========
+        
+        /**
+         * currentCard: POSIÇÃO no array filteredCards (NÃO é o índice original!)
+         * Exemplo: Se filteredCards = [5, 2, 8, 1] e currentCard = 2
+         * Isso significa que estamos mostrando o card na posição 2 da lista atual,
+         * que corresponde ao índice original 8.
+         */
         let currentCard = 0;
+        
+        /**
+         * flipped: controla se estamos mostrando a frente (false) ou o verso (true)
+         */
         let flipped = false;
+        
+        /**
+         * mastered: Set (conjunto) que armazena os ÍNDICES ORIGINAIS dos cards dominados
+         * Usamos Set porque é eficiente para verificar se um índice está presente
+         * e não permite duplicatas automaticamente.
+         */
         let mastered = new Set();
+        
+        /**
+         * answers: objeto que armazena as respostas do usuário no quiz
+         * Formato: { número_da_questão: índice_da_opção_selecionada }
+         */
         let answers = {};
+        
+        /**
+         * checked: flag que indica se o quiz já foi verificado
+         * Quando true, impede que o usuário mude as respostas
+         */
         let checked = false;
+        
+        /**
+         * filteredCards: array que contém os ÍNDICES ORIGINAIS dos cards
+         * na ORDEM ATUAL de exibição.
+         * 
+         * Este é o coração do sistema de navegação e embaralhamento.
+         * Inicialmente: [...Array(cards.length).keys()] = [0,1,2,3,...]
+         * 
+         * Quando embaralhamos: reordenamos este array aleatoriamente
+         * Quando filtramos: criamos um novo array apenas com índices que atendem ao filtro
+         */
+        let filteredCards = [...Array(cards.length).keys()]; // Gera [0,1,2,3,...,69]
+        
+        /**
+         * currentFilter: string que indica qual filtro está ativo
+         * Valores possíveis: 'all', 'mastered', 'unmastered'
+         */
+        let currentFilter = 'all';
 
-        // Carregar progresso salvo
+        // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
+        
+        /**
+         * loadProgress(): Carrega os cards dominados do localStorage
+         * 
+         * localStorage é uma API do navegador que permite armazenar dados
+         * de forma persistente (mesmo após fechar a página).
+         * 
+         * Os dados são armazenados como strings, por isso usamos:
+         * - JSON.stringify() para salvar
+         * - JSON.parse() para recuperar
+         */
         function loadProgress() {
+            // Tenta recuperar a string salva com a chave 'security_plus_cap4_mastered'
             const saved = localStorage.getItem('security_plus_cap4_mastered');
+            
             if (saved) {
+                // JSON.parse converte a string de volta para array
+                // new Set() converte o array em um Set (conjunto)
                 mastered = new Set(JSON.parse(saved));
             }
         }
 
-        // Salvar progresso
+        /**
+         * saveProgress(): Salva os cards dominados no localStorage
+         */
         function saveProgress() {
+            // [...mastered] usa o operador spread para converter o Set em array
+            // JSON.stringify converte o array para string
             localStorage.setItem('security_plus_cap4_mastered', JSON.stringify([...mastered]));
         }
 
-        // Chamar loadProgress assim que o script carregar
+        // Carrega o progresso assim que o script é executado
         loadProgress();
 
+        // ========== FUNÇÕES DAS ABAS ==========
+        
+        /**
+         * showTab(n): Alterna entre as abas (Flashcards, Resumo, Quiz)
+         * @param {number} n - Índice da aba (0, 1 ou 2)
+         */
         function showTab(n) {
+            // Para cada elemento com classe 'content', remove a classe 'active'
+            // e adiciona apenas se o índice for igual a n
             document.querySelectorAll('.content').forEach((c, i) => {
                 c.classList.toggle('active', i === n);
             });
+            
+            // Mesma coisa para os botões das abas
             document.querySelectorAll('.tab-btn').forEach((b, i) => {
                 b.classList.toggle('active', i === n);
             });
-            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
-        }
-
-        function updateCard() {
-            const card = cards[currentCard];
-            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
-            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${cards.length}`;
-            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
-            const btn = document.getElementById('master-btn');
-            btn.textContent = mastered.has(currentCard) ? '✓ Dominado' : 'Marcar Dominado';
-            btn.style.background = mastered.has(currentCard) ? '#10b981' : '#e5e7eb';
-            btn.style.color = mastered.has(currentCard) ? 'white' : 'black';
-        }
-
-        function flipCard() {
-            flipped = !flipped;
-            updateCard();
-        }
-
-        function nextCard() {
-            currentCard = (currentCard + 1) % cards.length;
-            flipped = false;
-            updateCard();
-        }
-
-        function prevCard() {
-            currentCard = (currentCard - 1 + cards.length) % cards.length;
-            flipped = false;
-            updateCard();
-        }
-
-        function toggleMaster() {
-            if (mastered.has(currentCard)) mastered.delete(currentCard);
-            else mastered.add(currentCard);
             
-            // Salvar sempre que mudar
+            // Se for a aba do quiz (2) e o quiz ainda não foi carregado, carrega
+            if (n === 2 && !document.getElementById('questions').innerHTML) {
+                loadQuiz();
+            }
+        }
+
+        // ========== FUNÇÕES DOS FLASHCARDS ==========
+        
+        /**
+         * updateCard(): Atualiza a interface com base no estado atual
+         * 
+         * Esta função é chamada sempre que algo muda:
+         * - Ao navegar entre cards
+         * - Ao virar o card
+         * - Ao marcar/desmarcar como dominado
+         * - Ao embaralhar
+         * - Ao filtrar
+         */
+        function updateCard() {
+            // Se não há cards no filtro atual, mostra mensagem
+            if (filteredCards.length === 0) {
+                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                document.getElementById('card-counter').textContent = 'Card 0 de 0';
+                document.getElementById('side-indicator').textContent = 'FRENTE';
+                document.getElementById('mastery-stat').textContent = '✅ 0% Dominado';
+                return;
+            }
+            
+            // PASSO 1: Pegar o índice ORIGINAL do card atual
+            // filteredCards[currentCard] nos dá o índice original
+            const cardIndex = filteredCards[currentCard];
+            
+            // PASSO 2: Pegar o card correspondente no array original
+            const card = cards[cardIndex];
+            
+            // PASSO 3: Mostrar frente ou verso baseado em 'flipped'
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            
+            // PASSO 4: Atualizar contador (currentCard+1 porque mostramos 1-based)
+            document.getElementById('card-counter').textContent = 
+                `Card ${currentCard + 1} de ${filteredCards.length}`;
+            
+            // PASSO 5: Mostrar total de cards dominados
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            
+            // PASSO 6: Atualizar estatística de progresso
+            const progress = Math.round((mastered.size / cards.length) * 100);
+            document.getElementById('mastery-stat').textContent = `✅ ${progress}% Dominado`;
+            
+            // PASSO 7: Atualizar botão "Marcar Dominado"
+            const btn = document.getElementById('master-btn');
+            const isMastered = mastered.has(cardIndex);
+            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', isMastered);
+            
+            // PASSO 8: Atualizar indicador de frente/verso
+            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+        }
+
+        /**
+         * flipCard(): Vira o card (alterna entre frente e verso)
+         * Chamado quando o usuário clica no card
+         */
+        function flipCard() {
+            flipped = !flipped; // Inverte o estado
+            updateCard();       // Atualiza a tela
+        }
+
+        /**
+         * nextCard(): Avança para o próximo card
+         * Usa operador módulo (%) para voltar ao início quando chegar ao final
+         */
+        function nextCard() {
+            if (filteredCards.length === 0) return; // Não faz nada se não há cards
+            
+            // Fórmula: (currentCard + 1) % tamanho
+            // Ex: se tamanho=5 e currentCard=4, (4+1)%5 = 5%5 = 0 (volta ao início)
+            currentCard = (currentCard + 1) % filteredCards.length;
+            
+            flipped = false; // Sempre mostra a frente ao mudar de card
+            updateCard();
+        }
+
+        /**
+         * prevCard(): Volta para o card anterior
+         * Fórmula especial para evitar números negativos
+         */
+        function prevCard() {
+            if (filteredCards.length === 0) return;
+            
+            // Fórmula: (currentCard - 1 + tamanho) % tamanho
+            // Ex: se tamanho=5 e currentCard=0, (0-1+5)%5 = 4%5 = 4 (último card)
+            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
+            
+            flipped = false;
+            updateCard();
+        }
+
+        /**
+         * toggleMaster(): Marca/desmarca o card atual como dominado
+         * 
+         * IMPORTANTE: Usamos o ÍNDICE ORIGINAL (cardIndex) para marcar,
+         * não a posição atual. Isso garante que um card continue marcado
+         * mesmo depois de embaralhado ou filtrado.
+         */
+        function toggleMaster() {
+            if (filteredCards.length === 0) return;
+            
+            // Pega o índice ORIGINAL do card atual
+            const cardIndex = filteredCards[currentCard];
+            
+            // Se já está no Set, remove; senão, adiciona
+            if (mastered.has(cardIndex)) {
+                mastered.delete(cardIndex);
+            } else {
+                mastered.add(cardIndex);
+            }
+            
+            // Salva no localStorage
             saveProgress();
             
+            // Atualiza a tela
             updateCard();
         }
 
+        // ========== FUNÇÃO DE EMBARALHAR ==========
+        
+        /**
+         * shuffleCards(): Embaralha os cards APENAS do filtro atual
+         * 
+         * Usa o algoritmo Fisher-Yates (também chamado de Knuth shuffle),
+         * que é o método mais eficiente e verdadeiramente aleatório para
+         * embaralhar arrays.
+         */
+        function shuffleCards() {
+            // Algoritmo Fisher-Yates
+            // Percorre o array do final para o início
+            for (let i = filteredCards.length - 1; i > 0; i--) {
+                // Escolhe um índice aleatório entre 0 e i
+                const j = Math.floor(Math.random() * (i + 1));
+                
+                // Troca os elementos nas posições i e j
+                // Usando destructuring assignment para troca em uma linha
+                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+            }
+            
+            // Volta para o primeiro card
+            currentCard = 0;
+            flipped = false;
+            
+            // Atualiza a tela
+            updateCard();
+            
+            // ===== FEEDBACK VISUAL =====
+            // Pega o botão de embaralhar
+            const shuffleBtn = document.querySelector('.btn-shuffle');
+            
+            // Aplica rotação de 180 graus (gira o botão)
+            shuffleBtn.style.transform = 'rotate(180deg)';
+            
+            // Após 300ms, volta ao normal
+            setTimeout(() => {
+                shuffleBtn.style.transform = 'rotate(0deg)';
+            }, 300);
+        }
+
+        // ========== FUNÇÕES DE FILTRO ==========
+        
+        /**
+         * filterCards(): Filtra os cards por status (todos, dominados, não dominados)
+         * @param {string} type - Tipo de filtro: 'all', 'mastered', 'unmastered'
+         * @param {Event} event - Evento do clique (para identificar o botão)
+         */
+        function filterCards(type, event) {
+            currentFilter = type;
+            
+            // Remove a classe 'active' de todos os botões de filtro
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Adiciona 'active' ao botão clicado
+            event.target.classList.add('active');
+            
+            // Cria o novo array filteredCards baseado no filtro selecionado
+            if (type === 'all') {
+                // Array com todos os índices [0,1,2,...]
+                filteredCards = [...Array(cards.length).keys()];
+                
+            } else if (type === 'mastered') {
+                // Converte o Set mastered para array
+                // Se não houver cards dominados, filteredCards será vazio []
+                filteredCards = Array.from(mastered);
+                
+            } else { // unmastered
+                // Filtra: mantém apenas os índices que NÃO estão no Set mastered
+                // Array.from({length: cards.length}, (_, i) => i) cria [0,1,2,...]
+                // .filter(i => !mastered.has(i)) mantém só os não dominados
+                filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            }
+            
+            // Ordena os cards para manter consistência (opcional - remove se quiser aleatório)
+            filteredCards.sort((a, b) => a - b);
+            
+            // Volta para o primeiro card
+            currentCard = 0;
+            flipped = false;
+            
+            // Atualiza a tela
+            updateCard();
+        }
+
+        // ========== FUNÇÕES DO QUIZ ==========
+        
+        /**
+         * loadQuiz(): Cria dinamicamente os elementos HTML do quiz
+         * 
+         * Para cada questão no array quiz, cria:
+         * - Um div com a pergunta
+         * - Vários divs para as opções
+         * - Um div para a explicação (inicialmente oculto)
+         */
         function loadQuiz() {
             const container = document.getElementById('questions');
+            
+            // Limpa o container antes de carregar (evita duplicação)
+            container.innerHTML = '';
+            
+            // Para cada questão no array quiz
             quiz.forEach((q, qi) => {
+                // Cria um div para a questão
                 const div = document.createElement('div');
                 div.className = 'question';
                 div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                
+                // Para cada opção da questão
                 q.o.forEach((opt, oi) => {
                     const odiv = document.createElement('div');
                     odiv.className = 'option';
                     odiv.textContent = opt;
+                    
+                    // Quando clicar na opção, chama selectOpt com os índices
                     odiv.onclick = () => selectOpt(qi, oi);
+                    
+                    // Define um ID único para cada opção: q0o0, q0o1, q1o0, etc.
                     odiv.id = `q${qi}o${oi}`;
+                    
                     div.appendChild(odiv);
                 });
+                
+                // Cria a explicação (inicialmente oculta)
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
                 exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>Resposta correta:</strong> ${q.o[q.c]}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
+                
                 div.appendChild(exp);
                 container.appendChild(div);
             });
         }
 
+        /**
+         * selectOpt(): Seleciona uma opção no quiz
+         * @param {number} qi - Índice da questão
+         * @param {number} oi - Índice da opção
+         */
         function selectOpt(qi, oi) {
+            // Se o quiz já foi verificado, não permite mais mudanças
             if (checked) return;
+            
+            // Remove a classe 'selected' de todas as opções desta questão
             quiz[qi].o.forEach((_, i) => {
-                document.getElementById(`q${qi}o${i}`).classList.remove('selected');
+                const el = document.getElementById(`q${qi}o${i}`);
+                if (el) el.classList.remove('selected');
             });
-            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            
+            // Adiciona a classe 'selected' à opção clicada
+            const selectedEl = document.getElementById(`q${qi}o${oi}`);
+            if (selectedEl) selectedEl.classList.add('selected');
+            
+            // Armazena a resposta (sobrescreve se já existia)
             answers[qi] = oi;
         }
 
+        /**
+         * checkAnswers(): Verifica as respostas do quiz
+         * 
+         * Marca as opções corretas em verde e as incorretas em vermelho,
+         * mostra as explicações e exibe a pontuação.
+         */
         function checkAnswers() {
-            checked = true;
-            let correct = 0;
+            checked = true; // Impede novas mudanças
+            
+            let correct = 0; // Contador de respostas corretas
+            
+            // Para cada questão
             quiz.forEach((q, qi) => {
+                // Verifica se a questão tem múltiplas respostas corretas
+                // q.c pode ser número (ex: 2) ou array (ex: [0,3])
+                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                
+                // Para cada opção da questão
                 q.o.forEach((_, oi) => {
                     const el = document.getElementById(`q${qi}o${oi}`);
-                    if (oi === q.c) el.classList.add('correct');
-                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                    if (!el) return;
+                    
+                    // Se a opção é a correta, marca como correct
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } 
+                    // Se não é a correta mas o usuário selecionou, marca como incorrect
+                    else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
                 });
-                document.getElementById(`exp${qi}`).style.display = 'block';
-                if (answers[qi] === q.c) correct++;
+                
+                // Mostra a explicação
+                const expEl = document.getElementById(`exp${qi}`);
+                if (expEl) expEl.style.display = 'block';
+                
+                // Se o usuário acertou, incrementa contador
+                if (correctAnswer.includes(answers[qi])) {
+                    correct++;
+                }
             });
+            
+            // Calcula porcentagem
             const pct = Math.round((correct / quiz.length) * 100);
-            document.getElementById('score').textContent = `${correct}/${quiz.length} (${pct}%)`;
-            document.getElementById('results').style.display = 'block';
+            
+            // Mostra resultado no modal
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = 
+                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa estudar mais'}`;
+            document.getElementById('results-modal').classList.add('show');
         }
 
+        /**
+         * resetQuiz(): Reinicia o quiz (limpa respostas e recarrega)
+         */
         function resetQuiz() {
-            checked = false;
-            answers = {};
-            document.getElementById('questions').innerHTML = '';
-            document.getElementById('results').style.display = 'none';
-            loadQuiz();
+            checked = false;          // Permite novas respostas
+            answers = {};              // Limpa respostas
+            document.getElementById('questions').innerHTML = ''; // Limpa HTML
+            document.getElementById('results-modal').classList.remove('show'); // Esconde modal
+            loadQuiz();                // Recarrega as questões
         }
 
+        // ========== INICIALIZAÇÃO ==========
+        // Mostra o primeiro card
         updateCard();
     </script>
 </body>

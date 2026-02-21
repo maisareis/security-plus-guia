@@ -5,99 +5,436 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Security+ Cap 2 - Threats & Vulnerabilities</title>
     <style>
+        /* ===== ESTILOS GLOBAIS ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            min-height: 100vh;
             padding: 20px;
         }
+        
         .container { max-width: 1200px; margin: 0 auto; }
-        .header { text-align: center; color: white; margin-bottom: 30px; }
-        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        
         .tabs {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
             margin-bottom: 30px;
             flex-wrap: wrap;
         }
+        
         .tab-btn {
             padding: 15px 30px;
             background: white;
             border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: bold;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        .tab-btn.active { background: #fa709a; color: white; }
-        .content { display: none; }
+        
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+        }
+        
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
         .content.active { display: block; }
         
-        .flashcard-area { max-width: 800px; margin: 0 auto; }
-        .card-info {
-            background: rgba(255,255,255,0.2);
-            padding: 15px;
-            border-radius: 10px;
-            color: white;
-            margin-bottom: 20px;
-            text-align: center;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+        
+        .flashcard-area { max-width: 900px; margin: 0 auto; }
+        
+        .card-info {
+            background: rgba(255,255,255,0.25);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+        }
+        
         .flashcard {
             background: white;
             border-radius: 20px;
-            padding: 50px;
-            min-height: 300px;
+            padding: 60px 40px;
+            min-height: 350px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            margin-bottom: 30px;
         }
-        .flashcard-text { font-size: 1.3rem; line-height: 1.8; text-align: center; }
-        .controls { display: flex; gap: 15px; justify-content: center; }
+        
+        .flashcard:hover { transform: scale(1.02); }
+        
+        .side-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #fa709a;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .flashcard-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #1f2937;
+        }
+        
+        .flip-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
         .btn {
             padding: 15px 30px;
             border: none;
-            border-radius: 10px;
-            font-weight: bold;
+            border-radius: 12px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        .btn-nav { background: white; font-size: 1.5rem; width: 50px; height: 50px; }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-nav {
+            background: white;
+            font-size: 1.5rem;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-master {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        
+        .btn-master.mastered {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-shuffle {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .filter-btn.active {
+            background: white;
+            color: #fa709a;
+        }
+
+        .quiz-area { max-width: 1000px; margin: 0 auto; }
+        
+        .quiz-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+        }
+        
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+        
+        .option:hover {
+            background: #fef3c7;
+            border-color: #fa709a;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            border-color: #fa709a;
+            background: #fef3c7;
+            font-weight: 600;
+        }
+        
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fef3c7;
+            border-left: 5px solid #fa709a;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .results-modal.show { display: flex; }
+        
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
         
         .summary {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
-            padding: 40px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        .summary h2 { color: #fa709a; margin-top: 30px; }
-        .summary h3 { margin-top: 20px; }
-        .summary ul { margin-left: 20px; margin-bottom: 15px; }
-        .summary li { margin-bottom: 8px; }
-        .summary ol { margin-left: 20px; margin-bottom: 15px; }
-        
-        .quiz-area { max-width: 900px; margin: 0 auto; }
-        .quiz-header { text-align: center; color: white; margin-bottom: 30px; }
-        .question { background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; }
-        .option {
-            padding: 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
+        .summary h1 {
+            color: #fa709a;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            border-bottom: 4px solid #fa709a;
+            padding-bottom: 15px;
+        }
+        .summary h2 {
+            color: #fee140;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        .summary h3 {
+            color: #fa709a;
+            margin-top: 20px;
             margin-bottom: 10px;
-            cursor: pointer;
         }
-        .option:hover { background: #fef3c7; }
-        .option.selected { border-color: #fa709a; background: #fef3c7; }
-        .option.correct { border-color: #10b981; background: #d1fae5; }
-        .option.incorrect { border-color: #ef4444; background: #fee2e2; }
-        .explanation {
-            margin-top: 15px;
-            padding: 15px;
+        .summary ul, .summary ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        .info-box {
+            background: #fce7f3;
+            border-left: 5px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .golden-rule {
             background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .attack-chain {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin: 30px 0;
+        }
+        .chain-item {
+            padding: 15px;
+            background: #f3f4f6;
+            border-left: 5px solid #fa709a;
+            border-radius: 5px;
+            display: flex;
+            gap: 15px;
+        }
+        .chain-number {
+            font-weight: bold;
+            color: #fa709a;
+            min-width: 30px;
+        }
+        .malware-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .malware-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
             border-left: 4px solid #fa709a;
-            display: none;
+        }
+        .malware-card strong {
+            color: #fa709a;
+            display: block;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -106,28 +443,48 @@
         <div class="header">
             <h1>⚠️ Security+ Capítulo 2</h1>
             <p>Threats & Vulnerabilities - 60 Cards | 30 Questões</p>
+            <div class="stats-bar">
+                <div class="stat-card">📚 60 Flashcards</div>
+                <div class="stat-card">❓ 30 Questões</div>
+                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+            </div>
         </div>
 
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
-            <button class="tab-btn" onclick="showTab(1)">📝 Resumo</button>
+            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
             <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
         </div>
 
         <div id="tab0" class="content active">
             <div class="flashcard-area">
                 <div class="card-info">
-                    <div id="card-counter">Card 1 de 60</div>
-                    <div id="mastered-count">0 dominados</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
+                        <div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 60</div>
+                            <div id="mastered-count">0 dominados</div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered', event)">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered', event)">Dominados</button>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
                 </div>
                 
                 <div class="flashcard" onclick="flipCard()">
+                    <div class="side-indicator" id="side-indicator">FRENTE</div>
                     <div class="flashcard-text" id="card-text"></div>
+                    <div class="flip-hint">👆 Clique para virar</div>
                 </div>
 
                 <div class="controls">
                     <button class="btn btn-nav" onclick="prevCard()">‹</button>
-                    <button class="btn" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
                     <button class="btn btn-nav" onclick="nextCard()">›</button>
                 </div>
             </div>
@@ -135,9 +492,19 @@
 
         <div id="tab1" class="content">
             <div class="summary">
-                <h1>Capítulo 2: Threats & Vulnerabilities</h1>
+                <h1>📖 Resumo - Capítulo 2: Threats & Vulnerabilities</h1>
                 
-                <h2>2.1 Atores de Ameaça (Threat Actors)</h2>
+                <div class="info-box">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Tipos de Atores:</strong> Nation-state (APT), Crime Organizado (financeiro), Hacktivists (político), Insider (interno)</li>
+                        <li><strong>Cyber Kill Chain:</strong> 7 fases do ataque - Reconhecimento → Weaponization → Delivery → Exploitation → Installation → C2 → Ações</li>
+                        <li><strong>Phishing vs Spear Phishing vs Whaling:</strong> Massa vs Direcionado vs Executivos</li>
+                        <li><strong>Ransomware:</strong> Criptografa dados e exige pagamento - BACKUP é a melhor defesa!</li>
+                    </ul>
+                </div>
+
+                <h2>1️⃣ Atores de Ameaças (Threat Actors)</h2>
                 <ul>
                     <li><strong>Nation-state (Estados Nação):</strong> Governos, recursos ilimitados, APT (Advanced Persistent Threat), espionagem</li>
                     <li><strong>Organized Crime (Crime Organizado):</strong> Motivação financeira, ransomware, fraudes</li>
@@ -146,7 +513,7 @@
                     <li><strong>Script Kiddies:</strong> Baixa habilidade técnica, usam ferramentas prontas, motivação: diversão</li>
                 </ul>
 
-                <h2>Estratégia de Ataque (Cyber Kill Chain)</h2>
+                <h2>2️⃣ Cyber Kill Chain</h2>
                 <ol>
                     <li><strong>Reconnaissance (Reconhecimento):</strong> Coletar informações sobre o alvo</li>
                     <li><strong>Weaponization (Preparação):</strong> Criar ou preparar o exploit para a vulnerabilidade</li>
@@ -157,7 +524,7 @@
                     <li><strong>Actions on Objectives:</strong> Roubar dados, destruir sistemas, espionar</li>
                 </ol>
 
-                <h2>2.2 Engenharia Social (Social Engineering)</h2>
+                <h2>3️⃣ Engenharia Social</h2>
                 <h3>Técnicas:</h3>
                 <ul>
                     <li><strong>Phishing:</strong> Email malicioso fingindo ser legítimo</li>
@@ -176,34 +543,23 @@
                     <li><strong>Typosquatting (ou URL Hijacking):</strong> Registrar domínios com erros de digitação</li>
                 </ul>
 
-                <h3>Princípios Psicológicos Explorados:</h3>
-                <ul>
-                    <li><strong>Authority (Autoridade):</strong> Fingir ser chefe, polícia, suporte técnico</li>
-                    <li><strong>Urgency (Urgência):</strong> "Resolva agora ou sua conta será bloqueada"</li>
-                    <li><strong>Scarcity (Escassez):</strong> "Oferta por tempo limitado, últimas vagas"</li>
-                    <li><strong>Social Proof:</strong> "Todo mundo está fazendo, você também deveria"</li>
-                    <li><strong>Fear (Medo):</strong> Ameaçar com consequências negativas</li>
-                </ul>
+                <h2>4️⃣ Malware</h2>
+                <div class="malware-grid">
+                    <div class="malware-card"><strong>Vírus</strong><p>Infecta arquivos, precisa ser executado, se replica</p></div>
+                    <div class="malware-card"><strong>Worm</strong><p>Auto-replicante, não precisa de arquivo hospedeiro</p></div>
+                    <div class="malware-card"><strong>Trojan</strong><p>Parece legítimo mas é malicioso, não se replica</p></div>
+                    <div class="malware-card"><strong>Ransomware</strong><p>Criptografa dados e exige pagamento</p></div>
+                    <div class="malware-card"><strong>Spyware</strong><p>Monitora atividades e rouba informações</p></div>
+                    <div class="malware-card"><strong>Keylogger</strong><p>Registra todas as teclas digitadas</p></div>
+                    <div class="malware-card"><strong>Rootkit</strong><p>Esconde a presença do malware, acesso privilegiado</p></div>
+                    <div class="malware-card"><strong>Botnet</strong><p>Rede de computadores infectados controlados remotamente</p></div>
+                    <div class="malware-card"><strong>RAT</strong><p>Remote Access Trojan - permite controle remoto completo</p></div>
+                    <div class="malware-card"><strong>Logic Bomb</strong><p>Dispara sob condições específicas (data, evento)</p></div>
+                    <div class="malware-card"><strong>Backdoor</strong><p>Acesso não autorizado que bypassa autenticação</p></div>
+                    <div class="malware-card"><strong>Fileless Malware</strong><p>Executa na memória, não grava em disco</p></div>
+                </div>
 
-                <h2>2.3 Malware</h2>
-                <h3>Tipos de Malware:</h3>
-                <ul>
-                    <li><strong>Vírus:</strong> Infecta arquivos, precisa ser executado, se replica</li>
-                    <li><strong>Worm:</strong> Auto-replicante, não precisa de arquivo hospedeiro</li>
-                    <li><strong>Trojan (Cavalo de Troia):</strong> Parece legítimo mas é malicioso, não se replica</li>
-                    <li><strong>Ransomware:</strong> Criptografa dados e exige pagamento pelo resgate</li>
-                    <li><strong>Spyware:</strong> Monitora atividades e rouba informações</li>
-                    <li><strong>Keylogger:</strong> Registra todas as teclas digitadas</li>
-                    <li><strong>Rootkit:</strong> Esconde a presença do malware, acesso privilegiado</li>
-                    <li><strong>Botnet:</strong> Rede de computadores infectados controlados remotamente</li>
-                    <li><strong>RAT (Remote Access Trojan):</strong> Permite controle remoto completo do sistema</li>
-                    <li><strong>Logic Bomb:</strong> Dispara sob condições específicas (data, evento)</li>
-                    <li><strong>Backdoor:</strong> Acesso não autorizado que bypassa autenticação</li>
-                    <li><strong>Fileless Malware:</strong> Executa na memória, não grava em disco</li>
-                    <li><strong>Adware:</strong> Exibe anúncios indesejados, pode rastrear hábitos</li>
-                </ul>
-
-                <h3>Métodos de Proteção e Detecção:</h3>
+                <h2>5️⃣ Proteções e Detecção</h2>
                 <ul>
                     <li><strong>Signature-based:</strong> Compara com banco de assinaturas conhecidas</li>
                     <li><strong>Heuristic:</strong> Analisa comportamento suspeito, detecta variações</li>
@@ -211,17 +567,19 @@
                     <li><strong>Sandboxing:</strong> Executa arquivo suspeito em ambiente isolado</li>
                     <li><strong>Application Whitelisting:</strong> Permite apenas aplicativos aprovados</li>
                     <li><strong>EDR (Endpoint Detection & Response):</strong> Monitoramento avançado de endpoints</li>
-                    <li><strong>Antivírus/Anti-malware:</strong> Proteção básica contra malware conhecido</li>
-                    <li><strong>Firewall:</strong> Controla tráfego de rede</li>
-                    <li><strong>Patch Management:</strong> Manter sistemas atualizados</li>
-                    <li><strong>Backup (regra 3-2-1):</strong> 3 cópias, 2 tipos de mídia, 1 offsite/offline</li>
                 </ul>
 
-                <h3>Indicadores de Comprometimento:</h3>
-                <ul>
-                    <li><strong>Phishing:</strong> Urgência, remetente suspeito, erros gramaticais, links estranhos</li>
-                    <li><strong>Malware:</strong> Sistema lento, alto uso de CPU/RAM, pop-ups, arquivos modificados</li>
-                </ul>
+                <div class="golden-rule">
+                    <strong>🎯 DICAS FINAIS PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Insider Threat é o <strong>mais difícil de detectar</strong></li>
+                        <li>Phishing (massa) vs Spear Phishing (direcionado) vs Whaling (executivos)</li>
+                        <li>Ransomware = BACKUP é a melhor defesa</li>
+                        <li>Rootkit de firmware sobrevive formatação</li>
+                        <li>Fileless malware usa PowerShell/WMI</li>
+                        <li>Watering Hole compromete sites frequentados pelo alvo</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -229,130 +587,288 @@
             <div class="quiz-area">
                 <div class="quiz-header">
                     <h2>Quiz - 30 Questões</h2>
+                    <p>Passing Score: 70% (21/30 corretas)</p>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn" onclick="checkAnswers()" style="background: #fa709a; color: white; padding: 15px 40px;">Ver Resultados</button>
-                </div>
-                <div id="results" style="display: none; text-align: center; margin-top: 20px;">
-                    <div style="background: white; padding: 30px; border-radius: 15px;">
-                        <h2 id="score"></h2>
-                        <button class="btn" onclick="resetQuiz()" style="margin-top: 15px;">Refazer</button>
-                    </div>
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+        </div>
+    </div>
+
     <script>
+        // ========== CARDS DO CAPÍTULO 2 - 60 CARDS COMPLETOS ==========
         const cards = [
             // Threat Actors (1-6)
-            {f: "O que é um ator de ameaça do tipo Nation-state?", b: "São governos com recursos ilimitados. Realizam espionagem e ataques avançados (APT - Advanced Persistent Threat). Alvos estratégicos."},
-            {f: "O que é Organized Crime (Crime Organizado)?", b: "Grupos criminosos com motivação financeira. Utilizam ransomware, fraudes bancárias e roubo de dados."},
-            {f: "O que são Hacktivists?", b: "Ativistas com motivação política ou social. Realizam ataques DDoS, desfiguração de sites (defacement) e vazamentos."},
-            {f: "O que é Insider Threat (Ameaça Interna)?", b: "Funcionários ou pessoas com acesso legítimo que comprometem a segurança por vingança, ganho financeiro ou negligência."},
-            {f: "O que são Script Kiddies?", b: "Atacantes com baixa habilidade técnica que usam ferramentas prontas. Motivação: diversão e reconhecimento."},
-            {f: "O que é APT (Advanced Persistent Threat)?", b: "Ameaça avançada e persistente: ataques sofisticados e prolongados, geralmente patrocinados por governos, com objetivos de espionagem."},
+            {f: "O que é um ator de ameaça do tipo Nation-state?", 
+             b: "São governos com recursos ilimitados. Realizam espionagem e ataques avançados (APT - Advanced Persistent Threat). Alvos estratégicos."},
+            {f: "O que é Organized Crime (Crime Organizado)?", 
+             b: "Grupos criminosos com motivação financeira. Utilizam ransomware, fraudes bancárias e roubo de dados."},
+            {f: "O que são Hacktivists?", 
+             b: "Ativistas com motivação política ou social. Realizam ataques DDoS, desfiguração de sites (defacement) e vazamentos."},
+            {f: "O que é Insider Threat (Ameaça Interna)?", 
+             b: "Funcionários ou pessoas com acesso legítimo que comprometem a segurança por vingança, ganho financeiro ou negligência."},
+            {f: "O que são Script Kiddies?", 
+             b: "Atacantes com baixa habilidade técnica que usam ferramentas prontas. Motivação: diversão e reconhecimento."},
+            {f: "O que é APT (Advanced Persistent Threat)?", 
+             b: "Ameaça avançada e persistente: ataques sofisticados e prolongados, geralmente patrocinados por governos, com objetivos de espionagem."},
 
             // Cyber Kill Chain (7-13)
-            {f: "O que é Reconnaissance (Reconhecimento)?", b: "Primeira fase do ataque. Coleta de informações sobre o alvo: varreduras, engenharia social, OSINT."},
-            {f: "O que é Weaponization (Preparação)?", b: "Segunda fase. Criação ou preparação do exploit para explorar uma vulnerabilidade."},
-            {f: "O que é Delivery (Entrega)?", b: "Terceira fase. Entrega do exploit ao alvo via email, USB, site comprometido ou outro vetor."},
-            {f: "O que é Exploitation (Exploração)?", b: "Quarta fase. Execução do exploit para ganhar acesso inicial ao sistema alvo."},
-            {f: "O que é Installation (Instalação)?", b: "Quinta fase. Instalação de backdoor, malware ou persistência no sistema comprometido."},
-            {f: "O que é C2 (Command & Control)?", b: "Sexta fase. Estabelecimento de comunicação entre o sistema comprometido e o servidor do atacante."},
-            {f: "O que é Actions on Objectives?", b: "Sétima e última fase. Ações finais do atacante: roubo de dados, destruição, espionagem ou movimentação lateral."},
+            {f: "O que é Reconnaissance (Reconhecimento)?", 
+             b: "Primeira fase do ataque. Coleta de informações sobre o alvo: varreduras, engenharia social, OSINT."},
+            {f: "O que é Weaponization (Preparação)?", 
+             b: "Segunda fase. Criação ou preparação do exploit para explorar uma vulnerabilidade."},
+            {f: "O que é Delivery (Entrega)?", 
+             b: "Terceira fase. Entrega do exploit ao alvo via email, USB, site comprometido ou outro vetor."},
+            {f: "O que é Exploitation (Exploração)?", 
+             b: "Quarta fase. Execução do exploit para ganhar acesso inicial ao sistema alvo."},
+            {f: "O que é Installation (Instalação)?", 
+             b: "Quinta fase. Instalação de backdoor, malware ou persistência no sistema comprometido."},
+            {f: "O que é C2 (Command & Control)?", 
+             b: "Sexta fase. Estabelecimento de comunicação entre o sistema comprometido e o servidor do atacante."},
+            {f: "O que é Actions on Objectives?", 
+             b: "Sétima e última fase. Ações finais do atacante: roubo de dados, destruição, espionagem ou movimentação lateral."},
 
-            // Social Engineering (14-35)
-            {f: "O que é Social Engineering (Engenharia Social)?", b: "Manipulação psicológica para induzir pessoas a comprometerem a segurança, revelando informações ou executando ações."},
-            {f: "O que é Phishing?", b: "Golpe onde o atacante envia emails falsos fingindo ser uma entidade legítima para roubar credenciais ou instalar malware."},
-            {f: "O que é Spear Phishing?", b: "Phishing direcionado a uma pessoa ou organização específica, com informações personalizadas para aumentar a credibilidade."},
-            {f: "O que é Whaling?", b: "Spear phishing focado em executivos, CEOs e VIPs. O alvo é considerado uma 'baleia' pelo seu alto valor."},
-            {f: "O que é Vishing (Voice Phishing)?", b: "Engenharia social realizada por telefone. O atacante se passa por suporte técnico, banco ou autoridade."},
-            {f: "O que é Smishing (SMS Phishing)?", b: "Golpe realizado via mensagens de texto (SMS), com links maliciosos ou pedidos de informação."},
-            {f: "O que é Pretexting?", b: "Criação de um cenário ou história falsa para obter informações da vítima."},
-            {f: "O que é Baiting?", b: "Oferecer algo atraente (USB infectada, download gratuito) para que a vítima comprometa a segurança."},
-            {f: "O que é Quid Pro Quo?", b: "Oferecer um serviço ou benefício em troca de informação. Ex: 'falso suporte' que pede senha."},
-            {f: "O que é Tailgating (ou Piggybacking)?", b: "Seguir uma pessoa autorizada para entrar em uma área restrita, aproveitando a porta aberta."},
-            {f: "O que é Shoulder Surfing?", b: "Observar por cima do ombro da vítima para capturar senhas, códigos ou informações na tela."},
-            {f: "O que é Dumpster Diving?", b: "Procurar informações confidenciais no lixo da organização: papéis, discos, anotações."},
-            {f: "O que é Watering Hole?", b: "Comprometer um site frequentado pelo alvo para infectar os visitantes."},
-            {f: "O que é Pharming?", b: "Redirecionar o tráfego de um site legítimo para um site falso, geralmente manipulando DNS."},
-            {f: "O que é Typosquatting (URL Hijacking)?", b: "Registrar domínios com erros de digitação comuns (ex: gooogle.com) para capturar tráfego ou aplicar golpes."},
-            {f: "O que é o princípio de Authority na engenharia social?", b: "Explorar o respeito à autoridade: atacantes se passam por chefes, polícia, suporte técnico."},
-            {f: "O que é o princípio de Urgency (Urgência)?", b: "Criar senso de urgência: 'Resolva agora ou sua conta será bloqueada' para impedir que a vítima pense."},
-            {f: "O que é o princípio de Scarcity (Escassez)?", b: "Usar ofertas limitadas: 'últimas vagas', 'promoção por tempo limitado' para pressionar a decisão."},
-            {f: "O que é o princípio de Social Proof?", b: "Persuadir mostrando que outros já fizeram: 'todo mundo está aderindo', 'seus colegas já usam'."},
-            {f: "O que é Invoice Scam?", b: "Golpe onde o atacante envia uma fatura falsa para pagamento, fingindo ser um fornecedor legítimo."},
-            {f: "Indicadores de um phishing", b: "Urgência, remetente suspeito, erros gramaticais, links diferentes, anexos inesperados."},
+            // Engenharia Social (14-35)
+            {f: "O que é Social Engineering (Engenharia Social)?", 
+             b: "Manipulação psicológica para induzir pessoas a comprometerem a segurança, revelando informações ou executando ações."},
+            {f: "O que é Phishing?", 
+             b: "Golpe onde o atacante envia emails falsos fingindo ser uma entidade legítima para roubar credenciais ou instalar malware."},
+            {f: "O que é Spear Phishing?", 
+             b: "Phishing direcionado a uma pessoa ou organização específica, com informações personalizadas para aumentar a credibilidade."},
+            {f: "O que é Whaling?", 
+             b: "Spear phishing focado em executivos, CEOs e VIPs. O alvo é considerado uma 'baleia' pelo seu alto valor."},
+            {f: "O que é Vishing (Voice Phishing)?", 
+             b: "Engenharia social realizada por telefone. O atacante se passa por suporte técnico, banco ou autoridade."},
+            {f: "O que é Smishing (SMS Phishing)?", 
+             b: "Golpe realizado via mensagens de texto (SMS), com links maliciosos ou pedidos de informação."},
+            {f: "O que é Pretexting?", 
+             b: "Criação de um cenário ou história falsa para obter informações da vítima."},
+            {f: "O que é Baiting?", 
+             b: "Oferecer algo atraente (USB infectada, download gratuito) para que a vítima comprometa a segurança."},
+            {f: "O que é Quid Pro Quo?", 
+             b: "Oferecer um serviço ou benefício em troca de informação. Ex: 'falso suporte' que pede senha."},
+            {f: "O que é Tailgating (ou Piggybacking)?", 
+             b: "Seguir uma pessoa autorizada para entrar em uma área restrita, aproveitando a porta aberta."},
+            {f: "O que é Shoulder Surfing?", 
+             b: "Observar por cima do ombro da vítima para capturar senhas, códigos ou informações na tela."},
+            {f: "O que é Dumpster Diving?", 
+             b: "Procurar informações confidenciais no lixo da organização: papéis, discos, anotações."},
+            {f: "O que é Watering Hole?", 
+             b: "Comprometer um site frequentado pelo alvo para infectar os visitantes."},
+            {f: "O que é Pharming?", 
+             b: "Redirecionar o tráfego de um site legítimo para um site falso, geralmente manipulando DNS."},
+            {f: "O que é Typosquatting (URL Hijacking)?", 
+             b: "Registrar domínios com erros de digitação comuns (ex: gooogle.com) para capturar tráfego ou aplicar golpes."},
+            {f: "O que é o princípio de Authority na engenharia social?", 
+             b: "Explorar o respeito à autoridade: atacantes se passam por chefes, polícia, suporte técnico."},
+            {f: "O que é o princípio de Urgency (Urgência)?", 
+             b: "Criar senso de urgência: 'Resolva agora ou sua conta será bloqueada' para impedir que a vítima pense."},
+            {f: "O que é o princípio de Scarcity (Escassez)?", 
+             b: "Usar ofertas limitadas: 'últimas vagas', 'promoção por tempo limitado' para pressionar a decisão."},
+            {f: "O que é o princípio de Social Proof?", 
+             b: "Persuadir mostrando que outros já fizeram: 'todo mundo está aderindo', 'seus colegas já usam'."},
+            {f: "O que é Invoice Scam?", 
+             b: "Golpe onde o atacante envia uma fatura falsa para pagamento, fingindo ser um fornecedor legítimo."},
+            {f: "Indicadores de um phishing", 
+             b: "Urgência, remetente suspeito, erros gramaticais, links diferentes, anexos inesperados."},
+            {f: "O que é o princípio de Fear (Medo)?", 
+             b: "Ameaçar a vítima com consequências negativas para que ela aja impulsivamente."},
 
             // Malware (36-56)
-            {f: "O que é um Vírus?", b: "Malware que infecta arquivos executáveis e se replica, precisando de ação do usuário para ser executado."},
-            {f: "O que é um Worm (Verme)?", b: "Malware auto-replicante que se espalha sem precisar de um arquivo hospedeiro, explorando redes."},
-            {f: "O que é um Trojan (Cavalo de Troia)?", b: "Malware que parece legítimo mas é malicioso. Não se replica."},
-            {f: "O que é Ransomware?", b: "Malware que criptografa os dados da vítima e exige pagamento (resgate) para liberar o acesso."},
-            {f: "O que é Spyware?", b: "Malware que monitora atividades do usuário, coleta informações e rouba dados."},
-            {f: "O que é Keylogger?", b: "Malware que registra todas as teclas digitadas pela vítima para capturar senhas e informações."},
-            {f: "O que é Rootkit?", b: "Malware que se esconde no sistema, muitas vezes em nível de kernel, para evitar detecção e manter acesso."},
-            {f: "O que é Botnet?", b: "Rede de computadores infectados (zumbis) controlados remotamente por um atacante para ataques coordenados."},
-            {f: "O que é RAT (Remote Access Trojan)?", b: "Trojan que permite acesso e controle remoto completo do sistema infectado."},
-            {f: "O que é Logic Bomb?", b: "Código malicioso programado para executar quando certas condições são atendidas (data, evento)."},
-            {f: "O que é Backdoor?", b: "Método de acesso não autorizado que contorna mecanismos normais de autenticação."},
-            {f: "O que é Fileless Malware?", b: "Malware que executa diretamente na memória, sem gravar arquivos em disco, dificultando detecção."},
-            {f: "O que é Adware?", b: "Malware que exibe anúncios indesejados, pode rastrear hábitos de navegação."},
-            {f: "O que é PUP (Potentially Unwanted Program)?", b: "Programa potencialmente indesejado: não é claramente malware, mas causa problemas ou reduz desempenho."},
-            {f: "O que é detecção Signature-based?", b: "Método que compara arquivos com um banco de assinaturas de malwares conhecidos."},
-            {f: "O que é detecção Heuristic?", b: "Método que analisa comportamento e características suspeitas para detectar variações de malware."},
-            {f: "O que é detecção Behavioral?", b: "Método que monitora ações em tempo real para identificar comportamentos maliciosos."},
-            {f: "O que é Sandboxing?", b: "Executar arquivos suspeitos em ambiente isolado para observar comportamento sem arriscar o sistema."},
-            {f: "O que é Application Whitelisting?", b: "Técnica que permite apenas aplicativos aprovados de executar, bloqueando todo o resto."},
-            {f: "O que é EDR (Endpoint Detection & Response)?", b: "Solução avançada que monitora endpoints continuamente, detecta e responde a ameaças."},
-            {f: "O que é SPF, DKIM e DMARC?", b: "Protocolos de autenticação de email que ajudam a prevenir phishing e falsificação de remetente."},
+            {f: "O que é um Vírus?", 
+             b: "Malware que infecta arquivos executáveis e se replica, precisando de ação do usuário para ser executado."},
+            {f: "O que é um Worm (Verme)?", 
+             b: "Malware auto-replicante que se espalha sem precisar de um arquivo hospedeiro, explorando redes."},
+            {f: "O que é um Trojan (Cavalo de Troia)?", 
+             b: "Malware que parece legítimo mas é malicioso. Não se replica."},
+            {f: "O que é Ransomware?", 
+             b: "Malware que criptografa os dados da vítima e exige pagamento (resgate) para liberar o acesso."},
+            {f: "O que é Spyware?", 
+             b: "Malware que monitora atividades do usuário, coleta informações e rouba dados."},
+            {f: "O que é Keylogger?", 
+             b: "Malware que registra todas as teclas digitadas pela vítima para capturar senhas e informações."},
+            {f: "O que é Rootkit?", 
+             b: "Malware que se esconde no sistema, muitas vezes em nível de kernel, para evitar detecção e manter acesso."},
+            {f: "O que é Botnet?", 
+             b: "Rede de computadores infectados (zumbis) controlados remotamente por um atacante para ataques coordenados."},
+            {f: "O que é RAT (Remote Access Trojan)?", 
+             b: "Trojan que permite acesso e controle remoto completo do sistema infectado."},
+            {f: "O que é Logic Bomb?", 
+             b: "Código malicioso programado para executar quando certas condições são atendidas (data, evento)."},
+            {f: "O que é Backdoor?", 
+             b: "Método de acesso não autorizado que contorna mecanismos normais de autenticação."},
+            {f: "O que é Fileless Malware?", 
+             b: "Malware que executa diretamente na memória, sem gravar arquivos em disco, dificultando detecção."},
+            {f: "O que é Adware?", 
+             b: "Malware que exibe anúncios indesejados, pode rastrear hábitos de navegação."},
+            {f: "O que é PUP (Potentially Unwanted Program)?", 
+             b: "Programa potencialmente indesejado: não é claramente malware, mas causa problemas ou reduz desempenho."},
+            {f: "O que é Crimeware?", 
+             b: "Malware projetado para automatizar fraudes financeiras e roubo de identidade."},
+            {f: "O que é Scareware?", 
+             b: "Malware que assusta o usuário com alertas falsos para comprar software desnecessário."},
+            {f: "O que é Bootkit?", 
+             b: "Rootkit que infecta o Master Boot Record (MBR), executando antes do sistema operacional."},
+            {f: "O que é Dropper?", 
+             b: "Malware projetado para instalar outros malwares no sistema alvo."},
+            {f: "O que é Downloader?", 
+             b: "Malware que baixa outros malwares da internet."},
+            {f: "O que é Stealer?", 
+             b: "Malware focado em roubar informações específicas como senhas, cookies e dados bancários."},
+            {f: "O que é Formjacking?", 
+             b: "Ataque que injeta código malicioso em formulários de pagamento para roubar dados de cartão."},
 
-            // Backup e conceitos gerais (57-60)
-            {f: "O que é a regra 3-2-1 de backup?", b: "3 cópias dos dados, em 2 tipos diferentes de mídia, com 1 cópia offsite ou offline."},
-            {f: "O que é Attack Surface (Superfície de Ataque)?", b: "Todos os pontos onde um atacante pode tentar acessar um sistema: rede, físico, humano, nuvem."},
-            {f: "O que é Defense in Depth (Defesa em Profundidade)?", b: "Estratégia de múltiplas camadas de segurança: se uma falhar, as outras protegem."},
-            {f: "O que é Zero Day (Dia Zero)?", b: "Vulnerabilidade desconhecida pelo fabricante, sem patch disponível no momento do ataque."}
+            // Métodos de Proteção (57-60)
+            {f: "O que é detecção Signature-based?", 
+             b: "Método que compara arquivos com um banco de assinaturas de malwares conhecidos."},
+            {f: "O que é detecção Heuristic?", 
+             b: "Método que analisa comportamento e características suspeitas para detectar variações de malware."},
+            {f: "O que é detecção Behavioral?", 
+             b: "Método que monitora ações em tempo real para identificar comportamentos maliciosos."},
+            {f: "O que é Sandboxing?", 
+             b: "Executar arquivos suspeitos em ambiente isolado para observar comportamento sem arriscar o sistema."}
         ];
 
+        // ========== QUIZ DO CAPÍTULO 2 (30 QUESTÕES COM EXPLICAÇÕES) ==========
         const quiz = [
             // Threat Actors (1-5)
-            {q: "Qual ator de ameaça possui recursos praticamente ilimitados e realiza ataques sofisticados como APT?", o: ["Script Kiddie", "Hacktivist", "Nation-state (Estados Nação)", "Insider Threat"], c: 2},
-            {q: "Qual é a principal motivação do Organized Crime (Crime Organizado)?", o: ["Política", "Financeira", "Diversão", "Ideologia"], c: 1},
-            {q: "Um funcionário que compromete a segurança da empresa por vingança se enquadra em qual categoria?", o: ["Nation-state", "Hacktivist", "Insider Threat (Ameaça Interna)", "APT"], c: 2},
-            {q: "Qual fase do ataque envolve a coleta de informações sobre o alvo?", o: ["Exploitation (Exploração)", "Delivery (Entrega)", "Reconnaissance (Reconhecimento)", "Installation (Instalação)"], c: 2},
-            {q: "Na Cyber Kill Chain, qual fase estabelece a comunicação com o servidor do atacante?", o: ["C2 (Command & Control)", "Reconnaissance", "Delivery", "Weaponization"], c: 0},
+            {q: "Qual ator de ameaça possui recursos praticamente ilimitados e realiza ataques sofisticados como APT?", 
+             o: ["Script Kiddie", "Hacktivist", "Nation-state (Estados Nação)", "Insider Threat"], 
+             c: 2,
+             e: "Nation-state (Estados Nação) possuem recursos ilimitados, realizam espionagem e ataques avançados (APT). Ex: Stuxnet (EUA/Israel contra Irã)."},
+            {q: "Qual é a principal motivação do Organized Crime (Crime Organizado)?", 
+             o: ["Política", "Financeira", "Diversão", "Ideologia"], 
+             c: 1,
+             e: "Crime Organizado tem motivação financeira: ransomware, fraudes bancárias, roubo de dados para venda."},
+            {q: "Um funcionário que compromete a segurança da empresa por vingança se enquadra em qual categoria?", 
+             o: ["Nation-state", "Hacktivist", "Insider Threat (Ameaça Interna)", "APT"], 
+             c: 2,
+             e: "Insider Threat (ameaça interna) são funcionários ou pessoas com acesso legítimo que comprometem a segurança."},
+            {q: "Qual fase da Cyber Kill Chain envolve a coleta de informações sobre o alvo?", 
+             o: ["Exploitation (Exploração)", "Delivery (Entrega)", "Reconnaissance (Reconhecimento)", "Installation (Instalação)"], 
+             c: 2,
+             e: "Reconnaissance (Reconhecimento) é a primeira fase: coleta de informações sobre o alvo usando OSINT, varreduras."},
+            {q: "Na Cyber Kill Chain, qual fase estabelece a comunicação com o servidor do atacante?", 
+             o: ["C2 (Command & Control)", "Reconnaissance", "Delivery", "Weaponization"], 
+             c: 0,
+             e: "C2 (Command & Control) é a sexta fase, onde o atacante estabelece comunicação com o sistema comprometido."},
 
-            // Social Engineering (6-15)
-            {q: "Qual técnica de engenharia social utiliza emails falsos em massa?", o: ["Vishing", "Phishing", "Smishing", "Baiting"], c: 1},
-            {q: "Phishing direcionado a executivos e VIPs é chamado de:", o: ["Spear Phishing", "Whaling", "Vishing", "Pretexting"], c: 1},
-            {q: "Qual técnica é realizada por telefone?", o: ["Phishing", "Smishing", "Vishing", "Pharming"], c: 2},
-            {q: "Qual técnica utiliza mensagens de texto (SMS)?", o: ["Phishing", "Vishing", "Smishing", "Baiting"], c: 2},
-            {q: "Criar um cenário falso para obter informações é conhecido como:", o: ["Phishing", "Pretexting", "Baiting", "Tailgating"], c: 1},
-            {q: "Deixar um USB infectado em local público é um exemplo de:", o: ["Pretexting", "Baiting", "Quid Pro Quo", "Phishing"], c: 1},
-            {q: "Seguir uma pessoa autorizada para entrar em área restrita é:", o: ["Shoulder Surfing", "Tailgating", "Dumpster Diving", "Baiting"], c: 1},
-            {q: "Observar por cima do ombro para capturar senhas é:", o: ["Tailgating", "Shoulder Surfing", "Pretexting", "Vishing"], c: 1},
-            {q: "Procurar informações confidenciais no lixo é:", o: ["Baiting", "Pretexting", "Dumpster Diving", "Pharming"], c: 2},
-            {q: "Redirecionar DNS para um site falso é:", o: ["Phishing", "Typosquatting", "Pharming", "Watering Hole"], c: 2},
-            {q: "Registrar domínios como 'gooogle.com' é:", o: ["Pharming", "Typosquatting", "Phishing", "Pretexting"], c: 1},
-            {q: "Comprometer um site frequentado pelo alvo é:", o: ["Phishing", "Pharming", "Watering Hole", "Typosquatting"], c: 2},
-            {q: "Explorar o respeito à autoridade (falso chefe, suporte) é qual princípio?", o: ["Authority (Autoridade)", "Urgency (Urgência)", "Scarcity (Escassez)", "Social Proof"], c: 0},
-            {q: "Criar senso de 'resolva agora ou será bloqueado' usa qual princípio?", o: ["Authority", "Urgency", "Scarcity", "Fear"], c: 1},
-            {q: "Oferta por tempo limitado explora qual princípio?", o: ["Authority", "Urgency", "Scarcity", "Social Proof"], c: 2},
+            // Engenharia Social (6-15)
+            {q: "Qual técnica de engenharia social utiliza emails falsos em massa?", 
+             o: ["Vishing", "Phishing", "Smishing", "Baiting"], 
+             c: 1,
+             e: "Phishing: emails falsos em massa fingindo ser entidades legítimas para roubar credenciais."},
+            {q: "Phishing direcionado a executivos e VIPs é chamado de:", 
+             o: ["Spear Phishing", "Whaling", "Vishing", "Pretexting"], 
+             c: 1,
+             e: "Whaling é phishing focado em executivos (baleias). Spear phishing é direcionado a pessoas específicas."},
+            {q: "Qual técnica é realizada por telefone?", 
+             o: ["Phishing", "Smishing", "Vishing", "Pharming"], 
+             c: 2,
+             e: "Vishing (voice phishing) é engenharia social por telefone."},
+            {q: "Criar um cenário falso para obter informações é conhecido como:", 
+             o: ["Phishing", "Pretexting", "Baiting", "Tailgating"], 
+             c: 1,
+             e: "Pretexting: criação de um cenário ou história falsa para obter informações da vítima."},
+            {q: "Deixar um USB infectado em local público é um exemplo de:", 
+             o: ["Pretexting", "Baiting", "Quid Pro Quo", "Phishing"], 
+             c: 1,
+             e: "Baiting: oferecer algo atraente (USB infectada, download gratuito) para que a vítima comprometa a segurança."},
+            {q: "Seguir uma pessoa autorizada para entrar em área restrita é:", 
+             o: ["Shoulder Surfing", "Tailgating", "Dumpster Diving", "Baiting"], 
+             c: 1,
+             e: "Tailgating (ou piggybacking) é seguir uma pessoa autorizada para entrar em uma área restrita."},
+            {q: "Observar por cima do ombro para capturar senhas é:", 
+             o: ["Tailgating", "Shoulder Surfing", "Pretexting", "Vishing"], 
+             c: 1,
+             e: "Shoulder Surfing é observar por cima do ombro para capturar informações na tela ou teclado."},
+            {q: "Procurar informações confidenciais no lixo é:", 
+             o: ["Baiting", "Pretexting", "Dumpster Diving", "Pharming"], 
+             c: 2,
+             e: "Dumpster Diving é procurar informações confidenciais no lixo da organização."},
+            {q: "Redirecionar DNS para um site falso é:", 
+             o: ["Phishing", "Typosquatting", "Pharming", "Watering Hole"], 
+             c: 2,
+             e: "Pharming redireciona o tráfego de um site legítimo para um site falso, manipulando DNS."},
+            {q: "Comprometer um site frequentado pelo alvo é:", 
+             o: ["Phishing", "Pharming", "Watering Hole", "Typosquatting"], 
+             c: 2,
+             e: "Watering Hole compromete um site frequentado pelo alvo para infectar os visitantes."},
 
-            // Malware (21-30)
-            {q: "Qual malware infecta arquivos e precisa ser executado para se replicar?", o: ["Worm", "Vírus", "Trojan", "Spyware"], c: 1},
-            {q: "Qual malware se auto-replica sem precisar de arquivo hospedeiro?", o: ["Vírus", "Worm", "Trojan", "Ransomware"], c: 1},
-            {q: "Qual malware parece legítimo mas é malicioso?", o: ["Vírus", "Worm", "Trojan (Cavalo de Troia)", "Rootkit"], c: 2},
-            {q: "Qual malware criptografa dados e exige pagamento?", o: ["Spyware", "Ransomware", "Adware", "Keylogger"], c: 1},
-            {q: "Qual malware registra as teclas digitadas?", o: ["Spyware", "Adware", "Keylogger", "Rootkit"], c: 2},
-            {q: "Qual malware se esconde no sistema para evitar detecção?", o: ["Vírus", "Trojan", "Rootkit", "Worm"], c: 2},
-            {q: "Rede de computadores infectados controlados remotamente é:", o: ["Botnet", "Worm", "Vírus", "Spyware"], c: 0},
-            {q: "Qual malware executa na memória sem gravar em disco?", o: ["Vírus", "Worm", "Fileless Malware", "Trojan"], c: 2},
-            {q: "Qual malware é programado para disparar sob condições específicas?", o: ["Logic Bomb", "Time Bomb", "Backdoor", "RAT"], c: 0},
-            {q: "Método de detecção que compara com banco de malwares conhecidos:", o: ["Signature-based (Baseado em assinaturas)", "Heuristic", "Behavioral", "Sandboxing"], c: 0},
-            {q: "Executar arquivo suspeito em ambiente isolado é:", o: ["Quarentena", "Sandboxing", "Whitelisting", "Blacklisting"], c: 1}
+            // Malware (16-25)
+            {q: "Qual malware infecta arquivos e precisa ser executado para se replicar?", 
+             o: ["Worm", "Vírus", "Trojan", "Spyware"], 
+             c: 1,
+             e: "Vírus infecta arquivos executáveis e precisa de ação do usuário para ser executado e se replicar."},
+            {q: "Qual malware se auto-replica sem precisar de arquivo hospedeiro?", 
+             o: ["Vírus", "Worm", "Trojan", "Ransomware"], 
+             c: 1,
+             e: "Worm (verme) é auto-replicante e se espalha explorando redes, sem precisar de arquivo hospedeiro."},
+            {q: "Qual malware parece legítimo mas é malicioso?", 
+             o: ["Vírus", "Worm", "Trojan (Cavalo de Troia)", "Rootkit"], 
+             c: 2,
+             e: "Trojan (Cavalo de Troia) parece um software legítimo mas é malicioso. Não se replica."},
+            {q: "Qual malware criptografa dados e exige pagamento?", 
+             o: ["Spyware", "Ransomware", "Adware", "Keylogger"], 
+             c: 1,
+             e: "Ransomware criptografa os dados da vítima e exige pagamento (resgate) para liberar o acesso."},
+            {q: "Qual malware registra as teclas digitadas?", 
+             o: ["Spyware", "Adware", "Keylogger", "Rootkit"], 
+             c: 2,
+             e: "Keylogger registra todas as teclas digitadas pela vítima para capturar senhas e informações."},
+            {q: "Qual malware se esconde no sistema para evitar detecção?", 
+             o: ["Vírus", "Trojan", "Rootkit", "Worm"], 
+             c: 2,
+             e: "Rootkit se esconde no sistema, muitas vezes em nível de kernel, para evitar detecção e manter acesso."},
+            {q: "Rede de computadores infectados controlados remotamente é:", 
+             o: ["Botnet", "Worm", "Vírus", "Spyware"], 
+             c: 0,
+             e: "Botnet é uma rede de computadores infectados (zumbis) controlados remotamente para ataques coordenados."},
+            {q: "Qual malware executa na memória sem gravar em disco?", 
+             o: ["Vírus", "Worm", "Fileless Malware", "Trojan"], 
+             c: 2,
+             e: "Fileless malware executa diretamente na memória, sem gravar arquivos em disco, dificultando detecção."},
+            {q: "Qual malware permite controle remoto completo do sistema?", 
+             o: ["RAT (Remote Access Trojan)", "Botnet", "Keylogger", "Adware"], 
+             c: 0,
+             e: "RAT (Remote Access Trojan) permite acesso e controle remoto completo do sistema infectado."},
+            {q: "Qual malware é programado para disparar sob condições específicas?", 
+             o: ["Logic Bomb", "Time Bomb", "Backdoor", "RAT"], 
+             c: 0,
+             e: "Logic Bomb é código malicioso programado para executar quando certas condições são atendidas (data, evento)."},
+
+            // Métodos de Proteção (26-30)
+            {q: "Método de detecção que compara com banco de malwares conhecidos:", 
+             o: ["Signature-based (Baseado em assinaturas)", "Heuristic", "Behavioral", "Sandboxing"], 
+             c: 0,
+             e: "Signature-based compara arquivos com um banco de assinaturas de malwares conhecidos."},
+            {q: "Método que analisa comportamento suspeito para detectar variações de malware:", 
+             o: ["Signature-based", "Heuristic", "Behavioral", "Sandboxing"], 
+             c: 1,
+             e: "Heuristic analisa comportamento e características suspeitas para detectar variações de malware."},
+            {q: "Executar arquivo suspeito em ambiente isolado é:", 
+             o: ["Quarentena", "Sandboxing", "Whitelisting", "Blacklisting"], 
+             c: 1,
+             e: "Sandboxing executa arquivos suspeitos em ambiente isolado para observar comportamento sem risco."},
+            {q: "Técnica que permite apenas aplicativos aprovados de executar:", 
+             o: ["Blacklisting", "Whitelisting", "Heuristic", "Behavioral"], 
+             c: 1,
+             e: "Application Whitelisting permite apenas aplicativos aprovados, bloqueando todo o resto."},
+            {q: "Solução avançada que monitora endpoints continuamente:", 
+             o: ["Antivírus", "Firewall", "EDR (Endpoint Detection & Response)", "IDS"], 
+             c: 2,
+             e: "EDR (Endpoint Detection & Response) é uma solução avançada que monitora endpoints continuamente."}
         ];
 
         let currentCard = 0;
@@ -360,21 +876,18 @@
         let mastered = new Set();
         let answers = {};
         let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
 
-        // Carregar progresso salvo
         function loadProgress() {
             const saved = localStorage.getItem('security_plus_cap2_mastered');
             if (saved) {
                 mastered = new Set(JSON.parse(saved));
             }
         }
-
-        // Salvar progresso
         function saveProgress() {
             localStorage.setItem('security_plus_cap2_mastered', JSON.stringify([...mastered]));
         }
-
-        // Chamar loadProgress assim que o script carregar
         loadProgress();
 
         function showTab(n) {
@@ -384,45 +897,68 @@
             document.querySelectorAll('.tab-btn').forEach((b, i) => {
                 b.classList.toggle('active', i === n);
             });
-            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+            if (n === 2 && !document.getElementById('questions').innerHTML) {
+                loadQuiz();
+            }
         }
 
         function updateCard() {
-            const card = cards[currentCard];
+            if (filteredCards.length === 0) {
+                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                document.getElementById('card-counter').textContent = 'Card 0 de 0';
+                document.getElementById('side-indicator').textContent = 'FRENTE';
+                return;
+            }
+            const cardIndex = filteredCards[currentCard];
+            const card = cards[cardIndex];
             document.getElementById('card-text').textContent = flipped ? card.b : card.f;
-            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${cards.length}`;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
             document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
             const btn = document.getElementById('master-btn');
-            btn.textContent = mastered.has(currentCard) ? '✓ Dominado' : 'Marcar Dominado';
-            btn.style.background = mastered.has(currentCard) ? '#10b981' : '#e5e7eb';
-            btn.style.color = mastered.has(currentCard) ? 'white' : 'black';
+            const isMastered = mastered.has(cardIndex);
+            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', isMastered);
+            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+            const progress = (mastered.size / cards.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
         }
 
-        function flipCard() {
-            flipped = !flipped;
-            updateCard();
-        }
-
-        function nextCard() {
-            currentCard = (currentCard + 1) % cards.length;
-            flipped = false;
-            updateCard();
-        }
-
-        function prevCard() {
-            currentCard = (currentCard - 1 + cards.length) % cards.length;
-            flipped = false;
-            updateCard();
-        }
-
+        function flipCard() { flipped = !flipped; updateCard(); }
+        function nextCard() { currentCard = (currentCard + 1) % filteredCards.length; flipped = false; updateCard(); }
+        function prevCard() { currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length; flipped = false; updateCard(); }
+        
         function toggleMaster() {
-            if (mastered.has(currentCard)) mastered.delete(currentCard);
-            else mastered.add(currentCard);
-            
-            // Salvar sempre que mudar
+            const cardIndex = filteredCards[currentCard];
+            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
+            else mastered.add(cardIndex);
             saveProgress();
-            
             updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = filteredCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+            }
+            currentCard = 0; flipped = false; updateCard();
+            
+            // Feedback visual
+            const shuffleBtn = document.querySelector('.btn-shuffle');
+            shuffleBtn.style.transform = 'rotate(180deg)';
+            setTimeout(() => {
+                shuffleBtn.style.transform = 'rotate(0deg)';
+            }, 300);
+        }
+
+        function filterCards(type, event) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            if (type === 'all') filteredCards = [...Array(cards.length).keys()];
+            else if (type === 'mastered') filteredCards = Array.from(mastered);
+            else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            currentCard = 0; flipped = false; updateCard();
         }
 
         function loadQuiz() {
@@ -442,7 +978,7 @@
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
                 exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>Resposta correta:</strong> ${q.o[q.c]}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
                 div.appendChild(exp);
                 container.appendChild(div);
             });
@@ -461,24 +997,29 @@
             checked = true;
             let correct = 0;
             quiz.forEach((q, qi) => {
+                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
                 q.o.forEach((_, oi) => {
                     const el = document.getElementById(`q${qi}o${oi}`);
-                    if (oi === q.c) el.classList.add('correct');
-                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
                 });
                 document.getElementById(`exp${qi}`).style.display = 'block';
-                if (answers[qi] === q.c) correct++;
+                if (correctAnswer.includes(answers[qi])) correct++;
             });
             const pct = Math.round((correct / quiz.length) * 100);
-            document.getElementById('score').textContent = `${correct}/${quiz.length} (${pct}%)`;
-            document.getElementById('results').style.display = 'block';
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
         }
 
         function resetQuiz() {
             checked = false;
             answers = {};
             document.getElementById('questions').innerHTML = '';
-            document.getElementById('results').style.display = 'none';
+            document.getElementById('results-modal').classList.remove('show');
             loadQuiz();
         }
 

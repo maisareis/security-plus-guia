@@ -162,6 +162,9 @@
             font-size: 1.5rem;
             width: 55px;
             height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-master {
             background: #e5e7eb;
@@ -174,6 +177,12 @@
         .btn-shuffle {
             background: #f59e0b;
             color: white;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
         }
         
         .filter-buttons {
@@ -197,6 +206,104 @@
             color: #2c3e50;
         }
 
+        .quiz-area { max-width: 1000px; margin: 0 auto; }
+        .quiz-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+        }
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+        .option:hover {
+            background: #e0f7ff;
+            border-color: #2c3e50;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            border-color: #2c3e50;
+            background: #e0f7ff;
+            font-weight: 600;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e0f7ff;
+            border-left: 5px solid #2c3e50;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .results-modal.show { display: flex; }
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+        
         .summary {
             max-width: 1100px;
             margin: 0 auto;
@@ -249,27 +356,10 @@
             margin: 20px 0;
             border-radius: 8px;
         }
-        .risk-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-        .risk-card {
-            background: #f3f4f6;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid #2c3e50;
-        }
-        .risk-card strong {
-            color: #2c3e50;
-            display: block;
-            margin-bottom: 5px;
-        }
         .doc-hierarchy {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 10px;
             margin: 30px 0;
         }
         .doc-level {
@@ -283,19 +373,19 @@
             display: block;
             margin-bottom: 5px;
         }
-        .compliance-grid {
+        .risk-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 15px;
             margin: 20px 0;
         }
-        .compliance-card {
+        .risk-card {
             background: #f3f4f6;
             padding: 15px;
             border-radius: 10px;
             border-left: 4px solid #2c3e50;
         }
-        .compliance-card strong {
+        .risk-card strong {
             color: #2c3e50;
             display: block;
             margin-bottom: 5px;
@@ -318,6 +408,23 @@
         .class-internal { background: #17a2b8; }
         .class-confidential { background: #ffc107; color: #212529; }
         .class-restricted { background: #dc3545; }
+        .compliance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .compliance-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #2c3e50;
+        }
+        .compliance-card strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -414,8 +521,9 @@
 
                 <h3>Tipos Específicos de Políticas</h3>
                 <ul>
-                    <li><strong>AUP (Acceptable Use Policy):</strong> Define uso aceitável de recursos corporativos (email, internet, dispositivos).</li>
+                    <li><strong>AUP (Acceptable Use Policy):</strong> Define uso aceitável de recursos corporativos (email, internet, dispositivos). Tem força legal.</li>
                     <li><strong>NDA (Non-Disclosure Agreement):</strong> Acordo de confidencialidade para proteger segredos comerciais.</li>
+                    <li><strong>Data Classification Policy:</strong> Define categorias de dados baseadas em sensibilidade.</li>
                 </ul>
 
                 <h2>2️⃣ Change Management</h2>
@@ -446,12 +554,14 @@
                 <h3>CAB (Change Advisory Board)</h3>
                 <ul>
                     <li>Comitê que analisa mudanças propostas</li>
-                    <li>Composto por stakeholders: TI, segurança, áreas de negócio</li>
+                    <li>Composto por stakeholders: TI, segurança, áreas de negócio, gestão</li>
                 </ul>
 
                 <h3>Tipos de Mudança</h3>
                 <ul>
-                    <li><strong>Emergency Change:</strong> Mudança crítica não planejada (incidente, patch urgente)</li>
+                    <li><strong>Normal Change:</strong> Mudança planejada, segue processo completo</li>
+                    <li><strong>Emergency Change:</strong> Mudança crítica não planejada (incidente, patch urgente). Processo acelerado.</li>
+                    <li><strong>Standard Change:</strong> Mudança de baixo risco, pré-aprovada.</li>
                 </ul>
 
                 <h2>3️⃣ Conceitos de Risco</h2>
@@ -460,8 +570,9 @@
                     <tr><th style="background:#2c3e50; color:white;">Conceito</th><th style="background:#2c3e50; color:white;">Descrição</th></tr>
                     <tr><td><strong>Inherent Risk</strong></td><td>Risco natural sem controles implementados. É o baseline.</td></tr>
                     <tr><td><strong>Residual Risk</strong></td><td>Risco que permanece após a implementação de controles.</td></tr>
-                    <tr><td><strong>Risk Appetite</strong></td><td>Quantidade total de risco que a organização está disposta a aceitar.</td></tr>
-                    <tr><td><strong>Risk Tolerance</strong></td><td>Variação aceitável no apetite de risco.</td></tr>
+                    <tr><td><strong>Risk Appetite</strong></td><td>Quantidade total de risco que a organização está disposta a aceitar. Decisão estratégica.</td></tr>
+                    <tr><td><strong>Risk Tolerance</strong></td><td>Variação aceitável no apetite de risco. Nível operacional.</td></tr>
+                    <tr><td><strong>Risk Assessment</strong></td><td>Processo de identificar, analisar e priorizar riscos.</td></tr>
                 </table>
 
                 <h2>4️⃣ Análise Quantitativa de Riscos</h2>
@@ -473,6 +584,7 @@
                         <li><strong>SLE = AV × EF</strong> (Perda por ocorrência)</li>
                         <li><strong>ARO</strong> = Frequência anual do risco</li>
                         <li><strong>EF</strong> = % do ativo perdido no ataque</li>
+                        <li><strong>AV (Asset Value)</strong> = Valor monetário do ativo</li>
                     </ul>
                 </div>
 
@@ -485,39 +597,51 @@
                 </table>
 
                 <h3>Exemplo Prático</h3>
-                <p>Servidor R$100.000, EF 0.5 (50%), ARO 0.5 (1x a cada 2 anos):</p>
-                <ul>
-                    <li>SLE = R$100.000 × 0.5 = R$50.000</li>
-                    <li>ALE = R$50.000 × 0.5 = R$25.000/ano</li>
-                </ul>
+                <div class="tip-box">
+                    <p>Servidor com valor de R$100.000 (AV), fator de exposição 0.5 (perde 50% em ataque), ocorre uma vez a cada 2 anos (ARO = 0.5).</p>
+                    <ul>
+                        <li>SLE = R$100.000 × 0.5 = R$50.000</li>
+                        <li>ALE = R$50.000 × 0.5 = R$25.000/ano</li>
+                    </ul>
+                </div>
 
                 <h2>5️⃣ Business Continuity</h2>
+
+                <h3>BIA (Business Impact Analysis)</h3>
+                <ul>
+                    <li>Identifica processos críticos de negócio</li>
+                    <li>Define RTO, RPO e MTD para cada processo</li>
+                    <li>Base para Disaster Recovery Plan (DRP) e Business Continuity Plan (BCP)</li>
+                </ul>
 
                 <h3>Métricas de Continuidade</h3>
                 <ul>
                     <li><strong>RTO (Recovery Time Objective):</strong> Tempo máximo que um processo pode ficar offline.</li>
                     <li><strong>RPO (Recovery Point Objective):</strong> Quantidade máxima de dados que pode ser perdida.</li>
                     <li><strong>MTD (Maximum Tolerable Downtime):</strong> Tempo máximo que organização pode operar sem o processo.</li>
+                    <li><strong>MTBF (Mean Time Between Failures):</strong> Tempo médio entre falhas (confiabilidade).</li>
+                    <li><strong>MTTR (Mean Time To Repair):</strong> Tempo médio para reparo.</li>
                 </ul>
 
-                <h2>6️⃣ Vendor Management</h2>
+                <h2>6️⃣ Vendor Management (Gestão de Terceiros)</h2>
 
                 <ul>
-                    <li><strong>Due Diligence:</strong> Avaliação pré-contrato do fornecedor.</li>
-                    <li><strong>Due Care:</strong> Ações contínuas após o contrato (monitoramento).</li>
-                    <li><strong>SLA (Service Level Agreement):</strong> Contrato que define níveis de serviço.</li>
+                    <li><strong>Due Diligence:</strong> Avaliação pré-contrato do fornecedor. Inclui background check, controles de segurança, saúde financeira.</li>
+                    <li><strong>Due Care:</strong> Ações contínuas após o contrato. Monitoramento, auditorias, verificação de conformidade.</li>
+                    <li><strong>SLA (Service Level Agreement):</strong> Contrato que define níveis de serviço: uptime, tempo de resposta, penalidades.</li>
                     <li><strong>Right-to-Audit:</strong> Cláusula que permite auditar o fornecedor.</li>
+                    <li><strong>Vendor lock-in:</strong> Dependência excessiva de um fornecedor.</li>
                 </ul>
 
                 <h2>7️⃣ Auditoria</h2>
 
                 <table style="width:100%; border-collapse:collapse; margin:20px 0;">
                     <tr><th style="background:#2c3e50; color:white;">Tipo</th><th style="background:#2c3e50; color:white;">Descrição</th></tr>
-                    <tr><td><strong>Internal Audit</strong></td><td>Realizado por equipe interna independente.</td></tr>
-                    <tr><td><strong>External Audit</strong></td><td>Realizado por firma externa independente.</td></tr>
-                    <tr><td><strong>First-Party</strong></td><td>Auto-avaliação.</td></tr>
-                    <tr><td><strong>Second-Party</strong></td><td>Avaliação de fornecedor.</td></tr>
-                    <tr><td><strong>Third-Party</strong></td><td>Avaliação independente (certificação).</td></tr>
+                    <tr><td><strong>Internal Audit</strong></td><td>Realizado por equipe interna independente (reporta ao board).</td></tr>
+                    <tr><td><strong>External Audit</strong></td><td>Realizado por firma externa independente. Mais credibilidade.</td></tr>
+                    <tr><td><strong>First-Party</strong></td><td>Auto-avaliação (a própria organização se avalia).</td></tr>
+                    <tr><td><strong>Second-Party</strong></td><td>Avaliação de fornecedor/parceiro (vendor audit).</td></tr>
+                    <tr><td><strong>Third-Party</strong></td><td>Avaliação independente (certificação externa).</td></tr>
                 </table>
 
                 <h2>8️⃣ Classificação de Dados</h2>
@@ -534,23 +658,23 @@
                 <div class="compliance-grid">
                     <div class="compliance-card">
                         <strong>GDPR</strong>
-                        <p>União Europeia. Proteção de dados pessoais. Multas até €20M ou 4% do faturamento.</p>
+                        <p>General Data Protection Regulation. União Europeia. Proteção de dados pessoais. Multas até €20M ou 4% do faturamento global.</p>
                     </div>
                     <div class="compliance-card">
                         <strong>LGPD</strong>
-                        <p>Brasil. Baseada no GDPR. Multas até 2% do faturamento (R$50M).</p>
+                        <p>Lei Geral de Proteção de Dados. Brasil. Baseada no GDPR. Fiscalizada pela ANPD. Multas até 2% do faturamento (R$50M).</p>
                     </div>
                     <div class="compliance-card">
                         <strong>HIPAA</strong>
-                        <p>EUA. Proteção de dados de saúde (PHI).</p>
+                        <p>Health Insurance Portability and Accountability Act. EUA. Proteção de dados de saúde (PHI).</p>
                     </div>
                     <div class="compliance-card">
                         <strong>PCI DSS</strong>
-                        <p>Proteção de dados de cartões de crédito.</p>
+                        <p>Payment Card Industry Data Security Standard. Proteção de dados de cartões de crédito. 12 requisitos.</p>
                     </div>
                     <div class="compliance-card">
                         <strong>SOX</strong>
-                        <p>Governança corporativa e controles financeiros.</p>
+                        <p>Sarbanes-Oxley Act. EUA. Governança corporativa e controles financeiros para empresas públicas.</p>
                     </div>
                 </div>
 
@@ -558,27 +682,43 @@
 
                 <table style="width:100%; border-collapse:collapse; margin:20px 0;">
                     <tr><th style="background:#2c3e50; color:white;">Método</th><th style="background:#2c3e50; color:white;">Descrição</th></tr>
-                    <tr><td><strong>Shredding</strong></td><td>Destruição física de papel/discos. Cross-cut mais seguro.</td></tr>
-                    <tr><td><strong>Wiping</strong></td><td>Sobrescrever dados em disco. DoD 5220.22-M para alta segurança.</td></tr>
-                    <tr><td><strong>Degaussing</strong></td><td>Campo magnético para apagar mídia magnética (HDD, fitas).</td></tr>
-                    <tr><td><strong>Incineration</strong></td><td>Queima controlada.</td></tr>
+                    <tr><td><strong>Shredding</strong></td><td>Destruição física de papel ou discos. Cross-cut shredder é mais seguro.</td></tr>
+                    <tr><td><strong>Wiping</strong></td><td>Sobrescrever dados em disco com padrões de bits. DoD 5220.22-M para alta segurança.</td></tr>
+                    <tr><td><strong>Degaussing</strong></td><td>Campo magnético para apagar mídias magnéticas (HDDs, fitas). Torna a mídia inutilizável.</td></tr>
+                    <tr><td><strong>Incineration</strong></td><td>Queima controlada de mídias. Destruição completa.</td></tr>
                 </table>
 
                 <h2>1️⃣1️⃣ Políticas de Pessoal</h2>
 
+                <h3>Background Check (Verificação de Antecedentes)</h3>
                 <ul>
-                    <li><strong>Background Check:</strong> Verificação pré-contratação (criminal, profissional).</li>
-                    <li><strong>Onboarding:</strong> Concessão gradual de acessos, treinamento.</li>
-                    <li><strong>Offboarding:</strong> Revogação imediata de acessos, recolhimento de ativos.</li>
+                    <li>Verificação criminal, histórico profissional, educação, crédito (para cargos financeiros).</li>
+                    <li>Realizada antes da contratação.</li>
+                </ul>
+
+                <h3>Ciclo de Vida do Funcionário</h3>
+                <ul>
+                    <li><strong>Onboarding (Admissão):</strong> Concessão gradual de acessos (least privilege), treinamento de segurança, assinatura de políticas (AUP, NDA).</li>
+                    <li><strong>Role Changes (Mudança de Função):</strong> Revisão de privilégios, remoção de acessos antigos.</li>
+                    <li><strong>Offboarding (Desligamento):</strong> Revogação imediata de todos os acessos, recolhimento de ativos (laptop, badge).</li>
+                </ul>
+
+                <h3>Princípios Fundamentais</h3>
+                <ul>
+                    <li><strong>PoLP (Principle of Least Privilege):</strong> Usuários recebem apenas as permissões mínimas necessárias.</li>
+                    <li><strong>SoD (Segregação de Funções):</strong> Divide tarefas críticas entre múltiplas pessoas para prevenir fraudes.</li>
                 </ul>
 
                 <div class="golden-rule">
                     <strong>🎯 DICAS FINAIS PARA PROVA:</strong>
                     <ul style="margin-top: 10px;">
                         <li><strong>Policy:</strong> Alto nível (POR QUE) | <strong>Standard:</strong> Obrigatório (O QUE) | <strong>Procedure:</strong> Passo a passo (COMO)</li>
+                        <li><strong>Guideline:</strong> Recomendação, não obrigatório</li>
                         <li><strong>Inherent Risk:</strong> sem controles | <strong>Residual Risk:</strong> após controles</li>
                         <li><strong>ALE = SLE × ARO</strong> (decorar!)</li>
+                        <li><strong>SLE = AV × EF</strong></li>
                         <li><strong>RTO:</strong> tempo offline | <strong>RPO:</strong> dados perdidos</li>
+                        <li><strong>MTD</strong> > RTO (sempre)</li>
                         <li><strong>Due Diligence:</strong> antes | <strong>Due Care:</strong> depois</li>
                         <li><strong>Data Classification:</strong> Public, Internal, Confidential, Restricted</li>
                         <li><strong>GDPR (UE)</strong> | <strong>LGPD (Brasil)</strong> | <strong>HIPAA (saúde)</strong> | <strong>PCI DSS (cartões)</strong></li>
@@ -588,140 +728,349 @@
         </div>
 
         <div id="tab2" class="content">
-            <div class="quiz-area" style="max-width: 1000px; margin:0 auto;">
-                <div class="quiz-header" style="text-align:center; color:white; margin-bottom:35px;">
+            <div class="quiz-area">
+                <div class="quiz-header">
                     <h2>Quiz - 35 Questões</h2>
+                    <p>Passing Score: 70% (25/35 corretas)</p>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn btn-primary" onclick="checkAnswers()" style="background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); color:white; padding:15px 40px;">Ver Resultados</button>
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="results-modal" id="results-modal" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:1000;">
-        <div class="results-content" style="background:white; padding:50px; border-radius:25px; max-width:500px; text-align:center;">
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
             <h2>Resultado</h2>
-            <div class="score-circle" id="score-circle" style="width:180px; height:180px; border-radius:50%; background:linear-gradient(135deg, #2c3e50 0%, #3498db 100%); color:white; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:bold; margin:30px auto;">0%</div>
-            <p id="score-text" style="font-size:1.2rem; margin-bottom:20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()" style="background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); color:white; padding:15px 40px;">Refazer Quiz</button>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
         </div>
     </div>
 
     <script>
+        // ========== CARDS DO DOMÍNIO 5 - 70 CARDS COMPLETOS ==========
         const cards = [
-            // Documentos de Governança (1-10)
-            {f: "O que é uma Security Policy (Política de Segurança)?", b: "Documento de alto nível, aprovado pela alta gestão, que define objetivos de segurança, responsabilidades e requisitos gerais."},
-            {f: "O que é um Security Standard (Padrão de Segurança)?", b: "Documento que especifica requisitos obrigatórios e detalhados. Ex: 'Senhas devem ter 12+ caracteres'."},
-            {f: "O que é uma Security Procedure (Procedimento)?", b: "Instruções passo a passo para executar uma tarefa específica de segurança."},
-            {f: "O que é uma Security Guideline (Diretriz)?", b: "Recomendações e melhores práticas não obrigatórias."},
-            {f: "O que é uma AUP (Acceptable Use Policy)?", b: "Política de uso aceitável de recursos corporativos."},
-            {f: "O que é um NDA (Non-Disclosure Agreement)?", b: "Acordo de confidencialidade para proteger segredos comerciais."},
-            
-            // Change Management (7-12)
-            {f: "O que é Change Management?", b: "Processo formal para mudanças: Request → Approval → Test → Implement → Document."},
-            {f: "O que é CAB (Change Advisory Board)?", b: "Comitê que analisa e aprova mudanças propostas."},
-            {f: "O que é uma Emergency Change?", b: "Mudança crítica não planejada (incidente, patch urgente). Processo acelerado."},
-            
-            // Conceitos de Risco (13-20)
-            {f: "O que é Inherent Risk (Risco Inerente)?", b: "Risco natural sem controles implementados. Baseline antes da mitigação."},
-            {f: "O que é Residual Risk (Risco Residual)?", b: "Risco que permanece após a implementação de controles."},
-            {f: "O que é Risk Appetite (Apetite de Risco)?", b: "Quantidade total de risco que a organização está disposta a aceitar."},
-            {f: "O que é Risk Tolerance (Tolerância a Risco)?", b: "Variação aceitável no apetite de risco em nível operacional."},
-            
-            // Análise Quantitativa (21-30)
-            {f: "O que é ALE (Annual Loss Expectancy)?", b: "Perda anual esperada. ALE = SLE × ARO."},
-            {f: "O que é SLE (Single Loss Expectancy)?", b: "Perda por ocorrência. SLE = AV × EF."},
-            {f: "O que é ARO (Annual Rate of Occurrence)?", b: "Frequência anual do risco. Ex: ARO 0.5 = 1x a cada 2 anos."},
-            {f: "O que é EF (Exposure Factor)?", b: "Percentual do ativo perdido no ataque."},
-            
-            // Business Continuity (31-35)
-            {f: "O que é RTO (Recovery Time Objective)?", b: "Tempo máximo que um processo pode ficar offline."},
-            {f: "O que é RPO (Recovery Point Objective)?", b: "Quantidade máxima de dados que pode ser perdida."},
-            {f: "O que é MTD (Maximum Tolerable Downtime)?", b: "Tempo máximo sem o processo crítico."},
-            
-            // Vendor Management (36-40)
-            {f: "O que é Due Diligence?", b: "Avaliação pré-contrato do fornecedor."},
-            {f: "O que é Due Care?", b: "Ações contínuas após o contrato (monitoramento)."},
-            {f: "O que é SLA (Service Level Agreement)?", b: "Contrato que define níveis de serviço."},
-            {f: "O que é Right-to-Audit?", b: "Cláusula que permite auditar o fornecedor."},
-            
-            // Auditoria (41-45)
-            {f: "O que é Internal Audit?", b: "Auditoria realizada por equipe interna independente."},
-            {f: "O que é External Audit?", b: "Auditoria por firma externa independente."},
-            {f: "O que é Third-Party Audit?", b: "Avaliação independente para certificação."},
-            
-            // Classificação de Dados (46-50)
-            {f: "O que é Data Classification?", b: "Categorizar dados por sensibilidade: Public, Internal, Confidential, Restricted."},
-            {f: "O que são dados Public?", b: "Informações públicas. Ex: site, marketing."},
-            {f: "O que são dados Internal?", b: "Uso interno. Ex: manuais, políticas."},
-            {f: "O que são dados Confidential?", b: "Dados sensíveis. Ex: PII, financeiro."},
-            {f: "O que são dados Restricted?", b: "Altamente sensíveis. Ex: segredos comerciais."},
-            
-            // Regulamentações (51-60)
-            {f: "O que é GDPR?", b: "Regulamentação de proteção de dados da União Europeia."},
-            {f: "O que é LGPD?", b: "Lei Geral de Proteção de Dados do Brasil."},
-            {f: "O que é HIPAA?", b: "Proteção de dados de saúde nos EUA."},
-            {f: "O que é PCI DSS?", b: "Padrão de segurança para dados de cartões."},
-            {f: "O que é SOX?", b: "Sarbanes-Oxley. Governança corporativa."},
-            
-            // Data Destruction (61-65)
-            {f: "O que é Shredding?", b: "Destruição física de papel/discos."},
-            {f: "O que é Wiping?", b: "Sobrescrever dados em disco."},
-            {f: "O que é Degaussing?", b: "Campo magnético para apagar mídia magnética."},
-            {f: "O que é Incineration?", b: "Queima controlada de mídias."},
-            
-            // Políticas de Pessoal (66-70)
-            {f: "O que é Background Check?", b: "Verificação pré-contratação."},
-            {f: "O que é Onboarding?", b: "Processo de admissão: acessos, treinamento."},
-            {f: "O que é Offboarding?", b: "Processo de desligamento: revogar acessos."},
-            {f: "O que é PoLP (Principle of Least Privilege)?", b: "Usuários têm apenas permissões mínimas necessárias."},
-            {f: "O que é Segregação de Funções (SoD)?", b: "Dividir tarefas críticas entre pessoas diferentes."}
+            // Documentos de Governança (1-15)
+            {f: "O que é uma Security Policy (Política de Segurança)?", 
+             b: "Documento de alto nível, aprovado pela alta gestão, que define objetivos de segurança, responsabilidades e requisitos gerais."},
+            {f: "O que é um Security Standard (Padrão de Segurança)?", 
+             b: "Documento que especifica requisitos obrigatórios e detalhados. Ex: 'Senhas devem ter 12+ caracteres'."},
+            {f: "O que é uma Security Procedure (Procedimento)?", 
+             b: "Instruções passo a passo para executar uma tarefa específica de segurança. Ex: 'Como provisionar um novo usuário'."},
+            {f: "O que é uma Security Guideline (Diretriz)?", 
+             b: "Recomendações e melhores práticas não obrigatórias. Ex: 'Recomenda-se usar um gerenciador de senhas'."},
+            {f: "O que é uma AUP (Acceptable Use Policy)?", 
+             b: "Política de uso aceitável de recursos corporativos: email, internet, dispositivos. Tem força legal."},
+            {f: "O que é um NDA (Non-Disclosure Agreement)?", 
+             b: "Acordo de confidencialidade para proteger segredos comerciais e propriedade intelectual."},
+            {f: "O que é uma Data Classification Policy?", 
+             b: "Política que define categorias de dados baseadas em sensibilidade: Public, Internal, Confidential, Restricted."},
+            {f: "Qual a diferença entre Policy, Standard, Procedure e Guideline?", 
+             b: "Policy: alto nível (POR QUE). Standard: obrigatório (O QUE). Procedure: passo a passo (COMO). Guideline: recomendação."},
+            {f: "O que é uma Privacy Policy?", 
+             b: "Política que define como os dados pessoais são coletados, usados e protegidos."},
+            {f: "O que é uma Information Security Policy?", 
+             b: "Documento mestre que estabelece a estrutura de segurança da informação na organização."},
+            {f: "O que é uma Password Policy?", 
+             b: "Política que define requisitos de senhas: comprimento, complexidade, expiração."},
+            {f: "O que é uma Remote Access Policy?", 
+             b: "Política que define regras para acesso remoto à rede corporativa (VPN, autenticação)."},
+            {f: "O que é uma BYOD Policy?", 
+             b: "Política para uso de dispositivos pessoais no trabalho, definindo requisitos de segurança."},
+            {f: "O que é uma Data Retention Policy?", 
+             b: "Política que define por quanto tempo os dados devem ser mantidos e quando devem ser descartados."},
+            {f: "O que é uma Incident Response Policy?", 
+             b: "Política que estabelece a estrutura para resposta a incidentes de segurança."},
+
+            // Change Management (16-22)
+            {f: "O que é Change Management?", 
+             b: "Processo formal para gerenciar mudanças em sistemas de produção: Request → Approval → Test → Implement → Document."},
+            {f: "O que é CAB (Change Advisory Board)?", 
+             b: "Comitê que analisa e aprova mudanças propostas. Inclui stakeholders de TI, segurança, negócio."},
+            {f: "O que é uma Emergency Change?", 
+             b: "Mudança crítica não planejada (incidente, patch urgente). Processo acelerado, mas ainda documentado."},
+            {f: "O que é uma Standard Change?", 
+             b: "Mudança de baixo risco, pré-aprovada. Ex: nova VM, backup."},
+            {f: "O que é um Change Request (Solicitação de Mudança)?", 
+             b: "Documento formal solicitando uma mudança, com detalhes do que será feito e plano de rollback."},
+            {f: "O que é um plano de rollback (backout plan)?", 
+             b: "Plano para reverter a mudança em caso de problemas durante a implementação."},
+            {f: "O que é um teste de mudança?", 
+             b: "Execução da mudança em ambiente controlado antes da implementação em produção."},
+
+            // Conceitos de Risco (23-30)
+            {f: "O que é Inherent Risk (Risco Inerente)?", 
+             b: "Risco natural de uma atividade sem nenhum controle implementado. Baseline antes da mitigação."},
+            {f: "O que é Residual Risk (Risco Residual)?", 
+             b: "Risco que permanece após a implementação de controles. Fórmula: Inherent Risk - Controles = Residual Risk."},
+            {f: "O que é Risk Appetite (Apetite de Risco)?", 
+             b: "Quantidade total de risco que a organização está disposta a aceitar em busca de seus objetivos."},
+            {f: "O que é Risk Tolerance (Tolerância a Risco)?", 
+             b: "Variação aceitável no apetite de risco em nível operacional. Ex: '±10% de variação'."},
+            {f: "O que é Risk Assessment (Avaliação de Risco)?", 
+             b: "Processo de identificar, analisar e priorizar riscos. Pode ser qualitativa ou quantitativa."},
+            {f: "O que é Risk Mitigation?", 
+             b: "Aplicar controles para reduzir o risco a um nível aceitável."},
+            {f: "O que é Risk Transfer?", 
+             b: "Transferir o risco para terceiros, como seguro cibernético."},
+            {f: "O que é Risk Acceptance?", 
+             b: "Aceitar formalmente o risco sem aplicar correção (quando custo > impacto)."},
+
+            // Análise Quantitativa (31-40)
+            {f: "O que é ALE (Annual Loss Expectancy)?", 
+             b: "Perda anual esperada devido a um risco. ALE = SLE × ARO."},
+            {f: "O que é SLE (Single Loss Expectancy)?", 
+             b: "Perda esperada para uma única ocorrência do risco. SLE = AV × EF."},
+            {f: "O que é ARO (Annual Rate of Occurrence)?", 
+             b: "Frequência anual esperada de um risco. Ex: ARO 0.5 = 1x a cada 2 anos."},
+            {f: "O que é EF (Exposure Factor)?", 
+             b: "Percentual do ativo que é perdido quando o ataque ocorre. Ex: EF = 0.7 = 70% de perda."},
+            {f: "O que é AV (Asset Value)?", 
+             b: "Valor monetário do ativo. Base para calcular SLE."},
+            {f: "Como calcular ALE?", 
+             b: "ALE = SLE × ARO = (AV × EF) × ARO."},
+            {f: "Exemplo: AV=R$100k, EF=0.5, ARO=0.5, qual ALE?", 
+             b: "SLE = R$100k × 0.5 = R$50k. ALE = R$50k × 0.5 = R$25k/ano."},
+            {f: "O que é análise quantitativa de riscos?", 
+             b: "Usa números e valores monetários para calcular risco (ALE, SLE, ARO)."},
+            {f: "O que é análise qualitativa de riscos?", 
+             b: "Usa escalas subjetivas (Alto, Médio, Baixo) para avaliar riscos."},
+            {f: "O que é um heat map de riscos?", 
+             b: "Matriz que combina probabilidade e impacto para visualizar riscos."},
+
+            // Business Continuity (41-48)
+            {f: "O que é BIA (Business Impact Analysis)?", 
+             b: "Análise de Impacto nos Negócios. Identifica processos críticos, define RTO, RPO e MTD."},
+            {f: "O que é RTO (Recovery Time Objective)?", 
+             b: "Tempo máximo que um processo de negócio pode ficar offline após um desastre."},
+            {f: "O que é RPO (Recovery Point Objective)?", 
+             b: "Quantidade máxima de dados que pode ser perdida em um desastre. Define frequência de backup."},
+            {f: "O que é MTD (Maximum Tolerable Downtime)?", 
+             b: "Tempo máximo que a organização pode operar sem um processo crítico antes de sofrer danos irreparáveis."},
+            {f: "O que é MTBF (Mean Time Between Failures)?", 
+             b: "Tempo médio entre falhas. Medida de confiabilidade."},
+            {f: "O que é MTTR (Mean Time To Repair)?", 
+             b: "Tempo médio para reparo. Impacta o RTO."},
+            {f: "O que é BCP (Business Continuity Plan)?", 
+             b: "Plano de Continuidade de Negócios. Estratégias para manter operações durante um desastre."},
+            {f: "O que é DRP (Disaster Recovery Plan)?", 
+             b: "Plano de Recuperação de Desastres. Foco em recuperar sistemas de TI após um desastre."},
+
+            // Vendor Management (49-55)
+            {f: "O que é Due Diligence em gestão de fornecedores?", 
+             b: "Avaliação pré-contrato do fornecedor. Inclui verificação de antecedentes, controles de segurança, saúde financeira."},
+            {f: "O que é Due Care em gestão de fornecedores?", 
+             b: "Ações contínuas após o contrato. Monitoramento, auditorias, verificação de conformidade."},
+            {f: "O que é SLA (Service Level Agreement)?", 
+             b: "Acordo de Nível de Serviço. Define níveis de serviço, uptime, tempo de resposta, penalidades."},
+            {f: "O que é Right-to-Audit (Direito de Auditoria)?", 
+             b: "Cláusula contratual que permite à organização auditar o fornecedor."},
+            {f: "O que é vendor lock-in?", 
+             b: "Dependência excessiva de um fornecedor, dificultando a troca."},
+            {f: "O que é um contrato de nível de serviço (SLA)?", 
+             b: "Documento legal que especifica os serviços, métricas e penalidades."},
+            {f: "O que é um fornecedor crítico?", 
+             b: "Fornecedor cuja falha pode causar impacto significativo nos negócios."},
+
+            // Auditoria (56-60)
+            {f: "O que é Internal Audit (Auditoria Interna)?", 
+             b: "Auditoria realizada por equipe interna independente, reporta ao conselho (board)."},
+            {f: "O que é External Audit (Auditoria Externa)?", 
+             b: "Auditoria realizada por firma externa independente. Mais credibilidade."},
+            {f: "O que é First-Party Audit?", 
+             b: "Auto-avaliação. A própria organização se avalia."},
+            {f: "O que é Second-Party Audit?", 
+             b: "Avaliação de fornecedor/parceiro (vendor audit)."},
+            {f: "O que é Third-Party Audit?", 
+             b: "Avaliação independente para certificação (ISO, SOC, PCI)."},
+
+            // Classificação de Dados (61-65)
+            {f: "O que é Data Classification?", 
+             b: "Categorizar dados por sensibilidade e impacto. Níveis: Public, Internal, Confidential, Restricted."},
+            {f: "O que são dados Public?", 
+             b: "Informações públicas que podem ser divulgadas sem causar danos. Ex: site, marketing."},
+            {f: "O que são dados Internal?", 
+             b: "Uso interno da organização. Ex: manuais, políticas internas, organogramas."},
+            {f: "O que são dados Confidential?", 
+             b: "Dados sensíveis que requerem proteção. Ex: PII, informações financeiras, dados de saúde."},
+            {f: "O que são dados Restricted?", 
+             b: "Dados altamente sensíveis. Ex: segredos comerciais, propriedade intelectual."},
+
+            // Regulamentações (66-68)
+            {f: "O que é GDPR?", 
+             b: "General Data Protection Regulation. Regulamentação de proteção de dados da União Europeia. Multas de até €20M ou 4% do faturamento."},
+            {f: "O que é LGPD?", 
+             b: "Lei Geral de Proteção de Dados do Brasil. Baseada no GDPR. Multas de até 2% do faturamento (R$50M)."},
+            {f: "O que é HIPAA?", 
+             b: "Health Insurance Portability and Accountability Act. Proteção de dados de saúde nos EUA."},
+
+            // Data Destruction (69-70)
+            {f: "O que é Data Destruction?", 
+             b: "Processos para garantir que dados não possam ser recuperados após descarte: Shredding, Wiping, Degaussing."},
+            {f: "Qual a diferença entre Shredding, Wiping e Degaussing?", 
+             b: "Shredding: destruição física. Wiping: sobrescrita de dados. Degaussing: campo magnético para mídias magnéticas."}
         ];
 
+        // ========== QUIZ DO DOMÍNIO 5 (35 QUESTÕES COM EXPLICAÇÕES) ==========
         const quiz = [
-            // Documentos
-            {q: "Documento de segurança de alto nível (estratégico):", o: ["Procedure", "Standard", "Policy", "Guideline"], c: 2},
-            {q: "Passo a passo para executar uma tarefa (operacional):", o: ["Policy", "Standard", "Guideline", "Procedure"], c: 3},
-            {q: "Requisitos obrigatórios e detalhados (tático):", o: ["Policy", "Standard", "Procedure", "Guideline"], c: 1},
-            
-            // Risco
-            {q: "Risco natural sem controles implementados:", o: ["Residual Risk", "Inherent Risk", "Accepted Risk", "Transferred Risk"], c: 1},
-            {q: "Risco remanescente após controles:", o: ["Inherent Risk", "Residual Risk", "Avoided Risk", "Mitigated Risk"], c: 1},
-            {q: "Quantidade de risco que organização aceita:", o: ["Risk Tolerance", "Risk Appetite", "Risk Threshold", "Risk Capacity"], c: 1},
-            
-            // Fórmulas
-            {q: "Fórmula para calcular ALE:", o: ["AV × EF", "SLE × ARO", "AV × ARO", "SLE × EF"], c: 1},
-            {q: "Fórmula para calcular SLE:", o: ["AV × EF", "AV × ARO", "SLE × ARO", "EF × ARO"], c: 0},
-            {q: "Frequência anual de um risco:", o: ["SLE", "ALE", "ARO", "EF"], c: 2},
-            
-            // Continuidade
-            {q: "Tempo máximo que processo pode ficar offline:", o: ["RPO", "RTO", "MTD", "SLA"], c: 1},
-            {q: "Quantidade máxima de dados que pode perder:", o: ["RTO", "RPO", "MTD", "BIA"], c: 1},
-            
-            // Vendor
-            {q: "Avaliação pré-contrato do fornecedor:", o: ["Due Care", "Due Diligence", "Right-to-Audit", "SLA"], c: 1},
-            {q: "Ações contínuas pós-contrato:", o: ["Due Diligence", "Due Care", "SLA", "Audit"], c: 1},
-            
-            // Classificação
-            {q: "Dados públicos (site, marketing):", o: ["Public", "Internal", "Confidential", "Restricted"], c: 0},
-            {q: "Dados altamente sensíveis (segredos):", o: ["Internal", "Confidential", "Restricted", "Public"], c: 2},
-            
-            // Regulamentações
-            {q: "Regulamentação de proteção de dados da UE:", o: ["LGPD", "HIPAA", "GDPR", "PCI DSS"], c: 2},
-            {q: "Lei brasileira de proteção de dados:", o: ["GDPR", "HIPAA", "LGPD", "SOX"], c: 2},
-            {q: "Proteção de dados de saúde (EUA):", o: ["GDPR", "HIPAA", "PCI DSS", "SOX"], c: 1},
-            
-            // Data Destruction
-            {q: "Destruição física de papel/discos:", o: ["Wiping", "Degaussing", "Shredding", "Pulping"], c: 2},
-            {q: "Sobrescrever dados em disco:", o: ["Shredding", "Degaussing", "Wiping", "Burning"], c: 2},
-            {q: "Campo magnético para apagar mídias:", o: ["Shredding", "Wiping", "Degaussing", "Incineration"], c: 2},
-            
-            // Pessoal
-            {q: "Verificação pré-contratação:", o: ["NDA", "Background Check", "AUP", "PoLP"], c: 1},
-            {q: "Acordo de confidencialidade:", o: ["AUP", "NDA", "SLA", "BIA"], c: 1},
-            {q: "Princípio do menor privilégio:", o: ["SoD", "PoLP", "AUP", "RBAC"], c: 1}
+            // Documentos (1-6)
+            {q: "Documento de segurança de alto nível (estratégico):", 
+             o: ["Procedure", "Standard", "Policy", "Guideline"], 
+             c: 2,
+             e: "Policy (Política) é o documento de alto nível, aprovado pela diretoria, que define o 'por que fazer'."},
+            {q: "Passo a passo para executar uma tarefa (operacional):", 
+             o: ["Policy", "Standard", "Guideline", "Procedure"], 
+             c: 3,
+             e: "Procedure (Procedimento) é o passo a passo detalhado, o 'como fazer'."},
+            {q: "Requisitos obrigatórios e detalhados (tático):", 
+             o: ["Policy", "Standard", "Procedure", "Guideline"], 
+             c: 1,
+             e: "Standard (Padrão) define requisitos obrigatórios, o 'o que fazer'."},
+            {q: "Recomendações e melhores práticas não obrigatórias:", 
+             o: ["Policy", "Standard", "Procedure", "Guideline"], 
+             c: 3,
+             e: "Guideline (Diretriz) são recomendações, não obrigatórias."},
+            {q: "Política de uso aceitável de recursos corporativos:", 
+             o: ["NDA", "AUP", "SLA", "BIA"], 
+             c: 1,
+             e: "AUP (Acceptable Use Policy) define uso aceitável de email, internet, dispositivos."},
+            {q: "Acordo de confidencialidade para proteger segredos:", 
+             o: ["AUP", "NDA", "SLA", "BIA"], 
+             c: 1,
+             e: "NDA (Non-Disclosure Agreement) é um acordo de confidencialidade."},
+
+            // Change Management (7-10)
+            {q: "Processo formal para mudanças em produção:", 
+             o: ["Risk Management", "Change Management", "Incident Response", "Vendor Management"], 
+             c: 1,
+             e: "Change Management é o processo formal: Request → Approval → Test → Implement → Document."},
+            {q: "Comitê que analisa e aprova mudanças propostas:", 
+             o: ["SOC", "CAB", "NOC", "CISO"], 
+             c: 1,
+             e: "CAB (Change Advisory Board) é o comitê que analisa e aprova mudanças."},
+            {q: "Mudança crítica não planejada (ex: patch urgente):", 
+             o: ["Standard Change", "Normal Change", "Emergency Change", "Routine Change"], 
+             c: 2,
+             e: "Emergency Change é para situações críticas não planejadas, com processo acelerado."},
+            {q: "Plano para reverter mudança em caso de problemas:", 
+             o: ["Rollback plan", "Recovery plan", "Contingency plan", "Business plan"], 
+             c: 0,
+             e: "Rollback plan (ou backout plan) é o plano para reverter a mudança se algo der errado."},
+
+            // Risco (11-16)
+            {q: "Risco natural sem controles implementados:", 
+             o: ["Residual Risk", "Inherent Risk", "Accepted Risk", "Transferred Risk"], 
+             c: 1,
+             e: "Inherent Risk (risco inerente) é o risco natural sem controles."},
+            {q: "Risco remanescente após controles:", 
+             o: ["Inherent Risk", "Residual Risk", "Avoided Risk", "Mitigated Risk"], 
+             c: 1,
+             e: "Residual Risk é o risco que permanece após a implementação de controles."},
+            {q: "Quantidade de risco que organização aceita (estratégico):", 
+             o: ["Risk Tolerance", "Risk Appetite", "Risk Threshold", "Risk Capacity"], 
+             c: 1,
+             e: "Risk Appetite (apetite de risco) é a quantidade total de risco que a organização está disposta a aceitar."},
+            {q: "Variação aceitável no apetite de risco (operacional):", 
+             o: ["Risk Appetite", "Risk Tolerance", "Risk Threshold", "Risk Capacity"], 
+             c: 1,
+             e: "Risk Tolerance (tolerância a risco) é a variação aceitável no apetite de risco."},
+            {q: "Aplicar controles para reduzir risco:", 
+             o: ["Risk Transfer", "Risk Mitigation", "Risk Acceptance", "Risk Avoidance"], 
+             c: 1,
+             e: "Risk Mitigation é aplicar controles para reduzir o risco."},
+            {q: "Transferir risco para terceiros (seguro):", 
+             o: ["Risk Mitigation", "Risk Transfer", "Risk Acceptance", "Risk Avoidance"], 
+             c: 1,
+             e: "Risk Transfer transfere o risco para terceiros, como seguro cibernético."},
+
+            // Fórmulas (17-22)
+            {q: "Fórmula para calcular ALE:", 
+             o: ["AV × EF", "SLE × ARO", "AV × ARO", "SLE × EF"], 
+             c: 1,
+             e: "ALE (Annual Loss Expectancy) = SLE × ARO."},
+            {q: "Fórmula para calcular SLE:", 
+             o: ["AV × EF", "AV × ARO", "SLE × ARO", "EF × ARO"], 
+             c: 0,
+             e: "SLE (Single Loss Expectancy) = AV (Asset Value) × EF (Exposure Factor)."},
+            {q: "Frequência anual de um risco:", 
+             o: ["SLE", "ALE", "ARO", "EF"], 
+             c: 2,
+             e: "ARO (Annual Rate of Occurrence) é a frequência anual do risco."},
+            {q: "Percentual do ativo perdido no ataque:", 
+             o: ["AV", "ARO", "SLE", "EF"], 
+             c: 3,
+             e: "EF (Exposure Factor) é o percentual do ativo perdido quando o ataque ocorre."},
+            {q: "Valor monetário do ativo:", 
+             o: ["AV", "EF", "SLE", "ARO"], 
+             c: 0,
+             e: "AV (Asset Value) é o valor monetário do ativo."},
+            {q: "Exemplo: AV=R$100k, EF=0.5, ARO=0.5, qual ALE?", 
+             o: ["R$25k", "R$50k", "R$75k", "R$100k"], 
+             c: 0,
+             e: "SLE = R$100k × 0.5 = R$50k. ALE = R$50k × 0.5 = R$25k."},
+
+            // Business Continuity (23-26)
+            {q: "Tempo máximo que processo pode ficar offline:", 
+             o: ["RPO", "RTO", "MTD", "SLA"], 
+             c: 1,
+             e: "RTO (Recovery Time Objective) é o tempo máximo que um processo pode ficar offline."},
+            {q: "Quantidade máxima de dados que pode perder:", 
+             o: ["RTO", "RPO", "MTD", "BIA"], 
+             c: 1,
+             e: "RPO (Recovery Point Objective) é a quantidade máxima de dados que pode ser perdida."},
+            {q: "Análise que identifica processos críticos e define RTO/RPO:", 
+             o: ["BCP", "DRP", "BIA", "RA"], 
+             c: 2,
+             e: "BIA (Business Impact Analysis) identifica processos críticos e define RTO, RPO e MTD."},
+            {q: "Tempo médio entre falhas (confiabilidade):", 
+             o: ["MTTR", "MTBF", "RTO", "RPO"], 
+             c: 1,
+             e: "MTBF (Mean Time Between Failures) é o tempo médio entre falhas."},
+
+            // Vendor Management (27-29)
+            {q: "Avaliação pré-contrato do fornecedor:", 
+             o: ["Due Care", "Due Diligence", "Right-to-Audit", "SLA"], 
+             c: 1,
+             e: "Due Diligence é a avaliação pré-contrato do fornecedor."},
+            {q: "Ações contínuas pós-contrato (monitoramento):", 
+             o: ["Due Diligence", "Due Care", "SLA", "Audit"], 
+             c: 1,
+             e: "Due Care são as ações contínuas após o contrato: monitoramento, auditorias."},
+            {q: "Contrato que define níveis de serviço:", 
+             o: ["NDA", "AUP", "SLA", "BIA"], 
+             c: 2,
+             e: "SLA (Service Level Agreement) define níveis de serviço, uptime, penalidades."},
+
+            // Classificação de Dados (30-32)
+            {q: "Dados públicos (site, marketing):", 
+             o: ["Public", "Internal", "Confidential", "Restricted"], 
+             c: 0,
+             e: "Dados Public são informações públicas, sem impacto se divulgadas."},
+            {q: "Dados de uso interno (manuais, políticas):", 
+             o: ["Public", "Internal", "Confidential", "Restricted"], 
+             c: 1,
+             e: "Dados Internal são para uso interno, impacto moderado se divulgados."},
+            {q: "Dados altamente sensíveis (segredos comerciais):", 
+             o: ["Internal", "Confidential", "Restricted", "Public"], 
+             c: 2,
+             e: "Dados Restricted são altamente sensíveis, impacto máximo se divulgados."},
+
+            // Regulamentações (33-35)
+            {q: "Regulamentação de proteção de dados da UE:", 
+             o: ["LGPD", "HIPAA", "GDPR", "PCI DSS"], 
+             c: 2,
+             e: "GDPR (General Data Protection Regulation) é a lei de proteção de dados da União Europeia."},
+            {q: "Lei brasileira de proteção de dados:", 
+             o: ["GDPR", "HIPAA", "LGPD", "SOX"], 
+             c: 2,
+             e: "LGPD (Lei Geral de Proteção de Dados) é a lei brasileira, baseada no GDPR."},
+            {q: "Proteção de dados de saúde (EUA):", 
+             o: ["GDPR", "HIPAA", "PCI DSS", "SOX"], 
+             c: 1,
+             e: "HIPAA (Health Insurance Portability and Accountability Act) protege dados de saúde nos EUA."}
         ];
 
         let currentCard = 0;
@@ -734,7 +1083,9 @@
 
         function loadProgress() {
             const saved = localStorage.getItem('dominio5_mastered');
-            if (saved) mastered = new Set(JSON.parse(saved));
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
         }
         function saveProgress() {
             localStorage.setItem('dominio5_mastered', JSON.stringify([...mastered]));
@@ -742,14 +1093,22 @@
         loadProgress();
 
         function showTab(n) {
-            document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
-            document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
-            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) {
+                loadQuiz();
+            }
         }
 
         function updateCard() {
             if (filteredCards.length === 0) {
                 document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                document.getElementById('card-counter').textContent = 'Card 0 de 0';
+                document.getElementById('side-indicator').textContent = 'FRENTE';
                 return;
             }
             const cardIndex = filteredCards[currentCard];
@@ -758,10 +1117,10 @@
             document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
             document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
             const btn = document.getElementById('master-btn');
-            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
-            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            const isMastered = mastered.has(cardIndex);
+            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', isMastered);
             document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
-            
             const progress = (mastered.size / cards.length) * 100;
             document.getElementById('progress-fill').style.width = progress + '%';
             document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
@@ -791,11 +1150,9 @@
             currentFilter = type;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
             if (type === 'all') filteredCards = [...Array(cards.length).keys()];
             else if (type === 'mastered') filteredCards = Array.from(mastered);
             else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
-            
             currentCard = 0; flipped = false; updateCard();
         }
 
@@ -816,7 +1173,7 @@
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
                 exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
                 div.appendChild(exp);
                 container.appendChild(div);
             });
@@ -824,7 +1181,9 @@
 
         function selectOpt(qi, oi) {
             if (checked) return;
-            quiz[qi].o.forEach((_, i) => document.getElementById(`q${qi}o${i}`).classList.remove('selected'));
+            quiz[qi].o.forEach((_, i) => {
+                document.getElementById(`q${qi}o${i}`).classList.remove('selected');
+            });
             document.getElementById(`q${qi}o${oi}`).classList.add('selected');
             answers[qi] = oi;
         }
@@ -836,24 +1195,26 @@
                 const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
                 q.o.forEach((_, oi) => {
                     const el = document.getElementById(`q${qi}o${oi}`);
-                    if (correctAnswer.includes(oi)) el.classList.add('correct');
-                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
                 });
                 document.getElementById(`exp${qi}`).style.display = 'block';
                 if (correctAnswer.includes(answers[qi])) correct++;
             });
-            
             const pct = Math.round((correct / quiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
             document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
-            document.getElementById('results-modal').style.display = 'flex';
+            document.getElementById('results-modal').classList.add('show');
         }
 
         function resetQuiz() {
             checked = false;
             answers = {};
             document.getElementById('questions').innerHTML = '';
-            document.getElementById('results-modal').style.display = 'none';
+            document.getElementById('results-modal').classList.remove('show');
             loadQuiz();
         }
 

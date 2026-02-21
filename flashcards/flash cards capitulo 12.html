@@ -5,25 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Security+ Cap 12 - Risk Management Processes</title>
     <style>
+        /* ===== RESET CSS ===== */
+        /* Remove todas as margens e paddings padrão do navegador */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Gradiente laranja - tema do capítulo 12 (Risk Management) */
             background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; /* Centraliza horizontalmente */
+        }
+        
+        /* ===== CABEÇALHO ===== */
         .header {
             text-align: center;
             color: white;
             margin-bottom: 40px;
             animation: fadeIn 0.5s;
         }
+        
         .header h1 {
             font-size: 2.8rem;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
+        
+        /* Barra de estatísticas */
         .stats-bar {
             display: flex;
             gap: 20px;
@@ -31,14 +44,17 @@
             margin-top: 20px;
             flex-wrap: wrap;
         }
+        
         .stat-card {
             background: rgba(255,255,255,0.2);
             padding: 15px 25px;
             border-radius: 12px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px); /* Efeito vidro fosco */
             color: white;
             font-weight: bold;
         }
+        
+        /* ===== ABAS (TABS) ===== */
         .tabs {
             display: flex;
             gap: 12px;
@@ -46,6 +62,7 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
         }
+        
         .tab-btn {
             padding: 15px 30px;
             background: white;
@@ -57,26 +74,32 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        
         .tab-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
+        
         .tab-btn.active {
             background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
             color: white;
         }
+        
+        /* Controle de visibilidade das abas */
         .content { 
             display: none;
             animation: fadeIn 0.4s;
         }
         .content.active { display: block; }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* FLASHCARDS */
+        /* ===== FLASHCARDS ===== */
         .flashcard-area { max-width: 900px; margin: 0 auto; }
+        
         .card-info {
             background: rgba(255,255,255,0.25);
             padding: 20px;
@@ -85,6 +108,8 @@
             margin-bottom: 25px;
             backdrop-filter: blur(10px);
         }
+        
+        /* Barra de progresso */
         .progress-bar {
             width: 100%;
             height: 8px;
@@ -93,11 +118,14 @@
             overflow: hidden;
             margin-top: 10px;
         }
+        
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #10b981, #34d399);
             transition: width 0.3s ease;
         }
+        
+        /* O flashcard */
         .flashcard {
             background: white;
             border-radius: 20px;
@@ -113,7 +141,9 @@
             position: relative;
             margin-bottom: 30px;
         }
+        
         .flashcard:hover { transform: scale(1.02); }
+        
         .side-indicator {
             position: absolute;
             top: 20px;
@@ -125,18 +155,22 @@
             font-size: 0.9rem;
             font-weight: 600;
         }
+        
         .flashcard-text {
             font-size: 1.4rem;
             line-height: 1.8;
             text-align: center;
             color: #1f2937;
         }
+        
         .flip-hint {
             margin-top: 20px;
             font-size: 0.9rem;
             color: #6b7280;
             font-style: italic;
         }
+        
+        /* ===== CONTROLES ===== */
         .controls {
             display: flex;
             gap: 15px;
@@ -144,6 +178,7 @@
             align-items: center;
             flex-wrap: wrap;
         }
+        
         .btn {
             padding: 15px 30px;
             border: none;
@@ -154,36 +189,46 @@
             font-size: 1rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
+        
         .btn-nav {
             background: white;
             font-size: 1.5rem;
             width: 55px;
             height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        
         .btn-master {
             background: #e5e7eb;
             color: #1f2937;
         }
+        
         .btn-master.mastered {
             background: #10b981;
             color: white;
         }
+        
         .btn-shuffle {
             background: #f59e0b;
             color: white;
         }
         
-        /* QUIZ */
+        /* ===== QUIZ ===== */
         .quiz-area { max-width: 1000px; margin: 0 auto; }
+        
         .quiz-header {
             text-align: center;
             color: white;
             margin-bottom: 35px;
         }
+        
         .question {
             background: white;
             border-radius: 18px;
@@ -191,12 +236,14 @@
             margin-bottom: 25px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
+        
         .question h3 {
             color: #1f2937;
             margin-bottom: 20px;
             font-size: 1.25rem;
             line-height: 1.6;
         }
+        
         .option {
             padding: 18px 20px;
             border: 3px solid #e5e7eb;
@@ -207,26 +254,31 @@
             background: white;
             font-size: 1.05rem;
         }
+        
         .option:hover {
             background: #fff5f0;
             border-color: #ff7e5f;
             transform: translateX(5px);
         }
+        
         .option.selected {
             border-color: #ff7e5f;
             background: #fff5f0;
             font-weight: 600;
         }
+        
         .option.correct {
             border-color: #10b981;
             background: #d1fae5;
             font-weight: 600;
         }
+        
         .option.incorrect {
             border-color: #ef4444;
             background: #fee2e2;
             font-weight: 600;
         }
+        
         .explanation {
             margin-top: 20px;
             padding: 20px;
@@ -236,6 +288,8 @@
             display: none;
             line-height: 1.6;
         }
+        
+        /* ===== MODAL DE RESULTADOS ===== */
         .results-modal {
             position: fixed;
             top: 0;
@@ -248,7 +302,9 @@
             justify-content: center;
             z-index: 1000;
         }
+        
         .results-modal.show { display: flex; }
+        
         .results-content {
             background: white;
             padding: 50px;
@@ -257,10 +313,12 @@
             text-align: center;
             animation: scaleIn 0.3s ease;
         }
+        
         @keyframes scaleIn {
             from { transform: scale(0.9); }
             to { transform: scale(1); }
         }
+        
         .score-circle {
             width: 180px;
             height: 180px;
@@ -274,18 +332,22 @@
             font-weight: bold;
             margin: 30px auto;
         }
+        
         .btn-primary {
             background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
             color: white;
             padding: 18px 45px;
             font-size: 1.1rem;
         }
+        
+        /* ===== BOTÕES DE FILTRO ===== */
         .filter-buttons {
             display: flex;
             gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
         }
+        
         .filter-btn {
             padding: 10px 20px;
             background: rgba(255,255,255,0.3);
@@ -296,6 +358,7 @@
             transition: all 0.3s ease;
             font-weight: 600;
         }
+        
         .filter-btn.active {
             background: white;
             color: #ff7e5f;
@@ -304,6 +367,7 @@
 </head>
 <body>
     <div class="container">
+        <!-- ===== CABEÇALHO ===== -->
         <div class="header">
             <h1>⚖️ Security+ Capítulo 12</h1>
             <p>Risk Management Processes - 20 Cards | 10 Questões</p>
@@ -314,12 +378,14 @@
             </div>
         </div>
 
+        <!-- ===== ABAS ===== -->
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
             <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
             <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
         </div>
 
+        <!-- ===== ABA 0: FLASHCARDS ===== -->
         <div id="tab0" class="content active">
             <div class="flashcard-area">
                 <div class="card-info">
@@ -354,11 +420,13 @@
             </div>
         </div>
 
+        <!-- ===== ABA 1: RESUMO ===== -->
         <div id="tab1" class="content">
             <div class="summary" style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
                 <h1 style="color: #ff7e5f; margin-bottom: 30px; font-size: 2.5rem; border-bottom: 4px solid #ff7e5f; padding-bottom: 15px;">📖 Resumo - Capítulo 12</h1>
                 
-                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                <!-- Destaque com conceitos críticos -->
+                <div style="background: #fff5f0; border-left: 5px solid #ff7e5f; padding: 20px; margin: 20px 0; border-radius: 8px;">
                     <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
                     <ul style="margin-top: 10px; margin-left: 20px;">
                         <li><strong>Inherent Risk:</strong> Risco natural (sem controles)</li>
@@ -382,6 +450,7 @@
 
                 <h2 style="color: #feb47b; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ Análise Quantitativa de Riscos</h2>
 
+                <!-- Destaque com fórmulas críticas -->
                 <div style="background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px;">
                     <strong>⚠️ FÓRMULAS CRÍTICAS:</strong>
                     <ul style="margin-top: 10px;">
@@ -401,11 +470,13 @@
                 </table>
 
                 <h3 style="color: #ff7e5f; margin-top: 20px; margin-bottom: 10px;">Exemplo Prático</h3>
-                <p>Servidor com valor de R$100.000 (AV), fator de exposição 0.5 (perde 50% em ataque), ocorre uma vez a cada 2 anos (ARO = 0.5).</p>
-                <ul>
-                    <li>SLE = R$100.000 × 0.5 = R$50.000</li>
-                    <li>ALE = R$50.000 × 0.5 = R$25.000 por ano</li>
-                </ul>
+                <div style="background: #f3f4f6; padding: 20px; border-radius: 8px;">
+                    <p>Servidor com valor de R$100.000 (AV), fator de exposição 0.5 (perde 50% em ataque), ocorre uma vez a cada 2 anos (ARO = 0.5).</p>
+                    <ul>
+                        <li>SLE = R$100.000 × 0.5 = R$50.000</li>
+                        <li>ALE = R$50.000 × 0.5 = R$25.000 por ano</li>
+                    </ul>
+                </div>
 
                 <h2 style="color: #feb47b; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Business Continuity Planning</h2>
 
@@ -423,6 +494,7 @@
                     <tr><td><strong>MTD (Maximum Tolerable Downtime)</strong></td><td>Tempo máximo que a organização pode operar sem o processo crítico antes de sofrer danos irreparáveis.</td></tr>
                 </table>
 
+                <!-- Destaque com relação entre métricas -->
                 <div style="background: #d1fae5; border-left: 5px solid #10b981; padding: 20px; margin: 20px 0; border-radius: 8px;">
                     <strong>💡 RELAÇÃO ENTRE MÉTRICAS:</strong>
                     <ul>
@@ -474,8 +546,9 @@
                     <li><strong>Financial Audit:</strong> Foca em controles financeiros e precisão de relatórios</li>
                 </ul>
 
-                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 30px 0; border-radius: 8px;">
-                    <h3 style="color: #ec4899; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
+                <!-- Dicas finais para a prova -->
+                <div style="background: #fff5f0; border-left: 5px solid #ff7e5f; padding: 20px; margin: 30px 0; border-radius: 8px;">
+                    <h3 style="color: #ff7e5f; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
                     <ul style="margin-left: 20px; line-height: 1.8;">
                         <li><strong>Inherent Risk:</strong> sem controles | <strong>Residual Risk:</strong> após controles</li>
                         <li><strong>Risk Appetite:</strong> quanto quer aceitar | <strong>Risk Tolerance:</strong> variação permitida</li>
@@ -491,6 +564,7 @@
             </div>
         </div>
 
+        <!-- ===== ABA 2: QUIZ ===== -->
         <div id="tab2" class="content">
             <div class="quiz-area">
                 <div class="quiz-header">
@@ -504,6 +578,7 @@
         </div>
     </div>
 
+    <!-- ===== MODAL DE RESULTADOS ===== -->
     <div class="results-modal" id="results-modal">
         <div class="results-content">
             <h2>Resultado</h2>
@@ -514,53 +589,130 @@
     </div>
 
     <script>
-        // ========== CARDS TRADUZIDOS PARA PORTUGUÊS ==========
+        // ========== CARDS DO CAPÍTULO 12 ==========
+        /**
+         * ARRAY cards: armazena TODOS os flashcards do capítulo
+         * Cada card tem:
+         * - f: frente (a pergunta/conceito)
+         * - b: verso (a resposta/definição)
+         */
         const cards = [
-            {f: "O que é Inherent Risk (Risco Inerente)?", b: "Risco natural de uma atividade sem nenhum controle implementado. É o baseline de risco antes de qualquer medida de mitigação."},
-            {f: "O que é Residual Risk (Risco Residual)?", b: "Risco que permanece após a implementação de controles de segurança. Fórmula: Inherent Risk - Controles = Residual Risk."},
-            {f: "O que é Risk Appetite (Apetite de Risco)?", b: "Quantidade total de risco que uma organização está disposta a aceitar em busca de seus objetivos. É uma decisão estratégica da alta gestão."},
-            {f: "O que é Risk Tolerance (Tolerância a Risco)?", b: "Variação aceitável no apetite de risco em nível operacional. Ex: 'Podemos tolerar ±10% de variação no orçamento'."},
-            {f: "O que é Risk Assessment (Avaliação de Risco)?", b: "Processo de identificar, analisar e priorizar riscos. Pode ser qualitativa (Alto/Médio/Baixo) ou quantitativa (usando ALE, SLE, ARO)."},
-            {f: "O que é ALE (Annual Loss Expectancy)?", b: "Perda anual esperada devido a um risco. Calculada como ALE = SLE × ARO. Usada para justificar investimentos em segurança."},
-            {f: "O que é SLE (Single Loss Expectancy)?", b: "Perda esperada para uma única ocorrência do risco. Calculada como SLE = AV (Asset Value) × EF (Exposure Factor)."},
-            {f: "O que é ARO (Annual Rate of Occurrence)?", b: "Frequência anual esperada de um risco. Ex: ARO = 0.5 significa que o risco ocorre uma vez a cada 2 anos."},
-            {f: "O que é EF (Exposure Factor)?", b: "Percentual do ativo que é perdido quando o ataque ocorre. Ex: EF = 0.7 significa que 70% do valor do ativo é perdido."},
-            {f: "O que é BIA (Business Impact Analysis)?", b: "Análise de Impacto nos Negócios. Identifica processos críticos, define RTO, RPO e MTD. É a base para o DRP (Disaster Recovery Plan) e BCP (Business Continuity Plan)."},
-            {f: "O que é RTO (Recovery Time Objective)?", b: "Tempo máximo que um processo de negócio pode ficar offline após um desastre. Define a velocidade de recuperação necessária."},
-            {f: "O que é RPO (Recovery Point Objective)?", b: "Quantidade máxima de dados que pode ser perdida em um desastre. Define a frequência de backups necessária (ex: RPO de 4 horas = backup a cada 4h)."},
-            {f: "O que é MTD (Maximum Tolerable Downtime)?", b: "Tempo máximo que a organização pode operar sem um processo crítico antes de sofrer danos irreparáveis. O RTO deve ser menor que o MTD."},
-            {f: "O que é Vendor Management (Gestão de Fornecedores)?", b: "Gestão de riscos relacionados a fornecedores e terceiros. Inclui due diligence pré-contrato, contratos, monitoramento contínuo e auditorias."},
-            {f: "O que é Due Diligence em gestão de fornecedores?", b: "Avaliação pré-contrato do fornecedor. Inclui verificação de antecedentes, análise de controles de segurança, saúde financeira e reputação."},
-            {f: "O que é Due Care em gestão de fornecedores?", b: "Ações contínuas após a assinatura do contrato. Inclui monitoramento, auditorias periódicas e verificação de conformidade. É uma responsabilidade contínua."},
-            {f: "O que é SLA (Service Level Agreement)?", b: "Acordo de Nível de Serviço. Contrato que define os níveis de serviço esperados do fornecedor: uptime, tempo de resposta, suporte, e penalidades por descumprimento."},
-            {f: "O que é Right-to-Audit (Direito de Auditoria)?", b: "Cláusula contratual que permite à organização auditar o fornecedor para verificar se ele está cumprindo os requisitos de segurança e conformidade."},
-            {f: "O que é Internal Audit (Auditoria Interna)?", b: "Auditoria realizada por equipe interna da organização, independente dos departamentos auditados. Reporta diretamente ao conselho (board)."},
-            {f: "O que é External Audit (Auditoria Externa)?", b: "Auditoria realizada por firma externa independente. Tem mais credibilidade e é frequentemente exigida para certificações como ISO, SOC e PCI DSS."}
+            {f: "O que é Inherent Risk (Risco Inerente)?", 
+             b: "Risco natural de uma atividade sem nenhum controle implementado. É o baseline de risco antes de qualquer medida de mitigação."},
+             
+            {f: "O que é Residual Risk (Risco Residual)?", 
+             b: "Risco que permanece após a implementação de controles de segurança. Fórmula: Inherent Risk - Controles = Residual Risk."},
+             
+            {f: "O que é Risk Appetite (Apetite de Risco)?", 
+             b: "Quantidade total de risco que uma organização está disposta a aceitar em busca de seus objetivos. É uma decisão estratégica da alta gestão."},
+             
+            {f: "O que é Risk Tolerance (Tolerância a Risco)?", 
+             b: "Variação aceitável no apetite de risco em nível operacional. Ex: 'Podemos tolerar ±10% de variação no orçamento'."},
+             
+            {f: "O que é Risk Assessment (Avaliação de Risco)?", 
+             b: "Processo de identificar, analisar e priorizar riscos. Pode ser qualitativa (Alto/Médio/Baixo) ou quantitativa (usando ALE, SLE, ARO)."},
+             
+            {f: "O que é ALE (Annual Loss Expectancy)?", 
+             b: "Perda anual esperada devido a um risco. Calculada como ALE = SLE × ARO. Usada para justificar investimentos em segurança."},
+             
+            {f: "O que é SLE (Single Loss Expectancy)?", 
+             b: "Perda esperada para uma única ocorrência do risco. Calculada como SLE = AV (Asset Value) × EF (Exposure Factor)."},
+             
+            {f: "O que é ARO (Annual Rate of Occurrence)?", 
+             b: "Frequência anual esperada de um risco. Ex: ARO = 0.5 significa que o risco ocorre uma vez a cada 2 anos."},
+             
+            {f: "O que é EF (Exposure Factor)?", 
+             b: "Percentual do ativo que é perdido quando o ataque ocorre. Ex: EF = 0.7 significa que 70% do valor do ativo é perdido."},
+             
+            {f: "O que é BIA (Business Impact Analysis)?", 
+             b: "Análise de Impacto nos Negócios. Identifica processos críticos, define RTO, RPO e MTD. É a base para o DRP (Disaster Recovery Plan) e BCP (Business Continuity Plan)."},
+             
+            {f: "O que é RTO (Recovery Time Objective)?", 
+             b: "Tempo máximo que um processo de negócio pode ficar offline após um desastre. Define a velocidade de recuperação necessária."},
+             
+            {f: "O que é RPO (Recovery Point Objective)?", 
+             b: "Quantidade máxima de dados que pode ser perdida em um desastre. Define a frequência de backups necessária (ex: RPO de 4 horas = backup a cada 4h)."},
+             
+            {f: "O que é MTD (Maximum Tolerable Downtime)?", 
+             b: "Tempo máximo que a organização pode operar sem um processo crítico antes de sofrer danos irreparáveis. O RTO deve ser menor que o MTD."},
+             
+            {f: "O que é Vendor Management (Gestão de Fornecedores)?", 
+             b: "Gestão de riscos relacionados a fornecedores e terceiros. Inclui due diligence pré-contrato, contratos, monitoramento contínuo e auditorias."},
+             
+            {f: "O que é Due Diligence em gestão de fornecedores?", 
+             b: "Avaliação pré-contrato do fornecedor. Inclui verificação de antecedentes, análise de controles de segurança, saúde financeira e reputação."},
+             
+            {f: "O que é Due Care em gestão de fornecedores?", 
+             b: "Ações contínuas após a assinatura do contrato. Inclui monitoramento, auditorias periódicas e verificação de conformidade. É uma responsabilidade contínua."},
+             
+            {f: "O que é SLA (Service Level Agreement)?", 
+             b: "Acordo de Nível de Serviço. Contrato que define os níveis de serviço esperados do fornecedor: uptime, tempo de resposta, suporte, e penalidades por descumprimento."},
+             
+            {f: "O que é Right-to-Audit (Direito de Auditoria)?", 
+             b: "Cláusula contratual que permite à organização auditar o fornecedor para verificar se ele está cumprindo os requisitos de segurança e conformidade."},
+             
+            {f: "O que é Internal Audit (Auditoria Interna)?", 
+             b: "Auditoria realizada por equipe interna da organização, independente dos departamentos auditados. Reporta diretamente ao conselho (board)."},
+             
+            {f: "O que é External Audit (Auditoria Externa)?", 
+             b: "Auditoria realizada por firma externa independente. Tem mais credibilidade e é frequentemente exigida para certificações como ISO, SOC e PCI DSS."}
         ];
 
+        // ========== QUIZ DO CAPÍTULO 12 (10 QUESTÕES) ==========
         const quiz = [
-            {q: "Risco natural sem controles implementados:", o: ["Residual Risk", "Inherent Risk", "Mitigated Risk", "Accepted Risk"], c: 1},
-            {q: "Risco que permanece após a implementação de controles:", o: ["Inherent Risk", "Residual Risk", "Avoided Risk", "Transferred Risk"], c: 1},
-            {q: "Quantidade total de risco que a organização está disposta a aceitar:", o: ["Risk Tolerance", "Risk Appetite", "Risk Threshold", "Risk Capacity"], c: 1},
-            {q: "Fórmula para calcular perda anual esperada (ALE):", o: ["AV × EF", "SLE × ARO", "AV × ARO", "SLE × EF"], c: 1},
-            {q: "Perda esperada para uma única ocorrência de risco:", o: ["ALE", "ARO", "SLE", "EF"], c: 2},
-            {q: "Frequência anual esperada de um risco:", o: ["SLE", "ALE", "ARO", "EF"], c: 2},
-            {q: "Tempo máximo que um processo pode ficar offline (objetivo de recuperação):", o: ["RPO", "RTO", "MTD", "SLA"], c: 1},
-            {q: "Quantidade máxima de dados que pode ser perdida (objetivo de recuperação):", o: ["RTO", "RPO", "MTD", "BIA"], c: 1},
-            {q: "Avaliação pré-contrato do fornecedor (antes da contratação):", o: ["Due Care", "Due Diligence", "Right-to-Audit", "SLA"], c: 1},
-            {q: "Ações contínuas após o contrato (monitoramento pós-contrato):", o: ["Due Diligence", "Due Care", "SLA", "Vendor Audit"], c: 1}
+            {q: "Risco natural sem controles implementados:", 
+             o: ["Residual Risk", "Inherent Risk", "Mitigated Risk", "Accepted Risk"], 
+             c: 1},
+             
+            {q: "Risco que permanece após a implementação de controles:", 
+             o: ["Inherent Risk", "Residual Risk", "Avoided Risk", "Transferred Risk"], 
+             c: 1},
+             
+            {q: "Quantidade total de risco que a organização está disposta a aceitar:", 
+             o: ["Risk Tolerance", "Risk Appetite", "Risk Threshold", "Risk Capacity"], 
+             c: 1},
+             
+            {q: "Fórmula para calcular perda anual esperada (ALE):", 
+             o: ["AV × EF", "SLE × ARO", "AV × ARO", "SLE × EF"], 
+             c: 1},
+             
+            {q: "Perda esperada para uma única ocorrência de risco:", 
+             o: ["ALE", "ARO", "SLE", "EF"], 
+             c: 2},
+             
+            {q: "Frequência anual esperada de um risco:", 
+             o: ["SLE", "ALE", "ARO", "EF"], 
+             c: 2},
+             
+            {q: "Tempo máximo que um processo pode ficar offline (objetivo de recuperação):", 
+             o: ["RPO", "RTO", "MTD", "SLA"], 
+             c: 1},
+             
+            {q: "Quantidade máxima de dados que pode ser perdida (objetivo de recuperação):", 
+             o: ["RTO", "RPO", "MTD", "BIA"], 
+             c: 1},
+             
+            {q: "Avaliação pré-contrato do fornecedor (antes da contratação):", 
+             o: ["Due Care", "Due Diligence", "Right-to-Audit", "SLA"], 
+             c: 1},
+             
+            {q: "Ações contínuas após o contrato (monitoramento pós-contrato):", 
+             o: ["Due Diligence", "Due Care", "SLA", "Vendor Audit"], 
+             c: 1}
         ];
 
-        let currentCard = 0;
-        let flipped = false;
-        let mastered = new Set();
-        let answers = {};
-        let checked = false;
-        let filteredCards = [...Array(cards.length).keys()];
-        let currentFilter = 'all';
+        // ========== VARIÁVEIS DE ESTADO ==========
+        
+        let currentCard = 0;        // POSIÇÃO no array filteredCards
+        let flipped = false;        // false = frente, true = verso
+        let mastered = new Set();   // Índices originais dos cards dominados
+        let answers = {};           // Respostas do quiz
+        let checked = false;        // Quiz já foi verificado?
+        let filteredCards = [...Array(cards.length).keys()]; // Índices na ordem atual
+        let currentFilter = 'all';  // Filtro atual
 
-        // ========== LOCALSTORAGE ==========
-        // Carregar progresso salvo
+        // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
+        
         function loadProgress() {
             const saved = localStorage.getItem('security_plus_cap12_mastered');
             if (saved) {
@@ -568,37 +720,51 @@
             }
         }
 
-        // Salvar progresso
         function saveProgress() {
             localStorage.setItem('security_plus_cap12_mastered', JSON.stringify([...mastered]));
         }
 
-        // Chamar loadProgress assim que o script carregar
-        loadProgress();
+        loadProgress(); // Carrega progresso ao iniciar
 
+        // ========== FUNÇÕES DAS ABAS ==========
+        
         function showTab(n) {
             document.querySelectorAll('.content').forEach((c, i) => {
                 c.classList.toggle('active', i === n);
             });
+            
             document.querySelectorAll('.tab-btn').forEach((b, i) => {
                 b.classList.toggle('active', i === n);
             });
-            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+            
+            if (n === 2 && !document.getElementById('questions').innerHTML) {
+                loadQuiz();
+            }
         }
 
+        // ========== FUNÇÕES DOS FLASHCARDS ==========
+        
         function updateCard() {
             if (filteredCards.length === 0) {
                 document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                document.getElementById('card-counter').textContent = 'Card 0 de 0';
+                document.getElementById('side-indicator').textContent = 'FRENTE';
                 return;
             }
+            
             const cardIndex = filteredCards[currentCard];
             const card = cards[cardIndex];
+            
             document.getElementById('card-text').textContent = flipped ? card.b : card.f;
-            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            document.getElementById('card-counter').textContent = 
+                `Card ${currentCard + 1} de ${filteredCards.length}`;
             document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            
             const btn = document.getElementById('master-btn');
-            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
-            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            const isMastered = mastered.has(cardIndex);
+            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', isMastered);
+            
             document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
             
             const progress = (mastered.size / cards.length) * 100;
@@ -612,28 +778,36 @@
         }
 
         function nextCard() {
+            if (filteredCards.length === 0) return;
             currentCard = (currentCard + 1) % filteredCards.length;
             flipped = false;
             updateCard();
         }
 
         function prevCard() {
+            if (filteredCards.length === 0) return;
             currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
             flipped = false;
             updateCard();
         }
 
         function toggleMaster() {
+            if (filteredCards.length === 0) return;
+            
             const cardIndex = filteredCards[currentCard];
-            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
-            else mastered.add(cardIndex);
             
-            // ========== SALVAR PROGRESSO ==========
+            if (mastered.has(cardIndex)) {
+                mastered.delete(cardIndex);
+            } else {
+                mastered.add(cardIndex);
+            }
+            
             saveProgress();
-            
             updateCard();
         }
 
+        // ========== FUNÇÃO DE EMBARALHAR ==========
+        
         function shuffleCards() {
             for (let i = filteredCards.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -644,8 +818,11 @@
             updateCard();
         }
 
+        // ========== FUNÇÕES DE FILTRO ==========
+        
         function filterCards(type) {
             currentFilter = type;
+            
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
@@ -662,6 +839,8 @@
             updateCard();
         }
 
+        // ========== FUNÇÕES DO QUIZ ==========
+        
         function loadQuiz() {
             const container = document.getElementById('questions');
             quiz.forEach((q, qi) => {
@@ -714,7 +893,8 @@
             
             const pct = Math.round((correct / quiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('score-text').textContent = 
+                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
             document.getElementById('results-modal').classList.add('show');
         }
 
@@ -726,6 +906,7 @@
             loadQuiz();
         }
 
+        // ========== INICIALIZAÇÃO ==========
         updateCard();
     </script>
 </body>

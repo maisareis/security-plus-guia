@@ -5,25 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Security+ Cap 10 - Virtualização, Cloud e Email Security</title>
     <style>
+        /* ===== RESET CSS ===== */
+        /* Remove todas as margens e paddings padrão do navegador */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Gradiente roxo - tema do capítulo 10 (Virtualização, Cloud e Email) */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; /* Centraliza horizontalmente */
+        }
+        
+        /* ===== CABEÇALHO ===== */
         .header {
             text-align: center;
             color: white;
             margin-bottom: 40px;
             animation: fadeIn 0.5s;
         }
+        
         .header h1 {
             font-size: 2.8rem;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
+        
+        /* Barra de estatísticas */
         .stats-bar {
             display: flex;
             gap: 20px;
@@ -31,14 +44,17 @@
             margin-top: 20px;
             flex-wrap: wrap;
         }
+        
         .stat-card {
             background: rgba(255,255,255,0.2);
             padding: 15px 25px;
             border-radius: 12px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px); /* Efeito vidro fosco */
             color: white;
             font-weight: bold;
         }
+        
+        /* ===== ABAS (TABS) ===== */
         .tabs {
             display: flex;
             gap: 12px;
@@ -46,6 +62,7 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
         }
+        
         .tab-btn {
             padding: 15px 30px;
             background: white;
@@ -57,26 +74,32 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        
         .tab-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
+        
         .tab-btn.active {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
+        
+        /* Controle de visibilidade das abas */
         .content { 
             display: none;
             animation: fadeIn 0.4s;
         }
         .content.active { display: block; }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* FLASHCARDS */
+        /* ===== FLASHCARDS ===== */
         .flashcard-area { max-width: 900px; margin: 0 auto; }
+        
         .card-info {
             background: rgba(255,255,255,0.25);
             padding: 20px;
@@ -85,6 +108,8 @@
             margin-bottom: 25px;
             backdrop-filter: blur(10px);
         }
+        
+        /* Barra de progresso */
         .progress-bar {
             width: 100%;
             height: 8px;
@@ -93,11 +118,14 @@
             overflow: hidden;
             margin-top: 10px;
         }
+        
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #10b981, #34d399);
             transition: width 0.3s ease;
         }
+        
+        /* O flashcard */
         .flashcard {
             background: white;
             border-radius: 20px;
@@ -113,7 +141,9 @@
             position: relative;
             margin-bottom: 30px;
         }
+        
         .flashcard:hover { transform: scale(1.02); }
+        
         .side-indicator {
             position: absolute;
             top: 20px;
@@ -125,18 +155,22 @@
             font-size: 0.9rem;
             font-weight: 600;
         }
+        
         .flashcard-text {
             font-size: 1.4rem;
             line-height: 1.8;
             text-align: center;
             color: #1f2937;
         }
+        
         .flip-hint {
             margin-top: 20px;
             font-size: 0.9rem;
             color: #6b7280;
             font-style: italic;
         }
+        
+        /* ===== CONTROLES ===== */
         .controls {
             display: flex;
             gap: 15px;
@@ -144,6 +178,7 @@
             align-items: center;
             flex-wrap: wrap;
         }
+        
         .btn {
             padding: 15px 30px;
             border: none;
@@ -154,36 +189,46 @@
             font-size: 1rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
+        
         .btn-nav {
             background: white;
             font-size: 1.5rem;
             width: 55px;
             height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        
         .btn-master {
             background: #e5e7eb;
             color: #1f2937;
         }
+        
         .btn-master.mastered {
             background: #10b981;
             color: white;
         }
+        
         .btn-shuffle {
             background: #f59e0b;
             color: white;
         }
         
-        /* QUIZ */
+        /* ===== QUIZ ===== */
         .quiz-area { max-width: 1000px; margin: 0 auto; }
+        
         .quiz-header {
             text-align: center;
             color: white;
             margin-bottom: 35px;
         }
+        
         .question {
             background: white;
             border-radius: 18px;
@@ -191,12 +236,14 @@
             margin-bottom: 25px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
+        
         .question h3 {
             color: #1f2937;
             margin-bottom: 20px;
             font-size: 1.25rem;
             line-height: 1.6;
         }
+        
         .option {
             padding: 18px 20px;
             border: 3px solid #e5e7eb;
@@ -207,26 +254,31 @@
             background: white;
             font-size: 1.05rem;
         }
+        
         .option:hover {
             background: #e0f7ff;
             border-color: #667eea;
             transform: translateX(5px);
         }
+        
         .option.selected {
             border-color: #667eea;
             background: #e0f7ff;
             font-weight: 600;
         }
+        
         .option.correct {
             border-color: #10b981;
             background: #d1fae5;
             font-weight: 600;
         }
+        
         .option.incorrect {
             border-color: #ef4444;
             background: #fee2e2;
             font-weight: 600;
         }
+        
         .explanation {
             margin-top: 20px;
             padding: 20px;
@@ -236,6 +288,8 @@
             display: none;
             line-height: 1.6;
         }
+        
+        /* ===== MODAL DE RESULTADOS ===== */
         .results-modal {
             position: fixed;
             top: 0;
@@ -248,7 +302,9 @@
             justify-content: center;
             z-index: 1000;
         }
+        
         .results-modal.show { display: flex; }
+        
         .results-content {
             background: white;
             padding: 50px;
@@ -257,10 +313,12 @@
             text-align: center;
             animation: scaleIn 0.3s ease;
         }
+        
         @keyframes scaleIn {
             from { transform: scale(0.9); }
             to { transform: scale(1); }
         }
+        
         .score-circle {
             width: 180px;
             height: 180px;
@@ -274,18 +332,22 @@
             font-weight: bold;
             margin: 30px auto;
         }
+        
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 18px 45px;
             font-size: 1.1rem;
         }
+        
+        /* ===== BOTÕES DE FILTRO ===== */
         .filter-buttons {
             display: flex;
             gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
         }
+        
         .filter-btn {
             padding: 10px 20px;
             background: rgba(255,255,255,0.3);
@@ -296,6 +358,7 @@
             transition: all 0.3s ease;
             font-weight: 600;
         }
+        
         .filter-btn.active {
             background: white;
             color: #667eea;
@@ -304,6 +367,7 @@
 </head>
 <body>
     <div class="container">
+        <!-- ===== CABEÇALHO ===== -->
         <div class="header">
             <h1>☁️ Security+ Capítulo 10</h1>
             <p>Virtualização, Cloud, Mobile, Embedded e Email Security</p>
@@ -314,12 +378,14 @@
             </div>
         </div>
 
+        <!-- ===== ABAS ===== -->
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
             <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
             <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
         </div>
 
+        <!-- ===== ABA 0: FLASHCARDS ===== -->
         <div id="tab0" class="content active">
             <div class="flashcard-area">
                 <div class="card-info">
@@ -354,10 +420,12 @@
             </div>
         </div>
 
+        <!-- ===== ABA 1: RESUMO ===== -->
         <div id="tab1" class="content">
             <div class="summary" style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
                 <h1 style="color: #667eea; margin-bottom: 30px; font-size: 2.5rem; border-bottom: 4px solid #667eea; padding-bottom: 15px;">📖 Resumo - Capítulo 10</h1>
                 
+                <!-- Destaque com conceitos críticos -->
                 <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 20px 0; border-radius: 8px;">
                     <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
                     <ul style="margin-top: 10px; margin-left: 20px;">
@@ -461,6 +529,7 @@
                     </ul>
                 </div>
 
+                <!-- Dicas finais para a prova -->
                 <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 30px 0; border-radius: 8px;">
                     <h3 style="color: #ec4899; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
                     <ul style="margin-left: 20px; line-height: 1.8;">
@@ -477,6 +546,7 @@
             </div>
         </div>
 
+        <!-- ===== ABA 2: QUIZ ===== -->
         <div id="tab2" class="content">
             <div class="quiz-area">
                 <div class="quiz-header">
@@ -490,6 +560,7 @@
         </div>
     </div>
 
+    <!-- ===== MODAL DE RESULTADOS ===== -->
     <div class="results-modal" id="results-modal">
         <div class="results-content">
             <h2>Resultado</h2>
@@ -500,80 +571,194 @@
     </div>
 
     <script>
-        // ========== CARDS TRADUZIDOS PARA PORTUGUÊS ==========
+        // ========== CARDS DO CAPÍTULO 10 ==========
+        /**
+         * ARRAY cards: armazena TODOS os flashcards do capítulo
+         * Cada card tem:
+         * - f: frente (a pergunta/conceito)
+         * - b: verso (a resposta/definição)
+         */
         const cards = [
-            // Virtualização (1-13)
-            {f: "O que é um Hypervisor Type 1 (bare metal)?", b: "Hypervisor que executa diretamente no hardware, sem um sistema operacional hospedeiro. Melhor performance e segurança. Exemplos: VMware ESXi, Microsoft Hyper-V, Xen, KVM."},
-            {f: "O que é um Hypervisor Type 2 (hosted)?", b: "Hypervisor que executa sobre um sistema operacional existente. Usado para desenvolvimento, teste e ambientes de estação de trabalho. Exemplos: VMware Workstation, VirtualBox, Parallels."},
-            {f: "O que é VM Sprawl?", b: "Proliferação descontrolada de máquinas virtuais sem gerenciamento adequado. Dificulta inventário, aplicação de patches e pode criar riscos de segurança."},
-            {f: "O que é VM Escape?", b: "Ataque onde um processo executando dentro de uma máquina virtual consegue 'escapar' e comprometer o hypervisor ou o host. É raro, mas crítico."},
-            {f: "O que são Containers?", b: "Tecnologia de virtualização a nível de sistema operacional que permite executar aplicações isoladas compartilhando o mesmo kernel. Mais leves e rápidos que VMs. Ex: Docker, Kubernetes."},
-            {f: "Quais as principais práticas de segurança em containers?", b: "Image scanning (escaneamento de imagens por vulnerabilidades), princípio do menor privilégio, segmentação de rede, proteção em runtime."},
-            {f: "O que é um vSwitch (Virtual Switch)?", b: "Switch virtual que conecta máquinas virtuais entre si e com a rede física. Presente em hypervisors como VMware vSwitch e Hyper-V Virtual Switch."},
-            {f: "O que é NIC Teaming (Bonding)?", b: "Agregação de múltiplas interfaces de rede para fornecer balanceamento de carga e failover. Aumenta disponibilidade e performance."},
-            {f: "O que é VLAN (Virtual LAN)?", b: "Segmentação lógica de uma rede física em múltiplas redes broadcast separadas. Melhora segurança e performance."},
-            {f: "O que é SDN (Software-Defined Networking)?", b: "Arquitetura que separa o plano de controle (decisões de roteamento) do plano de dados (encaminhamento de pacotes). Centraliza o gerenciamento."},
-            {f: "O que é Control Plane no SDN?", b: "Plano de controle: toma decisões sobre como os pacotes devem ser encaminhados. É centralizado e baseado em software."},
-            {f: "O que é Data Plane no SDN?", b: "Plano de dados: executa o encaminhamento de pacotes conforme as regras definidas pelo plano de controle. Geralmente implementado em hardware."},
-            {f: "O que são APIs Northbound no SDN?", b: "APIs que permitem a comunicação do plano de controle com aplicações e serviços (automação, orquestração). Geralmente REST."},
-            {f: "O que são APIs Southbound no SDN?", b: "APIs que permitem a comunicação do plano de controle com dispositivos de rede (switches, roteadores). Ex: OpenFlow, NETCONF."},
+            // Virtualização (1-14)
+            {f: "O que é um Hypervisor Type 1 (bare metal)?", 
+             b: "Hypervisor que executa diretamente no hardware, sem um sistema operacional hospedeiro. Melhor performance e segurança. Exemplos: VMware ESXi, Microsoft Hyper-V, Xen, KVM."},
+             
+            {f: "O que é um Hypervisor Type 2 (hosted)?", 
+             b: "Hypervisor que executa sobre um sistema operacional existente. Usado para desenvolvimento, teste e ambientes de estação de trabalho. Exemplos: VMware Workstation, VirtualBox, Parallels."},
+             
+            {f: "O que é VM Sprawl?", 
+             b: "Proliferação descontrolada de máquinas virtuais sem gerenciamento adequado. Dificulta inventário, aplicação de patches e pode criar riscos de segurança."},
+             
+            {f: "O que é VM Escape?", 
+             b: "Ataque onde um processo executando dentro de uma máquina virtual consegue 'escapar' e comprometer o hypervisor ou o host. É raro, mas crítico."},
+             
+            {f: "O que são Containers?", 
+             b: "Tecnologia de virtualização a nível de sistema operacional que permite executar aplicações isoladas compartilhando o mesmo kernel. Mais leves e rápidos que VMs. Ex: Docker, Kubernetes."},
+             
+            {f: "Quais as principais práticas de segurança em containers?", 
+             b: "Image scanning (escaneamento de imagens por vulnerabilidades), princípio do menor privilégio, segmentação de rede, proteção em runtime."},
+             
+            {f: "O que é um vSwitch (Virtual Switch)?", 
+             b: "Switch virtual que conecta máquinas virtuais entre si e com a rede física. Presente em hypervisors como VMware vSwitch e Hyper-V Virtual Switch."},
+             
+            {f: "O que é NIC Teaming (Bonding)?", 
+             b: "Agregação de múltiplas interfaces de rede para fornecer balanceamento de carga e failover. Aumenta disponibilidade e performance."},
+             
+            {f: "O que é VLAN (Virtual LAN)?", 
+             b: "Segmentação lógica de uma rede física em múltiplas redes broadcast separadas. Melhora segurança e performance."},
+             
+            {f: "O que é SDN (Software-Defined Networking)?", 
+             b: "Arquitetura que separa o plano de controle (decisões de roteamento) do plano de dados (encaminhamento de pacotes). Centraliza o gerenciamento."},
+             
+            {f: "O que é Control Plane no SDN?", 
+             b: "Plano de controle: toma decisões sobre como os pacotes devem ser encaminhados. É centralizado e baseado em software."},
+             
+            {f: "O que é Data Plane no SDN?", 
+             b: "Plano de dados: executa o encaminhamento de pacotes conforme as regras definidas pelo plano de controle. Geralmente implementado em hardware."},
+             
+            {f: "O que são APIs Northbound no SDN?", 
+             b: "APIs que permitem a comunicação do plano de controle com aplicações e serviços (automação, orquestração). Geralmente REST."},
+             
+            {f: "O que são APIs Southbound no SDN?", 
+             b: "APIs que permitem a comunicação do plano de controle com dispositivos de rede (switches, roteadores). Ex: OpenFlow, NETCONF."},
 
             // Cloud (15-21)
-            {f: "O que é SaaS (Software as a Service)?", b: "Software como Serviço. O cliente usa o software sem gerenciar infraestrutura. O provedor gerencia tudo. Ex: Gmail, Office 365, Salesforce."},
-            {f: "O que é PaaS (Platform as a Service)?", b: "Plataforma como Serviço. O cliente gerencia apenas aplicação e dados. O provedor gerencia a plataforma. Ex: Heroku, Google App Engine."},
-            {f: "O que é IaaS (Infrastructure as a Service)?", b: "Infraestrutura como Serviço. O cliente gerencia SO, aplicação e dados. O provedor gerencia virtualização e hardware. Ex: AWS EC2, Azure VMs."},
-            {f: "O que é Public Cloud?", b: "Nuvem pública: recursos compartilhados (multi-tenant), acessíveis pela internet. Ex: AWS, Azure, Google Cloud. Pagamento por uso."},
-            {f: "O que é Private Cloud?", b: "Nuvem privada: infraestrutura dedicada a uma única organização. Mais controle, mas mais cara. Pode ser on-premises ou hospedada."},
-            {f: "O que é Hybrid Cloud?", b: "Nuvem híbrida: combinação de nuvem pública e privada, permitindo portabilidade de workloads. Balanceia custo e controle."},
-            {f: "O que é Community Cloud?", b: "Nuvem comunitária: compartilhada por organizações com interesses comuns (ex: governo, saúde). Custos e benefícios compartilhados."},
+            {f: "O que é SaaS (Software as a Service)?", 
+             b: "Software como Serviço. O cliente usa o software sem gerenciar infraestrutura. O provedor gerencia tudo. Ex: Gmail, Office 365, Salesforce."},
+             
+            {f: "O que é PaaS (Platform as a Service)?", 
+             b: "Plataforma como Serviço. O cliente gerencia apenas aplicação e dados. O provedor gerencia a plataforma. Ex: Heroku, Google App Engine."},
+             
+            {f: "O que é IaaS (Infrastructure as a Service)?", 
+             b: "Infraestrutura como Serviço. O cliente gerencia SO, aplicação e dados. O provedor gerencia virtualização e hardware. Ex: AWS EC2, Azure VMs."},
+             
+            {f: "O que é Public Cloud?", 
+             b: "Nuvem pública: recursos compartilhados (multi-tenant), acessíveis pela internet. Ex: AWS, Azure, Google Cloud. Pagamento por uso."},
+             
+            {f: "O que é Private Cloud?", 
+             b: "Nuvem privada: infraestrutura dedicada a uma única organização. Mais controle, mas mais cara. Pode ser on-premises ou hospedada."},
+             
+            {f: "O que é Hybrid Cloud?", 
+             b: "Nuvem híbrida: combinação de nuvem pública e privada, permitindo portabilidade de workloads. Balanceia custo e controle."},
+             
+            {f: "O que é Community Cloud?", 
+             b: "Nuvem comunitária: compartilhada por organizações com interesses comuns (ex: governo, saúde). Custos e benefícios compartilhados."},
 
             // Mobile (22-26)
-            {f: "O que é MDM (Mobile Device Management)?", b: "Gerenciamento centralizado de dispositivos móveis: aplicação de políticas, remote wipe (apagamento remoto), distribuição de apps, controle de acesso."},
-            {f: "O que é MAM (Mobile Application Management)?", b: "Gerenciamento de aplicações móveis: distribuição, atualização e remoção de apps específicas, sem gerenciar o dispositivo inteiro."},
-            {f: "O que é BYOD (Bring Your Own Device)?", b: "Política onde funcionários usam seus próprios dispositivos para trabalho. Desafios: separação de dados pessoais/corporativos (containerização), políticas de segurança."},
-            {f: "O que é COPE (Corporate Owned, Personally Enabled)?", b: "Dispositivo fornecido pela empresa, mas com uso pessoal permitido. A empresa mantém controle total."},
-            {f: "O que é CYOD (Choose Your Own Device)?", b: "Funcionário escolhe um dispositivo de uma lista aprovada pela empresa. Balanceia flexibilidade e controle."},
+            {f: "O que é MDM (Mobile Device Management)?", 
+             b: "Gerenciamento centralizado de dispositivos móveis: aplicação de políticas, remote wipe (apagamento remoto), distribuição de apps, controle de acesso."},
+             
+            {f: "O que é MAM (Mobile Application Management)?", 
+             b: "Gerenciamento de aplicações móveis: distribuição, atualização e remoção de apps específicas, sem gerenciar o dispositivo inteiro."},
+             
+            {f: "O que é BYOD (Bring Your Own Device)?", 
+             b: "Política onde funcionários usam seus próprios dispositivos para trabalho. Desafios: separação de dados pessoais/corporativos (containerização), políticas de segurança."},
+             
+            {f: "O que é COPE (Corporate Owned, Personally Enabled)?", 
+             b: "Dispositivo fornecido pela empresa, mas com uso pessoal permitido. A empresa mantém controle total."},
+             
+            {f: "O que é CYOD (Choose Your Own Device)?", 
+             b: "Funcionário escolhe um dispositivo de uma lista aprovada pela empresa. Balanceia flexibilidade e controle."},
 
-            // Embedded Systems (27-29)
-            {f: "O que é IoT (Internet of Things) e quais seus desafios de segurança?", b: "Dispositivos conectados com limitações de CPU, memória e energia. Segurança: segmentação de rede, atualizações, troca de senhas padrão."},
-            {f: "O que é SCADA?", b: "Supervisory Control and Data Acquisition. Sistemas de controle industrial para infraestrutura crítica. Segurança: isolamento (air gap), monitoramento."},
-            {f: "O que é RTOS (Real-Time Operating System)?", b: "Sistema operacional de tempo real. Prioriza determinismo e previsibilidade sobre performance. Usado em sistemas industriais, automotivos, médicos."},
-            {f: "O que é SoC (System on a Chip)?", b: "Integração de processador, memória e periféricos em um único chip. Comum em IoT e dispositivos móveis. Eficiência energética."},
+            // Embedded Systems (27-30)
+            {f: "O que é IoT (Internet of Things) e quais seus desafios de segurança?", 
+             b: "Dispositivos conectados com limitações de CPU, memória e energia. Segurança: segmentação de rede, atualizações, troca de senhas padrão."},
+             
+            {f: "O que é SCADA?", 
+             b: "Supervisory Control and Data Acquisition. Sistemas de controle industrial para infraestrutura crítica. Segurança: isolamento (air gap), monitoramento."},
+             
+            {f: "O que é RTOS (Real-Time Operating System)?", 
+             b: "Sistema operacional de tempo real. Prioriza determinismo e previsibilidade sobre performance. Usado em sistemas industriais, automotivos, médicos."},
+             
+            {f: "O que é SoC (System on a Chip)?", 
+             b: "Integração de processador, memória e periféricos em um único chip. Comum em IoT e dispositivos móveis. Eficiência energética."},
 
-            // Email Security (30-32)
-            {f: "O que é SPF (Sender Policy Framework)?", b: "Registro DNS que lista os endereços IP autorizados a enviar email em nome de um domínio. Ajuda a prevenir spoofing de email."},
-            {f: "O que é DKIM (DomainKeys Identified Mail)?", b: "Assinatura digital anexada ao email que permite ao receptor validar que o email veio do domínio e não foi alterado durante o trânsito."},
-            {f: "O que é DMARC (Domain-based Message Authentication)?", b: "Política que define o que fazer com emails que falham nas verificações SPF e/ou DKIM: monitorar, quarentena ou rejeitar."}
+            // Email Security (31-33)
+            {f: "O que é SPF (Sender Policy Framework)?", 
+             b: "Registro DNS que lista os endereços IP autorizados a enviar email em nome de um domínio. Ajuda a prevenir spoofing de email."},
+             
+            {f: "O que é DKIM (DomainKeys Identified Mail)?", 
+             b: "Assinatura digital anexada ao email que permite ao receptor validar que o email veio do domínio e não foi alterado durante o trânsito."},
+             
+            {f: "O que é DMARC (Domain-based Message Authentication)?", 
+             b: "Política que define o que fazer com emails que falham nas verificações SPF e/ou DKIM: monitorar, quarentena ou rejeitar."}
         ];
 
+        // ========== QUIZ DO CAPÍTULO 10 (15 QUESTÕES) ==========
         const quiz = [
-            {q: "Hypervisor que executa diretamente no hardware (melhor performance):", o: ["Type 1 (Bare Metal)", "Type 2 (Hosted)", "Type 3", "Container"], c: 0},
-            {q: "Proliferação descontrolada de VMs sem gerenciamento:", o: ["VM Escape", "VM Sprawl", "VM Hopping", "VM Spoofing"], c: 1},
-            {q: "Ataque onde uma VM compromete o hypervisor:", o: ["VM Sprawl", "VM Escape", "Container Escape", "Hyperjacking"], c: 1},
-            {q: "Tecnologia que compartilha o kernel do host e é mais leve que VM:", o: ["vSwitch", "Hypervisor", "Container", "VLAN"], c: 2},
-            {q: "Switch virtual que conecta VMs entre si:", o: ["vSwitch", "SDN", "VLAN", "NIC Teaming"], c: 0},
-            {q: "Agregação de múltiplas NICs para balanceamento e failover:", o: ["VLAN", "SDN", "NIC Teaming", "vSwitch"], c: 2},
-            {q: "Plano SDN responsável por tomar decisões de roteamento:", o: ["Data Plane", "Management Plane", "Control Plane", "Forwarding Plane"], c: 2},
-            {q: "Gmail e Office 365 são exemplos de:", o: ["IaaS", "PaaS", "SaaS", "DaaS"], c: 2},
-            {q: "AWS EC2 é um exemplo de:", o: ["SaaS", "PaaS", "IaaS", "CaaS"], c: 2},
-            {q: "Modelo de implantação cloud com recursos compartilhados (multi-tenant):", o: ["Private Cloud", "Public Cloud", "Hybrid Cloud", "Community Cloud"], c: 1},
-            {q: "Gerenciamento centralizado de dispositivos móveis:", o: ["MAM", "MDM", "BYOD", "COPE"], c: 1},
-            {q: "Política onde funcionário usa dispositivo pessoal:", o: ["COPE", "CYOD", "BYOD", "MDM"], c: 2},
-            {q: "Sistema de controle industrial para infraestrutura crítica:", o: ["IoT", "RTOS", "SCADA", "SoC"], c: 2},
-            {q: "Registro DNS que lista IPs autorizados a enviar email do domínio:", o: ["DKIM", "DMARC", "SPF", "TLS"], c: 2},
-            {q: "Assinatura digital para autenticação de email:", o: ["SPF", "DMARC", "DKIM", "S/MIME"], c: 2}
+            {q: "Hypervisor que executa diretamente no hardware (melhor performance):", 
+             o: ["Type 1 (Bare Metal)", "Type 2 (Hosted)", "Type 3", "Container"], 
+             c: 0},
+             
+            {q: "Proliferação descontrolada de VMs sem gerenciamento:", 
+             o: ["VM Escape", "VM Sprawl", "VM Hopping", "VM Spoofing"], 
+             c: 1},
+             
+            {q: "Ataque onde uma VM compromete o hypervisor:", 
+             o: ["VM Sprawl", "VM Escape", "Container Escape", "Hyperjacking"], 
+             c: 1},
+             
+            {q: "Tecnologia que compartilha o kernel do host e é mais leve que VM:", 
+             o: ["vSwitch", "Hypervisor", "Container", "VLAN"], 
+             c: 2},
+             
+            {q: "Switch virtual que conecta VMs entre si:", 
+             o: ["vSwitch", "SDN", "VLAN", "NIC Teaming"], 
+             c: 0},
+             
+            {q: "Agregação de múltiplas NICs para balanceamento e failover:", 
+             o: ["VLAN", "SDN", "NIC Teaming", "vSwitch"], 
+             c: 2},
+             
+            {q: "Plano SDN responsável por tomar decisões de roteamento:", 
+             o: ["Data Plane", "Management Plane", "Control Plane", "Forwarding Plane"], 
+             c: 2},
+             
+            {q: "Gmail e Office 365 são exemplos de:", 
+             o: ["IaaS", "PaaS", "SaaS", "DaaS"], 
+             c: 2},
+             
+            {q: "AWS EC2 é um exemplo de:", 
+             o: ["SaaS", "PaaS", "IaaS", "CaaS"], 
+             c: 2},
+             
+            {q: "Modelo de implantação cloud com recursos compartilhados (multi-tenant):", 
+             o: ["Private Cloud", "Public Cloud", "Hybrid Cloud", "Community Cloud"], 
+             c: 1},
+             
+            {q: "Gerenciamento centralizado de dispositivos móveis:", 
+             o: ["MAM", "MDM", "BYOD", "COPE"], 
+             c: 1},
+             
+            {q: "Política onde funcionário usa dispositivo pessoal:", 
+             o: ["COPE", "CYOD", "BYOD", "MDM"], 
+             c: 2},
+             
+            {q: "Sistema de controle industrial para infraestrutura crítica:", 
+             o: ["IoT", "RTOS", "SCADA", "SoC"], 
+             c: 2},
+             
+            {q: "Registro DNS que lista IPs autorizados a enviar email do domínio:", 
+             o: ["DKIM", "DMARC", "SPF", "TLS"], 
+             c: 2},
+             
+            {q: "Assinatura digital para autenticação de email:", 
+             o: ["SPF", "DMARC", "DKIM", "S/MIME"], 
+             c: 2}
         ];
 
-        let currentCard = 0;
-        let flipped = false;
-        let mastered = new Set();
-        let answers = {};
-        let checked = false;
-        let filteredCards = [...Array(cards.length).keys()];
-        let currentFilter = 'all';
+        // ========== VARIÁVEIS DE ESTADO ==========
+        
+        let currentCard = 0;        // POSIÇÃO no array filteredCards
+        let flipped = false;        // false = frente, true = verso
+        let mastered = new Set();   // Índices originais dos cards dominados
+        let answers = {};           // Respostas do quiz
+        let checked = false;        // Quiz já foi verificado?
+        let filteredCards = [...Array(cards.length).keys()]; // Índices na ordem atual
+        let currentFilter = 'all';  // Filtro atual
 
-        // ========== LOCALSTORAGE ==========
-        // Carregar progresso salvo
+        // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
+        
         function loadProgress() {
             const saved = localStorage.getItem('security_plus_cap10_mastered');
             if (saved) {
@@ -581,37 +766,51 @@
             }
         }
 
-        // Salvar progresso
         function saveProgress() {
             localStorage.setItem('security_plus_cap10_mastered', JSON.stringify([...mastered]));
         }
 
-        // Chamar loadProgress assim que o script carregar
-        loadProgress();
+        loadProgress(); // Carrega progresso ao iniciar
 
+        // ========== FUNÇÕES DAS ABAS ==========
+        
         function showTab(n) {
             document.querySelectorAll('.content').forEach((c, i) => {
                 c.classList.toggle('active', i === n);
             });
+            
             document.querySelectorAll('.tab-btn').forEach((b, i) => {
                 b.classList.toggle('active', i === n);
             });
-            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+            
+            if (n === 2 && !document.getElementById('questions').innerHTML) {
+                loadQuiz();
+            }
         }
 
+        // ========== FUNÇÕES DOS FLASHCARDS ==========
+        
         function updateCard() {
             if (filteredCards.length === 0) {
                 document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                document.getElementById('card-counter').textContent = 'Card 0 de 0';
+                document.getElementById('side-indicator').textContent = 'FRENTE';
                 return;
             }
+            
             const cardIndex = filteredCards[currentCard];
             const card = cards[cardIndex];
+            
             document.getElementById('card-text').textContent = flipped ? card.b : card.f;
-            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            document.getElementById('card-counter').textContent = 
+                `Card ${currentCard + 1} de ${filteredCards.length}`;
             document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            
             const btn = document.getElementById('master-btn');
-            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
-            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            const isMastered = mastered.has(cardIndex);
+            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', isMastered);
+            
             document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
             
             const progress = (mastered.size / cards.length) * 100;
@@ -625,28 +824,36 @@
         }
 
         function nextCard() {
+            if (filteredCards.length === 0) return;
             currentCard = (currentCard + 1) % filteredCards.length;
             flipped = false;
             updateCard();
         }
 
         function prevCard() {
+            if (filteredCards.length === 0) return;
             currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
             flipped = false;
             updateCard();
         }
 
         function toggleMaster() {
+            if (filteredCards.length === 0) return;
+            
             const cardIndex = filteredCards[currentCard];
-            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
-            else mastered.add(cardIndex);
             
-            // ========== SALVAR PROGRESSO ==========
+            if (mastered.has(cardIndex)) {
+                mastered.delete(cardIndex);
+            } else {
+                mastered.add(cardIndex);
+            }
+            
             saveProgress();
-            
             updateCard();
         }
 
+        // ========== FUNÇÃO DE EMBARALHAR ==========
+        
         function shuffleCards() {
             for (let i = filteredCards.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -657,8 +864,11 @@
             updateCard();
         }
 
+        // ========== FUNÇÕES DE FILTRO ==========
+        
         function filterCards(type) {
             currentFilter = type;
+            
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
@@ -675,6 +885,8 @@
             updateCard();
         }
 
+        // ========== FUNÇÕES DO QUIZ ==========
+        
         function loadQuiz() {
             const container = document.getElementById('questions');
             quiz.forEach((q, qi) => {
@@ -727,7 +939,8 @@
             
             const pct = Math.round((correct / quiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('score-text').textContent = 
+                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
             document.getElementById('results-modal').classList.add('show');
         }
 
@@ -739,6 +952,7 @@
             loadQuiz();
         }
 
+        // ========== INICIALIZAÇÃO ==========
         updateCard();
     </script>
 </body>

@@ -162,6 +162,9 @@
             font-size: 1.5rem;
             width: 55px;
             height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-master {
             background: #e5e7eb;
@@ -174,6 +177,12 @@
         .btn-shuffle {
             background: #f59e0b;
             color: white;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
         }
         
         .filter-buttons {
@@ -197,6 +206,104 @@
             color: #ff6b6b;
         }
 
+        .quiz-area { max-width: 1000px; margin: 0 auto; }
+        .quiz-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+        }
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+        .option:hover {
+            background: #fff5f0;
+            border-color: #ff6b6b;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            border-color: #ff6b6b;
+            background: #fff5f0;
+            font-weight: 600;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff5f0;
+            border-left: 5px solid #ff6b6b;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .results-modal.show { display: flex; }
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+        
         .summary {
             max-width: 1100px;
             margin: 0 auto;
@@ -574,153 +681,403 @@
         </div>
 
         <div id="tab2" class="content">
-            <div class="quiz-area" style="max-width: 1000px; margin:0 auto;">
-                <div class="quiz-header" style="text-align:center; color:white; margin-bottom:35px;">
+            <div class="quiz-area">
+                <div class="quiz-header">
                     <h2>Quiz - 40 Questões</h2>
+                    <p>Passing Score: 70% (28/40 corretas)</p>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn btn-primary" onclick="checkAnswers()" style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%); color:white; padding:15px 40px;">Ver Resultados</button>
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="results-modal" id="results-modal" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:1000;">
-        <div class="results-content" style="background:white; padding:50px; border-radius:25px; max-width:500px; text-align:center;">
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
             <h2>Resultado</h2>
-            <div class="score-circle" id="score-circle" style="width:180px; height:180px; border-radius:50%; background:linear-gradient(135deg, #ff6b6b 0%, #feca57 100%); color:white; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:bold; margin:30px auto;">0%</div>
-            <p id="score-text" style="font-size:1.2rem; margin-bottom:20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()" style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%); color:white; padding:15px 40px;">Refazer Quiz</button>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
         </div>
     </div>
 
     <script>
+        // ========== CARDS DO DOMÍNIO 4 - 90 CARDS COMPLETOS ==========
         const cards = [
-            // Incident Response Steps (1-10)
-            {f: "Quais são as 6 fases do processo de resposta a incidentes?", b: "1) Preparation, 2) Identification, 3) Containment, 4) Eradication, 5) Recovery, 6) Lessons Learned."},
-            {f: "O que é a fase de Containment?", b: "Isolar a ameaça para evitar propagação. Short-term (rápido) e Long-term (permanente)."},
-            {f: "O que é a fase de Eradication?", b: "Remover a causa raiz do incidente: deletar malware, fechar vulnerabilidades, revogar credenciais."},
-            {f: "O que é a fase de Recovery?", b: "Restaurar sistemas à operação normal. Restaurar backups, rebuild, patches."},
-            {f: "O que é a fase de Lessons Learned?", b: "Post-mortem do incidente. Documentar o que funcionou e propor melhorias."},
-            
-            // IDS/IPS (11-20)
-            {f: "Qual a diferença entre IDS e IPS?", b: "IDS: detecta e alerta (passivo). IPS: detecta e bloqueia (ativo, inline)."},
-            {f: "O que é detecção baseada em assinatura?", b: "Compara com assinaturas de ataques conhecidos. Rápido, baixo falso positivo, só detecta conhecido."},
-            {f: "O que é detecção baseada em anomalia?", b: "Estabelece baseline e detecta desvios. Detecta novos ataques, mais falsos positivos."},
-            {f: "O que é um falso positivo (false positive)?", b: "Alerta para tráfego legítimo classificado como malicioso."},
-            {f: "O que é um falso negativo (false negative)?", b: "Falha em detectar um ataque real. É o MAIS GRAVE."},
-            
-            // SIEM e SOAR (21-25)
-            {f: "O que é SIEM?", b: "Security Information and Event Management. Coleta, agrega e correlaciona logs. Ex: Splunk, QRadar."},
-            {f: "O que é SOAR?", b: "Security Orchestration, Automation and Response. Automatiza resposta a incidentes com playbooks."},
-            {f: "O que é NetFlow?", b: "Coleta metadados de tráfego (IPs, portas, bytes). Não captura payload."},
-            {f: "O que é ELK Stack?", b: "Elasticsearch, Logstash, Kibana. Solução open source de log management."},
-            
-            // Gerenciamento de Vulnerabilidades (26-35)
-            {f: "Quais são as 6 fases do ciclo de gestão de vulnerabilidades?", b: "1) Discovery, 2) Assessment, 3) Prioritization, 4) Remediation, 5) Verification, 6) Monitoring."},
-            {f: "O que é CVE?", b: "Common Vulnerabilities and Exposures. ID único para vulnerabilidades (CVE-2024-12345)."},
-            {f: "O que é CVSS?", b: "Common Vulnerability Scoring System. Score 0-10. Critical (9-10), High (7-8.9), Medium (4-6.9)."},
-            {f: "O que é CWE?", b: "Common Weakness Enumeration. Categorias de fraquezas (ex: CWE-79 = XSS)."},
-            {f: "Qual a diferença entre credentialed e non-credentialed scan?", b: "Credentialed: com login, mais profundo. Non-credentialed: sem login, visão de atacante."},
-            {f: "O que é Nessus?", b: "Scanner de vulnerabilidades comercial mais utilizado."},
-            {f: "O que é OpenVAS?", b: "Scanner de vulnerabilidades open source."},
-            
-            // Pentest (36-45)
-            {f: "O que é Penetration Testing (Pentest)?", b: "Simulação de ataque autorizado para identificar vulnerabilidades exploráveis."},
-            {f: "O que é Black Box pentest?", b: "Sem conhecimento prévio do alvo. Simula atacante externo."},
-            {f: "O que é White Box pentest?", b: "Com conhecimento completo (código, arquitetura). Mais profundo."},
-            {f: "O que é Gray Box pentest?", b: "Conhecimento parcial do alvo."},
-            {f: "Quais as fases de um pentest?", b: "1) Planning, 2) Reconnaissance, 3) Scanning, 4) Exploitation, 5) Post-Exploitation, 6) Reporting."},
-            {f: "O que é Metasploit?", b: "Framework de exploração mais utilizado em pentests."},
-            {f: "O que é Burp Suite?", b: "Proxy interceptador para testes em aplicações web."},
-            {f: "O que são ROE (Rules of Engagement)?", b: "Documento que define escopo e regras do pentest."},
-            
-            // Forense (46-55)
-            {f: "O que é Ordem de Volatilidade?", b: "Coletar do mais volátil: CPU/RAM → Disco → Logs → Backups."},
-            {f: "O que é Chain of Custody?", b: "Documentação de quem acessou a evidência. Essencial para tribunal."},
-            {f: "O que é Write Blocker?", b: "Dispositivo que previne modificação da evidência durante análise."},
-            {f: "O que é FTK Imager?", b: "Ferramenta para criar imagens forenses."},
-            {f: "O que é dd/dcfldd?", b: "Comandos Linux para disk imaging (cópia bit-a-bit)."},
-            {f: "O que é Autopsy?", b: "Ferramenta de análise forense com GUI."},
-            {f: "O que é Volatility?", b: "Framework para análise de memória RAM (memory forensics)."},
-            
-            // RAID (56-65)
-            {f: "O que é RAID 0?", b: "Striping. Alta performance, SEM REDUNDÂNCIA."},
-            {f: "O que é RAID 1?", b: "Mirroring. 50% capacidade, tolera 1 falha."},
-            {f: "O que é RAID 5?", b: "Striping + parity. Mínimo 3 discos, tolera 1 falha."},
-            {f: "O que é RAID 6?", b: "Double parity. Mínimo 4 discos, tolera 2 falhas."},
-            {f: "O que é RAID 10?", b: "Striping de mirrors. Performance + redundância."},
-            
-            // Backup (66-75)
-            {f: "O que é Full Backup?", b: "Cópia completa de todos os dados. Restore rápido, backup lento."},
-            {f: "O que é Incremental Backup?", b: "Mudanças desde o ÚLTIMO backup. Backup rápido, restore lento."},
-            {f: "O que é Differential Backup?", b: "Mudanças desde o último FULL. Meio termo."},
-            {f: "O que é a regra 3-2-1?", b: "3 cópias, 2 mídias, 1 offsite."},
-            {f: "O que é RPO?", b: "Recovery Point Objective. Quanto dado pode perder."},
-            {f: "O que é RTO?", b: "Recovery Time Objective. Tempo para recuperar."},
-            {f: "O que é MTD?", b: "Maximum Tolerable Downtime. Tempo máximo sem o processo."},
-            
-            // DR Sites (76-80)
-            {f: "O que é Hot Site?", b: "Totalmente equipado, failover imediato. RTO minutos."},
-            {f: "O que é Warm Site?", b: "Equipado mas sem dados atuais. RTO horas."},
-            {f: "O que é Cold Site?", b: "Apenas espaço físico. RTO dias/semanas."},
-            
-            // Ferramentas adicionais (81-90)
-            {f: "O que é Hydra?", b: "Ferramenta de quebra de senhas online."},
-            {f: "O que é John the Ripper?", b: "Password cracker multiplataforma."},
-            {f: "O que é Hashcat?", b: "Password cracker usando GPU."},
-            {f: "O que é Aircrack-ng?", b: "Suíte para teste de segurança Wi-Fi."},
-            {f: "O que é Social Engineer Toolkit (SET)?", b: "Framework para engenharia social."},
-            {f: "O que é sqlmap?", b: "Ferramenta de SQL injection automation."},
-            {f: "O que é Mimikatz?", b: "Extrai credenciais da memória do Windows."},
-            {f: "O que é Wireshark?", b: "Packet sniffer para análise de rede."},
-            {f: "O que é tcpdump?", b: "Packet sniffer de linha de comando."}
+            // Incident Response Steps (1-15)
+            {f: "Quais são as 6 fases do processo de resposta a incidentes?", 
+             b: "1) Preparation, 2) Identification, 3) Containment, 4) Eradication, 5) Recovery, 6) Lessons Learned."},
+            {f: "O que é a fase de Preparation (Preparação)?", 
+             b: "Criar planos, adquirir ferramentas, treinar equipe, definir contatos de emergência."},
+            {f: "O que é a fase de Identification (Identificação)?", 
+             b: "Detectar o incidente através de alertas, logs, relatórios de usuários."},
+            {f: "O que é a fase de Containment (Contenção)?", 
+             b: "Isolar a ameaça para evitar propagação. Short-term (rápido) e Long-term (permanente)."},
+            {f: "O que é a fase de Eradication (Erradicação)?", 
+             b: "Remover a causa raiz do incidente: deletar malware, fechar vulnerabilidades, revogar credenciais."},
+            {f: "O que é a fase de Recovery (Recuperação)?", 
+             b: "Restaurar sistemas à operação normal. Restaurar backups, rebuild, aplicar patches."},
+            {f: "O que é a fase de Lessons Learned (Lições Aprendidas)?", 
+             b: "Post-mortem do incidente. Documentar o que funcionou, o que falhou e propor melhorias."},
+            {f: "O que é um Incident Response Plan (IRP)?", 
+             b: "Documento formal com procedimentos, contatos de emergência e responsabilidades para resposta a incidentes."},
+            {f: "O que é um Incident Response Team (CSIRT/CIRT)?", 
+             b: "Equipe responsável por responder a incidentes: coordenador, analistas, suporte legal."},
+            {f: "O que é um tabletop exercise?", 
+             b: "Simulação de incidente em sala de reunião, sem sistemas reais. Testa comunicação e procedimentos."},
+            {f: "O que é um drill (simulado)?", 
+             b: "Exercício prático com sistemas reais para testar a resposta a incidentes."},
+            {f: "O que é um playbook em resposta a incidentes?", 
+             b: "Documento passo a passo para responder a tipos específicos de incidentes."},
+            {f: "O que é Isolation em resposta a incidentes?", 
+             b: "Desconectar o sistema comprometido da rede para prevenir propagação, mantendo-o ligado."},
+            {f: "O que é quarentena em resposta a incidentes?", 
+             b: "Mover o sistema para uma VLAN isolada para análise sem risco de propagação."},
+            {f: "O que é um plano de comunicação em incidentes?", 
+             b: "Define quem deve ser notificado, quando e como durante um incidente."},
+
+            // IDS/IPS (16-30)
+            {f: "Qual a diferença entre IDS e IPS?", 
+             b: "IDS: detecta e alerta (passivo). IPS: detecta e bloqueia (ativo, inline)."},
+            {f: "O que é HIDS (Host-based IDS)?", 
+             b: "Monitora atividades em um único host: logs, integridade de arquivos, chamadas de sistema. Ex: OSSEC."},
+            {f: "O que é NIDS (Network-based IDS)?", 
+             b: "Monitora tráfego de rede em um segmento. Analisa pacotes em tempo real. Ex: Snort, Suricata."},
+            {f: "O que é WIPS (Wireless IPS)?", 
+             b: "Monitora espectro Wi-Fi, detecta rogue APs e evil twins."},
+            {f: "O que é detecção baseada em assinatura?", 
+             b: "Compara com assinaturas de ataques conhecidos. Rápido, baixo falso positivo, só detecta conhecido."},
+            {f: "O que é detecção baseada em anomalia?", 
+             b: "Estabelece baseline e detecta desvios. Detecta novos ataques, mais falsos positivos."},
+            {f: "O que é detecção baseada em comportamento?", 
+             b: "Similar a anomalia, mas foca em comportamento de usuários e processos."},
+            {f: "O que é um falso positivo (false positive)?", 
+             b: "Alerta para tráfego legítimo classificado como malicioso. Causa fadiga de alertas."},
+            {f: "O que é um falso negativo (false negative)?", 
+             b: "Falha em detectar um ataque real. É o MAIS GRAVE."},
+            {f: "O que é um verdadeiro positivo (true positive)?", 
+             b: "Alerta correto, ataque real detectado."},
+            {f: "O que é um verdadeiro negativo (true negative)?", 
+             b: "Tráfego legítimo não gera alerta. Comportamento normal."},
+            {f: "O que é um span port (porta espelhada)?", 
+             b: "Porta em switch configurada para receber cópia de tráfego de outras portas. Usada por IDS."},
+            {f: "O que é modo promíscuo (promiscuous mode)?", 
+             b: "Placa de rede captura todos os pacotes, não apenas os endereçados a ela. Necessário para sniffing."},
+            {f: "O que é um TAP (Test Access Point)?", 
+             b: "Dispositivo físico que copia todo o tráfego sem interferir na rede."},
+            {f: "O que é um sensor de IDS/IPS?", 
+             b: "Dispositivo que captura e analisa tráfego. Pode ser baseado em hardware ou software."},
+
+            // SIEM e SOAR (31-40)
+            {f: "O que é SIEM (Security Information and Event Management)?", 
+             b: "Coleta, agrega e correlaciona logs de múltiplas fontes. Ex: Splunk, QRadar."},
+            {f: "O que é correlação de eventos?", 
+             b: "Análise de eventos de diferentes fontes para identificar padrões de ataque."},
+            {f: "O que é normalização de logs?", 
+             b: "Processo de converter logs de diferentes formatos para um formato padrão."},
+            {f: "O que é um dashboard em SIEM?", 
+             b: "Visualização gráfica de dados de segurança em tempo real."},
+            {f: "O que é SOAR (Security Orchestration, Automation and Response)?", 
+             b: "Automatiza resposta a incidentes com playbooks. Ex: Palo Alto Cortex XSOAR."},
+            {f: "O que é orquestração em SOAR?", 
+             b: "Integração de diferentes ferramentas para executar workflows automatizados."},
+            {f: "O que é um playbook em SOAR?", 
+             b: "Workflow automatizado para resposta a incidentes."},
+            {f: "O que é NetFlow?", 
+             b: "Protocolo Cisco para coleta de metadados de tráfego (IPs, portas, bytes). Não captura payload."},
+            {f: "O que é sFlow?", 
+             b: "Tecnologia de amostragem de pacotes para monitoramento de tráfego."},
+            {f: "O que é ELK Stack?", 
+             b: "Elasticsearch, Logstash, Kibana. Solução open source de log management."},
+
+            // Gerenciamento de Vulnerabilidades (41-50)
+            {f: "Quais são as 6 fases do ciclo de gestão de vulnerabilidades?", 
+             b: "1) Discovery, 2) Assessment, 3) Prioritization, 4) Remediation, 5) Verification, 6) Monitoring."},
+            {f: "O que é CVE?", 
+             b: "Common Vulnerabilities and Exposures. ID único para vulnerabilidades (CVE-2024-12345)."},
+            {f: "O que é CVSS?", 
+             b: "Common Vulnerability Scoring System. Score 0-10. Critical (9-10), High (7-8.9), Medium (4-6.9)."},
+            {f: "O que é CWE?", 
+             b: "Common Weakness Enumeration. Categorias de fraquezas (ex: CWE-79 = XSS)."},
+            {f: "Qual a diferença entre credentialed e non-credentialed scan?", 
+             b: "Credentialed: com login, mais profundo. Non-credentialed: sem login, visão de atacante."},
+            {f: "Qual a diferença entre agent-based e agentless scan?", 
+             b: "Agent-based: agente instalado no host, scan contínuo. Agentless: scan remoto sem agente."},
+            {f: "O que é Nessus?", 
+             b: "Scanner de vulnerabilidades comercial da Tenable, o mais utilizado."},
+            {f: "O que é OpenVAS?", 
+             b: "Scanner de vulnerabilidades open source (Greenbone). Alternativa gratuita ao Nessus."},
+            {f: "O que é Qualys?", 
+             b: "Plataforma cloud-based de gerenciamento de vulnerabilidades."},
+            {f: "O que é Rapid7 Nexpose?", 
+             b: "Scanner de vulnerabilidades que integra com Metasploit."},
+
+            // Pentest (51-60)
+            {f: "O que é Penetration Testing (Pentest)?", 
+             b: "Simulação de ataque autorizado para identificar vulnerabilidades exploráveis."},
+            {f: "O que é Black Box pentest?", 
+             b: "Sem conhecimento prévio do alvo. Simula atacante externo."},
+            {f: "O que é White Box pentest?", 
+             b: "Com conhecimento completo (código, arquitetura). Mais profundo."},
+            {f: "O que é Gray Box pentest?", 
+             b: "Conhecimento parcial do alvo."},
+            {f: "Quais as fases de um pentest?", 
+             b: "1) Planning, 2) Reconnaissance, 3) Scanning, 4) Exploitation, 5) Post-Exploitation, 6) Reporting."},
+            {f: "O que é Metasploit?", 
+             b: "Framework de exploração mais utilizado em pentests. Contém exploits e payloads."},
+            {f: "O que é Burp Suite?", 
+             b: "Proxy interceptador para testes em aplicações web. Permite modificar requisições."},
+            {f: "O que é OWASP ZAP?", 
+             b: "Ferramenta open source de teste de segurança em aplicações web."},
+            {f: "O que são ROE (Rules of Engagement)?", 
+             b: "Documento que define escopo, regras e limites do pentest."},
+            {f: "O que é um relatório de pentest?", 
+             b: "Documento com achados, evidências, severidade e recomendações de remediação."},
+
+            // Forense (61-75)
+            {f: "O que é Ordem de Volatilidade (Order of Volatility)?", 
+             b: "Coletar do mais volátil: CPU/RAM → Disco → Logs → Backups."},
+            {f: "O que é Chain of Custody (Cadeia de Custódia)?", 
+             b: "Documentação de quem acessou a evidência, quando, onde e por quê. Essencial para tribunal."},
+            {f: "O que é Write Blocker?", 
+             b: "Dispositivo que previne modificação da evidência durante análise forense."},
+            {f: "O que é FTK Imager?", 
+             b: "Ferramenta da AccessData para criar imagens forenses (E01, raw). GUI Windows."},
+            {f: "O que é dd/dcfldd?", 
+             b: "Comandos Linux para disk imaging (cópia bit-a-bit). dcfldd tem hash integrado."},
+            {f: "O que é Autopsy?", 
+             b: "Ferramenta de análise forense com GUI. Timeline, recover de arquivos, keyword search."},
+            {f: "O que é Volatility?", 
+             b: "Framework para análise de memória RAM (memory forensics). Analisa processos, conexões, malware."},
+            {f: "O que é Wireshark?", 
+             b: "Packet sniffer para análise de rede. Captura e analisa tráfego."},
+            {f: "O que é tcpdump?", 
+             b: "Packet sniffer de linha de comando para Linux/Unix."},
+            {f: "O que é NetworkMiner?", 
+             b: "Ferramenta de network forensics passiva. Extrai arquivos e credenciais de PCAPs."},
+            {f: "O que é Live Acquisition em forense?", 
+             b: "Coleta de dados voláteis (RAM) enquanto o sistema está ligado."},
+            {f: "O que é Dead Acquisition em forense?", 
+             b: "Imagem de disco com o sistema desligado."},
+            {f: "O que é um hash forense?", 
+             b: "Hash (MD5/SHA-256) calculado antes e depois da análise para provar integridade da evidência."},
+            {f: "O que é um timestamp em forense?", 
+             b: "Marca de tempo de arquivos e eventos, essencial para timeline."},
+            {f: "O que é um timeline em forense?", 
+             b: "Linha do tempo de eventos para reconstruir o incidente."},
+
+            // RAID (76-85)
+            {f: "O que é RAID 0?", 
+             b: "Striping. Alta performance, SEM REDUNDÂNCIA. Se um disco falha, perde tudo."},
+            {f: "O que é RAID 1?", 
+             b: "Mirroring (espelhamento). 50% da capacidade, tolera 1 falha."},
+            {f: "O que é RAID 5?", 
+             b: "Striping + paridade. Mínimo 3 discos, tolera 1 falha. Bom custo/benefício."},
+            {f: "O que é RAID 6?", 
+             b: "Striping + dupla paridade. Mínimo 4 discos, tolera 2 falhas."},
+            {f: "O que é RAID 10 (1+0)?", 
+             b: "Striping de mirrors. Performance + redundância. Tolerância a múltiplas falhas."},
+            {f: "O que é RAID 01 (0+1)?", 
+             b: "Mirror de stripes. Menos comum que RAID 10."},
+            {f: "O que é JBOD?", 
+             b: "Just a Bunch Of Disks. Discos independentes, sem RAID."},
+            {f: "O que é hot spare?", 
+             b: "Disco reserva que entra automaticamente em caso de falha em RAID."},
+            {f: "O que é rebuild em RAID?", 
+             b: "Reconstrução de dados em um novo disco após falha."},
+            {f: "O que é striping em RAID?", 
+             b: "Distribuição de dados entre discos para aumentar performance."},
+
+            // Backup (86-90)
+            {f: "O que é Full Backup?", 
+             b: "Cópia completa de todos os dados. Restore rápido, backup lento."},
+            {f: "O que é Incremental Backup?", 
+             b: "Mudanças desde o ÚLTIMO backup (qualquer tipo). Backup rápido, restore lento."},
+            {f: "O que é Differential Backup?", 
+             b: "Mudanças desde o último FULL. Meio termo."},
+            {f: "O que é a regra 3-2-1 de backup?", 
+             b: "3 cópias, 2 tipos de mídia, 1 offsite."},
+            {f: "O que é snapshot?", 
+             b: "Instantâneo do estado de VM/storage. Rápido mas NÃO é backup (mesmo storage)."}
         ];
 
+        // ========== QUIZ DO DOMÍNIO 4 (40 QUESTÕES COM EXPLICAÇÕES) ==========
         const quiz = [
-            // Incident Response
-            {q: "Primeira fase do processo de resposta a incidentes:", o: ["Identification", "Preparation", "Containment", "Recovery"], c: 1},
-            {q: "Fase onde a ameaça é isolada:", o: ["Identification", "Containment", "Eradication", "Recovery"], c: 1},
-            {q: "Fase de post-mortem e melhorias:", o: ["Recovery", "Eradication", "Lessons Learned", "Preparation"], c: 2},
-            
-            // IDS/IPS
-            {q: "Sistema que detecta e BLOQUEIA ativamente:", o: ["IDS", "IPS", "Firewall", "SIEM"], c: 1},
-            {q: "Método de detecção que compara com padrões conhecidos:", o: ["Anomaly-based", "Signature-based", "Heuristic", "Behavioral"], c: 1},
-            {q: "Falha em detectar ataque real (MAIS GRAVE):", o: ["False Positive", "False Negative", "True Positive", "True Negative"], c: 1},
-            
-            // SIEM/SOAR
-            {q: "Sistema que coleta e correlaciona logs:", o: ["SOAR", "SIEM", "DLP", "IDS"], c: 1},
-            {q: "Plataforma que automatiza resposta a incidentes:", o: ["SIEM", "SOAR", "DLP", "IPS"], c: 1},
-            
-            // Vulnerabilidades
-            {q: "ID único para vulnerabilidades (ex: CVE-2024-12345):", o: ["CVE", "CWE", "CVSS", "NVD"], c: 0},
-            {q: "Sistema de pontuação para vulnerabilidades (0-10):", o: ["CVE", "CWE", "CVSS", "NVD"], c: 2},
-            {q: "Scan COM credenciais de acesso:", o: ["Black box", "Credentialed", "Non-credentialed", "Agent-based"], c: 1},
-            
-            // Pentest
-            {q: "Teste SEM conhecimento prévio do alvo:", o: ["White Box", "Gray Box", "Black Box", "Red Team"], c: 2},
-            {q: "Framework de exploração mais utilizado:", o: ["Nmap", "Burp", "Metasploit", "Wireshark"], c: 2},
-            
-            // Forense
-            {q: "Item MAIS volátil na ordem de volatilidade:", o: ["Disco", "RAM", "Backup", "Log"], c: 1},
-            {q: "Documentação de quem acessou evidência:", o: ["Hash", "Write Blocker", "Chain of Custody", "Timeline"], c: 2},
-            {q: "Ferramenta de análise de memória RAM:", o: ["Autopsy", "Volatility", "FTK Imager", "dd"], c: 1},
-            
-            // RAID
-            {q: "RAID sem redundância (apenas performance):", o: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"], c: 0},
-            {q: "RAID que tolera 2 falhas simultâneas:", o: ["RAID 1", "RAID 5", "RAID 6", "RAID 10"], c: 2},
-            
-            // Backup
-            {q: "Tipo de backup que copia mudanças desde o ÚLTIMO backup:", o: ["Full", "Incremental", "Differential", "Snapshot"], c: 1},
-            {q: "Tipo de backup que copia mudanças desde o último FULL:", o: ["Full", "Incremental", "Differential", "Clone"], c: 2},
-            {q: "Regra 3-2-1: quantas cópias?", o: ["2", "3", "4", "5"], c: 1},
-            {q: "Quanto dado pode perder (objetivo):", o: ["RTO", "RPO", "MTD", "SLA"], c: 1},
-            {q: "Tempo para recuperar (objetivo):", o: ["RPO", "RTO", "MTD", "SLA"], c: 1},
-            
-            // DR Sites
-            {q: "Site de DR com failover imediato (minutos):", o: ["Cold", "Warm", "Hot", "Backup"], c: 2},
-            {q: "Site de DR apenas com espaço físico:", o: ["Hot", "Warm", "Cold", "Active"], c: 2}
+            // Incident Response (1-8)
+            {q: "Primeira fase do processo de resposta a incidentes:", 
+             o: ["Identification", "Preparation", "Containment", "Recovery"], 
+             c: 1,
+             e: "Preparation é a primeira fase: planos, ferramentas e treinamento."},
+            {q: "Fase onde a ameaça é isolada para não se propagar:", 
+             o: ["Identification", "Containment", "Eradication", "Recovery"], 
+             c: 1,
+             e: "Containment isola a ameaça para evitar propagação."},
+            {q: "Fase onde a causa raiz é removida:", 
+             o: ["Containment", "Eradication", "Recovery", "Lessons Learned"], 
+             c: 1,
+             e: "Eradication remove a causa raiz: malware, vulnerabilidades, credenciais comprometidas."},
+            {q: "Fase de post-mortem e melhorias:", 
+             o: ["Recovery", "Eradication", "Lessons Learned", "Preparation"], 
+             c: 2,
+             e: "Lessons Learned é a fase de documentação e melhorias após o incidente."},
+            {q: "Simulação de incidente em sala de reunião:", 
+             o: ["Pentest", "Red team", "Tabletop exercise", "Drill"], 
+             c: 2,
+             e: "Tabletop exercise é uma simulação em sala, sem sistemas reais."},
+            {q: "Documento formal com procedimentos de resposta:", 
+             o: ["Playbook", "IRP (Incident Response Plan)", "ROE", "SLA"], 
+             c: 1,
+             e: "Incident Response Plan é o documento formal com procedimentos e contatos."},
+            {q: "Desconectar sistema da rede durante incidente:", 
+             o: ["Eradication", "Isolation", "Recovery", "Quarentena"], 
+             c: 1,
+             e: "Isolation desconecta o sistema da rede para evitar propagação."},
+            {q: "Equipe responsável por responder a incidentes:", 
+             o: ["NOC", "CSIRT", "CAB", "SOC"], 
+             c: 1,
+             e: "CSIRT (Computer Security Incident Response Team) é a equipe de resposta a incidentes."},
+
+            // IDS/IPS (9-15)
+            {q: "Sistema que detecta e BLOQUEIA ativamente:", 
+             o: ["IDS", "IPS", "Firewall", "SIEM"], 
+             c: 1,
+             e: "IPS (Intrusion Prevention System) é ativo (inline) e bloqueia."},
+            {q: "Sistema passivo que apenas alerta:", 
+             o: ["IPS", "Firewall", "IDS", "Router"], 
+             c: 2,
+             e: "IDS (Intrusion Detection System) é passivo, apenas alerta."},
+            {q: "Método de detecção que compara com padrões conhecidos:", 
+             o: ["Anomaly-based", "Signature-based", "Heuristic", "Behavioral"], 
+             c: 1,
+             e: "Signature-based usa assinaturas de ataques conhecidos."},
+            {q: "Método que estabelece baseline e detecta desvios:", 
+             o: ["Signature-based", "Anomaly-based", "Rule-based", "Pattern-based"], 
+             c: 1,
+             e: "Anomaly-based estabelece um baseline e detecta desvios."},
+            {q: "Falha em detectar ataque real (MAIS GRAVE):", 
+             o: ["False Positive", "False Negative", "True Positive", "True Negative"], 
+             c: 1,
+             e: "False Negative é o mais grave: deixa um ataque real passar sem detecção."},
+            {q: "IDS baseado em host:", 
+             o: ["NIDS", "HIDS", "WIPS", "NIPS"], 
+             c: 1,
+             e: "HIDS (Host-based IDS) monitora atividades em um único host."},
+            {q: "Porta em switch que copia tráfego para análise:", 
+             o: ["Trunk port", "Access port", "Span port", "Uplink port"], 
+             c: 2,
+             e: "Span port (porta espelhada) copia tráfego de outras portas para análise."},
+
+            // SIEM/SOAR (16-20)
+            {q: "Sistema que coleta e correlaciona logs:", 
+             o: ["SOAR", "SIEM", "DLP", "IDS"], 
+             c: 1,
+             e: "SIEM (Security Information and Event Management) coleta e correlaciona logs."},
+            {q: "Plataforma que automatiza resposta a incidentes:", 
+             o: ["SIEM", "SOAR", "DLP", "IPS"], 
+             c: 1,
+             e: "SOAR (Security Orchestration, Automation and Response) automatiza resposta."},
+            {q: "Elasticsearch, Logstash, Kibana formam:", 
+             o: ["SIEM", "SOAR", "ELK Stack", "Splunk"], 
+             c: 2,
+             e: "ELK Stack (Elasticsearch, Logstash, Kibana) é solução open source de log management."},
+            {q: "Protocolo Cisco que coleta metadados de tráfego:", 
+             o: ["SNMP", "NetFlow", "Syslog", "sFlow"], 
+             c: 1,
+             e: "NetFlow coleta metadados (IPs, portas, bytes), não payload."},
+            {q: "Processo de converter logs para formato padrão:", 
+             o: ["Correlação", "Normalização", "Agregação", "Parsing"], 
+             c: 1,
+             e: "Normalização converte logs de diferentes formatos para um formato padrão."},
+
+            // Vulnerabilidades (21-25)
+            {q: "ID único para vulnerabilidades (ex: CVE-2024-12345):", 
+             o: ["CVE", "CWE", "CVSS", "NVD"], 
+             c: 0,
+             e: "CVE (Common Vulnerabilities and Exposures) é o identificador único."},
+            {q: "Sistema de pontuação para vulnerabilidades (0-10):", 
+             o: ["CVE", "CWE", "CVSS", "NVD"], 
+             c: 2,
+             e: "CVSS (Common Vulnerability Scoring System) dá score de 0 a 10."},
+            {q: "Scan COM credenciais de acesso:", 
+             o: ["Black box", "Credentialed", "Non-credentialed", "Agent-based"], 
+             c: 1,
+             e: "Credentialed scan usa credenciais, é mais profundo."},
+            {q: "Scanner de vulnerabilidades comercial mais usado:", 
+             o: ["OpenVAS", "Nessus", "Qualys", "Nexpose"], 
+             c: 1,
+             e: "Nessus (Tenable) é o scanner comercial mais utilizado."},
+            {q: "Scanner de vulnerabilidades open source:", 
+             o: ["Nessus", "Qualys", "OpenVAS", "Nexpose"], 
+             c: 2,
+             e: "OpenVAS (Greenbone) é a alternativa open source."},
+
+            // Pentest (26-30)
+            {q: "Teste SEM conhecimento prévio do alvo:", 
+             o: ["White Box", "Gray Box", "Black Box", "Red Team"], 
+             c: 2,
+             e: "Black Box: sem conhecimento prévio, simula atacante externo."},
+            {q: "Teste COM conhecimento completo (código, arquitetura):", 
+             o: ["Black Box", "Gray Box", "White Box", "Blue Team"], 
+             c: 2,
+             e: "White Box: conhecimento completo, mais profundo."},
+            {q: "Framework de exploração mais utilizado em pentests:", 
+             o: ["Nmap", "Burp", "Metasploit", "Wireshark"], 
+             c: 2,
+             e: "Metasploit é o framework de exploração mais utilizado."},
+            {q: "Proxy interceptador para testes web:", 
+             o: ["Metasploit", "Burp Suite", "Nmap", "sqlmap"], 
+             c: 1,
+             e: "Burp Suite é um proxy interceptador para testes de aplicações web."},
+            {q: "Documento que define escopo e regras do pentest:", 
+             o: ["NDA", "SLA", "ROE (Rules of Engagement)", "MOU"], 
+             c: 2,
+             e: "ROE define escopo, regras, horários e limites do pentest."},
+
+            // Forense (31-35)
+            {q: "Item MAIS volátil na ordem de volatilidade:", 
+             o: ["Disco", "RAM", "Backup", "Log"], 
+             c: 1,
+             e: "RAM é mais volátil que disco, deve ser coletada primeiro."},
+            {q: "Documentação de quem acessou a evidência:", 
+             o: ["Hash", "Write Blocker", "Chain of Custody", "Timeline"], 
+             c: 2,
+             e: "Chain of Custody documenta todos os acessos à evidência."},
+            {q: "Dispositivo que previne modificação da evidência:", 
+             o: ["Hash", "Write Blocker", "Chain of Custody", "Timestamp"], 
+             c: 1,
+             e: "Write Blocker previne modificação durante análise forense."},
+            {q: "Ferramenta de análise de memória RAM:", 
+             o: ["Autopsy", "Volatility", "FTK Imager", "dd"], 
+             c: 1,
+             e: "Volatility é framework para análise de memória RAM."},
+            {q: "Ferramenta de disk imaging no Linux:", 
+             o: ["FTK Imager", "Autopsy", "dd", "Wireshark"], 
+             c: 2,
+             e: "dd (e dcfldd) são comandos Linux para disk imaging."},
+
+            // RAID (36-40)
+            {q: "RAID sem redundância (apenas performance):", 
+             o: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"], 
+             c: 0,
+             e: "RAID 0 é striping, performance mas SEM REDUNDÂNCIA."},
+            {q: "RAID que usa mirroring (espelhamento):", 
+             o: ["RAID 0", "RAID 1", "RAID 5", "RAID 6"], 
+             c: 1,
+             e: "RAID 1 é mirroring: dados idênticos em dois discos."},
+            {q: "RAID que tolera 2 falhas simultâneas:", 
+             o: ["RAID 1", "RAID 5", "RAID 6", "RAID 10"], 
+             c: 2,
+             e: "RAID 6 tem dupla paridade, tolera 2 falhas."},
+            {q: "RAID 10 é combinação de:", 
+             o: ["Striping + mirror", "Mirror + parity", "Parity + striping", "JBOD"], 
+             c: 0,
+             e: "RAID 10 = RAID 1 (mirror) + RAID 0 (striping)."},
+            {q: "Disco reserva em RAID:", 
+             o: ["Hot swap", "Hot spare", "Cold spare", "Standby"], 
+             c: 1,
+             e: "Hot spare é disco reserva que entra automaticamente em caso de falha."}
         ];
 
         let currentCard = 0;
@@ -733,7 +1090,9 @@
 
         function loadProgress() {
             const saved = localStorage.getItem('dominio4_mastered');
-            if (saved) mastered = new Set(JSON.parse(saved));
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
         }
         function saveProgress() {
             localStorage.setItem('dominio4_mastered', JSON.stringify([...mastered]));
@@ -741,14 +1100,22 @@
         loadProgress();
 
         function showTab(n) {
-            document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
-            document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
-            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) {
+                loadQuiz();
+            }
         }
 
         function updateCard() {
             if (filteredCards.length === 0) {
                 document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                document.getElementById('card-counter').textContent = 'Card 0 de 0';
+                document.getElementById('side-indicator').textContent = 'FRENTE';
                 return;
             }
             const cardIndex = filteredCards[currentCard];
@@ -757,10 +1124,10 @@
             document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
             document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
             const btn = document.getElementById('master-btn');
-            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
-            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            const isMastered = mastered.has(cardIndex);
+            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', isMastered);
             document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
-            
             const progress = (mastered.size / cards.length) * 100;
             document.getElementById('progress-fill').style.width = progress + '%';
             document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
@@ -790,11 +1157,9 @@
             currentFilter = type;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
             if (type === 'all') filteredCards = [...Array(cards.length).keys()];
             else if (type === 'mastered') filteredCards = Array.from(mastered);
             else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
-            
             currentCard = 0; flipped = false; updateCard();
         }
 
@@ -815,7 +1180,7 @@
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
                 exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
                 div.appendChild(exp);
                 container.appendChild(div);
             });
@@ -823,7 +1188,9 @@
 
         function selectOpt(qi, oi) {
             if (checked) return;
-            quiz[qi].o.forEach((_, i) => document.getElementById(`q${qi}o${i}`).classList.remove('selected'));
+            quiz[qi].o.forEach((_, i) => {
+                document.getElementById(`q${qi}o${i}`).classList.remove('selected');
+            });
             document.getElementById(`q${qi}o${oi}`).classList.add('selected');
             answers[qi] = oi;
         }
@@ -835,24 +1202,26 @@
                 const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
                 q.o.forEach((_, oi) => {
                     const el = document.getElementById(`q${qi}o${oi}`);
-                    if (correctAnswer.includes(oi)) el.classList.add('correct');
-                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
                 });
                 document.getElementById(`exp${qi}`).style.display = 'block';
                 if (correctAnswer.includes(answers[qi])) correct++;
             });
-            
             const pct = Math.round((correct / quiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
             document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
-            document.getElementById('results-modal').style.display = 'flex';
+            document.getElementById('results-modal').classList.add('show');
         }
 
         function resetQuiz() {
             checked = false;
             answers = {};
             document.getElementById('questions').innerHTML = '';
-            document.getElementById('results-modal').style.display = 'none';
+            document.getElementById('results-modal').classList.remove('show');
             loadQuiz();
         }
 

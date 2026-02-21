@@ -162,6 +162,9 @@
             font-size: 1.5rem;
             width: 55px;
             height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-master {
             background: #e5e7eb;
@@ -174,6 +177,12 @@
         .btn-shuffle {
             background: #f59e0b;
             color: white;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
         }
         
         .filter-buttons {
@@ -197,6 +206,104 @@
             color: #667eea;
         }
 
+        .quiz-area { max-width: 1000px; margin: 0 auto; }
+        .quiz-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+        }
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+        .option:hover {
+            background: #f5f0ff;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            border-color: #667eea;
+            background: #f5f0ff;
+            font-weight: 600;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f5f0ff;
+            border-left: 5px solid #667eea;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .results-modal.show { display: flex; }
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+        
         .summary {
             max-width: 1100px;
             margin: 0 auto;
@@ -238,13 +345,6 @@
         .golden-rule {
             background: #fef3c7;
             border-left: 5px solid #f59e0b;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
-        }
-        .tip-box {
-            background: #eff6ff;
-            border-left: 5px solid #3b82f6;
             padding: 20px;
             margin: 20px 0;
             border-radius: 8px;
@@ -472,140 +572,347 @@
         </div>
 
         <div id="tab2" class="content">
-            <div class="quiz-area" style="max-width: 1000px; margin:0 auto;">
-                <div class="quiz-header" style="text-align:center; color:white; margin-bottom:35px;">
+            <div class="quiz-area">
+                <div class="quiz-header">
                     <h2>Quiz - 35 Questões</h2>
+                    <p>Passing Score: 70% (25/35 corretas)</p>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn btn-primary" onclick="checkAnswers()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; padding:15px 40px;">Ver Resultados</button>
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="results-modal" id="results-modal" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:1000;">
-        <div class="results-content" style="background:white; padding:50px; border-radius:25px; max-width:500px; text-align:center;">
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
             <h2>Resultado</h2>
-            <div class="score-circle" id="score-circle" style="width:180px; height:180px; border-radius:50%; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:bold; margin:30px auto;">0%</div>
-            <p id="score-text" style="font-size:1.2rem; margin-bottom:20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; padding:15px 40px;">Refazer Quiz</button>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
         </div>
     </div>
 
     <script>
+        // ========== CARDS DO DOMÍNIO 1 - 75 CARDS COMPLETOS ==========
         const cards = [
-            // Atores de Ameaça (1-10)
-            {f: "O que é um ator de ameaça do tipo Nation-state (Estado-nação)?", b: "São governos com recursos ilimitados. Realizam espionagem e ataques avançados (APT - Advanced Persistent Threat). Alvos estratégicos."},
-            {f: "O que é Organized Crime (Crime Organizado)?", b: "Grupos criminosos com motivação financeira. Utilizam ransomware, fraudes bancárias e roubo de dados."},
-            {f: "O que são Hacktivists?", b: "Ativistas com motivação política ou social. Realizam ataques DDoS, desfiguração de sites (defacement) e vazamentos."},
-            {f: "O que é Insider Threat (Ameaça Interna)?", b: "Funcionários ou pessoas com acesso legítimo que comprometem a segurança por vingança, ganho financeiro ou negligência."},
-            {f: "O que são Script Kiddies?", b: "Atacantes com baixa habilidade técnica que usam ferramentas prontas. Motivação: diversão e reconhecimento."},
-            {f: "O que é APT (Advanced Persistent Threat)?", b: "Ameaça avançada e persistente: ataques sofisticados e prolongados, geralmente patrocinados por governos, com objetivos de espionagem."},
+            // Atores de Ameaça (1-6)
+            {f: "O que é um ator de ameaça do tipo Nation-state (Estado-nação)?", 
+             b: "São governos com recursos ilimitados. Realizam espionagem e ataques avançados (APT - Advanced Persistent Threat). Alvos estratégicos."},
+            {f: "O que é Organized Crime (Crime Organizado)?", 
+             b: "Grupos criminosos com motivação financeira. Utilizam ransomware, fraudes bancárias e roubo de dados."},
+            {f: "O que são Hacktivists?", 
+             b: "Ativistas com motivação política ou social. Realizam ataques DDoS, desfiguração de sites (defacement) e vazamentos."},
+            {f: "O que é Insider Threat (Ameaça Interna)?", 
+             b: "Funcionários ou pessoas com acesso legítimo que comprometem a segurança por vingança, ganho financeiro ou negligência."},
+            {f: "O que são Script Kiddies?", 
+             b: "Atacantes com baixa habilidade técnica que usam ferramentas prontas. Motivação: diversão e reconhecimento."},
+            {f: "O que é APT (Advanced Persistent Threat)?", 
+             b: "Ameaça avançada e persistente: ataques sofisticados e prolongados, geralmente patrocinados por governos, com objetivos de espionagem."},
             
             // Cyber Kill Chain (7-13)
-            {f: "O que é Reconnaissance (Reconhecimento)?", b: "Primeira fase do ataque. Coleta de informações sobre o alvo: varreduras, engenharia social, OSINT."},
-            {f: "O que é Weaponization (Preparação)?", b: "Segunda fase. Criação ou preparação do exploit para explorar uma vulnerabilidade."},
-            {f: "O que é Delivery (Entrega)?", b: "Terceira fase. Entrega do exploit ao alvo via email, USB, site comprometido ou outro vetor."},
-            {f: "O que é Exploitation (Exploração)?", b: "Quarta fase. Execução do exploit para ganhar acesso inicial ao sistema alvo."},
-            {f: "O que é Installation (Instalação)?", b: "Quinta fase. Instalação de backdoor, malware ou persistência no sistema comprometido."},
-            {f: "O que é C2 (Command & Control)?", b: "Sexta fase. Estabelecimento de comunicação entre o sistema comprometido e o servidor do atacante."},
-            {f: "O que é Actions on Objectives?", b: "Sétima e última fase. Ações finais do atacante: roubo de dados, destruição, espionagem ou movimentação lateral."},
+            {f: "O que é Reconnaissance (Reconhecimento)?", 
+             b: "Primeira fase do ataque. Coleta de informações sobre o alvo: varreduras, engenharia social, OSINT."},
+            {f: "O que é Weaponization (Preparação)?", 
+             b: "Segunda fase. Criação ou preparação do exploit para explorar uma vulnerabilidade."},
+            {f: "O que é Delivery (Entrega)?", 
+             b: "Terceira fase. Entrega do exploit ao alvo via email, USB, site comprometido ou outro vetor."},
+            {f: "O que é Exploitation (Exploração)?", 
+             b: "Quarta fase. Execução do exploit para ganhar acesso inicial ao sistema alvo."},
+            {f: "O que é Installation (Instalação)?", 
+             b: "Quinta fase. Instalação de backdoor, malware ou persistência no sistema comprometido."},
+            {f: "O que é C2 (Command & Control)?", 
+             b: "Sexta fase. Estabelecimento de comunicação entre o sistema comprometido e o servidor do atacante."},
+            {f: "O que é Actions on Objectives?", 
+             b: "Sétima e última fase. Ações finais do atacante: roubo de dados, destruição, espionagem ou movimentação lateral."},
 
             // Engenharia Social (14-25)
-            {f: "O que é Social Engineering (Engenharia Social)?", b: "Manipulação psicológica para induzir pessoas a comprometerem a segurança, revelando informações ou executando ações."},
-            {f: "O que é Phishing?", b: "Golpe onde o atacante envia emails falsos fingindo ser uma entidade legítima para roubar credenciais ou instalar malware."},
-            {f: "O que é Spear Phishing?", b: "Phishing direcionado a uma pessoa ou organização específica, com informações personalizadas para aumentar a credibilidade."},
-            {f: "O que é Whaling?", b: "Spear phishing focado em executivos, CEOs e VIPs. O alvo é considerado uma 'baleia' pelo seu alto valor."},
-            {f: "O que é Vishing (Voice Phishing)?", b: "Engenharia social realizada por telefone. O atacante se passa por suporte técnico, banco ou autoridade."},
-            {f: "O que é Smishing (SMS Phishing)?", b: "Golpe realizado via mensagens de texto (SMS), com links maliciosos ou pedidos de informação."},
-            {f: "O que é Pretexting?", b: "Criação de um cenário ou história falsa para obter informações da vítima."},
-            {f: "O que é Baiting?", b: "Oferecer algo atraente (USB infectada, download gratuito) para que a vítima comprometa a segurança."},
-            {f: "O que é Tailgating (ou Piggybacking)?", b: "Seguir uma pessoa autorizada para entrar em uma área restrita, aproveitando a porta aberta."},
-            {f: "O que é Pharming?", b: "Redirecionar o tráfego de um site legítimo para um site falso, geralmente manipulando DNS."},
-            {f: "O que é Typosquatting (URL Hijacking)?", b: "Registrar domínios com erros de digitação comuns (ex: gooogle.com) para capturar tráfego ou aplicar golpes."},
-            {f: "O que é Watering Hole?", b: "Comprometer um site frequentado pelo alvo para infectar os visitantes."},
+            {f: "O que é Social Engineering (Engenharia Social)?", 
+             b: "Manipulação psicológica para induzir pessoas a comprometerem a segurança, revelando informações ou executando ações."},
+            {f: "O que é Phishing?", 
+             b: "Golpe onde o atacante envia emails falsos fingindo ser uma entidade legítima para roubar credenciais ou instalar malware."},
+            {f: "O que é Spear Phishing?", 
+             b: "Phishing direcionado a uma pessoa ou organização específica, com informações personalizadas para aumentar a credibilidade."},
+            {f: "O que é Whaling?", 
+             b: "Spear phishing focado em executivos, CEOs e VIPs. O alvo é considerado uma 'baleia' pelo seu alto valor."},
+            {f: "O que é Vishing (Voice Phishing)?", 
+             b: "Engenharia social realizada por telefone. O atacante se passa por suporte técnico, banco ou autoridade."},
+            {f: "O que é Smishing (SMS Phishing)?", 
+             b: "Golpe realizado via mensagens de texto (SMS), com links maliciosos ou pedidos de informação."},
+            {f: "O que é Pretexting?", 
+             b: "Criação de um cenário ou história falsa para obter informações da vítima."},
+            {f: "O que é Baiting?", 
+             b: "Oferecer algo atraente (USB infectada, download gratuito) para que a vítima comprometa a segurança."},
+            {f: "O que é Tailgating (ou Piggybacking)?", 
+             b: "Seguir uma pessoa autorizada para entrar em uma área restrita, aproveitando a porta aberta."},
+            {f: "O que é Pharming?", 
+             b: "Redirecionar o tráfego de um site legítimo para um site falso, geralmente manipulando DNS."},
+            {f: "O que é Typosquatting (URL Hijacking)?", 
+             b: "Registrar domínios com erros de digitação comuns (ex: gooogle.com) para capturar tráfego ou aplicar golpes."},
+            {f: "O que é Watering Hole?", 
+             b: "Comprometer um site frequentado pelo alvo para infectar os visitantes."},
 
             // Malware (26-45)
-            {f: "O que é um Vírus?", b: "Malware que infecta arquivos executáveis e se replica, precisando de ação do usuário para ser executado."},
-            {f: "O que é um Worm (Verme)?", b: "Malware auto-replicante que se espalha sem precisar de um arquivo hospedeiro, explorando redes."},
-            {f: "O que é um Trojan (Cavalo de Troia)?", b: "Malware que parece legítimo mas é malicioso. Não se replica."},
-            {f: "O que é Ransomware?", b: "Malware que criptografa os dados da vítima e exige pagamento (resgate) para liberar o acesso."},
-            {f: "O que é Spyware?", b: "Malware que monitora atividades do usuário, coleta informações e rouba dados."},
-            {f: "O que é Keylogger?", b: "Malware que registra todas as teclas digitadas pela vítima para capturar senhas e informações."},
-            {f: "O que é Rootkit?", b: "Malware que se esconde no sistema, muitas vezes em nível de kernel, para evitar detecção e manter acesso."},
-            {f: "O que é Botnet?", b: "Rede de computadores infectados (zumbis) controlados remotamente por um atacante para ataques coordenados."},
-            {f: "O que é RAT (Remote Access Trojan)?", b: "Trojan que permite acesso e controle remoto completo do sistema infectado."},
-            {f: "O que é Fileless Malware?", b: "Malware que executa diretamente na memória, sem gravar arquivos em disco, dificultando detecção."},
-            {f: "O que é Adware?", b: "Malware que exibe anúncios indesejados, pode rastrear hábitos de navegação."},
+            {f: "O que é um Vírus?", 
+             b: "Malware que infecta arquivos executáveis e se replica, precisando de ação do usuário para ser executado."},
+            {f: "O que é um Worm (Verme)?", 
+             b: "Malware auto-replicante que se espalha sem precisar de um arquivo hospedeiro, explorando redes."},
+            {f: "O que é um Trojan (Cavalo de Troia)?", 
+             b: "Malware que parece legítimo mas é malicioso. Não se replica."},
+            {f: "O que é Ransomware?", 
+             b: "Malware que criptografa os dados da vítima e exige pagamento (resgate) para liberar o acesso."},
+            {f: "O que é Spyware?", 
+             b: "Malware que monitora atividades do usuário, coleta informações e rouba dados."},
+            {f: "O que é Keylogger?", 
+             b: "Malware que registra todas as teclas digitadas pela vítima para capturar senhas e informações."},
+            {f: "O que é Rootkit?", 
+             b: "Malware que se esconde no sistema, muitas vezes em nível de kernel, para evitar detecção e manter acesso."},
+            {f: "O que é Botnet?", 
+             b: "Rede de computadores infectados (zumbis) controlados remotamente por um atacante para ataques coordenados."},
+            {f: "O que é RAT (Remote Access Trojan)?", 
+             b: "Trojan que permite acesso e controle remoto completo do sistema infectado."},
+            {f: "O que é Fileless Malware?", 
+             b: "Malware que executa diretamente na memória, sem gravar arquivos em disco, dificultando detecção."},
+            {f: "O que é Adware?", 
+             b: "Malware que exibe anúncios indesejados, pode rastrear hábitos de navegação."},
+            {f: "O que é Logic Bomb?", 
+             b: "Código malicioso programado para executar sob condições específicas (data, evento)."},
+            {f: "O que é Backdoor?", 
+             b: "Método de acesso não autorizado que bypassa autenticação normal."},
+            {f: "O que é Rootkit de firmware?", 
+             b: "Rootkit que infecta firmware de dispositivos, sobrevivendo a formatações."},
+            {f: "O que é Crimeware?", 
+             b: "Malware projetado para automatizar fraudes financeiras."},
+            {f: "O que é Scareware?", 
+             b: "Malware que assusta usuário com alertas falsos para comprar software."},
+            {f: "O que é Bootkit?", 
+             b: "Rootkit que infecta o Master Boot Record (MBR), executando antes do SO."},
+            {f: "O que é Dropper?", 
+             b: "Malware projetado para instalar outros malwares."},
+            {f: "O que é Downloader?", 
+             b: "Malware que baixa outros malwares da internet."},
+            {f: "O que é Stealer?", 
+             b: "Malware focado em roubar informações específicas (senhas, cookies)."},
 
             // Ataques de Rede (46-55)
-            {f: "O que é ataque de MAC Flooding?", b: "Inunda a tabela CAM do switch. O switch vira um hub (fail open). Atacante consegue snifar todo tráfego. Proteção: Port Security."},
-            {f: "O que é ARP Spoofing/Poisoning?", b: "Atacante associa seu MAC com o IP da vítima. O tráfego vai para o atacante (MitM). Proteção: DAI (Dynamic ARP Inspection)."},
-            {f: "O que é VLAN Hopping?", b: "Atacante salta entre VLANs não autorizadas (double tagging). Proteção: desabilitar DTP, VLAN nativa segura."},
-            {f: "O que é DHCP Spoofing?", b: "Servidor DHCP falso fornece gateway malicioso. Proteção: DHCP Snooping."},
-            {f: "O que é SYN Flood?", b: "Ataque DoS que envia muitos SYN sem completar handshake. Esgota recursos. Contramedida: SYN cookies."},
-            {f: "O que é DNS Amplification?", b: "DDoS usando servidores DNS abertos como amplificadores. Spoofed source IP da vítima."},
-            {f: "O que é On-Path Attack (MITM)?", b: "Intercepta comunicação entre dois lados. Lê, modifica, injeta. ARP poisoning, rogue AP."},
-            {f: "O que é Replay Attack?", b: "Captura tráfego legítimo e retransmite. Contramedida: timestamps, nonces, sequence numbers."},
-            {f: "O que é IP Spoofing?", b: "Falsificação do endereço IP de origem em pacotes de rede. Usado em ataques de DoS, para bypassar filtros."},
-            {f: "O que é MAC Spoofing?", b: "Alteração do endereço MAC. Usado para impersonar outro dispositivo, bypassar filtros MAC."},
+            {f: "O que é ataque de MAC Flooding?", 
+             b: "Inunda a tabela CAM do switch. O switch vira um hub (fail open). Atacante consegue snifar todo tráfego. Proteção: Port Security."},
+            {f: "O que é ARP Spoofing/Poisoning?", 
+             b: "Atacante associa seu MAC com o IP da vítima. O tráfego vai para o atacante (MitM). Proteção: DAI (Dynamic ARP Inspection)."},
+            {f: "O que é VLAN Hopping?", 
+             b: "Atacante salta entre VLANs não autorizadas (double tagging). Proteção: desabilitar DTP, VLAN nativa segura."},
+            {f: "O que é DHCP Spoofing?", 
+             b: "Servidor DHCP falso fornece gateway malicioso. Proteção: DHCP Snooping."},
+            {f: "O que é SYN Flood?", 
+             b: "Ataque DoS que envia muitos SYN sem completar handshake. Esgota recursos. Contramedida: SYN cookies."},
+            {f: "O que é DNS Amplification?", 
+             b: "DDoS usando servidores DNS abertos como amplificadores. Spoofed source IP da vítima."},
+            {f: "O que é On-Path Attack (MITM)?", 
+             b: "Intercepta comunicação entre dois lados. Lê, modifica, injeta. ARP poisoning, rogue AP."},
+            {f: "O que é Replay Attack?", 
+             b: "Captura tráfego legítimo e retransmite. Contramedida: timestamps, nonces, sequence numbers."},
+            {f: "O que é IP Spoofing?", 
+             b: "Falsificação do endereço IP de origem em pacotes de rede. Usado em ataques de DoS, para bypassar filtros."},
+            {f: "O que é MAC Spoofing?", 
+             b: "Alteração do endereço MAC. Usado para impersonar outro dispositivo, bypassar filtros MAC."},
 
             // Ataques de Senha (56-65)
-            {f: "O que é ataque de força bruta (Brute Force)?", b: "Testa todas as combinações possíveis de caracteres. É lento, mas eventualmente encontrará a senha."},
-            {f: "O que é ataque de dicionário (Dictionary Attack)?", b: "Usa uma lista de palavras comuns e suas variações. Rápido, mas só funciona se a senha for fraca."},
-            {f: "O que é ataque híbrido (Hybrid Attack)?", b: "Combina dictionary attack com variações: adiciona números, símbolos (ex: password → password123)."},
-            {f: "O que é rainbow table?", b: "Tabela pré-computada que mapeia hashes a senhas em texto plano. Muito rápida, mas inútil com salt."},
-            {f: "O que é credential stuffing?", b: "Usa pares de usuário/senha vazados de outros serviços para tentar acessar contas. Explora reuso de senhas."},
-            {f: "O que é password spraying?", b: "Testa uma senha comum contra muitas contas de usuário. Evita lockout."},
-            {f: "O que é pass-the-hash?", b: "Usa o hash da senha diretamente para autenticar, sem precisar quebrá-lo. Comum em Windows (NTLM)."},
-            {f: "O que é salting (salt)?", b: "Valor aleatório único adicionado à senha antes do hash. Torna rainbow tables inúteis."},
-            {f: "O que é key stretching?", b: "Técnica que aumenta o tempo para calcular o hash (múltiplas iterações). Ex: PBKDF2, bcrypt, Argon2."},
-            {f: "O que é account lockout?", b: "Política que bloqueia uma conta após X tentativas erradas. Previne brute force online."},
+            {f: "O que é ataque de força bruta (Brute Force)?", 
+             b: "Testa todas as combinações possíveis de caracteres. É lento, mas eventualmente encontrará a senha."},
+            {f: "O que é ataque de dicionário (Dictionary Attack)?", 
+             b: "Usa uma lista de palavras comuns e suas variações. Rápido, mas só funciona se a senha for fraca."},
+            {f: "O que é ataque híbrido (Hybrid Attack)?", 
+             b: "Combina dictionary attack com variações: adiciona números, símbolos (ex: password → password123)."},
+            {f: "O que é rainbow table?", 
+             b: "Tabela pré-computada que mapeia hashes a senhas em texto plano. Muito rápida, mas inútil com salt."},
+            {f: "O que é credential stuffing?", 
+             b: "Usa pares de usuário/senha vazados de outros serviços para tentar acessar contas. Explora reuso de senhas."},
+            {f: "O que é password spraying?", 
+             b: "Testa uma senha comum contra muitas contas de usuário. Evita lockout."},
+            {f: "O que é pass-the-hash?", 
+             b: "Usa o hash da senha diretamente para autenticar, sem precisar quebrá-lo. Comum em Windows (NTLM)."},
+            {f: "O que é salting (salt)?", 
+             b: "Valor aleatório único adicionado à senha antes do hash. Torna rainbow tables inúteis."},
+            {f: "O que é key stretching?", 
+             b: "Técnica que aumenta o tempo para calcular o hash (múltiplas iterações). Ex: PBKDF2, bcrypt, Argon2."},
+            {f: "O que é account lockout?", 
+             b: "Política que bloqueia uma conta após X tentativas erradas. Previne brute force online."},
 
             // Reconhecimento (66-75)
-            {f: "O que é Passive Reconnaissance?", b: "Coleta informações sem interagir com o alvo. Difícil de detectar. Inclui OSINT, redes sociais, DNS lookups."},
-            {f: "O que é Active Reconnaissance?", b: "Interage diretamente com o alvo. Pode ser detectado. Inclui port scan, ping sweep, banner grabbing."},
-            {f: "O que é OSINT?", b: "Open-Source Intelligence. Coleta de informações de fontes públicas: Google, redes sociais, Shodan, whois."},
-            {f: "O que é banner grabbing?", b: "Conectar a um serviço e ler o banner retornado, que geralmente contém informações sobre software e versão."},
-            {f: "O que é nmap -sS?", b: "SYN scan (stealth). Envia pacotes SYN e analisa respostas. Não completa handshake TCP, gerando menos logs."},
-            {f: "O que é nmap -sV?", b: "Version detection. Após descobrir portas abertas, tenta identificar a versão do serviço."},
-            {f: "O que é nmap -O?", b: "OS detection. Tenta identificar o sistema operacional do alvo."},
-            {f: "O que é nmap -A?", b: "Aggressive mode. Ativa várias opções: -O, -sV, -sC (scripts), e traceroute."},
-            {f: "O que é nmap -p-?", b: "Escaneia todas as 65535 portas TCP."},
-            {f: "O que é nmap -Pn?", b: "No ping. Assume que os hosts estão ativos, pulando a fase de descoberta."}
+            {f: "O que é Passive Reconnaissance?", 
+             b: "Coleta informações sem interagir com o alvo. Difícil de detectar. Inclui OSINT, redes sociais, DNS lookups."},
+            {f: "O que é Active Reconnaissance?", 
+             b: "Interage diretamente com o alvo. Pode ser detectado. Inclui port scan, ping sweep, banner grabbing."},
+            {f: "O que é OSINT?", 
+             b: "Open-Source Intelligence. Coleta de informações de fontes públicas: Google, redes sociais, Shodan, whois."},
+            {f: "O que é banner grabbing?", 
+             b: "Conectar a um serviço e ler o banner retornado, que geralmente contém informações sobre software e versão."},
+            {f: "O que é nmap -sS?", 
+             b: "SYN scan (stealth). Envia pacotes SYN e analisa respostas. Não completa handshake TCP, gerando menos logs."},
+            {f: "O que é nmap -sV?", 
+             b: "Version detection. Após descobrir portas abertas, tenta identificar a versão do serviço."},
+            {f: "O que é nmap -O?", 
+             b: "OS detection. Tenta identificar o sistema operacional do alvo."},
+            {f: "O que é nmap -A?", 
+             b: "Aggressive mode. Ativa várias opções: -O, -sV, -sC (scripts), e traceroute."},
+            {f: "O que é nmap -p-?", 
+             b: "Escaneia todas as 65535 portas TCP."},
+            {f: "O que é nmap -Pn?", 
+             b: "No ping. Assume que os hosts estão ativos, pulando a fase de descoberta. Útil quando firewalls bloqueiam ICMP."} // Card 75
         ];
 
+        // ========== QUIZ DO DOMÍNIO 1 (35 QUESTÕES COM EXPLICAÇÕES) ==========
         const quiz = [
-            // Atores
-            {q: "Qual ator de ameaça possui recursos ilimitados e realiza APT?", o: ["Script Kiddie", "Hacktivist", "Nation-state", "Insider"], c: 2},
-            {q: "Qual a principal motivação do Crime Organizado?", o: ["Política", "Financeira", "Diversão", "Ideologia"], c: 1},
-            {q: "Funcionário que compromete a segurança se enquadra em qual categoria?", o: ["Nation-state", "Hacktivist", "Insider Threat", "APT"], c: 2},
-            // Cyber Kill Chain
-            {q: "Primeira fase da Cyber Kill Chain:", o: ["Exploitation", "Delivery", "Reconnaissance", "Installation"], c: 2},
-            {q: "Fase onde atacante estabelece comunicação com servidor:", o: ["C2", "Weaponization", "Delivery", "Actions"], c: 0},
-            // Engenharia Social
-            {q: "Email malicioso em massa:", o: ["Vishing", "Phishing", "Smishing", "Baiting"], c: 1},
-            {q: "Phishing para executivos:", o: ["Spear Phishing", "Whaling", "Vishing", "Pretexting"], c: 1},
-            {q: "Golpe por telefone:", o: ["Phishing", "Smishing", "Vishing", "Pharming"], c: 2},
-            {q: "Seguir pessoa autorizada:", o: ["Shoulder Surfing", "Tailgating", "Dumpster Diving", "Baiting"], c: 1},
-            // Malware
-            {q: "Malware que criptografa dados e exige pagamento:", o: ["Spyware", "Ransomware", "Adware", "Keylogger"], c: 1},
-            {q: "Malware que se replica sem precisar de arquivo hospedeiro:", o: ["Vírus", "Worm", "Trojan", "Rootkit"], c: 1},
-            {q: "Malware que parece legítimo mas é malicioso:", o: ["Vírus", "Worm", "Trojan", "Spyware"], c: 2},
-            {q: "Malware que executa na memória sem gravar em disco:", o: ["Rootkit", "RAT", "Fileless Malware", "Adware"], c: 2},
-            // Ataques de Rede
-            {q: "Ataque que inunda tabela CAM do switch:", o: ["ARP Spoofing", "MAC Flooding", "DHCP Spoofing", "VLAN Hopping"], c: 1},
-            {q: "Ataque que associa MAC do atacante ao IP da vítima:", o: ["DNS Poisoning", "ARP Spoofing", "IP Spoofing", "MAC Flooding"], c: 1},
-            {q: "Ataque DoS com muitos SYN sem completar handshake:", o: ["Ping Flood", "SYN Flood", "UDP Flood", "HTTP Flood"], c: 1},
-            // Ataques de Senha
-            {q: "Ataque que testa todas as combinações possíveis:", o: ["Dictionary", "Brute Force", "Hybrid", "Rainbow Table"], c: 1},
-            {q: "Tabela pré-computada de hashes:", o: ["Dictionary", "Rainbow Table", "Salt", "Hash"], c: 1},
-            {q: "Valor aleatório que torna rainbow tables inúteis:", o: ["Complexity", "Length", "Salt", "Lockout"], c: 2},
-            // Reconhecimento
-            {q: "Reconhecimento sem interagir com alvo:", o: ["Active", "Passive", "Port Scan", "Ping Sweep"], c: 1},
-            {q: "Comando nmap para SYN scan (stealth):", o: ["-sT", "-sS", "-sU", "-sV"], c: 1},
-            {q: "Comando nmap para detectar versão de serviços:", o: ["-sT", "-sS", "-sU", "-sV"], c: 3}
+            // Atores de Ameaça (1-5)
+            {q: "Qual ator de ameaça possui recursos ilimitados e realiza ataques sofisticados como APT?", 
+             o: ["Script Kiddie", "Hacktivist", "Nation-state (Estado-nação)", "Insider Threat"], 
+             c: 2,
+             e: "Nation-state (Estados Nação) possuem recursos ilimitados, realizam espionagem e ataques avançados (APT). Ex: Stuxnet (EUA/Israel contra Irã)."},
+            {q: "Qual é a principal motivação do Organized Crime (Crime Organizado)?", 
+             o: ["Política", "Financeira", "Diversão", "Ideologia"], 
+             c: 1,
+             e: "Crime Organizado tem motivação financeira: ransomware, fraudes bancárias, roubo de dados para venda."},
+            {q: "Um funcionário que compromete a segurança da empresa por vingança se enquadra em qual categoria?", 
+             o: ["Nation-state", "Hacktivist", "Insider Threat (Ameaça Interna)", "APT"], 
+             c: 2,
+             e: "Insider Threat (ameaça interna) são funcionários ou pessoas com acesso legítimo que comprometem a segurança por vingança, ganho financeiro ou negligência."},
+            {q: "Qual fase da Cyber Kill Chain envolve a coleta de informações sobre o alvo?", 
+             o: ["Exploitation (Exploração)", "Delivery (Entrega)", "Reconnaissance (Reconhecimento)", "Installation (Instalação)"], 
+             c: 2,
+             e: "Reconnaissance (Reconhecimento) é a primeira fase: coleta de informações sobre o alvo usando OSINT, varreduras, engenharia social."},
+            {q: "Na Cyber Kill Chain, qual fase estabelece a comunicação com o servidor do atacante?", 
+             o: ["C2 (Command & Control)", "Reconnaissance", "Delivery", "Weaponization"], 
+             c: 0,
+             e: "C2 (Command & Control) é a sexta fase, onde o atacante estabelece comunicação entre o sistema comprometido e seu servidor."},
+
+            // Engenharia Social (6-15)
+            {q: "Qual técnica de engenharia social utiliza emails falsos em massa?", 
+             o: ["Vishing", "Phishing", "Smishing", "Baiting"], 
+             c: 1,
+             e: "Phishing: emails falsos em massa fingindo ser entidades legítimas para roubar credenciais ou instalar malware."},
+            {q: "Phishing direcionado a executivos e VIPs é chamado de:", 
+             o: ["Spear Phishing", "Whaling", "Vishing", "Pretexting"], 
+             c: 1,
+             e: "Whaling é phishing focado em executivos (baleias). Spear phishing é direcionado a pessoas específicas, whaling é um tipo de spear phishing para VIPs."},
+            {q: "Qual técnica é realizada por telefone?", 
+             o: ["Phishing", "Smishing", "Vishing", "Pharming"], 
+             c: 2,
+             e: "Vishing (voice phishing) é engenharia social por telefone, onde o atacante se passa por suporte técnico, banco ou autoridade."},
+            {q: "Criar um cenário falso para obter informações é conhecido como:", 
+             o: ["Phishing", "Pretexting", "Baiting", "Tailgating"], 
+             c: 1,
+             e: "Pretexting: criação de um cenário ou história falsa para obter informações da vítima."},
+            {q: "Deixar um USB infectado em local público é um exemplo de:", 
+             o: ["Pretexting", "Baiting", "Quid Pro Quo", "Phishing"], 
+             c: 1,
+             e: "Baiting: oferecer algo atraente (USB infectada, download gratuito) para que a vítima comprometa a segurança."},
+            {q: "Seguir uma pessoa autorizada para entrar em área restrita é:", 
+             o: ["Shoulder Surfing", "Tailgating", "Dumpster Diving", "Baiting"], 
+             c: 1,
+             e: "Tailgating (ou piggybacking) é seguir uma pessoa autorizada para entrar em uma área restrita."},
+            {q: "Redirecionar DNS para um site falso é:", 
+             o: ["Phishing", "Typosquatting", "Pharming", "Watering Hole"], 
+             c: 2,
+             e: "Pharming redireciona o tráfego de um site legítimo para um site falso, geralmente manipulando DNS."},
+            {q: "Registrar domínios como 'gooogle.com' é:", 
+             o: ["Pharming", "Typosquatting", "Phishing", "Pretexting"], 
+             c: 1,
+             e: "Typosquatting (URL hijacking) registra domínios com erros de digitação comuns para capturar tráfego ou aplicar golpes."},
+            {q: "Comprometer um site frequentado pelo alvo é:", 
+             o: ["Phishing", "Pharming", "Watering Hole", "Typosquatting"], 
+             c: 2,
+             e: "Watering Hole compromete um site frequentado pelo alvo para infectar os visitantes."},
+            {q: "Qual princípio de engenharia social explora o respeito à autoridade?", 
+             o: ["Urgência", "Escassez", "Autoridade", "Prova Social"], 
+             c: 2,
+             e: "Autoridade: atacantes se passam por chefes, polícia, suporte técnico para obter informações."},
+
+            // Malware (16-25)
+            {q: "Qual malware infecta arquivos e precisa ser executado para se replicar?", 
+             o: ["Worm", "Vírus", "Trojan", "Spyware"], 
+             c: 1,
+             e: "Vírus infecta arquivos executáveis e precisa de ação do usuário para ser executado e se replicar."},
+            {q: "Qual malware se auto-replica sem precisar de arquivo hospedeiro?", 
+             o: ["Vírus", "Worm", "Trojan", "Ransomware"], 
+             c: 1,
+             e: "Worm (verme) é auto-replicante e se espalha explorando redes, sem precisar de arquivo hospedeiro."},
+            {q: "Qual malware parece legítimo mas é malicioso?", 
+             o: ["Vírus", "Worm", "Trojan (Cavalo de Troia)", "Rootkit"], 
+             c: 2,
+             e: "Trojan (Cavalo de Troia) parece um software legítimo mas é malicioso. Não se replica."},
+            {q: "Qual malware criptografa dados e exige pagamento?", 
+             o: ["Spyware", "Ransomware", "Adware", "Keylogger"], 
+             c: 1,
+             e: "Ransomware criptografa os dados da vítima e exige pagamento (resgate) para liberar o acesso."},
+            {q: "Qual malware registra as teclas digitadas?", 
+             o: ["Spyware", "Adware", "Keylogger", "Rootkit"], 
+             c: 2,
+             e: "Keylogger registra todas as teclas digitadas pela vítima para capturar senhas e informações."},
+            {q: "Qual malware se esconde no sistema para evitar detecção?", 
+             o: ["Vírus", "Trojan", "Rootkit", "Worm"], 
+             c: 2,
+             e: "Rootkit se esconde no sistema, muitas vezes em nível de kernel, para evitar detecção e manter acesso."},
+            {q: "Rede de computadores infectados controlados remotamente é:", 
+             o: ["Botnet", "Worm", "Vírus", "Spyware"], 
+             c: 0,
+             e: "Botnet é uma rede de computadores infectados (zumbis) controlados remotamente para ataques coordenados."},
+            {q: "Qual malware executa na memória sem gravar em disco?", 
+             o: ["Vírus", "Worm", "Fileless Malware", "Trojan"], 
+             c: 2,
+             e: "Fileless malware executa diretamente na memória, sem gravar arquivos em disco, dificultando detecção."},
+            {q: "Qual malware permite controle remoto completo do sistema?", 
+             o: ["RAT (Remote Access Trojan)", "Botnet", "Keylogger", "Adware"], 
+             c: 0,
+             e: "RAT (Remote Access Trojan) permite acesso e controle remoto completo do sistema infectado."},
+            {q: "Qual é a melhor defesa contra ransomware?", 
+             o: ["Antivírus", "Firewall", "Backup regular", "IDS"], 
+             c: 2,
+             e: "Backup regular é a melhor defesa contra ransomware. Se os dados estiverem em backup, não precisa pagar resgate."},
+
+            // Ataques de Rede (26-30)
+            {q: "Qual ataque inunda a tabela CAM do switch, fazendo-o funcionar como hub?", 
+             o: ["ARP Spoofing", "MAC Flooding", "VLAN Hopping", "DHCP Spoofing"], 
+             c: 1,
+             e: "MAC Flooding inunda a tabela CAM do switch. O switch entra em fail open e funciona como hub, permitindo sniffing."},
+            {q: "Qual ataque associa o MAC do atacante ao IP da vítima?", 
+             o: ["DNS Poisoning", "ARP Spoofing", "IP Spoofing", "MAC Flooding"], 
+             c: 1,
+             e: "ARP Spoofing/Poisoning: atacante envia mensagens ARP falsas associando seu MAC ao IP da vítima ou gateway."},
+            {q: "Qual proteção previne ARP Spoofing?", 
+             o: ["Port Security", "DHCP Snooping", "DAI (Dynamic ARP Inspection)", "BPDU Guard"], 
+             c: 2,
+             e: "DAI (Dynamic ARP Inspection) valida pacotes ARP contra a tabela do DHCP snooping, prevenindo ARP spoofing."},
+            {q: "Qual ataque DoS envia muitos SYN sem completar handshake?", 
+             o: ["Ping Flood", "SYN Flood", "UDP Flood", "HTTP Flood"], 
+             c: 1,
+             e: "SYN Flood envia uma enxurrada de pacotes SYN sem completar o handshake, esgotando recursos do servidor."},
+            {q: "Qual ataque usa servidores DNS abertos como amplificadores?", 
+             o: ["DNS Tunneling", "DNS Poisoning", "DNS Amplification", "DNS Hijacking"], 
+             c: 2,
+             e: "DNS Amplification: atacante envia consultas DNS com IP falsificado da vítima; a resposta amplificada é enviada para a vítima."},
+
+            // Ataques de Senha (31-35)
+            {q: "Qual ataque de senha testa todas as combinações possíveis?", 
+             o: ["Dictionary Attack", "Brute Force Attack", "Hybrid Attack", "Rainbow Table"], 
+             c: 1,
+             e: "Brute Force testa todas as combinações possíveis de caracteres. É lento, mas eventualmente encontrará a senha."},
+            {q: "Qual ataque usa uma lista de palavras comuns?", 
+             o: ["Brute Force", "Dictionary Attack", "Hybrid", "Password Spraying"], 
+             c: 1,
+             e: "Dictionary Attack usa uma lista de palavras comuns (dicionário) e suas variações. Rápido contra senhas fracas."},
+            {q: "O que é uma rainbow table?", 
+             o: ["Lista de senhas comuns", "Tabela hash→plaintext pré-computada", "Técnica de key stretching", "Ataque online"], 
+             c: 1,
+             e: "Rainbow table é uma tabela pré-computada que mapeia hashes a senhas em texto plano. Muito rápida, mas inútil com salt."},
+            {q: "O que torna rainbow tables inúteis?", 
+             o: ["Complexidade de senha", "Comprimento de senha", "Salt", "Key stretching"], 
+             c: 2,
+             e: "Salt: valor aleatório único adicionado a cada senha antes do hash. Torna rainbow tables inúteis."},
+            {q: "Qual técnica aplica múltiplas iterações de hash para dificultar brute force?", 
+             o: ["Salt", "Key stretching", "Hashing", "Encryption"], 
+             c: 1,
+             e: "Key stretching aumenta o tempo para calcular o hash aplicando múltiplas iterações. Ex: PBKDF2, bcrypt, Argon2."}
         ];
 
         let currentCard = 0;
@@ -618,7 +925,9 @@
 
         function loadProgress() {
             const saved = localStorage.getItem('dominio1_mastered');
-            if (saved) mastered = new Set(JSON.parse(saved));
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
         }
         function saveProgress() {
             localStorage.setItem('dominio1_mastered', JSON.stringify([...mastered]));
@@ -626,14 +935,22 @@
         loadProgress();
 
         function showTab(n) {
-            document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
-            document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
-            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) {
+                loadQuiz();
+            }
         }
 
         function updateCard() {
             if (filteredCards.length === 0) {
                 document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                document.getElementById('card-counter').textContent = 'Card 0 de 0';
+                document.getElementById('side-indicator').textContent = 'FRENTE';
                 return;
             }
             const cardIndex = filteredCards[currentCard];
@@ -642,10 +959,10 @@
             document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
             document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
             const btn = document.getElementById('master-btn');
-            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
-            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            const isMastered = mastered.has(cardIndex);
+            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', isMastered);
             document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
-            
             const progress = (mastered.size / cards.length) * 100;
             document.getElementById('progress-fill').style.width = progress + '%';
             document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
@@ -675,11 +992,9 @@
             currentFilter = type;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
             if (type === 'all') filteredCards = [...Array(cards.length).keys()];
             else if (type === 'mastered') filteredCards = Array.from(mastered);
             else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
-            
             currentCard = 0; flipped = false; updateCard();
         }
 
@@ -700,7 +1015,7 @@
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
                 exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
                 div.appendChild(exp);
                 container.appendChild(div);
             });
@@ -708,7 +1023,9 @@
 
         function selectOpt(qi, oi) {
             if (checked) return;
-            quiz[qi].o.forEach((_, i) => document.getElementById(`q${qi}o${i}`).classList.remove('selected'));
+            quiz[qi].o.forEach((_, i) => {
+                document.getElementById(`q${qi}o${i}`).classList.remove('selected');
+            });
             document.getElementById(`q${qi}o${oi}`).classList.add('selected');
             answers[qi] = oi;
         }
@@ -720,24 +1037,26 @@
                 const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
                 q.o.forEach((_, oi) => {
                     const el = document.getElementById(`q${qi}o${oi}`);
-                    if (correctAnswer.includes(oi)) el.classList.add('correct');
-                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
                 });
                 document.getElementById(`exp${qi}`).style.display = 'block';
                 if (correctAnswer.includes(answers[qi])) correct++;
             });
-            
             const pct = Math.round((correct / quiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
             document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
-            document.getElementById('results-modal').style.display = 'flex';
+            document.getElementById('results-modal').classList.add('show');
         }
 
         function resetQuiz() {
             checked = false;
             answers = {};
             document.getElementById('questions').innerHTML = '';
-            document.getElementById('results-modal').style.display = 'none';
+            document.getElementById('results-modal').classList.remove('show');
             loadQuiz();
         }
 

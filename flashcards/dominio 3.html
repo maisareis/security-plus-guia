@@ -162,6 +162,9 @@
             font-size: 1.5rem;
             width: 55px;
             height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-master {
             background: #e5e7eb;
@@ -174,6 +177,12 @@
         .btn-shuffle {
             background: #f59e0b;
             color: white;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
         }
         
         .filter-buttons {
@@ -197,6 +206,104 @@
             color: #667eea;
         }
 
+        .quiz-area { max-width: 1000px; margin: 0 auto; }
+        .quiz-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+        }
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+        .option:hover {
+            background: #f5f0ff;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            border-color: #667eea;
+            background: #f5f0ff;
+            font-weight: 600;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f5f0ff;
+            border-left: 5px solid #667eea;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .results-modal.show { display: flex; }
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+        
         .summary {
             max-width: 1100px;
             margin: 0 auto;
@@ -599,133 +706,401 @@
         </div>
 
         <div id="tab2" class="content">
-            <div class="quiz-area" style="max-width: 1000px; margin:0 auto;">
-                <div class="quiz-header" style="text-align:center; color:white; margin-bottom:35px;">
+            <div class="quiz-area">
+                <div class="quiz-header">
                     <h2>Quiz - 40 Questões</h2>
+                    <p>Passing Score: 70% (28/40 corretas)</p>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn btn-primary" onclick="checkAnswers()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; padding:15px 40px;">Ver Resultados</button>
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="results-modal" id="results-modal" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:1000;">
-        <div class="results-content" style="background:white; padding:50px; border-radius:25px; max-width:500px; text-align:center;">
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
             <h2>Resultado</h2>
-            <div class="score-circle" id="score-circle" style="width:180px; height:180px; border-radius:50%; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:bold; margin:30px auto;">0%</div>
-            <p id="score-text" style="font-size:1.2rem; margin-bottom:20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; padding:15px 40px;">Refazer Quiz</button>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
         </div>
     </div>
 
     <script>
+        // ========== CARDS DO DOMÍNIO 3 - 85 CARDS COMPLETOS ==========
         const cards = [
             // Criptografia Simétrica (1-10)
-            {f: "O que é criptografia simétrica?", b: "Utiliza a mesma chave para criptografar e descriptografar. É rápida e adequada para grandes volumes. Exemplos: AES, DES, 3DES."},
-            {f: "O que é AES (Advanced Encryption Standard)?", b: "Padrão de criptografia simétrica atual. Suporta chaves de 128, 192 e 256 bits. É rápido, seguro e amplamente utilizado."},
-            {f: "O que é DES (Data Encryption Standard)?", b: "Algoritmo simétrico antigo com chave de 56 bits. Hoje é considerado obsoleto e vulnerável a ataques de força bruta."},
-            {f: "O que é 3DES (Triple DES)?", b: "Versão melhorada do DES que aplica o algoritmo três vezes. Mais seguro que o DES original, mas está sendo substituído pelo AES."},
-            
-            // Criptografia Assimétrica (11-18)
-            {f: "O que é criptografia assimétrica?", b: "Utiliza um par de chaves: uma pública (compartilhável) e uma privada (secreta). É mais lenta que a simétrica. Exemplos: RSA, ECC."},
-            {f: "O que é RSA?", b: "Algoritmo assimétrico mais utilizado para criptografia e assinaturas digitais. Recomenda-se chaves de 2048 bits ou mais."},
-            {f: "O que é ECC (Elliptic Curve Cryptography)?", b: "Criptografia assimétrica baseada em curvas elípticas. Oferece o mesmo nível de segurança que o RSA com chaves muito menores."},
-            {f: "O que é Diffie-Hellman?", b: "Algoritmo de troca de chaves que permite que duas partes estabeleçam uma chave compartilhada sem transmiti-la diretamente."},
-            
-            // Hashing (19-25)
-            {f: "O que é hashing?", b: "Função matemática one-way (não reversível) que gera uma saída de tamanho fixo (hash). Usada para verificar integridade."},
-            {f: "O que é MD5?", b: "Algoritmo de hash que produz saída de 128 bits. Está obsoleto e vulnerável a colisões, portanto não deve ser usado para segurança."},
-            {f: "O que é SHA-1?", b: "Algoritmo de hash que produz saída de 160 bits. Está obsoleto e vulnerável a colisões. Deve ser substituído por SHA-2."},
-            {f: "O que é SHA-256?", b: "Algoritmo da família SHA-2 que produz hash de 256 bits. É o padrão atual e seguro, usado em SSL/TLS e Bitcoin."},
-            
-            // Salt e Key Stretching (26-30)
-            {f: "O que é salt em hashing de senhas?", b: "Valor aleatório adicionado à senha antes do hash para prevenir ataques de rainbow table. Deve ser único para cada senha."},
-            {f: "O que é um ataque de rainbow table?", b: "Técnica que usa tabelas pré-computadas de hashes para quebrar senhas sem salt. A contramedida é usar salt."},
-            {f: "O que é key stretching?", b: "Técnica que aumenta o tempo necessário para derivar um hash, aplicando múltiplas iterações. Ex: PBKDF2, bcrypt, Argon2."},
-            {f: "O que é PBKDF2?", b: "Password-Based Key Derivation Function 2. Aplica uma função hash milhares de vezes (iterações) para derivar uma chave."},
-            
-            // PKI (31-40)
-            {f: "O que é PKI (Public Key Infrastructure)?", b: "Infraestrutura de chaves públicas que gerencia certificados digitais através de CAs, CRLs e OCSP."},
-            {f: "O que é uma CA (Certificate Authority)?", b: "Autoridade Certificadora: entidade que emite e gerencia certificados digitais. Exemplos: Let's Encrypt, DigiCert."},
-            {f: "O que é um certificado digital?", b: "Documento eletrônico que liga uma chave pública a uma identidade, seguindo o padrão X.509."},
-            {f: "O que é CRL (Certificate Revocation List)?", b: "Lista de certificados revogados publicada periodicamente por uma CA."},
-            {f: "O que é OCSP (Online Certificate Status Protocol)?", b: "Protocolo que permite verificar em tempo real se um certificado foi revogado."},
-            {f: "O que é um certificado wildcard?", b: "Certificado que cobre um domínio e todos seus subdomínios (ex: *.dominio.com)."},
-            {f: "O que é um certificado SAN (Subject Alternative Name)?", b: "Certificado que permite especificar múltiplos domínios diferentes."},
-            
-            // Cryptoprocessors (41-45)
-            {f: "O que é TPM (Trusted Platform Module)?", b: "Chip de segurança presente na placa-mãe que armazena chaves criptográficas. Usado pelo BitLocker."},
-            {f: "O que é HSM (Hardware Security Module)?", b: "Dispositivo físico dedicado a gerenciar e proteger chaves criptográficas. Usado em bancos e CAs."},
-            
-            // IAM - Modelos de Acesso (46-55)
-            {f: "O que é DAC (Discretionary Access Control)?", b: "Modelo onde o proprietário do recurso define as permissões. Ex: NTFS."},
-            {f: "O que é MAC (Mandatory Access Control)?", b: "Modelo onde o sistema define permissões através de rótulos. Ex: SELinux."},
-            {f: "O que é RBAC (Role-Based Access Control)?", b: "Modelo onde as permissões são baseadas em funções ou cargos."},
-            {f: "O que é ABAC (Attribute-Based Access Control)?", b: "Modelo onde políticas são baseadas em atributos como horário e localização."},
-            {f: "O que é princípio do menor privilégio (Least Privilege)?", b: "Conceder apenas as permissões mínimas necessárias para realizar as tarefas."},
-            {f: "O que é segregação de funções (Separation of Duties)?", b: "Dividir tarefas críticas entre múltiplas pessoas para prevenir fraudes."},
-            
-            // Fatores de Autenticação (56-65)
-            {f: "O que é autenticação por algo que você sabe (Tipo 1)?", b: "Senha, PIN, resposta a pergunta secreta."},
-            {f: "O que é autenticação por algo que você tem (Tipo 2)?", b: "Smart card, token, celular."},
-            {f: "O que é autenticação por algo que você é (Tipo 3)?", b: "Biometria: impressão digital, íris, face."},
-            {f: "O que é MFA (Multi-Factor Authentication)?", b: "Combina dois ou mais fatores de categorias DIFERENTES. Ex: senha + biometria."},
-            {f: "O que é TOTP (Time-based One-Time Password)?", b: "Código temporário baseado em tempo. Ex: Google Authenticator."},
-            {f: "O que é FAR (False Acceptance Rate)?", b: "Taxa de aceitar um impostor como legítimo. É a métrica mais GRAVE."},
-            {f: "O que é FRR (False Rejection Rate)?", b: "Taxa de rejeitar um usuário legítimo."},
-            {f: "O que é CER (Crossover Error Rate)?", b: "Ponto onde FAR e FRR se igualam. Quanto menor, melhor o sistema."},
-            
-            // Kerberos (66-72)
-            {f: "O que é Kerberos?", b: "Protocolo de autenticação usado pelo Active Directory. Utiliza tickets em vez de transmitir senhas."},
-            {f: "O que é KDC (Key Distribution Center)?", b: "Componente central que emite tickets no Kerberos."},
-            {f: "O que é TGT (Ticket Granting Ticket)?", b: "Ticket inicial obtido após a autenticação do usuário no Kerberos."},
-            {f: "O que é Service Ticket no Kerberos?", b: "Ticket para acessar um serviço específico."},
-            
-            // Automação (73-80)
-            {f: "O que é CI/CD?", b: "Continuous Integration/Continuous Delivery. Commits frequentes, testes automatizados, deploy automatizado."},
-            {f: "O que é Infrastructure as Code (IaC)?", b: "Gerenciar infraestrutura através de código (Terraform, CloudFormation). Version control, reprodutível."},
-            {f: "O que é SOAR?", b: "Security Orchestration, Automation and Response. Automatiza resposta a incidentes com playbooks."},
-            
-            // SSL/TLS e Protocolos (81-85)
-            {f: "O que é TLS 1.3?", b: "Versão mais recente do TLS. Mais rápido (1-RTT), remove ciphers fracos, forward secrecy obrigatório."},
-            {f: "O que é HTTPS?", b: "HTTP + TLS. Porta 443. Criptografa comunicação web."},
-            {f: "O que é SFTP?", b: "FTP sobre SSH. Mais seguro que FTPS."}
+            {f: "O que é criptografia simétrica?", 
+             b: "Utiliza a mesma chave para criptografar e descriptografar. É rápida e adequada para grandes volumes. Exemplos: AES, DES, 3DES."},
+            {f: "O que é AES (Advanced Encryption Standard)?", 
+             b: "Padrão de criptografia simétrica atual. Suporta chaves de 128, 192 e 256 bits. É rápido, seguro e amplamente utilizado."},
+            {f: "O que é DES (Data Encryption Standard)?", 
+             b: "Algoritmo simétrico antigo com chave de 56 bits. Hoje é considerado obsoleto e vulnerável a ataques de força bruta."},
+            {f: "O que é 3DES (Triple DES)?", 
+             b: "Versão melhorada do DES que aplica o algoritmo três vezes. Mais seguro que o DES original, mas está sendo substituído pelo AES."},
+            {f: "O que é Blowfish?", 
+             b: "Cifra simétrica rápida, com chaves de até 448 bits. Considerada segura, mas AES é preferido."},
+            {f: "O que é Twofish?", 
+             b: "Sucessor do Blowfish, finalista do concurso do AES. Usa blocos de 128 bits."},
+            {f: "O que é RC4?", 
+             b: "Stream cipher amplamente usado no passado (WEP, SSL). Hoje é considerado inseguro."},
+            {f: "O que é ChaCha20?", 
+             b: "Stream cipher moderna, alternativa ao RC4. Usada em TLS e por Google."},
+            {f: "O que é um stream cipher?", 
+             b: "Cifra que criptografa dados bit a bit ou byte a byte. Ex: RC4, ChaCha20."},
+            {f: "O que é um block cipher?", 
+             b: "Cifra que criptografa blocos de tamanho fixo. Ex: AES (128 bits), DES (64 bits)."},
+
+            // Criptografia Assimétrica (11-20)
+            {f: "O que é criptografia assimétrica?", 
+             b: "Utiliza um par de chaves: uma pública (compartilhável) e uma privada (secreta). É mais lenta que a simétrica. Exemplos: RSA, ECC."},
+            {f: "O que é RSA?", 
+             b: "Algoritmo assimétrico mais utilizado para criptografia e assinaturas digitais. Recomenda-se chaves de 2048 bits ou mais."},
+            {f: "O que é ECC (Elliptic Curve Cryptography)?", 
+             b: "Criptografia assimétrica baseada em curvas elípticas. Oferece o mesmo nível de segurança que o RSA com chaves muito menores."},
+            {f: "O que é Diffie-Hellman?", 
+             b: "Algoritmo de troca de chaves que permite que duas partes estabeleçam uma chave compartilhada sem transmiti-la diretamente."},
+            {f: "O que é DSA (Digital Signature Algorithm)?", 
+             b: "Algoritmo usado apenas para assinaturas digitais, não para criptografia. Padrão do governo americano."},
+            {f: "O que é ElGamal?", 
+             b: "Algoritmo assimétrico usado tanto para criptografia quanto para assinaturas. Baseado no problema do logaritmo discreto."},
+            {f: "O que é um par de chaves?", 
+             b: "Chave pública (compartilhada) e chave privada (secreta). O que uma cifra, só a outra decifra."},
+            {f: "O que é um certificado digital?", 
+             b: "Documento eletrônico que liga uma chave pública a uma identidade, assinado por uma CA."},
+            {f: "O que é Perfect Forward Secrecy (PFS)?", 
+             b: "Propriedade onde cada sessão usa chaves únicas. Se a chave privada for comprometida, sessões passadas permanecem seguras."},
+            {f: "O que é um nonce?", 
+             b: "Número usado uma única vez (number used once) para garantir que operações criptográficas sejam únicas."},
+
+            // Hashing (21-30)
+            {f: "O que é hashing?", 
+             b: "Função matemática one-way (não reversível) que gera uma saída de tamanho fixo (hash). Usada para verificar integridade."},
+            {f: "O que é MD5?", 
+             b: "Algoritmo de hash que produz saída de 128 bits. Está obsoleto e vulnerável a colisões, portanto não deve ser usado para segurança."},
+            {f: "O que é SHA-1?", 
+             b: "Algoritmo de hash que produz saída de 160 bits. Está obsoleto e vulnerável a colisões. Deve ser substituído por SHA-2."},
+            {f: "O que é SHA-256?", 
+             b: "Algoritmo da família SHA-2 que produz hash de 256 bits. É o padrão atual e seguro, usado em SSL/TLS e Bitcoin."},
+            {f: "O que é SHA-512?", 
+             b: "Algoritmo da família SHA-2 que produz hash de 512 bits. Oferece maior segurança que SHA-256, mas é mais lento."},
+            {f: "O que é SHA-3?", 
+             b: "Versão mais recente da família SHA, criada como alternativa ao SHA-2. Usa uma estrutura diferente (sponge construction)."},
+            {f: "O que é HMAC?", 
+             b: "Hash-based Message Authentication Code. É um hash com chave secreta que garante autenticação e integridade."},
+            {f: "O que é RIPEMD-160?", 
+             b: "Algoritmo de hash de 160 bits, usado em Bitcoin como parte do endereço."},
+            {f: "O que é uma colisão de hash?", 
+             b: "Quando duas entradas diferentes produzem o mesmo hash. MD5 e SHA-1 são vulneráveis a colisões."},
+            {f: "O que é efeito avalanche em hashing?", 
+             b: "Pequena mudança na entrada produz um hash completamente diferente."},
+
+            // Salt e Key Stretching (31-35)
+            {f: "O que é salt em hashing de senhas?", 
+             b: "Valor aleatório adicionado à senha antes do hash para prevenir ataques de rainbow table. Deve ser único para cada senha."},
+            {f: "O que é um ataque de rainbow table?", 
+             b: "Técnica que usa tabelas pré-computadas de hashes para quebrar senhas sem salt. A contramedida é usar salt."},
+            {f: "O que é key stretching?", 
+             b: "Técnica que aumenta o tempo necessário para derivar um hash, aplicando múltiplas iterações. Ex: PBKDF2, bcrypt, Argon2."},
+            {f: "O que é PBKDF2?", 
+             b: "Password-Based Key Derivation Function 2. Aplica uma função hash milhares de vezes (iterações) para derivar uma chave."},
+            {f: "O que é bcrypt?", 
+             b: "Função de hash de senha baseada no Blowfish, com key stretching. Muito usado em sistemas web."},
+
+            // PKI (36-45)
+            {f: "O que é PKI (Public Key Infrastructure)?", 
+             b: "Infraestrutura de chaves públicas que gerencia certificados digitais através de CAs, CRLs e OCSP."},
+            {f: "O que é uma CA (Certificate Authority)?", 
+             b: "Autoridade Certificadora: entidade que emite e gerencia certificados digitais. Exemplos: Let's Encrypt, DigiCert."},
+            {f: "O que é uma RA (Registration Authority)?", 
+             b: "Autoridade de Registro: verifica a identidade do solicitante antes da CA emitir o certificado."},
+            {f: "O que é CRL (Certificate Revocation List)?", 
+             b: "Lista de certificados revogados publicada periodicamente por uma CA."},
+            {f: "O que é OCSP (Online Certificate Status Protocol)?", 
+             b: "Protocolo que permite verificar em tempo real se um certificado foi revogado."},
+            {f: "O que é um certificado wildcard?", 
+             b: "Certificado que cobre um domínio e todos seus subdomínios (ex: *.dominio.com)."},
+            {f: "O que é um certificado SAN (Subject Alternative Name)?", 
+             b: "Certificado que permite especificar múltiplos domínios diferentes."},
+            {f: "O que é um certificado auto-assinado (self-signed)?", 
+             b: "Certificado não emitido por uma CA confiável. Usado para testes."},
+            {f: "O que é um certificado de code signing?", 
+             b: "Certificado usado para assinar digitalmente software, garantindo autenticidade e integridade."},
+            {f: "O que é OCSP Stapling?", 
+             b: "Mecanismo onde o servidor web anexa a resposta OCSP ao handshake TLS, reduzindo latência."},
+
+            // Cryptoprocessors (46-50)
+            {f: "O que é TPM (Trusted Platform Module)?", 
+             b: "Chip de segurança presente na placa-mãe que armazena chaves criptográficas. Usado pelo BitLocker para boot seguro."},
+            {f: "O que é HSM (Hardware Security Module)?", 
+             b: "Dispositivo físico dedicado a gerenciar e proteger chaves criptográficas. Usado em bancos e CAs."},
+            {f: "O que é um smart card?", 
+             b: "Cartão com chip que armazena certificados digitais e chaves privadas. Requer leitor e PIN."},
+            {f: "O que é um token USB?", 
+             b: "Dispositivo USB que armazena certificados e chaves, usado para autenticação de dois fatores."},
+            {f: "O que é Secure Enclave?", 
+             b: "Coprocessador de segurança em dispositivos Apple (iPhone, Mac) para proteger dados biométricos e chaves."},
+
+            // IAM - Modelos de Acesso (51-60)
+            {f: "O que é DAC (Discretionary Access Control)?", 
+             b: "Modelo onde o proprietário do recurso define as permissões. Ex: NTFS."},
+            {f: "O que é MAC (Mandatory Access Control)?", 
+             b: "Modelo onde o sistema define permissões através de rótulos. Ex: SELinux, sistemas militares."},
+            {f: "O que é RBAC (Role-Based Access Control)?", 
+             b: "Modelo onde as permissões são baseadas em funções ou cargos. Mais comum em empresas."},
+            {f: "O que é ABAC (Attribute-Based Access Control)?", 
+             b: "Modelo onde políticas são baseadas em atributos como horário, localização e dispositivo."},
+            {f: "O que é princípio do menor privilégio (Least Privilege)?", 
+             b: "Conceder apenas as permissões mínimas necessárias para realizar as tarefas."},
+            {f: "O que é segregação de funções (Separation of Duties)?", 
+             b: "Dividir tarefas críticas entre múltiplas pessoas para prevenir fraudes."},
+            {f: "O que é need to know?", 
+             b: "Conceder acesso apenas às informações estritamente necessárias para a função."},
+            {f: "O que é um token de acesso?", 
+             b: "Objeto que contém a identidade do usuário e seus grupos após a autenticação."},
+            {f: "O que é uma ACL (Access Control List)?", 
+             b: "Lista que define permissões para usuários e grupos em um recurso."},
+            {f: "O que é provisioning de usuários?", 
+             b: "Processo de criar, modificar e desativar contas de usuário."},
+
+            // Fatores de Autenticação (61-70)
+            {f: "O que é autenticação por algo que você sabe (Tipo 1)?", 
+             b: "Senha, PIN, resposta a pergunta secreta."},
+            {f: "O que é autenticação por algo que você tem (Tipo 2)?", 
+             b: "Smart card, token, celular, token USB."},
+            {f: "O que é autenticação por algo que você é (Tipo 3)?", 
+             b: "Biometria: impressão digital, íris, face, voz."},
+            {f: "O que é autenticação por algum lugar onde você está (Tipo 4)?", 
+             b: "Localização geográfica, geofencing."},
+            {f: "O que é MFA (Multi-Factor Authentication)?", 
+             b: "Combina dois ou mais fatores de categorias DIFERENTES. Ex: senha + biometria."},
+            {f: "O que é 2FA (Two-Factor Authentication)?", 
+             b: "MFA com exatamente dois fatores."},
+            {f: "O que é TOTP (Time-based One-Time Password)?", 
+             b: "Código temporário baseado em tempo. Ex: Google Authenticator, Microsoft Authenticator."},
+            {f: "O que é HOTP (HMAC-based One-Time Password)?", 
+             b: "Código baseado em contador, muda apenas quando usado."},
+            {f: "O que é autenticação por push?", 
+             b: "Notificação enviada ao celular para aprovar ou negar tentativa de login."},
+            {f: "O que é FIDO2?", 
+             b: "Padrão de autenticação sem senha, usando biometria ou PIN com token de hardware."},
+
+            // Biometria (71-75)
+            {f: "O que é FAR (False Acceptance Rate)?", 
+             b: "Taxa de aceitar um impostor como legítimo. É a métrica mais GRAVE em biometria."},
+            {f: "O que é FRR (False Rejection Rate)?", 
+             b: "Taxa de rejeitar um usuário legítimo. Frustrante, mas menos grave que FAR."},
+            {f: "O que é CER (Crossover Error Rate)?", 
+             b: "Ponto onde FAR e FRR se igualam. Quanto menor o CER, melhor o sistema biométrico."},
+            {f: "O que é biometria comportamental?", 
+             b: "Baseada em padrões de comportamento: ritmo de digitação, movimentos do mouse."},
+            {f: "O que é liveness detection?", 
+             b: "Técnica para garantir que a biometria é de uma pessoa viva, não de uma foto ou gravação."},
+
+            // Kerberos (76-80)
+            {f: "O que é Kerberos?", 
+             b: "Protocolo de autenticação usado pelo Active Directory. Utiliza tickets em vez de transmitir senhas."},
+            {f: "O que é KDC (Key Distribution Center)?", 
+             b: "Componente central que emite tickets no Kerberos. No AD, é o Domain Controller."},
+            {f: "O que é TGT (Ticket Granting Ticket)?", 
+             b: "Ticket inicial obtido após a autenticação do usuário no Kerberos."},
+            {f: "O que é Service Ticket no Kerberos?", 
+             b: "Ticket para acessar um serviço específico."},
+            {f: "Qual porta usa o Kerberos?", 
+             b: "Porta 88 (TCP/UDP). Requer sincronização de tempo (tolerância de 5 minutos)."},
+
+            // Automação e Implementação (81-85)
+            {f: "O que é CI/CD?", 
+             b: "Continuous Integration/Continuous Delivery. Commits frequentes, testes automatizados, deploy automatizado."},
+            {f: "O que é Infrastructure as Code (IaC)?", 
+             b: "Gerenciar infraestrutura através de código (Terraform, CloudFormation). Version control, reprodutível."},
+            {f: "O que é SOAR?", 
+             b: "Security Orchestration, Automation and Response. Automatiza resposta a incidentes com playbooks."},
+            {f: "O que é um playbook em segurança?", 
+             b: "Workflow automatizado para resposta a incidentes, usado em SOAR."},
+            {f: "O que é um script?", 
+             b: "Código automatizado para executar tarefas. Ex: Python, PowerShell, Bash."}
         ];
 
+        // ========== QUIZ DO DOMÍNIO 3 (40 QUESTÕES COM EXPLICAÇÕES) ==========
         const quiz = [
-            // Criptografia
-            {q: "Qual tipo de criptografia usa a mesma chave para cifrar e decifrar?", o: ["Assimétrica", "Simétrica", "Hash", "PKI"], c: 1},
-            {q: "Qual é o algoritmo simétrico considerado padrão atual?", o: ["DES", "3DES", "AES", "RC4"], c: 2},
-            {q: "Qual algoritmo assimétrico é mais utilizado?", o: ["AES", "DES", "RSA", "MD5"], c: 2},
-            {q: "Qual técnica criptográfica é uma função one-way (não reversível)?", o: ["Simétrica", "Assimétrica", "Hash", "Criptografia"], c: 2},
-            {q: "Algoritmo de hash obsoleto de 128 bits:", o: ["SHA-256", "MD5", "SHA-512", "SHA-3"], c: 1},
-            
-            // Salt e Rainbow Tables
-            {q: "O que é adicionado à senha antes do hash para prevenir rainbow tables?", o: ["Criptografia", "IV", "Salt", "Nonce"], c: 2},
-            {q: "Técnica que aplica múltiplas iterações de hash:", o: ["Salt", "Key Stretching", "Encryption", "Hashing"], c: 1},
-            
-            // PKI
-            {q: "Entidade que emite certificados digitais:", o: ["RA", "CRL", "OCSP", "CA"], c: 3},
-            {q: "Protocolo que verifica status de certificado em tempo real:", o: ["CRL", "OCSP", "CA", "RA"], c: 1},
-            {q: "Certificado que cobre *.dominio.com:", o: ["Root", "Self-signed", "Wildcard", "SAN"], c: 2},
-            
-            // Cryptoprocessors
-            {q: "Chip na placa-mãe que armazena chaves:", o: ["HSM", "TPM", "Smart Card", "USB Token"], c: 1},
-            
-            // IAM
-            {q: "Modelo onde proprietário do recurso define permissões:", o: ["MAC", "DAC", "RBAC", "ABAC"], c: 1},
-            {q: "Senha é fator tipo:", o: ["Algo que você tem", "Algo que você sabe", "Algo que você é", "Algo que você faz"], c: 1},
-            {q: "Taxa de aceitar impostores em biometria (MAIS GRAVE):", o: ["FRR", "FAR", "CER", "FER"], c: 1},
-            
-            // Kerberos
-            {q: "Protocolo de autenticação do Active Directory:", o: ["LDAP", "RADIUS", "Kerberos", "TACACS+"], c: 2},
-            {q: "Ticket inicial no Kerberos:", o: ["Service Ticket", "TGT", "KDC", "Session Key"], c: 1},
-            
-            // Automação
-            {q: "Gerenciamento de infraestrutura via código:", o: ["SOAR", "CI/CD", "IaC", "DevOps"], c: 2},
-            {q: "Plataforma que automatiza resposta a incidentes:", o: ["SIEM", "SOAR", "DLP", "IDS"], c: 1}
+            // Criptografia (1-8)
+            {q: "Qual tipo de criptografia usa a mesma chave para cifrar e decifrar?", 
+             o: ["Assimétrica", "Simétrica", "Hash", "PKI"], 
+             c: 1,
+             e: "Criptografia simétrica utiliza a mesma chave para cifrar e decifrar. Ex: AES, DES."},
+            {q: "Qual é o algoritmo simétrico considerado padrão atual?", 
+             o: ["DES", "3DES", "AES", "RC4"], 
+             c: 2,
+             e: "AES (Advanced Encryption Standard) é o padrão atual, com chaves de 128, 192 ou 256 bits."},
+            {q: "Qual algoritmo assimétrico é mais utilizado?", 
+             o: ["AES", "DES", "RSA", "MD5"], 
+             c: 2,
+             e: "RSA é o algoritmo assimétrico mais usado para criptografia e assinaturas digitais."},
+            {q: "Qual técnica criptográfica é uma função one-way (não reversível)?", 
+             o: ["Simétrica", "Assimétrica", "Hash", "Criptografia"], 
+             c: 2,
+             e: "Hash é uma função one-way: não é possível reverter o hash para obter o dado original."},
+            {q: "Algoritmo de hash obsoleto de 128 bits:", 
+             o: ["SHA-256", "MD5", "SHA-512", "SHA-3"], 
+             c: 1,
+             e: "MD5 produz hash de 128 bits e é considerado inseguro desde 2005 devido a vulnerabilidades de colisão."},
+            {q: "Algoritmo de hash padrão atual com 256 bits:", 
+             o: ["MD5", "SHA-1", "SHA-256", "DES"], 
+             c: 2,
+             e: "SHA-256 da família SHA-2 é o padrão atual, usado em SSL/TLS e blockchain."},
+            {q: "Algoritmo de troca de chaves assimétrico:", 
+             o: ["RSA", "AES", "Diffie-Hellman", "MD5"], 
+             c: 2,
+             e: "Diffie-Hellman permite que duas partes estabeleçam uma chave compartilhada sem transmiti-la."},
+            {q: "Criptografia baseada em curvas elípticas (chaves menores):", 
+             o: ["RSA", "ECC", "AES", "3DES"], 
+             c: 1,
+             e: "ECC oferece mesma segurança que RSA com chaves muito menores. Ex: 256 bits ECC = 3072 bits RSA."},
+
+            // Salt e Rainbow Tables (9-12)
+            {q: "O que é adicionado à senha antes do hash para prevenir rainbow tables?", 
+             o: ["Criptografia", "IV", "Salt", "Nonce"], 
+             c: 2,
+             e: "Salt: valor aleatório único adicionado a cada senha antes do hash. Torna rainbow tables inúteis."},
+            {q: "Técnica que aplica múltiplas iterações de hash:", 
+             o: ["Salt", "Key Stretching", "Encryption", "Hashing"], 
+             c: 1,
+             e: "Key stretching aumenta o tempo para calcular o hash aplicando múltiplas iterações. Ex: PBKDF2, bcrypt."},
+            {q: "O que é uma rainbow table?", 
+             o: ["Lista de senhas comuns", "Tabela hash→plaintext pré-computada", "Técnica de key stretching", "Ataque online"], 
+             c: 1,
+             e: "Rainbow table é uma tabela pré-computada que mapeia hashes a senhas em texto plano."},
+            {q: "Função de hash de senha baseada no Blowfish:", 
+             o: ["PBKDF2", "bcrypt", "Argon2", "MD5"], 
+             c: 1,
+             e: "bcrypt é baseado no Blowfish e incorpora key stretching com custo configurável."},
+
+            // PKI (13-18)
+            {q: "Entidade que emite certificados digitais:", 
+             o: ["RA", "CRL", "OCSP", "CA"], 
+             c: 3,
+             e: "CA (Certificate Authority) é a autoridade certificadora que emite certificados."},
+            {q: "Protocolo que verifica status de certificado em tempo real:", 
+             o: ["CRL", "OCSP", "CA", "RA"], 
+             c: 1,
+             e: "OCSP (Online Certificate Status Protocol) verifica em tempo real se um certificado foi revogado."},
+            {q: "Certificado que cobre *.dominio.com:", 
+             o: ["Root", "Self-signed", "Wildcard", "SAN"], 
+             c: 2,
+             e: "Wildcard certificate cobre um domínio e todos seus subdomínios."},
+            {q: "Lista de certificados revogados publicada periodicamente:", 
+             o: ["OCSP", "CRL", "CA", "RA"], 
+             c: 1,
+             e: "CRL (Certificate Revocation List) é uma lista de certificados revogados publicada pela CA."},
+            {q: "Certificado não emitido por CA confiável:", 
+             o: ["Wildcard", "Self-signed", "SAN", "Code Signing"], 
+             c: 1,
+             e: "Self-signed certificate é auto-assinado, não emitido por CA confiável. Usado para testes."},
+            {q: "Mecanismo onde servidor anexa resposta OCSP ao handshake TLS:", 
+             o: ["OCSP Stapling", "OCSP Pinning", "CRL Stapling", "Certificate Pinning"], 
+             c: 0,
+             e: "OCSP Stapling: servidor anexa resposta OCSP ao handshake, reduzindo latência e carga na CA."},
+
+            // Cryptoprocessors (19-21)
+            {q: "Chip na placa-mãe que armazena chaves (BitLocker):", 
+             o: ["HSM", "TPM", "Smart Card", "USB Token"], 
+             c: 1,
+             e: "TPM (Trusted Platform Module) é um chip na placa-mãe usado pelo BitLocker para armazenar chaves."},
+            {q: "Dispositivo dedicado para gerenciar chaves em bancos:", 
+             o: ["TPM", "Smart Card", "HSM", "Secure Enclave"], 
+             c: 2,
+             e: "HSM (Hardware Security Module) é um dispositivo dedicado de alta segurança para gerenciar chaves."},
+            {q: "Coprocessador de segurança da Apple:", 
+             o: ["TPM", "HSM", "Secure Enclave", "Smart Card"], 
+             c: 2,
+             e: "Secure Enclave é o coprocessador de segurança em dispositivos Apple (iPhone, Mac)."},
+
+            // IAM e Modelos de Acesso (22-28)
+            {q: "Modelo onde proprietário do recurso define permissões:", 
+             o: ["MAC", "DAC", "RBAC", "ABAC"], 
+             c: 1,
+             e: "DAC (Discretionary Access Control): o proprietário define permissões. Ex: NTFS."},
+            {q: "Modelo onde sistema define permissões por rótulos (SELinux):", 
+             o: ["DAC", "MAC", "RBAC", "ABAC"], 
+             c: 1,
+             e: "MAC (Mandatory Access Control): sistema define permissões através de rótulos. Ex: SELinux."},
+            {q: "Modelo baseado em funções/cargos:", 
+             o: ["DAC", "MAC", "RBAC", "ABAC"], 
+             c: 2,
+             e: "RBAC (Role-Based Access Control): permissões baseadas em funções. Mais comum em empresas."},
+            {q: "Modelo baseado em atributos (horário, local):", 
+             o: ["DAC", "MAC", "RBAC", "ABAC"], 
+             c: 3,
+             e: "ABAC (Attribute-Based Access Control): políticas baseadas em atributos como horário e localização."},
+            {q: "Princípio do menor privilégio significa:", 
+             o: ["Acesso total a tudo", "Apenas permissões mínimas", "Acesso negado a todos", "Acesso baseado em cargo"], 
+             c: 1,
+             e: "Menor privilégio (Least Privilege) concede apenas as permissões mínimas necessárias."},
+            {q: "Dividir tarefas críticas entre pessoas diferentes:", 
+             o: ["Least Privilege", "Need to Know", "Segregação de Funções", "Defense in Depth"], 
+             c: 2,
+             e: "Segregação de Funções (Separation of Duties) divide tarefas críticas para prevenir fraudes."},
+            {q: "Acesso apenas a informações necessárias para função:", 
+             o: ["Least Privilege", "Need to Know", "Segregação", "Defense in Depth"], 
+             c: 1,
+             e: "Need to Know: acesso apenas a informações estritamente necessárias."},
+
+            // Fatores de Autenticação (29-34)
+            {q: "Senha é fator tipo:", 
+             o: ["Algo que você tem", "Algo que você sabe", "Algo que você é", "Algo que você faz"], 
+             c: 1,
+             e: "Senha é 'algo que você sabe' (Tipo 1)."},
+            {q: "Smart card é fator tipo:", 
+             o: ["Algo que você sabe", "Algo que você tem", "Algo que você é", "Algum lugar"], 
+             c: 1,
+             e: "Smart card é 'algo que você tem' (Tipo 2)."},
+            {q: "Biometria é fator tipo:", 
+             o: ["Algo que você sabe", "Algo que você tem", "Algo que você é", "Algo que você faz"], 
+             c: 2,
+             e: "Biometria é 'algo que você é' (Tipo 3)."},
+            {q: "Geolocalização é fator tipo:", 
+             o: ["Tipo 1", "Tipo 2", "Tipo 3", "Tipo 4"], 
+             c: 3,
+             e: "Localização é 'algum lugar onde você está' (Tipo 4)."},
+            {q: "Google Authenticator usa:", 
+             o: ["HOTP", "TOTP", "SMS", "Push"], 
+             c: 1,
+             e: "Google Authenticator usa TOTP (Time-based One-Time Password), baseado em tempo."},
+            {q: "FIDO2 é um padrão de:", 
+             o: ["Criptografia", "Hashing", "Autenticação sem senha", "PKI"], 
+             c: 2,
+             e: "FIDO2 é um padrão de autenticação sem senha (passwordless), usando biometria ou PIN."},
+
+            // Biometria (35-37)
+            {q: "Taxa de aceitar impostores em biometria (MAIS GRAVE):", 
+             o: ["FRR", "FAR", "CER", "FER"], 
+             c: 1,
+             e: "FAR (False Acceptance Rate) é a taxa de aceitar impostores como legítimos - a mais grave."},
+            {q: "Taxa de rejeitar usuários legítimos:", 
+             o: ["FAR", "FRR", "CER", "FER"], 
+             c: 1,
+             e: "FRR (False Rejection Rate) é a taxa de rejeitar usuários legítimos."},
+            {q: "Ponto onde FAR = FRR:", 
+             o: ["FAR", "FRR", "CER", "EER"], 
+             c: 2,
+             e: "CER (Crossover Error Rate) ou EER é onde FAR e FRR se igualam. Quanto menor, melhor."},
+
+            // Kerberos (38-40)
+            {q: "Protocolo de autenticação do Active Directory:", 
+             o: ["LDAP", "RADIUS", "Kerberos", "TACACS+"], 
+             c: 2,
+             e: "Kerberos é o protocolo de autenticação padrão do Active Directory."},
+            {q: "Ticket inicial no Kerberos:", 
+             o: ["Service Ticket", "TGT", "KDC", "Session Key"], 
+             c: 1,
+             e: "TGT (Ticket Granting Ticket) é o ticket inicial obtido após autenticação."},
+            {q: "Porta do Kerberos:", 
+             o: ["389", "636", "88", "53"], 
+             c: 2,
+             e: "Kerberos usa a porta 88 (TCP/UDP)."}
         ];
 
         let currentCard = 0;
@@ -738,7 +1113,9 @@
 
         function loadProgress() {
             const saved = localStorage.getItem('dominio3_mastered');
-            if (saved) mastered = new Set(JSON.parse(saved));
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
         }
         function saveProgress() {
             localStorage.setItem('dominio3_mastered', JSON.stringify([...mastered]));
@@ -746,14 +1123,22 @@
         loadProgress();
 
         function showTab(n) {
-            document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
-            document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
-            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) {
+                loadQuiz();
+            }
         }
 
         function updateCard() {
             if (filteredCards.length === 0) {
                 document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                document.getElementById('card-counter').textContent = 'Card 0 de 0';
+                document.getElementById('side-indicator').textContent = 'FRENTE';
                 return;
             }
             const cardIndex = filteredCards[currentCard];
@@ -762,10 +1147,10 @@
             document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
             document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
             const btn = document.getElementById('master-btn');
-            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
-            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            const isMastered = mastered.has(cardIndex);
+            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', isMastered);
             document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
-            
             const progress = (mastered.size / cards.length) * 100;
             document.getElementById('progress-fill').style.width = progress + '%';
             document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
@@ -795,11 +1180,9 @@
             currentFilter = type;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
             if (type === 'all') filteredCards = [...Array(cards.length).keys()];
             else if (type === 'mastered') filteredCards = Array.from(mastered);
             else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
-            
             currentCard = 0; flipped = false; updateCard();
         }
 
@@ -820,7 +1203,7 @@
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
                 exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
                 div.appendChild(exp);
                 container.appendChild(div);
             });
@@ -828,7 +1211,9 @@
 
         function selectOpt(qi, oi) {
             if (checked) return;
-            quiz[qi].o.forEach((_, i) => document.getElementById(`q${qi}o${i}`).classList.remove('selected'));
+            quiz[qi].o.forEach((_, i) => {
+                document.getElementById(`q${qi}o${i}`).classList.remove('selected');
+            });
             document.getElementById(`q${qi}o${oi}`).classList.add('selected');
             answers[qi] = oi;
         }
@@ -840,24 +1225,26 @@
                 const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
                 q.o.forEach((_, oi) => {
                     const el = document.getElementById(`q${qi}o${oi}`);
-                    if (correctAnswer.includes(oi)) el.classList.add('correct');
-                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
                 });
                 document.getElementById(`exp${qi}`).style.display = 'block';
                 if (correctAnswer.includes(answers[qi])) correct++;
             });
-            
             const pct = Math.round((correct / quiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
             document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
-            document.getElementById('results-modal').style.display = 'flex';
+            document.getElementById('results-modal').classList.add('show');
         }
 
         function resetQuiz() {
             checked = false;
             answers = {};
             document.getElementById('questions').innerHTML = '';
-            document.getElementById('results-modal').style.display = 'none';
+            document.getElementById('results-modal').classList.remove('show');
             loadQuiz();
         }
 

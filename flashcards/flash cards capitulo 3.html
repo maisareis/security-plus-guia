@@ -5,22 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Security+ Cap 3 - Soluções Criptográficas</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ===== ESTILOS GLOBAIS ===== */
+        /* O seletor * aplica a todos os elementos da página */
+        * { margin: 0; padding: 0; box-sizing: border-box; } 
+        /* Reset CSS: remove margens e paddings padrão que os navegadores aplicam */
+        /* box-sizing: border-box faz com que padding e bordas sejam incluídos na largura/altura total */
+        
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); /* Gradiente azul - tema do cap3 */
             padding: 20px;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
+        
+        .container { max-width: 1200px; margin: 0 auto; } /* Container centralizado com largura máxima */
+        
         .header { text-align: center; color: white; margin-bottom: 30px; }
-        .header h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); } /* Sombra no texto */
+        
+        /* ===== ABAS (TABS) ===== */
+        /* As abas permitem alternar entre Flashcards, Resumo e Quiz */
         .tabs {
             display: flex;
-            gap: 10px;
+            gap: 10px; /* Espaçamento entre os botões */
             justify-content: center;
             margin-bottom: 30px;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* Em telas pequenas, quebra para a linha de baixo */
         }
+        
         .tab-btn {
             padding: 15px 30px;
             background: white;
@@ -29,20 +40,64 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s ease; /* Transição suave para hover */
         }
-        .tab-btn.active { background: #0072ff; color: white; }
-        .content { display: none; }
-        .content.active { display: block; }
         
+        .tab-btn:hover {
+            transform: translateY(-2px); /* Efeito de elevação ao passar mouse */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .tab-btn.active { background: #0072ff; color: white; } /* Estilo da aba ativa - azul */
+        
+        .content { display: none; } /* Por padrão, todos os conteúdos ficam ocultos */
+        .content.active { display: block; } /* Apenas o conteúdo com classe active aparece */
+        
+        /* ===== ÁREA DE FLASHCARDS ===== */
         .flashcard-area { max-width: 800px; margin: 0 auto; }
+        
         .card-info {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.2); /* Fundo semi-transparente para efeito vidro */
             padding: 15px;
             border-radius: 10px;
             color: white;
             margin-bottom: 20px;
             text-align: center;
+            backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
         }
+        
+        /* ===== BOTÕES DE FILTRO ===== */
+        /* Permitem filtrar cards por "Todos", "Não Dominados" e "Dominados" */
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(255,255,255,0.5);
+            transform: scale(1.05);
+        }
+        
+        .filter-btn.active {
+            background: white;
+            color: #0072ff; /* Texto azul quando ativo */
+        }
+        
+        /* ===== O CARD EM SI ===== */
         .flashcard {
             background: white;
             border-radius: 20px;
@@ -51,92 +106,374 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            cursor: pointer; /* Mãozinha indicando que é clicável */
             margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative; /* Para posicionar o indicador de frente/verso */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .flashcard:hover { transform: translateY(-5px); transition: 0.3s; }
-        .flashcard-text { font-size: 1.3rem; line-height: 1.8; text-align: center; }
-        .controls { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        
+        .flashcard:hover { 
+            transform: translateY(-5px); /* Efeito de elevação */
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .flashcard-text { 
+            font-size: 1.3rem; 
+            line-height: 1.8; 
+            text-align: center; 
+            color: #1f2937;
+        }
+        
+        /* Indicador que mostra se é FRENTE ou VERSO */
+        .side-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 5px 10px;
+            background: #0072ff; /* Azul do tema */
+            color: white;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        /* Dica para virar o card */
+        .flip-hint {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+        
+        /* ===== CONTROLES (BOTÕES) ===== */
+        .controls { 
+            display: flex; 
+            gap: 15px; 
+            justify-content: center; 
+            flex-wrap: wrap; 
+            margin-top: 20px;
+        }
+        
         .btn {
             padding: 15px 30px;
             border: none;
             border-radius: 10px;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        .btn-nav { background: white; font-size: 1.5rem; width: 50px; height: 50px; }
         
+        .btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-shuffle { 
+            background: #f59e0b; /* Laranja - botão de embaralhar */
+            color: white; 
+        }
+        
+        .btn-nav { 
+            background: white; 
+            font-size: 1.5rem; 
+            width: 60px; 
+            height: 60px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Botão "Marcar Dominado" - muda quando o card está dominado */
+        .btn-master {
+            background: #e5e7eb;
+            color: #1f2937;
+            min-width: 160px;
+        }
+        
+        .btn-master.mastered {
+            background: #10b981; /* Verde quando dominado */
+            color: white;
+        }
+        
+        /* ===== RESUMO ===== */
         .summary {
             max-width: 1000px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
             padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        .summary h2 { color: #0072ff; margin-top: 30px; margin-bottom: 15px; }
-        .summary h3 { margin-top: 20px; margin-bottom: 10px; color: #333; }
-        .summary ul { margin-left: 20px; margin-bottom: 15px; }
-        .summary li { margin-bottom: 8px; line-height: 1.6; }
         
-        .quiz-area { max-width: 900px; margin: 0 auto; }
-        .quiz-header { text-align: center; color: white; margin-bottom: 30px; }
-        .question { background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; }
-        .option {
+        .summary h1 {
+            color: #0072ff;
+            border-bottom: 3px solid #0072ff;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .summary h2 { 
+            color: #0072ff; 
+            margin-top: 30px; 
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .summary h3 { 
+            margin-top: 20px; 
+            margin-bottom: 10px; 
+            color: #333;
+            font-size: 1.4rem;
+        }
+        
+        .summary ul { 
+            margin-left: 20px; 
+            margin-bottom: 15px; 
+        }
+        
+        .summary li { 
+            margin-bottom: 8px; 
+            line-height: 1.6;
+        }
+        
+        /* Destaque para informações importantes */
+        .highlight {
+            background: #dbeafe;
+            border-left: 5px solid #0072ff;
             padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        /* ===== QUIZ ===== */
+        .quiz-area { max-width: 900px; margin: 0 auto; }
+        
+        .quiz-header { 
+            text-align: center; 
+            color: white; 
+            margin-bottom: 30px; 
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .quiz-header h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .question { 
+            background: white; 
+            border-radius: 15px; 
+            padding: 30px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .question:hover {
+            transform: translateX(5px);
+        }
+        
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        .option {
+            padding: 15px 20px;
             border: 2px solid #e5e7eb;
             border-radius: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
         }
-        .option:hover { background: #dbeafe; }
-        .option.selected { border-color: #0072ff; background: #dbeafe; }
-        .option.correct { border-color: #10b981; background: #d1fae5; }
-        .option.incorrect { border-color: #ef4444; background: #fee2e2; }
+        
+        .option:hover { 
+            background: #dbeafe; 
+            border-color: #0072ff;
+            transform: translateX(5px);
+        }
+        
+        .option.selected { 
+            border-color: #0072ff; 
+            background: #dbeafe; 
+            font-weight: 600;
+        }
+        
+        .option.correct { 
+            border-color: #10b981; 
+            background: #d1fae5; 
+            font-weight: 600;
+        }
+        
+        .option.incorrect { 
+            border-color: #ef4444; 
+            background: #fee2e2; 
+            font-weight: 600;
+        }
+        
         .explanation {
-            margin-top: 15px;
-            padding: 15px;
+            margin-top: 20px;
+            padding: 20px;
             background: #dbeafe;
-            border-left: 4px solid #0072ff;
+            border-left: 5px solid #0072ff;
+            border-radius: 8px;
+            display: none; /* Explicação fica oculta até verificar */
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+        
+        /* Modal de resultados */
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
             display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .results-modal.show { display: flex; }
+        
+        .results-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 20px auto;
+            box-shadow: 0 10px 20px rgba(0,114,255,0.3);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+        }
+        
+        /* Responsividade para telas pequenas */
+        @media (max-width: 768px) {
+            .flashcard {
+                padding: 30px 20px;
+                min-height: 250px;
+            }
+            
+            .flashcard-text {
+                font-size: 1.1rem;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+            }
+            
+            .btn-nav {
+                width: 50px;
+                height: 50px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- ===== CABEÇALHO ===== -->
         <div class="header">
             <h1>🔐 Security+ Capítulo 3</h1>
             <p>Soluções Criptográficas - 65 Cards | 30 Questões</p>
         </div>
 
+        <!-- ===== ABAS DE NAVEGAÇÃO ===== -->
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
             <button class="tab-btn" onclick="showTab(1)">📝 Resumo</button>
             <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
         </div>
 
+        <!-- ===== ABA 0: FLASHCARDS ===== -->
         <div id="tab0" class="content active">
             <div class="flashcard-area">
+                <!-- INFO DO CARD E FILTROS -->
                 <div class="card-info">
-                    <div id="card-counter">Card 1 de 65</div>
-                    <div id="mastered-count">0 dominados</div>
+                    <div style="margin-bottom: 10px;">
+                        <span id="card-counter">Card 1 de 65</span> | 
+                        <span id="mastered-count">0 dominados</span>
+                    </div>
+                    
+                    <!-- BOTÕES DE FILTRO -->
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
+                        <button class="filter-btn" onclick="filterCards('unmastered', event)">Não Dominados</button>
+                        <button class="filter-btn" onclick="filterCards('mastered', event)">Dominados</button>
+                    </div>
                 </div>
                 
-                <div class="flashcard" onclick="flipCard()">
+                <!-- O FLASHCARD PROPRIAMENTE DITO -->
+                <div class="flashcard" onclick="flipCard()"> <!-- Clica no card para virar -->
+                    <div class="side-indicator" id="side-indicator">FRENTE</div>
                     <div class="flashcard-text" id="card-text"></div>
+                    <div class="flip-hint">👆 Clique para virar</div>
                 </div>
 
+                <!-- BOTÕES DE CONTROLE -->
                 <div class="controls">
-                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
-                    <button class="btn" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
-                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button> <!-- Anterior -->
+                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button> <!-- Próximo -->
                 </div>
             </div>
         </div>
 
+        <!-- ===== ABA 1: RESUMO ===== -->
         <div id="tab1" class="content">
             <div class="summary">
                 <h1>Capítulo 3: Soluções Criptográficas</h1>
+                
+                <div class="highlight">
+                    <strong>🎯 CONCEITOS CRÍTICOS PARA A PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>AES = padrão atual de criptografia simétrica</li>
+                        <li>RSA = algoritmo assimétrico mais usado</li>
+                        <li>SHA-256 = padrão atual de hash</li>
+                        <li>MD5 e SHA-1 = obsoletos, não usar</li>
+                        <li>Salt = essencial para hashing de senhas</li>
+                    </ul>
+                </div>
                 
                 <h2>3.1 Criptografia</h2>
                 
@@ -217,7 +554,6 @@
                 <ul>
                     <li>Esconder mensagens dentro de arquivos (imagens, áudio, vídeo)</li>
                     <li>Diferente de criptografia (oculta existência vs oculta conteúdo)</li>
-                    <li><strong>Ferramenta:</strong> OpenStego</li>
                 </ul>
 
                 <h3>Ataques Criptográficos</h3>
@@ -228,8 +564,6 @@
                     <li><strong>Birthday Attack:</strong> Explorar colisões de hash</li>
                     <li><strong>Collision Attack:</strong> Encontrar dois inputs com mesmo hash</li>
                     <li><strong>Downgrade Attack:</strong> Forçar uso de criptografia fraca</li>
-                    <li><strong>Known Plaintext:</strong> Atacante tem plaintext e ciphertext</li>
-                    <li><strong>Chosen Plaintext:</strong> Atacante escolhe plaintext para criptografar</li>
                 </ul>
 
                 <h2>3.2 Implementações Criptográficas</h2>
@@ -268,7 +602,7 @@
                     <li><strong>Função one-way:</strong> Não pode ser revertida</li>
                     <li><strong>Sempre mesmo tamanho</strong> de output (digest/hash)</li>
                     <li><strong>Mesmo input = mesmo hash</strong></li>
-                    <li><strong>Pequena mudança = hash completamente diferente</strong></li>
+                    <li><strong>Pequena mudança = hash completamente diferente</strong> (efeito avalanche)</li>
                 </ul>
 
                 <h3>Usos de Hash</h3>
@@ -347,7 +681,7 @@
                     <li><strong>Self-signed:</strong> Não emitido por CA confiável</li>
                 </ul>
 
-                <h3>Conceitos</h3>
+                <h3>Conceitos PKI</h3>
                 <ul>
                     <li><strong>Certificate Chain:</strong> Hierarquia até root CA</li>
                     <li><strong>Trust Model:</strong> Quem confia em quem</li>
@@ -358,62 +692,96 @@
             </div>
         </div>
 
+        <!-- ===== ABA 2: QUIZ ===== -->
         <div id="tab2" class="content">
             <div class="quiz-area">
                 <div class="quiz-header">
                     <h2>Quiz - 30 Questões</h2>
+                    <p>Teste seus conhecimentos sobre criptografia</p>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn" onclick="checkAnswers()" style="background: #0072ff; color: white; padding: 15px 40px;">Ver Resultados</button>
-                </div>
-                <div id="results" style="display: none; text-align: center; margin-top: 20px;">
-                    <div style="background: white; padding: 30px; border-radius: 15px;">
-                        <h2 id="score"></h2>
-                        <button class="btn" onclick="resetQuiz()" style="margin-top: 15px;">Refazer</button>
-                    </div>
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal de Resultados do Quiz -->
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+        </div>
+    </div>
+
     <script>
+        // ========== CARDS DO CAPÍTULO 3 ==========
+        /**
+         * ARRAY cards: armazena TODOS os flashcards do capítulo
+         * Cada card tem:
+         * - f: frente (a pergunta/conceito)
+         * - b: verso (a resposta/definição)
+         * 
+         * IMPORTANTE: Este array NUNCA é modificado durante a execução.
+         * Ele é a fonte original dos dados.
+         */
         const cards = [
+            // Conceitos Básicos (1-5)
             {f: "O que é criptografia simétrica?", b: "Utiliza a mesma chave para criptografar e descriptografar. É rápida e adequada para grandes volumes. Exemplos: AES, DES, 3DES."},
             {f: "O que é criptografia assimétrica?", b: "Utiliza um par de chaves: uma pública (compartilhável) e uma privada (secreta). É mais lenta que a simétrica. Exemplos: RSA, ECC."},
             {f: "O que é AES (Advanced Encryption Standard)?", b: "Padrão de criptografia simétrica atual. Suporta chaves de 128, 192 e 256 bits. É rápido, seguro e amplamente utilizado."},
             {f: "O que é DES (Data Encryption Standard)?", b: "Algoritmo simétrico antigo com chave de 56 bits. Hoje é considerado obsoleto e vulnerável a ataques de força bruta."},
             {f: "O que é 3DES (Triple DES)?", b: "Versão melhorada do DES que aplica o algoritmo três vezes. Mais seguro que o DES original, mas está sendo substituído pelo AES."},
+            
+            // Algoritmos Assimétricos (6-10)
             {f: "O que é RSA?", b: "Algoritmo assimétrico mais utilizado para criptografia e assinaturas digitais. Recomenda-se chaves de 2048 bits ou mais."},
             {f: "O que é ECC (Elliptic Curve Cryptography)?", b: "Criptografia assimétrica baseada em curvas elípticas. Oferece o mesmo nível de segurança que o RSA com chaves muito menores."},
             {f: "O que é Diffie-Hellman?", b: "Algoritmo de troca de chaves que permite que duas partes estabeleçam uma chave compartilhada sem transmiti-la diretamente."},
-            {f: "O que é hashing?", b: "Função matemática one-way (não reversível) que gera uma saída de tamanho fixo (hash). Usada para verificar integridade."},
+            {f: "O que é DSA (Digital Signature Algorithm)?", b: "Algoritmo usado apenas para assinaturas digitais, não para criptografia. Padrão do governo americano."},
+            {f: "O que é ElGamal?", b: "Algoritmo assimétrico usado tanto para criptografia quanto para assinaturas digitais. Baseado no problema do logaritmo discreto."},
+            
+            // Hashing (11-20)
+            {f: "O que é hashing?", b: "Função matemática one-way (não reversível) que gera uma saída de tamanho fixo (hash/digest). Usada para verificar integridade."},
             {f: "O que é MD5?", b: "Algoritmo de hash que produz saída de 128 bits. Está obsoleto e vulnerável a colisões, portanto não deve ser usado para segurança."},
             {f: "O que é SHA-1?", b: "Algoritmo de hash que produz saída de 160 bits. Está obsoleto e vulnerável a colisões. Deve ser substituído por SHA-2."},
             {f: "O que é SHA-256?", b: "Algoritmo da família SHA-2 que produz hash de 256 bits. É o padrão atual e seguro, usado em SSL/TLS e Bitcoin."},
             {f: "O que é SHA-512?", b: "Algoritmo da família SHA-2 que produz hash de 512 bits. Oferece maior segurança que SHA-256, mas é mais lento."},
+            {f: "O que é SHA-3?", b: "Versão mais recente da família SHA, criada como alternativa ao SHA-2. Usa uma estrutura diferente (sponge construction)."},
             {f: "O que é HMAC?", b: "Hash-based Message Authentication Code. É um hash com chave secreta que garante autenticação e integridade."},
             {f: "O que é salt em hashing de senhas?", b: "Valor aleatório adicionado à senha antes do hash para prevenir ataques de rainbow table. Deve ser único para cada senha."},
             {f: "O que é um ataque de rainbow table?", b: "Técnica que usa tabelas pré-computadas de hashes para quebrar senhas sem salt. A contramedida é usar salt."},
             {f: "O que é um ataque de colisão (collision attack)?", b: "Quando um atacante encontra duas entradas diferentes que produzem o mesmo hash. MD5 e SHA-1 são vulneráveis."},
-            {f: "O que é um ataque de aniversário (birthday attack)?", b: "Explora a probabilidade de colisões em hashes. Requer menos tentativas que um ataque de força bruta."},
+            
+            // Ataques e Conceitos (21-25)
+            {f: "O que é um ataque de aniversário (birthday attack)?", b: "Explora a probabilidade de colisões em funções hash. Requer menos tentativas que um ataque de força bruta devido ao paradoxo do aniversário."},
             {f: "O que é blockchain?", b: "Ledger (registro) distribuído e imutável onde cada bloco contém o hash do bloco anterior. Usado em criptomoedas e contratos inteligentes."},
             {f: "O que é esteganografia?", b: "Técnica de esconder mensagens dentro de arquivos como imagens, áudio ou vídeo. Diferente da criptografia, oculta a existência da mensagem."},
             {f: "O que é TPM (Trusted Platform Module)?", b: "Chip de segurança presente na placa-mãe que armazena chaves criptográficas. Usado pelo BitLocker e para boot seguro."},
             {f: "O que é HSM (Hardware Security Module)?", b: "Dispositivo físico dedicado a gerenciar e proteger chaves criptográficas. É tamper-resistant (resistente a violação) e usado em bancos."},
+            
+            // Criptografia de Arquivos (26-30)
             {f: "O que é BitLocker?", b: "Ferramenta de criptografia de disco completo (FDE) do Windows. Requer TPM e protege contra acesso não autorizado em caso de roubo."},
-            {f: "O que é EFS (Encrypting File System)?", b: "Sistema de criptografia em nível de arquivo/pasta do Windows. Transparente para o usuário e usa certificados."},
+            {f: "O que é EFS (Encrypting File System)?", b: "Sistema de criptografia em nível de arquivo/pasta do Windows. Transparente para o usuário e usa certificados do usuário."},
             {f: "O que é PGP/GPG?", b: "PGP (Pretty Good Privacy) e GPG (GNU Privacy Guard) são ferramentas para criptografia de email e arquivos usando chaves públicas."},
+            {f: "O que é criptografia de banco de dados?", b: "Técnicas como TDE (Transparent Data Encryption) para criptografar dados em repouso no banco de dados."},
+            {f: "O que é criptografia de disco completa (FDE)?", b: "Criptografa todo o disco rígido, incluindo sistema operacional, arquivos e área de swap. Ex: BitLocker, FileVault."},
+            
+            // PKI (31-40)
             {f: "O que é PKI (Public Key Infrastructure)?", b: "Infraestrutura de chaves públicas que gerencia certificados digitais através de CAs, CRLs e OCSP."},
             {f: "O que é uma CA (Certificate Authority)?", b: "Autoridade Certificadora: entidade que emite e gerencia certificados digitais. Exemplos: Let's Encrypt, DigiCert."},
-            {f: "O que é um certificado digital?", b: "Documento eletrônico que liga uma chave pública a uma identidade, seguindo o padrão X.509."},
-            {f: "O que é CRL (Certificate Revocation List)?", b: "Lista de certificados revogados publicada periodicamente por uma CA."},
+            {f: "O que é um certificado digital?", b: "Documento eletrônico que liga uma chave pública a uma identidade, seguindo o padrão X.509. Contém informações como nome, validade e chave pública."},
+            {f: "O que é CRL (Certificate Revocation List)?", b: "Lista de certificados revogados publicada periodicamente por uma CA. Clientes baixam a lista para verificar status."},
             {f: "O que é OCSP (Online Certificate Status Protocol)?", b: "Protocolo que permite verificar em tempo real se um certificado foi revogado, substituindo o CRL."},
-            {f: "O que é um certificado root (raiz)?", b: "Certificado auto-assinado no topo da hierarquia PKI. É confiável por estar pré-instalado em sistemas operacionais."},
-            {f: "O que é um certificado auto-assinado (self-signed)?", b: "Certificado não emitido por uma CA confiável. Navegadores exibem avisos de segurança. Usado para testes."},
+            {f: "O que é um certificado root (raiz)?", b: "Certificado auto-assinado no topo da hierarquia PKI. É confiável por estar pré-instalado em sistemas operacionais e navegadores."},
+            {f: "O que é um certificado auto-assinado (self-signed)?", b: "Certificado não emitido por uma CA confiável. Navegadores exibem avisos de segurança. Usado para testes e ambientes internos."},
             {f: "O que é um certificado wildcard?", b: "Certificado que cobre um domínio e todos seus subdomínios (ex: *.dominio.com). Prático, mas mais arriscado se comprometido."},
             {f: "O que é um certificado SAN (Subject Alternative Name)?", b: "Certificado que permite especificar múltiplos domínios diferentes em um único certificado."},
             {f: "O que é um certificado de code signing?", b: "Certificado usado para assinar digitalmente software, garantindo autenticidade e integridade do código."},
+            
+            // Conceitos Avançados (41-50)
             {f: "O que é certificate pinning?", b: "Técnica onde um aplicativo aceita apenas um certificado específico, prevenindo ataques MITM mesmo com CAs comprometidas."},
             {f: "O que é OCSP Stapling?", b: "Mecanismo onde o servidor web anexa a resposta OCSP ao handshake TLS, reduzindo latência e carga na CA."},
             {f: "O que é key escrow?", b: "Prática de armazenar uma cópia das chaves criptográficas com um terceiro confiável para recuperação em caso de perda."},
@@ -424,11 +792,8 @@
             {f: "O que é IV (Initialization Vector)?", b: "Vetor de inicialização: valor aleatório usado em modos como CBC para garantir que mensagens iguais gerem ciphertext diferentes."},
             {f: "O que é nonce?", b: "Número usado uma única vez (number used once) para garantir que operações criptográficas sejam únicas."},
             {f: "O que é Perfect Forward Secrecy (PFS)?", b: "Propriedade onde cada sessão usa chaves únicas. Se a chave privada for comprometida, sessões passadas permanecem seguras."},
-            {f: "O que é um ataque de downgrade?", b: "Forçar o uso de versões antigas e inseguras de protocolos. Exemplo: ataque POODLE contra SSL 3.0."},
-            {f: "O que é um ataque de known plaintext?", b: "Quando o atacante possui pares de plaintext e ciphertext correspondentes e tenta descobrir a chave."},
-            {f: "O que é um ataque de chosen plaintext?", b: "Quando o atacante pode escolher plaintexts e obter os ciphertexts correspondentes, mais poderoso que known plaintext."},
-            {f: "O que é um ataque de força bruta (brute force)?", b: "Testar todas as combinações possíveis de chaves até encontrar a correta. O tempo cresce exponencialmente com o tamanho da chave."},
-            {f: "O que é um ataque de dicionário (dictionary attack)?", b: "Testar palavras comuns e senhas prováveis contra hashes. Contramedida: exigir complexidade de senha."},
+            
+            // Key Stretching e Ataques (51-60)
             {f: "O que é key stretching?", b: "Técnica que aumenta o tempo necessário para derivar uma chave, dificultando ataques de força bruta. Ex: PBKDF2, bcrypt."},
             {f: "O que é PBKDF2?", b: "Password-Based Key Derivation Function 2: função que aplica hash múltiplas vezes para aumentar o custo de ataques."},
             {f: "O que é bcrypt?", b: "Função de hash de senha com key stretching, baseada no Blowfish. Permite configurar o custo computacional."},
@@ -439,173 +804,621 @@
             {f: "O que é Poly1305?", b: "MAC (Message Authentication Code) rápido, frequentemente usado com ChaCha20."},
             {f: "O que é uma assinatura digital (digital signature)?", b: "Assina o hash de uma mensagem com a chave privada. Verifica-se com a chave pública, garantindo autenticação e não-repúdio."},
             {f: "O que é MAC (Message Authentication Code)?", b: "Código de autenticação de mensagem que garante integridade e autenticidade usando uma chave simétrica."},
+            
+            // Certificados e Padrões (61-65)
             {f: "O que é certificate chain (cadeia de certificados)?", b: "Hierarquia de certificados que vai do certificado do servidor (end-entity) até o certificado root."},
             {f: "O que é Web of Trust?", b: "Modelo de confiança usado pelo PGP, onde usuários assinam as chaves uns dos outros, descentralizado."},
             {f: "O que é X.509?", b: "Padrão que define o formato de certificados digitais, usado em SSL/TLS, S/MIME e IPSec."},
             {f: "O que é S/MIME?", b: "Secure/Multipurpose Internet Mail Extensions: padrão para criptografia e assinatura digital de emails."},
-            {f: "O que é criptografia de banco de dados?", b: "Técnicas como TDE (Transparent Data Encryption) para criptografar dados em repouso no banco."}
+            {f: "O que é um ataque de downgrade?", b: "Forçar o uso de versões antigas e inseguras de protocolos. Exemplo: ataque POODLE contra SSL 3.0."}
         ];
 
+        // ========== QUIZ DO CAPÍTULO 3 (30 QUESTÕES) ==========
         const quiz = [
-            {q: "Qual tipo de criptografia usa a mesma chave para criptografar e descriptografar?", o: ["Assimétrica", "Simétrica", "Hash", "PKI"], c: 1},
-            {q: "Qual tipo de criptografia usa um par de chaves (pública e privada)?", o: ["Simétrica", "Assimétrica", "Hash", "Salt"], c: 1},
-            {q: "Qual é o algoritmo simétrico considerado padrão atual?", o: ["DES", "3DES", "AES", "RC4"], c: 2},
-            {q: "Qual é o algoritmo assimétrico mais amplamente utilizado?", o: ["AES", "DES", "RSA", "MD5"], c: 2},
-            {q: "Qual técnica criptográfica é uma função one-way (não reversível)?", o: ["Criptografia simétrica", "Criptografia assimétrica", "Hash", "PKI"], c: 2},
-            {q: "Qual algoritmo de hash de 128 bits está obsoleto e vulnerável a colisões?", o: ["SHA-256", "MD5", "SHA-512", "SHA-3"], c: 1},
-            {q: "Qual é o algoritmo de hash padrão atual com saída de 256 bits?", o: ["MD5", "SHA-1", "SHA-256", "DES"], c: 2},
-            {q: "O que é adicionado a uma senha antes do hash para prevenir ataques de rainbow table?", o: ["Criptografia", "IV", "Salt", "Nonce"], c: 2},
-            {q: "Qual chip de segurança na placa-mãe armazena chaves e é usado pelo BitLocker?", o: ["HSM", "TPM", "Smart Card", "USB Token"], c: 1},
-            {q: "Qual ferramenta do Windows faz criptografia de disco completo?", o: ["EFS", "PGP", "BitLocker", "GPG"], c: 2},
-            {q: "Qual entidade emite certificados digitais em uma PKI?", o: ["RA", "CRL", "OCSP", "CA"], c: 3},
-            {q: "Qual protocolo verifica status de certificado em tempo real?", o: ["CRL", "OCSP", "CA", "RA"], c: 1},
-            {q: "Como é chamado o certificado auto-assinado no topo da hierarquia PKI?", o: ["Intermediate", "Root", "Server", "Client"], c: 1},
-            {q: "Qual tipo de certificado cobre um domínio e todos seus subdomínios (ex: *.exemplo.com)?", o: ["Root", "Self-signed", "Wildcard", "SAN"], c: 2},
-            {q: "Qual ferramenta é usada para criptografia de email com chaves públicas?", o: ["EFS", "BitLocker", "PGP/GPG", "AES"], c: 2},
-            {q: "Qual tecnologia usa um ledger distribuído imutável com blocos encadeados por hashes?", o: ["PKI", "Blockchain", "Hash", "Salt"], c: 1},
-            {q: "Qual técnica esconde mensagens dentro de imagens ou áudio?", o: ["Criptografia", "Hash", "Esteganografia", "Salt"], c: 2},
-            {q: "Qual ataque usa tabelas pré-computadas de hashes para quebrar senhas?", o: ["Força bruta", "Dicionário", "Rainbow Table", "Aniversário"], c: 2},
-            {q: "Qual ataque explora a probabilidade de colisões em funções hash?", o: ["Força bruta", "Ataque de aniversário", "Dicionário", "Phishing"], c: 1},
-            {q: "Como é chamada a combinação de criptografia assimétrica para troca de chaves e simétrica para dados?", o: ["Hash", "Salt", "Criptografia híbrida", "PKI"], c: 2},
-            {q: "Qual modo de operação de block cipher é inseguro porque blocos iguais geram ciphertext igual?", o: ["CBC", "GCM", "ECB", "CTR"], c: 2},
-            {q: "O que é HMAC?", o: ["Algoritmo de hash", "Criptografia assimétrica", "Hash com chave secreta (MAC)", "Salt"], c: 2},
-            {q: "Qual algoritmo permite troca segura de chaves sem transmitir a chave em si?", o: ["RSA", "AES", "Diffie-Hellman", "DES"], c: 2},
-            {q: "Qual ataque força o uso de versões antigas e inseguras de protocolos?", o: ["Força bruta", "Ataque de downgrade", "Phishing", "Rainbow"], c: 1},
-            {q: "Qual função de hash de senha utiliza key stretching e é recomendada atualmente?", o: ["MD5", "SHA-1", "bcrypt", "DES"], c: 2},
-            {q: "Qual tipo de cifra criptografa dados bit a bit (como um fluxo)?", o: ["Block cipher", "Stream cipher", "Hash", "Salt"], c: 1},
-            {q: "O que garante autenticação e não-repúdio através de chave privada?", o: ["Hash", "MAC", "Assinatura digital", "Salt"], c: 2},
-            {q: "Qual tipo de certificado permite especificar múltiplos domínios diferentes?", o: ["Wildcard", "SAN (Subject Alternative Name)", "Root", "Self-signed"], c: 1},
-            {q: "Qual técnica faz um aplicativo aceitar apenas um certificado específico?", o: ["Pinning", "Stapling", "Escrow", "CRL"], c: 0},
-            {q: "Qual é o padrão de formato de certificados digitais?", o: ["PGP", "GPG", "X.509", "S/MIME"], c: 2}
+            // Conceitos Básicos (1-5)
+            {q: "Qual tipo de criptografia usa a mesma chave para criptografar e descriptografar?", 
+             o: ["Assimétrica", "Simétrica", "Hash", "PKI"], 
+             c: 1,
+             e: "Criptografia simétrica utiliza a MESMA chave para ambos os processos. É rápida mas tem o desafio de compartilhar a chave com segurança."},
+             
+            {q: "Qual tipo de criptografia usa um par de chaves (pública e privada)?", 
+             o: ["Simétrica", "Assimétrica", "Hash", "Salt"], 
+             c: 1,
+             e: "Criptografia assimétrica usa duas chaves: uma pública (compartilhável) e uma privada (secreta). Ex: RSA, ECC."},
+             
+            {q: "Qual é o algoritmo simétrico considerado padrão atual?", 
+             o: ["DES", "3DES", "AES", "RC4"], 
+             c: 2,
+             e: "AES (Advanced Encryption Standard) é o padrão atual de criptografia simétrica, com chaves de 128, 192 ou 256 bits."},
+             
+            {q: "Qual é o algoritmo assimétrico mais amplamente utilizado?", 
+             o: ["AES", "DES", "RSA", "MD5"], 
+             c: 2,
+             e: "RSA é o algoritmo assimétrico mais usado para criptografia e assinaturas digitais. Chaves de 2048+ bits são recomendadas."},
+             
+            {q: "Qual técnica criptográfica é uma função one-way (não reversível)?", 
+             o: ["Criptografia simétrica", "Criptografia assimétrica", "Hash", "PKI"], 
+             c: 2,
+             e: "Hash é uma função matemática one-way: não é possível reverter o hash para obter o dado original."},
+            
+            // Hashing (6-10)
+            {q: "Qual algoritmo de hash de 128 bits está obsoleto e vulnerável a colisões?", 
+             o: ["SHA-256", "MD5", "SHA-512", "SHA-3"], 
+             c: 1,
+             e: "MD5 produz hash de 128 bits e é considerado inseguro desde 2005 devido a vulnerabilidades de colisão."},
+             
+            {q: "Qual é o algoritmo de hash padrão atual com saída de 256 bits?", 
+             o: ["MD5", "SHA-1", "SHA-256", "DES"], 
+             c: 2,
+             e: "SHA-256 da família SHA-2 é o padrão atual, usado em SSL/TLS, blockchain e verificação de integridade."},
+             
+            {q: "O que é adicionado a uma senha antes do hash para prevenir ataques de rainbow table?", 
+             o: ["Criptografia", "IV", "Salt", "Nonce"], 
+             c: 2,
+             e: "Salt é um valor aleatório único adicionado a cada senha antes do hashing, tornando rainbow tables ineficazes."},
+             
+            {q: "Qual ataque usa tabelas pré-computadas de hashes para quebrar senhas?", 
+             o: ["Força bruta", "Dicionário", "Rainbow Table", "Aniversário"], 
+             c: 2,
+             e: "Rainbow tables são tabelas pré-computadas de hashes. Salt é a defesa contra este ataque."},
+             
+            {q: "Qual ataque explora a probabilidade de colisões em funções hash?", 
+             o: ["Força bruta", "Ataque de aniversário", "Dicionário", "Phishing"], 
+             c: 1,
+             e: "Birthday attack (ataque de aniversário) explora a probabilidade de colisões em hashes, baseado no paradoxo do aniversário."},
+            
+            // PKI (11-15)
+            {q: "Qual entidade emite certificados digitais em uma PKI?", 
+             o: ["RA", "CRL", "OCSP", "CA"], 
+             c: 3,
+             e: "CA (Certificate Authority) é a autoridade certificadora que emite e gerencia certificados digitais."},
+             
+            {q: "Qual protocolo verifica status de certificado em tempo real?", 
+             o: ["CRL", "OCSP", "CA", "RA"], 
+             c: 1,
+             e: "OCSP (Online Certificate Status Protocol) verifica em tempo real se um certificado foi revogado."},
+             
+            {q: "Como é chamado o certificado auto-assinado no topo da hierarquia PKI?", 
+             o: ["Intermediate", "Root", "Server", "Client"], 
+             c: 1,
+             e: "Root certificate (certificado raiz) é auto-assinado e está no topo da hierarquia PKI. É confiável por estar pré-instalado em sistemas."},
+             
+            {q: "Qual tipo de certificado cobre um domínio e todos seus subdomínios (ex: *.exemplo.com)?", 
+             o: ["Root", "Self-signed", "Wildcard", "SAN"], 
+             c: 2,
+             e: "Wildcard certificate cobre um domínio e todos seus subdomínios. Prático mas mais arriscado se comprometido."},
+             
+            {q: "Qual ferramenta é usada para criptografia de email com chaves públicas?", 
+             o: ["EFS", "BitLocker", "PGP/GPG", "AES"], 
+             c: 2,
+             e: "PGP (Pretty Good Privacy) e GPG (GNU Privacy Guard) são usados para criptografia de email e arquivos com chaves públicas."},
+            
+            // Hardware e Implementações (16-20)
+            {q: "Qual chip de segurança na placa-mãe armazena chaves e é usado pelo BitLocker?", 
+             o: ["HSM", "TPM", "Smart Card", "USB Token"], 
+             c: 1,
+             e: "TPM (Trusted Platform Module) é um chip na placa-mãe que armazena chaves criptográficas e é usado pelo BitLocker."},
+             
+            {q: "Qual ferramenta do Windows faz criptografia de disco completo?", 
+             o: ["EFS", "PGP", "BitLocker", "GPG"], 
+             c: 2,
+             e: "BitLocker é a ferramenta de criptografia de disco completo (FDE) do Windows."},
+             
+            {q: "O que é blockchain?", 
+             o: ["Criptomoeda", "Ledger distribuído imutável", "Algoritmo de hash", "Tipo de certificado"], 
+             c: 1,
+             e: "Blockchain é um ledger (registro) distribuído e imutável onde cada bloco contém o hash do bloco anterior."},
+             
+            {q: "Qual técnica esconde mensagens dentro de imagens ou áudio?", 
+             o: ["Criptografia", "Hash", "Esteganografia", "Salt"], 
+             c: 2,
+             e: "Esteganografia oculta a existência da mensagem dentro de outros arquivos. Criptografia oculta o conteúdo, mas não a existência."},
+             
+            {q: "O que é Perfect Forward Secrecy (PFS)?", 
+             o: ["Chaves que nunca expiram", "Cada sessão usa chaves únicas", "Chave pública compartilhada", "Hash de senha"], 
+             c: 1,
+             e: "PFS garante que cada sessão use chaves únicas. Se a chave privada for comprometida, sessões passadas permanecem seguras."},
+            
+            // Modos de Operação (21-25)
+            {q: "Qual modo de operação de block cipher é inseguro porque blocos iguais geram ciphertext igual?", 
+             o: ["CBC", "GCM", "ECB", "CTR"], 
+             c: 2,
+             e: "ECB (Electronic Codebook) é inseguro porque blocos idênticos de plaintext produzem ciphertext idêntico, revelando padrões."},
+             
+            {q: "O que é HMAC?", 
+             o: ["Algoritmo de hash", "Criptografia assimétrica", "Hash com chave secreta (MAC)", "Salt"], 
+             c: 2,
+             e: "HMAC (Hash-based Message Authentication Code) é um hash com chave secreta que garante autenticação e integridade."},
+             
+            {q: "Qual algoritmo permite troca segura de chaves sem transmitir a chave em si?", 
+             o: ["RSA", "AES", "Diffie-Hellman", "DES"], 
+             c: 2,
+             e: "Diffie-Hellman permite que duas partes estabeleçam uma chave compartilhada sem transmiti-la diretamente."},
+             
+            {q: "Qual ataque força o uso de versões antigas e inseguras de protocolos?", 
+             o: ["Força bruta", "Ataque de downgrade", "Phishing", "Rainbow"], 
+             c: 1,
+             e: "Downgrade attack força o uso de versões antigas e inseguras de protocolos. Ex: POODLE contra SSL 3.0."},
+             
+            {q: "Qual função de hash de senha utiliza key stretching e é recomendada atualmente?", 
+             o: ["MD5", "SHA-1", "bcrypt", "DES"], 
+             c: 2,
+             e: "bcrypt é uma função de hash de senha com key stretching, projetada para ser lenta e resistir a ataques de força bruta."},
+            
+            // Tipos de Cifras (26-30)
+            {q: "Qual tipo de cifra criptografa dados bit a bit (como um fluxo)?", 
+             o: ["Block cipher", "Stream cipher", "Hash", "Salt"], 
+             c: 1,
+             e: "Stream cipher criptografa dados bit a bit ou byte a byte, como um fluxo. Ex: ChaCha20, RC4."},
+             
+            {q: "O que garante autenticação e não-repúdio através de chave privada?", 
+             o: ["Hash", "MAC", "Assinatura digital", "Salt"], 
+             c: 2,
+             e: "Assinatura digital usa a chave privada para assinar e a chave pública para verificar, garantindo autenticação e não-repúdio."},
+             
+            {q: "Qual tipo de certificado permite especificar múltiplos domínios diferentes?", 
+             o: ["Wildcard", "SAN (Subject Alternative Name)", "Root", "Self-signed"], 
+             c: 1,
+             e: "Certificado SAN permite especificar múltiplos domínios diferentes em um único certificado."},
+             
+            {q: "Qual técnica faz um aplicativo aceitar apenas um certificado específico?", 
+             o: ["Pinning", "Stapling", "Escrow", "CRL"], 
+             c: 0,
+             e: "Certificate pinning faz o aplicativo aceitar apenas um certificado específico, prevenindo ataques MITM."},
+             
+            {q: "Qual é o padrão de formato de certificados digitais?", 
+             o: ["PGP", "GPG", "X.509", "S/MIME"], 
+             c: 2,
+             e: "X.509 é o padrão que define o formato de certificados digitais, usado em SSL/TLS e S/MIME."}
         ];
 
+        // ========== VARIÁVEIS DE ESTADO ==========
+        
+        /**
+         * currentCard: POSIÇÃO no array filteredCards (NÃO é o índice original!)
+         * Exemplo: Se filteredCards = [5, 2, 8, 1] e currentCard = 2
+         * Isso significa que estamos mostrando o card na posição 2 da lista atual,
+         * que corresponde ao índice original 8.
+         */
         let currentCard = 0;
+        
+        /**
+         * flipped: controla se estamos mostrando a frente (false) ou o verso (true)
+         */
         let flipped = false;
+        
+        /**
+         * mastered: Set (conjunto) que armazena os ÍNDICES ORIGINAIS dos cards dominados
+         * Usamos Set porque é eficiente para verificar se um índice está presente
+         * e não permite duplicatas automaticamente.
+         */
         let mastered = new Set();
+        
+        /**
+         * answers: objeto que armazena as respostas do usuário no quiz
+         * Formato: { número_da_questão: índice_da_opção_selecionada }
+         */
         let answers = {};
+        
+        /**
+         * checked: flag que indica se o quiz já foi verificado
+         * Quando true, impede que o usuário mude as respostas
+         */
         let checked = false;
+        
+        /**
+         * filteredCards: array que contém os ÍNDICES ORIGINAIS dos cards
+         * na ORDEM ATUAL de exibição.
+         * 
+         * Este é o coração do sistema de navegação e embaralhamento.
+         * Inicialmente: [...Array(cards.length).keys()] = [0,1,2,3,...]
+         * 
+         * Quando embaralhamos: reordenamos este array aleatoriamente
+         * Quando filtramos: criamos um novo array apenas com índices que atendem ao filtro
+         */
+        let filteredCards = [...Array(cards.length).keys()]; // Gera [0,1,2,3,...,64]
+        
+        /**
+         * currentFilter: string que indica qual filtro está ativo
+         * Valores possíveis: 'all', 'mastered', 'unmastered'
+         */
+        let currentFilter = 'all';
 
-        // Carregar progresso salvo
+        // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
+        
+        /**
+         * loadProgress(): Carrega os cards dominados do localStorage
+         * 
+         * localStorage é uma API do navegador que permite armazenar dados
+         * de forma persistente (mesmo após fechar a página).
+         * 
+         * Os dados são armazenados como strings, por isso usamos:
+         * - JSON.stringify() para salvar
+         * - JSON.parse() para recuperar
+         */
         function loadProgress() {
+            // Tenta recuperar a string salva com a chave 'security_plus_cap3_mastered'
             const saved = localStorage.getItem('security_plus_cap3_mastered');
+            
             if (saved) {
+                // JSON.parse converte a string de volta para array
+                // new Set() converte o array em um Set (conjunto)
                 mastered = new Set(JSON.parse(saved));
             }
         }
 
-        // Salvar progresso
+        /**
+         * saveProgress(): Salva os cards dominados no localStorage
+         */
         function saveProgress() {
+            // [...mastered] usa o operador spread para converter o Set em array
+            // JSON.stringify converte o array para string
             localStorage.setItem('security_plus_cap3_mastered', JSON.stringify([...mastered]));
         }
 
-        // Chamar loadProgress assim que o script carregar
+        // Carrega o progresso assim que o script é executado
         loadProgress();
 
+        // ========== FUNÇÕES DAS ABAS ==========
+        
+        /**
+         * showTab(n): Alterna entre as abas (Flashcards, Resumo, Quiz)
+         * @param {number} n - Índice da aba (0, 1 ou 2)
+         */
         function showTab(n) {
+            // Para cada elemento com classe 'content', remove a classe 'active'
+            // e adiciona apenas se o índice for igual a n
             document.querySelectorAll('.content').forEach((c, i) => {
                 c.classList.toggle('active', i === n);
             });
+            
+            // Mesma coisa para os botões das abas
             document.querySelectorAll('.tab-btn').forEach((b, i) => {
                 b.classList.toggle('active', i === n);
             });
-            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
-        }
-
-        function updateCard() {
-            const card = cards[currentCard];
-            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
-            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${cards.length}`;
-            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
-            const btn = document.getElementById('master-btn');
-            btn.textContent = mastered.has(currentCard) ? '✓ Dominado' : 'Marcar Dominado';
-            btn.style.background = mastered.has(currentCard) ? '#10b981' : '#e5e7eb';
-            btn.style.color = mastered.has(currentCard) ? 'white' : 'black';
-        }
-
-        function flipCard() {
-            flipped = !flipped;
-            updateCard();
-        }
-
-        function nextCard() {
-            currentCard = (currentCard + 1) % cards.length;
-            flipped = false;
-            updateCard();
-        }
-
-        function prevCard() {
-            currentCard = (currentCard - 1 + cards.length) % cards.length;
-            flipped = false;
-            updateCard();
-        }
-
-        function toggleMaster() {
-            if (mastered.has(currentCard)) mastered.delete(currentCard);
-            else mastered.add(currentCard);
             
-            // Salvar sempre que mudar
+            // Se for a aba do quiz (2) e o quiz ainda não foi carregado, carrega
+            if (n === 2 && !document.getElementById('questions').innerHTML) {
+                loadQuiz();
+            }
+        }
+
+        // ========== FUNÇÕES DOS FLASHCARDS ==========
+        
+        /**
+         * updateCard(): Atualiza a interface com base no estado atual
+         * 
+         * Esta função é chamada sempre que algo muda:
+         * - Ao navegar entre cards
+         * - Ao virar o card
+         * - Ao marcar/desmarcar como dominado
+         * - Ao embaralhar
+         * - Ao filtrar
+         */
+        function updateCard() {
+            // Se não há cards no filtro atual, mostra mensagem
+            if (filteredCards.length === 0) {
+                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                document.getElementById('card-counter').textContent = 'Card 0 de 0';
+                document.getElementById('side-indicator').textContent = 'FRENTE';
+                return;
+            }
+            
+            // PASSO 1: Pegar o índice ORIGINAL do card atual
+            // filteredCards[currentCard] nos dá o índice original
+            const cardIndex = filteredCards[currentCard];
+            
+            // PASSO 2: Pegar o card correspondente no array original
+            const card = cards[cardIndex];
+            
+            // PASSO 3: Mostrar frente ou verso baseado em 'flipped'
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            
+            // PASSO 4: Atualizar contador (currentCard+1 porque mostramos 1-based)
+            document.getElementById('card-counter').textContent = 
+                `Card ${currentCard + 1} de ${filteredCards.length}`;
+            
+            // PASSO 5: Mostrar total de cards dominados
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            
+            // PASSO 6: Atualizar botão "Marcar Dominado"
+            const btn = document.getElementById('master-btn');
+            const isMastered = mastered.has(cardIndex);
+            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', isMastered);
+            
+            // PASSO 7: Atualizar indicador de frente/verso
+            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+        }
+
+        /**
+         * flipCard(): Vira o card (alterna entre frente e verso)
+         * Chamado quando o usuário clica no card
+         */
+        function flipCard() {
+            flipped = !flipped; // Inverte o estado
+            updateCard();       // Atualiza a tela
+        }
+
+        /**
+         * nextCard(): Avança para o próximo card
+         * Usa operador módulo (%) para voltar ao início quando chegar ao final
+         */
+        function nextCard() {
+            if (filteredCards.length === 0) return; // Não faz nada se não há cards
+            
+            // Fórmula: (currentCard + 1) % tamanho
+            // Ex: se tamanho=5 e currentCard=4, (4+1)%5 = 5%5 = 0 (volta ao início)
+            currentCard = (currentCard + 1) % filteredCards.length;
+            
+            flipped = false; // Sempre mostra a frente ao mudar de card
+            updateCard();
+        }
+
+        /**
+         * prevCard(): Volta para o card anterior
+         * Fórmula especial para evitar números negativos
+         */
+        function prevCard() {
+            if (filteredCards.length === 0) return;
+            
+            // Fórmula: (currentCard - 1 + tamanho) % tamanho
+            // Ex: se tamanho=5 e currentCard=0, (0-1+5)%5 = 4%5 = 4 (último card)
+            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
+            
+            flipped = false;
+            updateCard();
+        }
+
+        /**
+         * toggleMaster(): Marca/desmarca o card atual como dominado
+         * 
+         * IMPORTANTE: Usamos o ÍNDICE ORIGINAL (cardIndex) para marcar,
+         * não a posição atual. Isso garante que um card continue marcado
+         * mesmo depois de embaralhado ou filtrado.
+         */
+        function toggleMaster() {
+            if (filteredCards.length === 0) return;
+            
+            // Pega o índice ORIGINAL do card atual
+            const cardIndex = filteredCards[currentCard];
+            
+            // Se já está no Set, remove; senão, adiciona
+            if (mastered.has(cardIndex)) {
+                mastered.delete(cardIndex);
+            } else {
+                mastered.add(cardIndex);
+            }
+            
+            // Salva no localStorage
             saveProgress();
             
+            // Atualiza a tela
             updateCard();
         }
 
+        // ========== FUNÇÃO DE EMBARALHAR ==========
+        
+        /**
+         * shuffleCards(): Embaralha os cards APENAS do filtro atual
+         * 
+         * Usa o algoritmo Fisher-Yates (também chamado de Knuth shuffle),
+         * que é o método mais eficiente e verdadeiramente aleatório para
+         * embaralhar arrays.
+         */
+        function shuffleCards() {
+            // Algoritmo Fisher-Yates
+            // Percorre o array do final para o início
+            for (let i = filteredCards.length - 1; i > 0; i--) {
+                // Escolhe um índice aleatório entre 0 e i
+                const j = Math.floor(Math.random() * (i + 1));
+                
+                // Troca os elementos nas posições i e j
+                // Usando destructuring assignment para troca em uma linha
+                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+            }
+            
+            // Volta para o primeiro card
+            currentCard = 0;
+            flipped = false;
+            
+            // Atualiza a tela
+            updateCard();
+            
+            // ===== FEEDBACK VISUAL =====
+            // Pega o botão de embaralhar
+            const shuffleBtn = document.querySelector('.btn-shuffle');
+            
+            // Aplica rotação de 180 graus (gira o botão)
+            shuffleBtn.style.transform = 'rotate(180deg)';
+            
+            // Após 300ms, volta ao normal
+            setTimeout(() => {
+                shuffleBtn.style.transform = 'rotate(0deg)';
+            }, 300);
+        }
+
+        // ========== FUNÇÕES DE FILTRO ==========
+        
+        /**
+         * filterCards(): Filtra os cards por status (todos, dominados, não dominados)
+         * @param {string} type - Tipo de filtro: 'all', 'mastered', 'unmastered'
+         * @param {Event} event - Evento do clique (para identificar o botão)
+         */
+        function filterCards(type, event) {
+            currentFilter = type;
+            
+            // Remove a classe 'active' de todos os botões de filtro
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Adiciona 'active' ao botão clicado
+            event.target.classList.add('active');
+            
+            // Cria o novo array filteredCards baseado no filtro selecionado
+            if (type === 'all') {
+                // Array com todos os índices [0,1,2,...]
+                filteredCards = [...Array(cards.length).keys()];
+                
+            } else if (type === 'mastered') {
+                // Converte o Set mastered para array
+                // Se não houver cards dominados, filteredCards será vazio []
+                filteredCards = Array.from(mastered);
+                
+            } else { // unmastered
+                // Filtra: mantém apenas os índices que NÃO estão no Set mastered
+                // Array.from({length: cards.length}, (_, i) => i) cria [0,1,2,...]
+                // .filter(i => !mastered.has(i)) mantém só os não dominados
+                filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            }
+            
+            // Ordena os cards para manter consistência (opcional - remove se quiser aleatório)
+            // filteredCards.sort((a, b) => a - b);
+            
+            // Volta para o primeiro card
+            currentCard = 0;
+            flipped = false;
+            
+            // Atualiza a tela
+            updateCard();
+        }
+
+        // ========== FUNÇÕES DO QUIZ ==========
+        
+        /**
+         * loadQuiz(): Cria dinamicamente os elementos HTML do quiz
+         * 
+         * Para cada questão no array quiz, cria:
+         * - Um div com a pergunta
+         * - Vários divs para as opções
+         * - Um div para a explicação (inicialmente oculto)
+         */
         function loadQuiz() {
             const container = document.getElementById('questions');
+            
+            // Limpa o container antes de carregar (evita duplicação)
+            container.innerHTML = '';
+            
+            // Para cada questão no array quiz
             quiz.forEach((q, qi) => {
+                // Cria um div para a questão
                 const div = document.createElement('div');
                 div.className = 'question';
                 div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                
+                // Para cada opção da questão
                 q.o.forEach((opt, oi) => {
                     const odiv = document.createElement('div');
                     odiv.className = 'option';
                     odiv.textContent = opt;
+                    
+                    // Quando clicar na opção, chama selectOpt com os índices
                     odiv.onclick = () => selectOpt(qi, oi);
+                    
+                    // Define um ID único para cada opção: q0o0, q0o1, q1o0, etc.
                     odiv.id = `q${qi}o${oi}`;
+                    
                     div.appendChild(odiv);
                 });
+                
+                // Cria a explicação (inicialmente oculta)
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
                 exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>Resposta correta:</strong> ${q.o[q.c]}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
+                
                 div.appendChild(exp);
                 container.appendChild(div);
             });
         }
 
+        /**
+         * selectOpt(): Seleciona uma opção no quiz
+         * @param {number} qi - Índice da questão
+         * @param {number} oi - Índice da opção
+         */
         function selectOpt(qi, oi) {
+            // Se o quiz já foi verificado, não permite mais mudanças
             if (checked) return;
+            
+            // Remove a classe 'selected' de todas as opções desta questão
             quiz[qi].o.forEach((_, i) => {
-                document.getElementById(`q${qi}o${i}`).classList.remove('selected');
+                const el = document.getElementById(`q${qi}o${i}`);
+                if (el) el.classList.remove('selected');
             });
-            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            
+            // Adiciona a classe 'selected' à opção clicada
+            const selectedEl = document.getElementById(`q${qi}o${oi}`);
+            if (selectedEl) selectedEl.classList.add('selected');
+            
+            // Armazena a resposta (sobrescreve se já existia)
             answers[qi] = oi;
         }
 
+        /**
+         * checkAnswers(): Verifica as respostas do quiz
+         * 
+         * Marca as opções corretas em verde e as incorretas em vermelho,
+         * mostra as explicações e exibe a pontuação.
+         */
         function checkAnswers() {
-            checked = true;
-            let correct = 0;
+            checked = true; // Impede novas mudanças
+            
+            let correct = 0; // Contador de respostas corretas
+            
+            // Para cada questão
             quiz.forEach((q, qi) => {
+                // Verifica se a questão tem múltiplas respostas corretas
+                // q.c pode ser número (ex: 2) ou array (ex: [0,3])
+                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                
+                // Para cada opção da questão
                 q.o.forEach((_, oi) => {
                     const el = document.getElementById(`q${qi}o${oi}`);
-                    if (oi === q.c) el.classList.add('correct');
-                    else if (answers[qi] === oi) el.classList.add('incorrect');
+                    if (!el) return;
+                    
+                    // Se a opção é a correta, marca como correct
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } 
+                    // Se não é a correta mas o usuário selecionou, marca como incorrect
+                    else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
                 });
-                document.getElementById(`exp${qi}`).style.display = 'block';
-                if (answers[qi] === q.c) correct++;
+                
+                // Mostra a explicação
+                const expEl = document.getElementById(`exp${qi}`);
+                if (expEl) expEl.style.display = 'block';
+                
+                // Se o usuário acertou, incrementa contador
+                if (correctAnswer.includes(answers[qi])) {
+                    correct++;
+                }
             });
+            
+            // Calcula porcentagem
             const pct = Math.round((correct / quiz.length) * 100);
-            document.getElementById('score').textContent = `${correct}/${quiz.length} (${pct}%)`;
-            document.getElementById('results').style.display = 'block';
+            
+            // Mostra resultado no modal
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = 
+                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa estudar mais'}`;
+            document.getElementById('results-modal').classList.add('show');
         }
 
+        /**
+         * resetQuiz(): Reinicia o quiz (limpa respostas e recarrega)
+         */
         function resetQuiz() {
-            checked = false;
-            answers = {};
-            document.getElementById('questions').innerHTML = '';
-            document.getElementById('results').style.display = 'none';
-            loadQuiz();
+            checked = false;          // Permite novas respostas
+            answers = {};              // Limpa respostas
+            document.getElementById('questions').innerHTML = ''; // Limpa HTML
+            document.getElementById('results-modal').classList.remove('show'); // Esconde modal
+            loadQuiz();                // Recarrega as questões
         }
 
+        // ========== INICIALIZAÇÃO ==========
+        // Mostra o primeiro card
         updateCard();
     </script>
 </body>
