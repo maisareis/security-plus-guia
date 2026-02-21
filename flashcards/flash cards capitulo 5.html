@@ -5,25 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Security+ Cap 5 - Arquitetura de Redes</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ===== RESET CSS ===== */
+        /* Remove todas as margens e paddings padrão do navegador */
+        /* box-sizing: border-box faz com que padding e bordas sejam incluídos na largura total */
+        * { margin: 0; padding: 0; box-sizing: border-box; } 
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Gradiente roxo - tema do capítulo 5 */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            min-height: 100vh; /* Mínimo de 100% da altura da viewport */
             padding: 20px;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
+        
+        .container { 
+            max-width: 1200px; /* Largura máxima para telas grandes */
+            margin: 0 auto; /* Centraliza horizontalmente */
+        }
+        
+        /* ===== CABEÇALHO ===== */
         .header {
             text-align: center;
             color: white;
             margin-bottom: 40px;
-            animation: fadeIn 0.5s;
+            animation: fadeIn 0.5s; /* Animação de entrada */
         }
+        
         .header h1 {
             font-size: 2.8rem;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2); /* Sombra suave */
         }
+        
+        /* Barra de estatísticas com cards de informações */
         .stats-bar {
             display: flex;
             gap: 20px;
@@ -31,14 +45,17 @@
             margin-top: 20px;
             flex-wrap: wrap;
         }
+        
         .stat-card {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.2); /* Fundo semi-transparente */
             padding: 15px 25px;
             border-radius: 12px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px); /* Efeito de vidro fosco */
             color: white;
             font-weight: bold;
         }
+        
+        /* ===== ABAS (TABS) ===== */
         .tabs {
             display: flex;
             gap: 12px;
@@ -46,6 +63,7 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
         }
+        
         .tab-btn {
             padding: 15px 30px;
             background: white;
@@ -54,29 +72,37 @@
             font-size: 1.05rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s ease; /* Transição suave para hover */
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        
         .tab-btn:hover {
-            transform: translateY(-2px);
+            transform: translateY(-2px); /* Efeito de elevação */
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
+        
         .tab-btn.active {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
+        
+        /* Controles de visibilidade das abas */
         .content { 
-            display: none;
+            display: none; /* Por padrão, conteúdo fica oculto */
             animation: fadeIn 0.4s;
         }
-        .content.active { display: block; }
+        .content.active { display: block; } /* Apenas a aba ativa aparece */
+        
+        /* Animação de fade in */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* FLASHCARDS */
+        /* ===== FLASHCARDS ===== */
         .flashcard-area { max-width: 900px; margin: 0 auto; }
+        
+        /* Área de informações do card (contador, filtros, progresso) */
         .card-info {
             background: rgba(255,255,255,0.25);
             padding: 20px;
@@ -85,19 +111,24 @@
             margin-bottom: 25px;
             backdrop-filter: blur(10px);
         }
+        
+        /* Barra de progresso de dominados */
         .progress-bar {
             width: 100%;
             height: 8px;
             background: rgba(255,255,255,0.3);
             border-radius: 10px;
-            overflow: hidden;
+            overflow: hidden; /* Esconde as bordas do fill */
             margin-top: 10px;
         }
+        
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #10b981, #34d399);
-            transition: width 0.3s ease;
+            background: linear-gradient(90deg, #10b981, #34d399); /* Verde */
+            transition: width 0.3s ease; /* Animação suave ao atualizar */
         }
+        
+        /* O card em si */
         .flashcard {
             background: white;
             border-radius: 20px;
@@ -107,13 +138,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            cursor: pointer; /* Mãozinha indicando que é clicável */
             transition: transform 0.3s ease;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            position: relative;
+            position: relative; /* Para posicionar o indicador */
             margin-bottom: 30px;
         }
-        .flashcard:hover { transform: scale(1.02); }
+        
+        .flashcard:hover { transform: scale(1.02); } /* Zoom suave ao passar mouse */
+        
+        /* Indicador de FRENTE/VERSO */
         .side-indicator {
             position: absolute;
             top: 20px;
@@ -125,18 +159,22 @@
             font-size: 0.9rem;
             font-weight: 600;
         }
+        
         .flashcard-text {
             font-size: 1.4rem;
             line-height: 1.8;
             text-align: center;
             color: #1f2937;
         }
+        
         .flip-hint {
             margin-top: 20px;
             font-size: 0.9rem;
             color: #6b7280;
             font-style: italic;
         }
+        
+        /* ===== CONTROLES (BOTÕES) ===== */
         .controls {
             display: flex;
             gap: 15px;
@@ -144,6 +182,7 @@
             align-items: center;
             flex-wrap: wrap;
         }
+        
         .btn {
             padding: 15px 30px;
             border: none;
@@ -154,36 +193,44 @@
             font-size: 1rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
+        
         .btn-nav {
             background: white;
             font-size: 1.5rem;
             width: 55px;
             height: 55px;
         }
+        
+        /* Botão "Marcar Dominado" - muda de cor quando ativo */
         .btn-master {
             background: #e5e7eb;
             color: #1f2937;
         }
+        
         .btn-master.mastered {
-            background: #10b981;
-            color: white;
-        }
-        .btn-shuffle {
-            background: #f59e0b;
+            background: #10b981; /* Verde quando dominado */
             color: white;
         }
         
-        /* QUIZ */
+        .btn-shuffle {
+            background: #f59e0b; /* Laranja */
+            color: white;
+        }
+        
+        /* ===== QUIZ ===== */
         .quiz-area { max-width: 1000px; margin: 0 auto; }
+        
         .quiz-header {
             text-align: center;
             color: white;
             margin-bottom: 35px;
         }
+        
         .question {
             background: white;
             border-radius: 18px;
@@ -191,12 +238,15 @@
             margin-bottom: 25px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
+        
         .question h3 {
             color: #1f2937;
             margin-bottom: 20px;
             font-size: 1.25rem;
             line-height: 1.6;
         }
+        
+        /* Opções de resposta */
         .option {
             padding: 18px 20px;
             border: 3px solid #e5e7eb;
@@ -207,48 +257,58 @@
             background: white;
             font-size: 1.05rem;
         }
+        
         .option:hover {
             background: #f9fafb;
             border-color: #667eea;
-            transform: translateX(5px);
+            transform: translateX(5px); /* Desloca para a direita */
         }
-        .option.selected {
+        
+        /* Estados das opções */
+        .option.selected {  /* Opção selecionada pelo usuário */
             border-color: #667eea;
             background: #eff6ff;
             font-weight: 600;
         }
-        .option.correct {
+        
+        .option.correct {  /* Opção correta (após verificar) */
             border-color: #10b981;
             background: #d1fae5;
             font-weight: 600;
         }
-        .option.incorrect {
+        
+        .option.incorrect {  /* Opção errada (após verificar) */
             border-color: #ef4444;
             background: #fee2e2;
             font-weight: 600;
         }
+        
         .explanation {
             margin-top: 20px;
             padding: 20px;
             background: #eff6ff;
             border-left: 5px solid #667eea;
             border-radius: 8px;
-            display: none;
+            display: none; /* Inicialmente oculta */
             line-height: 1.6;
         }
+        
+        /* ===== MODAL DE RESULTADOS ===== */
         .results-modal {
-            position: fixed;
+            position: fixed; /* Fixo na tela */
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.7);
-            display: none;
+            background: rgba(0,0,0,0.7); /* Fundo escuro semi-transparente */
+            display: none; /* Inicialmente oculto */
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 1000; /* Fica acima de tudo */
         }
-        .results-modal.show { display: flex; }
+        
+        .results-modal.show { display: flex; } /* Quando ativo, mostra flex */
+        
         .results-content {
             background: white;
             padding: 50px;
@@ -257,10 +317,12 @@
             text-align: center;
             animation: scaleIn 0.3s ease;
         }
+        
         @keyframes scaleIn {
             from { transform: scale(0.9); }
             to { transform: scale(1); }
         }
+        
         .score-circle {
             width: 180px;
             height: 180px;
@@ -274,18 +336,22 @@
             font-weight: bold;
             margin: 30px auto;
         }
+        
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 18px 45px;
             font-size: 1.1rem;
         }
+        
+        /* ===== BOTÕES DE FILTRO ===== */
         .filter-buttons {
             display: flex;
             gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
         }
+        
         .filter-btn {
             padding: 10px 20px;
             background: rgba(255,255,255,0.3);
@@ -296,6 +362,7 @@
             transition: all 0.3s ease;
             font-weight: 600;
         }
+        
         .filter-btn.active {
             background: white;
             color: #667eea;
@@ -304,47 +371,59 @@
 </head>
 <body>
     <div class="container">
+        <!-- ===== CABEÇALHO ===== -->
         <div class="header">
             <h1>🔒 Security+ Capítulo 5</h1>
             <p>Arquitetura e Segurança de Redes </p>
+            <!-- Barra de estatísticas -->
             <div class="stats-bar">
                 <div class="stat-card">📚 70 Flashcards</div>
-                <div class="stat-card">❓ 35 Questões </div>
+                <div class="stat-card">❓ 35 Questões</div>
+                <!-- ID para atualização dinâmica via JavaScript -->
                 <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
             </div>
         </div>
 
+        <!-- ===== ABAS ===== -->
         <div class="tabs">
+            <!-- showTab(0) chama função JavaScript para mostrar Flashcards -->
             <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
             <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
-            <button class="tab-btn" onclick="showTab(2)">❓ Quiz </button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
         </div>
 
+        <!-- ===== ABA 0: FLASHCARDS ===== -->
         <div id="tab0" class="content active">
             <div class="flashcard-area">
+                <!-- Informações do card e filtros -->
                 <div class="card-info">
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
                         <div>
+                            <!-- IDs para atualização dinâmica -->
                             <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 70</div>
                             <div id="mastered-count">0 dominados</div>
                         </div>
+                        <!-- Botões de filtro -->
                         <div class="filter-buttons">
                             <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
                             <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
                             <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
                         </div>
                     </div>
+                    <!-- Barra de progresso -->
                     <div class="progress-bar">
                         <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
                     </div>
                 </div>
                 
+                <!-- O flashcard em si -->
                 <div class="flashcard" onclick="flipCard()">
                     <div class="side-indicator" id="side-indicator">FRENTE</div>
                     <div class="flashcard-text" id="card-text"></div>
                     <div class="flip-hint">👆 Clique para virar</div>
                 </div>
 
+                <!-- Botões de controle -->
                 <div class="controls">
                     <button class="btn btn-nav" onclick="prevCard()">‹</button>
                     <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
@@ -354,10 +433,12 @@
             </div>
         </div>
 
+        <!-- ===== ABA 1: RESUMO ===== -->
         <div id="tab1" class="content">
             <div style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
                 <h1 style="color: #667eea; margin-bottom: 30px; font-size: 2.5rem; border-bottom: 4px solid #667eea; padding-bottom: 15px;">📖 Resumo - Capítulo 5</h1>
                 
+                <!-- Destaque com conceitos importantes -->
                 <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 20px 0; border-radius: 8px;">
                     <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
                     <ul style="margin-top: 10px; margin-left: 20px;">
@@ -636,12 +717,14 @@
             </div>
         </div>
 
+        <!-- ===== ABA 2: QUIZ ===== -->
         <div id="tab2" class="content">
             <div class="quiz-area">
                 <div class="quiz-header">
-                    <h2>Quiz - 35 Questões </h2>
+                    <h2>Quiz - 35 Questões</h2>
                     <p>Passing Score: 80% (28/35 corretas)</p>
                 </div>
+                <!-- Container onde as questões serão inseridas dinamicamente -->
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
                     <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
@@ -650,6 +733,7 @@
         </div>
     </div>
 
+    <!-- ===== MODAL DE RESULTADOS ===== -->
     <div class="results-modal" id="results-modal">
         <div class="results-content">
             <h2>Resultado</h2>
@@ -660,21 +744,31 @@
     </div>
 
     <script>
-        // ========== CARDS TRADUZIDOS PARA PORTUGUÊS ==========
+        // ========== DADOS ==========
+        
+        /**
+         * ARRAY cards: armazena TODOS os flashcards do capítulo
+         * Cada card tem:
+         * - f: frente (a pergunta/conceito)
+         * - b: verso (a resposta/definição)
+         * 
+         * IMPORTANTE: Este array NUNCA é modificado durante a execução.
+         * Ele é a fonte original dos dados.
+         */
         const cards = [
-            // Arquitetura e OSI
+            // Arquitetura e OSI (1-4)
             {f: "O que é arquitetura de três camadas (Three-Tier Architecture)?", b: "Core Layer (backbone alta velocidade, roteamento entre segmentos) + Distribution Layer (políticas, ACLs, agregação) + Access Layer (conecta usuários finais, switches de acesso)"},
             {f: "Modelo OSI: quais são as camadas 1, 2, 3 e seus dispositivos?", b: "L1 Física: cabos, sinais. L2 Enlace: switches/APs + endereço MAC. L3 Rede: roteadores + endereço IP. L4 Transporte: TCP (confiável)/UDP (não confiável) + portas. L7 Aplicação: HTTP, DNS, FTP"},
             {f: "Qual a diferença entre LAN e WAN?", b: "LAN: Rede Local, um único site, domínio de broadcast. WAN: Rede de longa distância, conecta múltiplas LANs geograficamente dispersas"},
             {f: "O que são Host Node e Intermediary Node?", b: "Host Node: inicia transferências (servidores, clientes). Intermediary Node: encaminha tráfego (switches, roteadores)"},
             
-            // Defense in Depth e Controles
+            // Defense in Depth e Controles (5-8)
             {f: "O que é Defense in Depth (Defesa em Profundidade)?", b: "Múltiplas camadas de controles preventivos, detectivos e corretivos em diferentes pontos da rede. Diversidade de controles protegendo zonas críticas"},
             {f: "Qual a diferença entre controle Active e Passive?", b: "Passive: sem configuração no cliente, transparente (ex: TAP, porta espelhada). Active: requer configuração, credenciais (ex: firewall como gateway)"},
             {f: "Qual a diferença entre dispositivo Inline e TAP/Monitor?", b: "Inline: parte do caminho do cabo, sem IP/MAC configurado. TAP: copia TUDO fisicamente (incluindo erros). SPAN/Mirror: switch copia frames (pode perder sob carga)"},
             {f: "O que são Fail-Open e Fail-Closed?", b: "Fail-Open: mantém acesso em caso de falha, prioriza DISPONIBILIDADE. Fail-Closed: bloqueia acesso, prioriza CONFIDENCIALIDADE/INTEGRIDADE"},
             
-            // Screened Subnet (DMZ)
+            // Screened Subnet (DMZ) (9-17)
             {f: "Qual a configuração de uma Screened Subnet (DMZ)?", b: "2 firewalls: Externo (internet → DMZ) + Interno (DMZ → LAN). A DMZ contém servidores públicos (web, FTP, email, DNS público)"},
             {f: "O que acontece se o firewall EXTERNO da DMZ falhar?", b: "Apenas os servidores na DMZ são comprometidos. A LAN permanece protegida pelo firewall interno!"},
             {f: "Quantas interfaces tem um Dual-Homed Gateway?", b: "3 interfaces: Internet + DMZ + LAN privada"},
@@ -685,11 +779,11 @@
             {f: "O que é Padded Cell?", b: "Contramedida de IDS que retarda intrusos para coletar informações para investigação"},
             {f: "O que é DNS Sinkhole?", b: "DNS temporário que redireciona tráfego malicioso para um IP controlado. Fornece informação falsa para consultas DNS. Limitação: não funciona se malware usa DNS público próprio"},
             
-            // Posicionamento de Servidores
+            // Posicionamento de Servidores (18-19)
             {f: "Onde colocar um web server público e um database?", b: "Web server na DMZ (público). Database na LAN privada. O firewall interno permite apenas tráfego do web server para o database"},
             {f: "O que são Packet Filters na DMZ?", b: "Configurados em ambos os firewalls. Permitem tráfego para recursos públicos na DMZ. Previnem tráfego não autorizado para a LAN"},
             
-            // VPN
+            // VPN (20-31)
             {f: "Qual a melhor solução para acesso remoto seguro?", b: "VPN é a MELHOR solução para acessar recursos privados da internet. O servidor VPN pode ficar na DMZ. Usuários autenticam no VPN server e o tráfego atravessa o firewall interno"},
             {f: "O que é VPN Site-to-Site?", b: "Conecta redes inteiras (matriz-filial). Roteadores nas bordas. Sempre ativa. Os hosts não sabem que a VPN existe"},
             {f: "O que é VPN Remote Access?", b: "Usuários individuais conectam-se à rede corporativa. Um concentrador VPN aceita múltiplas conexões"},
@@ -703,7 +797,7 @@
             {f: "O que é TLS VPN?", b: "Cliente usa certificados digitais. Autenticação mútua. Túnel criptografado para credenciais (RADIUS). Pode usar TCP ou UDP (DTLS)"},
             {f: "É seguro usar VPN em WiFi aberto?", b: "Aceitável se usar tunelamento forte (IPSec ou SSL). Evitar PPTP+MS-CHAPv2. Requisições HTTPS devem passar pela VPN (não bypass)"},
             
-            // Firewalls
+            // Firewalls (32-40)
             {f: "Quais são os tipos de firewall?", b: "Host-based (no endpoint), Network-based (hardware na borda), Stateless (filtro de pacotes), Stateful (rastreia sessões)"},
             {f: "O que é WAF (Web Application Firewall)?", b: "Protege aplicações web contra SQL Injection, XSS, CSRF. Usa assinaturas. Examina a camada 7 HTTP"},
             {f: "O que é NGFW (Next-Gen Firewall)?", b: "Firewall de próxima geração: filtragem camada 7 + IPS + inspeção profunda de pacotes + inspeção TLS + integração com diretórios + inteligência de ameaças + integração em nuvem"},
@@ -714,7 +808,7 @@
             {f: "Qual a diferença entre ACL e regras de firewall?", b: "ACL: em roteadores/switches, camada 3 (IP/porta/protocolo). Regras de firewall: nível de rede e aplicação, pode incluir usuário/conteúdo"},
             {f: "Qual a melhor prática para portas em firewall?", b: "Fechar TODAS as portas, abrir apenas as necessárias para aplicações internas. Não abrir tudo e depois fechar as ruins"},
             
-            // NAC - Network Access Control
+            // NAC - Network Access Control (41-48)
             {f: "O que é NAC (Network Access Control)?", b: "Autentica usuários/dispositivos E verifica conformidade (antivírus, patches, SO) antes de permitir acesso à rede"},
             {f: "O que é Zero-Trust Security?", b: "Nunca confiar, sempre verificar. NAC = Autenticação E Autorização. Se qualquer uma falhar, o acesso é negado"},
             {f: "Qual a diferença entre Authentication e Authorization no NAC?", b: "Authentication: define pré-requisitos (antimalware, SO, nível de patch). Authorization: aplica políticas apropriadas baseadas na autenticação"},
@@ -724,12 +818,12 @@
             {f: "Qual o processo do NAC?", b: "Plan (planejar) → Define (definir) → Apply (aplicar) → Review (revisar)"},
             {f: "O que é remediação automática no NAC?", b: "Dispositivo não conforme → acesso apenas a recursos de remediação. Após correções → reavaliado → acesso liberado"},
             
-            // IDS/IPS
+            // IDS/IPS (49-51)
             {f: "Qual a diferença entre IDS e IPS?", b: "IDS: passivo, detecta e alerta. IPS: inline/ativo, detecta e bloqueia automaticamente"},
             {f: "Qual a diferença entre detecção por assinatura e por anomalia?", b: "Assinaturas: padrões conhecidos, baixo falso positivo. Anomalia: desvios do normal, pode ter falsos positivos"},
             {f: "O que é um sensor de IDS/IPS?", b: "Packet sniffer, controle passivo. Fica atrás do firewall ou perto de servidor importante. Envia tráfego para análise (Snort, Suricata, Zeek)"},
             
-            // Switch Security
+            // Switch Security (52-67)
             {f: "O que é ataque de MAC Flooding?", b: "Inunda a tabela CAM do switch. O switch vira um hub (fail open). Atacante consegue snifar todo tráfego. Proteção: Port Security"},
             {f: "O que é ARP Spoofing/Poisoning?", b: "Atacante associa seu MAC com o IP da vítima. O tráfego vai para o atacante (MitM). Proteção: DAI (Dynamic ARP Inspection)"},
             {f: "O que é VLAN Hopping?", b: "Atacante salta entre VLANs não autorizadas (double tagging). Proteção: desabilitar DTP, VLAN nativa segura"},
@@ -747,7 +841,7 @@
             {f: "O que é Private VLAN?", b: "Isola hosts na mesma VLAN. Hosts não comunicam entre si, só com o gateway"},
             {f: "O que é Air-Gapped?", b: "Isolamento físico completo. Host/rede sem conexão física com outras redes. Usado para: root CA PKI, análise de malware, sistemas militares"},
             
-            // Router Security
+            // Router Security (68-75)
             {f: "O que é ACL Standard (1-99)?", b: "Filtra apenas por IP de origem. Deve ser posicionada PERTO DO DESTINO"},
             {f: "O que é ACL Extended (100-199)?", b: "Filtra por IP origem/destino + portas + protocolo. Deve ser posicionada PERTO DA ORIGEM"},
             {f: "O que é máscara wildcard em ACL?", b: "Inverso da máscara de sub-rede. 0 = deve coincidir, 255 = ignorar"},
@@ -757,7 +851,7 @@
             {f: "SSH vs Telnet para gerenciamento de roteador?", b: "SSH: criptografa tudo, seguro. Telnet: texto claro, INSEGURO. Usar SCP para backups em vez de FTP/TFTP"},
             {f: "Quais são as medidas de segurança para roteadores?", b: "Mudar padrões, atualizar firmware PRIMEIRO, usar SSH não Telnet, segurança física (sala trancada), backups SCP criptografados, regras anti-spoofing, ACLs"},
             
-            // Security Solutions
+            // Security Solutions (76-83)
             {f: "O que é um Proxy Server?", b: "Intermediário entre cliente e internet. Forward Proxy: protege clientes. Reverse Proxy: protege servidores. Cache, filtro de conteúdo, anonimato"},
             {f: "O que é um Jump Server?", b: "Servidor fortificado, gateway para acessar sistemas isolados. Administradores conectam no jump server e depois nos sistemas internos. Segurança aprimorada controlando acesso"},
             {f: "O que é um Load Balancer?", b: "Distribui tráfego entre servidores. Camada 4 (IP/porta) ou camada 7 (dados de aplicação/URL). Tolerância a falhas. Pode incluir WAF"},
@@ -765,7 +859,7 @@
             {f: "O que é Content Filtering?", b: "Permitir tudo exceto bloqueado OU Bloquear tudo exceto permitido. Categorias, URLs, palavras-chave. Baseado em agente (endpoint) ou Centralizado (proxy server)"},
             {f: "O que é DNS Filtering?", b: "Controla a resolução de nomes de domínio. Bloqueia domínios maliciosos/inapropriados. Proativo, protege todos os dispositivos (incluindo IoT), reforça políticas de uso aceitável"},
             
-            // Vulnerabilities
+            // Vulnerabilities (84-89)
             {f: "O que são contas e senhas padrão (default)?", b: "Padrões de fábrica. Devem ser trocados IMEDIATAMENTE na primeira configuração. São públicos na internet"},
             {f: "O que é uma senha complexa?", b: "Mínimo 8+ caracteres. Mistura de tipos (números, símbolos). NÃO usar palavras, variações ou derivados do nome de usuário"},
             {f: "O que é escalada de privilégio (Privilege Escalation)?", b: "Usuário com conta normal acessa funções de administrador. Explora um bug para ganhar privilégios não tipicamente disponíveis"},
@@ -773,7 +867,7 @@
             {f: "O que é uma vulnerabilidade Zero-Day?", b: "Vulnerabilidade desconhecida antes de ser descoberta. Fabricantes têm '0 dias' para corrigir. Muito perigosa pois não há patch. Usada por estados-nação, crime organizado. Valem milhões"},
             {f: "O que é quebra de senha (Password Cracking)?", b: "Processo de recuperar senhas secretas a partir de dados armazenados/transmitidos. Se atacante obtém credenciais de admin = password cracking (NÃO escalada de privilégio)"},
             
-            // Application Security
+            // Application Security (90-97)
             {f: "O que é Flag no controle de aplicações?", b: "Aplicação permitida mas a violação é registrada quando identificada. Usado para monitoramento antes de aplicar bloqueio"},
             {f: "O que é Block no controle de aplicações?", b: "Aplicação não permitida. A sessão é descartada (UDP) ou resetada (TCP)"},
             {f: "O que é Tarpit no controle de aplicações?", b: "Aplicação não permitida. A conexão é mantida viva mas os dados são descartados silenciosamente. A aplicação não percebe que foi bloqueada. Previne circumvenção"},
@@ -784,7 +878,7 @@
             {f: "O que é SCA (Software Composition Analysis)?", b: "Identifica dependências open source e de terceiros na base de código. Detecta vulnerabilidades conhecidas. Compara com NVD. Sugere atualizações/substituições"},
             {f: "O que é monitoramento de pacotes (Package Monitoring)?", b: "Rastreia pacotes/bibliotecas/dependências de terceiros. Ferramentas automatizadas de SCA. Identifica pacotes desatualizados ou vulneráveis. Auditorias regulares + processos de aprovação"},
             
-            // Security Zones
+            // Security Zones (98-105)
             {f: "O que é Screened Subnet/DMZ?", b: "Zona de amortecimento entre a internet e a LAN privada. 2 firewalls. Hospeda serviços públicos. Atua como intermediário. Pode usar 1 ou 2 firewalls"},
             {f: "O que é Intranet?", b: "LAN privada que usa serviços de informação da internet. Só para uso interno. Ex: servidores web internos, servidores de email internos"},
             {f: "O que é Extranet?", b: "Rede controlada privadamente. Entre a internet e a LAN. Para parceiros de negócios, fornecedores, clientes. Acesso limitado a recursos específicos"},
@@ -794,7 +888,7 @@
             {f: "O que é Honeytoken?", b: "Credenciais falsas ou dados de login. Distraem atacantes, disparam alertas, fornecem insights sobre a atividade do atacante"},
             {f: "O que é Fake Telemetry?", b: "Dados falsos em resposta a sondagens de rede. Credenciais falsas, informação IP falsa, sistemas vulneráveis falsos. Atacantes agem com base na informação falsa e são rastreados"},
             
-            // Network Architecture
+            // Network Architecture (106-114)
             {f: "Quais são as considerações sobre On-Premises?", b: "Alto CapEx, baixa escalabilidade, controle total, manutenção interna, recuperação complexa, menor disponibilidade/resiliência"},
             {f: "Quais são as considerações sobre Cloud?", b: "OpEx, alta escalabilidade, menos controle, responsabilidade compartilhada, melhor resiliência"},
             {f: "Quais fatores considerar na arquitetura?", b: "Custos (CapEx/OpEx), capacidade de resposta, escalabilidade, disponibilidade, resiliência, energia, disponibilidade de patches, transferência de risco (SLA)"},
@@ -806,13 +900,14 @@
             {f: "Como garantir segurança em mídias removíveis?", b: "Criptografar dados na mídia removível. Mais vulnerável durante transferência. Criptografia garante que se perdido/roubado, os dados ficam inacessíveis sem a chave"},
             {f: "O que é princípio do menor privilégio?", b: "Limitar os privilégios de cada usuário ao mínimo necessário. Reduz o impacto de uma conta comprometida. Parte do hardening"},
             
-            // SD-WAN e SASE
+            // SD-WAN e SASE (115-116)
             {f: "O que é SD-WAN?", b: "WAN definida por software. Conecta filiais/data centers/nuvem. Criptografia, segmentação de tráfego por prioridade, roteamento inteligente, integração com firewall"},
             {f: "O que é SASE?", b: "Secure Access Service Edge. WAN + segurança em nuvem convergentes. Modelo zero trust. IAM. Prevenção de ameaças (IPS, malware, filtro de conteúdo). Centraliza segurança/acesso"},
         ];
 
+        // ========== QUIZ DO CAPÍTULO 5 (35 QUESTÕES) ==========
         const quiz = [
-            // Screened Subnet / DMZ Questions (baseado nos PDFs)
+            // Screened Subnet / DMZ Questions (1-10)
             {
                 q: "Qual é a MELHOR solução para permitir acesso a recursos privados da internet?",
                 o: ["Packet filters", "VPN", "Subnet", "FTP"],
@@ -874,7 +969,7 @@
                 e: "Bastion/sacrificial host é unprotected por firewall. Device fortified against attack. Sacrificial pode ser intentionally exposed (honeypot)."
             },
             
-            // Firewall Questions
+            // Firewall Questions (11-20)
             {
                 q: "Características de basic packet-filtering firewall? (Select two)",
                 o: ["Stateless", "Filtra based em URL", "Filtra IP address e port", "Stateful", "Filtra based em sessions"],
@@ -936,7 +1031,7 @@
                 e: "Implementar WAF diretamente addresses zero-day e XSS attacks inspecionando incoming traffic e bloqueando suspicious requests."
             },
             
-            // VPN Questions
+            // VPN Questions (21-30)
             {
                 q: "Qual VPN tunnel style roteia apenas certos tipos de tráfego?",
                 o: ["Host-to-host", "Split", "Site-to-site", "Full"],
@@ -998,7 +1093,7 @@
                 e: "Usar IPsec ou SSL para secure VPN. Configure browser HTTPS requests ir through VPN connection. Evitar PPTP com MS-CHAPv2 (não mais secure)."
             },
             
-            // NAC Questions
+            // NAC Questions (31-35)
             {
                 q: "O que MELHOR descreve zero-trust security?",
                 o: ["Apenas devices que passam authentication E authorization são trusted", "All devices são trusted", "Apenas devices que passam authentication são trusted", "Apenas devices que passam authorization são trusted"],
@@ -1028,512 +1123,446 @@
                 o: ["Reduzir security standards para decrease quarantined", "Investigate root cause da frequent non-compliance", "Disable automatic remediation feature", "Ignore issue pois NAC está fazendo seu job"],
                 c: 1,
                 e: "Investigate root cause melhor ação. Pode ser outdated software, overly strict policies, etc. Address root cause reduz quarantined e improve security."
-            },
-            {
-                q: "O que aplica appropriate policies para fornecer device com acesso definido?",
-                o: ["Identity Services Engine", "Authorization", "Zero-trust security", "Authentication"],
-                c: 1,
-                e: "Authorization olha authentication info e aplica appropriate policies para fornecer device com access defined."
-            },
-            {
-                q: "O que define todos prerequisites que device deve meet para acessar network?",
-                o: ["ISE", "Authorization", "Zero-trust security", "Authentication"],
-                c: 3,
-                e: "Authentication define prerequisites: anti-malware, OS, patch level, etc. Authorization então aplica policies."
-            },
-            {
-                q: "Qual NAC step ocorre uma vez que policies foram defined?",
-                o: ["Apply", "Review", "Test", "Plan"],
-                c: 0,
-                e: "Third step: apply policies. Ocorre após policies terem sido defined. Review é final step."
-            },
-            {
-                q: "Qual NAC agent type seria usado para IoT devices?",
-                o: ["Dissolvable", "Agentless", "Zero-trust", "Permanent"],
-                c: 1,
-                e: "Agentless agent está no domain controller. Quando user logs no domain, autentica com network. Usado quando limited disk space (IoT devices)."
-            },
-            
-            // Switch Security Questions  
-            {
-                q: "Qual ataque, se successful, causa switch funcionar como hub?",
-                o: ["Replay attack", "MAC flooding", "MAC spoofing", "ARP poisoning"],
-                c: 1,
-                e: "MAC flooding overloads MAC forwarding table. Switch entra fail open mode. Incoming packets broadcast para ALL ports (como hub)."
-            },
-            {
-                q: "Qual ataque associa attacker MAC address com IP da vítima?",
-                o: ["DNS poisoning", "ARP spoofing/poisoning", "XSS", "MAC spoofing"],
-                c: 1,
-                e: "ARP spoofing/poisoning: quando computers enviam ARP request, attacker responde com seu MAC. Source device envia frames para attacker MAC."
-            },
-            {
-                q: "VLANs criadas mas devices em diferentes VLANs não comunicam. Razão MAIS provável e next step?",
-                o: ["Inter-VLAN routing não enabled. Implementar router ou Layer 3 switch", "Devices não properly configured. Review network settings", "Switch não configured. Review VLAN config", "Switch ports não assigned. Review VLAN assignments"],
-                c: 0,
-                e: "Por padrão, devices em different VLANs NÃO comunicam. Para enable communication, precisa router ou Layer 3 switch para inter-VLAN routing."
-            },
-            {
-                q: "O que MELHOR descreve conceito de virtual LAN?",
-                o: ["Devices conectados via internet que comunicam sem network address", "Devices na mesma network logicamente agrupados como se em separate networks", "Devices em different networks que recebem multicast", "Devices conectados por transmission medium diferente de cable", "Devices em separate networks logicamente agrupados como se mesma network"],
-                c: 1,
-                e: "Virtual LAN: subset de devices na MESMA network logicamente agrupados como se em SEPARATE networks. VLANs = subdivisions de LAN."
-            },
-            {
-                q: "Ao configurar VLANs, qual type de switch ports são members de ALL VLANs?",
-                o: ["Uplink ports", "Trunk ports", "Gigabit e higher ports", "Qualquer port não assigned", "Cada port só pode ser member de single VLAN"],
-                c: 1,
-                e: "Trunk port é member de ALL VLANs defined no switch e carries traffic entre switches. Trunking usa tagging com VLAN ID."
-            },
-            {
-                q: "Single subnet com 3 switches conectados redundantly. Feature que previne switching loops?",
-                o: ["Trunking", "Spanning Tree Protocol", "Bonding", "802.1x", "PoE"],
-                c: 1,
-                e: "Spanning Tree Protocol mantém multiple paths mas seleciona single path entre switches. Ports: Forwarding state (active) ou Blocking state (backup). Auto-recovers quando path cai."
-            },
-            {
-                q: "Library computers: patrons desconectam library computers e conectam próprios laptops. Restringir acesso?",
-                o: ["Create static MACs e associate com VLAN", "Remove hub, place cada library computer em own access port", "Configure port security no switch", "Create VLAN para cada group de 4 computers"],
-                c: 2,
-                e: "Port security pode restringir acesso para que apenas specific MAC addresses conectem ao configured switch port. Previne laptop connectivity."
-            },
-            {
-                q: "MAC filtering implemented mas unauthorized device conectou. Explicação MAIS provável e next step?",
-                o: ["Unauthorized device spoofed MAC de authorized device. Implementar secondary authentication", "Unauthorized device bypassed por disabled port. Ensure unused ports disabled", "MAC do unauthorized foi manually added. Review allowed list", "MAC filtering malfunctioning. Troubleshoot feature"],
-                c: 0,
-                e: "Unauthorized device spoofed MAC de authorized é most likely. MAC spoofing = técnica comum para bypass MAC filtering. Implementar secondary auth (802.1x)."
-            },
-            {
-                q: "Qual scenario tipicamente utiliza 802.1X authentication?",
-                o: ["Authenticating remote access clients", "Controlling access through switch", "Controlling access through router", "Authenticating VPN users"],
-                c: 1,
-                e: "802.1X authentication é método usado em LAN para allow/deny access baseado em port/connection. Usado para port authentication em switches com RADIUS server."
-            },
-            
-            // Router/Device Security Questions
-            {
-                q: "Novo Cisco router: FTP para backup config, console port para config, admin01/P@ssW0rd com MD5. O que fazer?",
-                o: ["Use encrypted Type 7 passwords", "Use SCP para backup config para remote location", "Move router para secure data center", "Use SSH client para access config"],
-                c: 1,
-                e: "Config sendo copiado via unsecure FTP (cleartext). Deve usar SCP (Secure Copy Protocol) para transfer backup para remote storage."
-            },
-            {
-                q: "Router em server room com ID access. Backup encrypted. Telnet com admin/P@ssW0rd e MD5. O que fazer? (Select two)",
-                o: ["Use web browser via HTTP", "Use SSH client", "Change default administrative username e password", "Use encrypted Type 7 passwords", "Use TFTP para backup"],
-                c: [1, 2],
-                e: "Use SSH client (Telnet = cleartext). Change default username/password (defaults available em websites)."
-            },
-            {
-                q: "Remediation practices: divide network em separate pieces para contain attack?",
-                o: ["Segmentation", "Compensating controls", "Patching", "Insurance"],
-                c: 0,
-                e: "Segmentation envolve dividir network em separate pieces para contain potential security breaches."
-            },
-            {
-                q: "ICS/SCADA systems: qual unique control para protect?",
-                o: ["Regular system updates", "Network segmentation", "Transport encryption protocols", "Secure boot mechanisms"],
-                c: 1,
-                e: "Network segmentation isola ICS/SCADA systems de wider network, protegendo limitando access e defendendo contra inbound attacks."
-            },
-            {
-                q: "Financial institution processando transactions. Método para minimize risk?",
-                o: ["Segmentation", "Firewalling", "VPN", "NAT"],
-                c: 0,
-                e: "Segmentation divide network em different sections para instituição pode protect data enquanto processing."
-            },
-            {
-                q: "O que pode tornar passwords useless num router?",
-                o: ["Storing config file em secure location", "Using MD5 hashing para encrypt password", "Using SSH para remotely connect", "Not controlling physical access"],
-                c: 3,
-                e: "Se alguém ganha physical access, pode easily bypass configured passwords. Passwords são useless se physical access não controlado."
-            },
-            {
-                q: "Brand new router deployment. Após change factory defaults, o que fazer next?",
-                o: ["Secure config file", "Configure SSH", "Update firmware", "Configure anti-spoofing rules"],
-                c: 2,
-                e: "Após change defaults, update firmware. Updates fix vulnerabilities resolved by manufacturer no passado."
-            },
-            {
-                q: "O que acontece por default quando cria e aplica new ACL num router?",
-                o: ["All traffic permitted", "ACL ignored until applied", "All traffic blocked", "ACLs não created em router"],
-                c: 2,
-                e: "Nova ACL quase sempre inclui hidden Deny Any statement ao final. All traffic automatically blocked até configured."
-            },
-            {
-                q: "Anti-spoofing rule config MAIS efetiva?",
-                o: ["Source: Any, Dest: Internal IP/router, Interface: external, Direction: Outbound", "Source: Any, Dest: Any, Interface: external, Direction: Inbound", "Source: External IP, Dest: Any, Interface: internal, Direction: Outbound", "Source: Internal IP/router IP, Dest: Any, Interface: external, Direction: Inbound, Action: Deny"],
-                c: 3,
-                e: "Config efetiva bloqueia inbound packets de external interface que fingem ser da internal network ou router. Tática comum em spoofing attacks."
-            },
-            {
-                q: "O que deve ser configurado no router para filtrar traffic no router level?",
-                o: ["Telnet", "SSH", "Anti-spoofing rules", "Access control list"],
-                c: 3,
-                e: "Router ACLs podem ser configurados para increase security e limit traffic, como firewall mas no router level. ACLs filtram traffic e determinam se data deve ser blocked ou forwarded."
-            },
-            
-            // Application/Vulnerability Questions
-            {
-                q: "Application control: antes enforce allow list, quer monitor e log violations. Como configurar?",
-                o: ["Tarpit", "Drop", "Flag", "Block"],
-                c: 2,
-                e: "Flagged applications são allowed mas violation logged quando identified. Usado para discovery e monitoring antes enforcement."
-            },
-            {
-                q: "Qual descreve non-intrusive scanning framework?",
-                o: ["Vulnerability scanning", "Keylogger", "Penetration testing", "ACL"],
-                c: 0,
-                e: "Vulnerability scanners = non-intrusive. Identificam vulns analisando build/patch levels, policies. Penetration testing = active e intrusive."
-            },
-            {
-                q: "IT manager de company que desenvolve software. MAIS efetivo para implement app vulnerability scanning?",
-                o: ["Implement e immediately halt development até vulns addressed", "Implement mas ignore minor vulnerabilities", "Implement apenas para apps previously compromised", "Implement apenas sem informar dev team", "Implement E fornecer comprehensive training ao dev team"],
-                c: 4,
-                e: "Implement scanning E training é most effective. Não só introduz método para identify vulns mas ensures dev team equipped para address. Training e communication são key."
-            },
-            {
-                q: "Application control: app continuously circumvents blocking. Como configurar?",
-                o: ["Drop", "Tarpit", "Flag", "Block"],
-                c: 1,
-                e: "Tarpit: conexão kept alive mas app data silently dropped. Faz parecer que hosts estão recebendo mas não respondendo. Malicious apps não percebem block e não circumvent."
-            },
-            {
-                q: "Application control solutions usam o que para identificar apps específicas?",
-                o: ["Packet inspection", "Allow lists", "Flags", "Application signatures"],
-                c: 3,
-                e: "Application control usa application signatures para identificar specific applications. Contents de packets inspecionados e comparados contra signatures."
-            },
-            {
-                q: "Practices importantes em app vulnerability assessment para third-party software? (Select two)",
-                o: ["SSL", "SBOM", "DHCP", "SCA", "VPN"],
-                c: [1, 3],
-                e: "SBOM = Software Bill of Materials (lista components). SCA = Software Composition Analysis (identifica open source + third-party dependencies, detecta known vulns)."
-            },
-            {
-                q: "Cybersecurity analyst permite IM services com encryption. Concern: software vulnerabilities. Qual action?",
-                o: ["Allow uso sem changes pois encryption sufficient", "Implement additional encryption layers", "Regularly update e patch IM apps", "Disable all IM services"],
-                c: 2,
-                e: "Regularly update e patch IM apps para address known software vulnerabilities. Encryption oferece security mas keeping apps up-to-date é crucial."
-            },
-            {
-                q: "Package monitoring: quais actions prioritizadas? (Select two)",
-                o: ["Tracking outdated software packages", "Block firewall ports used by software", "Buying latest antivirus every month", "Monitoring software repositories para new updates", "Manually updating software daily"],
-                c: [0, 3],
-                e: "Track outdated packages (targets para attackers). Monitor repositories (stay informed sobre latest updates/patches). Manual daily updates = excessive."
-            },
-            {
-                q: "Melhores formas de monitor software usage e secure apps/dependencies? (Select two)",
-                o: ["Implementing application vulnerability scanning", "Ignoring software updates/patches", "Using package monitoring", "Allowing unrestricted software install", "Relying solely em firewall"],
-                c: [0, 2],
-                e: "App vulnerability scanning (static + dynamic analysis) identifica weaknesses. Package monitoring (SCA tools) tracks third-party packages, identifica outdated/vulnerable."
-            },
-            {
-                q: "Implementar application allow list. MAIS efetivo?",
-                o: ["Implement immediately e block all sem informar", "Implement, inform employees, provide process para request additions", "Create mas não enforce", "Create baseado apenas em IT preferences", "Implement mas allow employees instalar se necessary"],
-                c: 1,
-                e: "Implement allow list, inform employees, provide request process. Ensures adherence enquanto mantém communication channel. Allows requests previne inadvertent blocks."
-            },
-            
-            // Security Solutions/Concepts
-            {
-                q: "Network security engineer: empresa lançando software product, customer access via internet, internal production network secure. Qual zone?",
-                o: ["Intranet", "Extranet", "Screened Subnet", "Wireless"],
-                c: 2,
-                e: "Screened subnet = public-facing accessible network. Acts as buffer/barrier para internal production network. Configured com 1 ou 2 firewalls, middleman entre internet e internal."
-            },
-            {
-                q: "Company quer setup private network com internet info services para internal use only. Qual tipo?",
-                o: ["Internet", "Extranet", "Intranet", "Honeynet"],
-                c: 2,
-                e: "Intranet = private network (LAN) que usa internet information services para internal use only. Web servers e email servers para company employees."
-            },
-            {
-                q: "Proxy server pode ser configurado para fazer o quê?",
-                o: ["Block all exceto permissible", "Restrict users inside de getting out to internet", "Act como UTM ou web security gateway", "Allow all exceto restricted"],
-                c: 1,
-                e: "Proxies podem: restrict users inside de getting OUT to internet, restrict access by user/website, restrict protocols, use access controls, provide anonymity, cache content."
-            },
-            {
-                q: "Main role de load balancer em network security?",
-                o: ["Act como gateway para access isolated systems", "Act on behalf of client accessing internet", "Capture packets para intrusion detection", "Distribute network traffic across multiple servers"],
-                c: 3,
-                e: "Load balancer distribui client requests across available server nodes em farm/pool, optimizando performance e providing fault tolerance."
-            },
-            {
-                q: "Security device configurado para fail-closed. O que acontece quando ataque ocorre?",
-                o: ["Device acts on behalf of client", "Device distribui traffic", "Device blocks access ou enters most secure state", "Device preserves network/host access"],
-                c: 2,
-                e: "Fail-closed: prioritizes confidentiality/integrity over availability. Se failure, access blocked ou system enters most secure state available."
-            },
-            {
-                q: "High school library computers: students acessando inappropriate material. Budget limited. Qual content filtering?",
-                o: ["Block all exceto permissible", "Allow all exceto restricted", "Restrict content based em categories", "Block specific DNS domains"],
-                c: 2,
-                e: "Restrict baseado em categories fornece most protection com least research/involvement. Outras opções requerem research para identify specific content/sites."
-            },
-            {
-                q: "Small financial credit business: secure client records, budget issue. BEST security?",
-                o: ["All-in-one security appliance", "NAC system", "Proxy server com access controls", "Firewall em gateway server"],
-                c: 0,
-                e: "All-in-one appliance fornece best overall protection. Least space, least technical assistance. Inclui: spam filter, URL filter, content filter, malware inspection, IDS."
-            },
-            {
-                q: "Cybersecurity specialist: setup honeynet. BEST way?",
-                o: ["Setup com decoy systems e monitor para attacker activity", "Setup com real systems e ignore até attack", "Setup com real data/systems", "Setup com decoys e ignore até attack"],
-                c: 0,
-                e: "Honeynet com decoy systems que mimicam real systems. Monitoring permite gather info sobre attacker tactics/tools para strengthen defenses."
-            },
-            {
-                q: "Aumento em SMTP-based attacks (open relay, DDoS, spam). BEST solution?",
-                o: ["Setup email honeypot designed para attract/trap attacks", "Implement strong firewall e block all SMTP", "Regularly change email server IP", "Shut down email server"],
-                c: 0,
-                e: "Email honeypot = best solution. Designed para attract SMTP attacks. Enquanto distrai, team monitora malicious activity para learn e strengthen defenses."
-            },
-            {
-                q: "Limitation de usar DNS sinkhole como cybersecurity measure?",
-                o: ["DNS sinkholes podem prevent malware execution", "DNS sinkholes só podem provide false info", "DNS sinkholes podem block all malicious traffic", "DNS sinkholes ineffective se malware usa public DNS ou own DNS server"],
-                c: 3,
-                e: "Se malware usa public DNS server ou own DNS server, sinkhole não efetivo porque não pode intercept/redirect DNS queries."
-            },
-            
-            // Hardening/Baseline Questions
-            {
-                q: "Critical security patch para database software requer taking offline. O que fazer?",
-                o: ["Apply patch para test environment first, então roll out gradually", "Wait few weeks antes apply", "Apply immediately para all systems", "Ignore patch, disruption too significant"],
-                c: 0,
-                e: "Test patch em controlled environment permite identify/address issues antes roll out. Minimiza risk de disruption."
-            },
-            {
-                q: "Security templates permitem fazer o quê? (Select two)",
-                o: ["Fix specific software problem", "Configure consistent security settings entre devices", "Apply new patches", "Block malicious sites", "Quickly apply settings para multiple computers"],
-                c: [1, 4],
-                e: "Security templates permitem quickly e consistently apply settings para multiple computers para bring compliance com security baseline."
-            },
-            {
-                q: "Actions para reduce attack surface de server?",
-                o: ["Install anti-malware", "Remove unused services", "Install latest patches", "Install host-based IDS"],
-                c: 1,
-                e: "Attack Surface Reduction (ASR) = cut down software/services running. Remove unnecessary elimina possible attacks. Role separation: services em separate physical systems."
-            },
-            {
-                q: "Global corporation prioritizando server security. Opção MAIS efetiva?",
-                o: ["Enable all services", "Switch off all security features", "Use simple passwords", "Implement security baseline, apply updates/patches, adhere to hardening guidelines"],
-                c: 3,
-                e: "Establish security baseline, regular updates/patches, hardening guidelines = significantly improves security, reduzindo risk de cyber threats."
-            },
-            {
-                q: "System admin hardening: strategy MAIS efetiva para reduce impact se single system compromised?",
-                o: ["Using complex passwords", "Role separation", "Installing anti-virus", "Regularly updating software"],
-                c: 1,
-                e: "Role separation = installing services em separate physical systems. Se single system compromised, apenas few services naquele system affected."
-            },
-            {
-                q: "Healthcare org usando USB drives para transfer patient data. MAIS efetivo para achieve security?",
-                o: ["Regularly update OS/apps", "Encrypt data on removable media", "Implement strict password policy", "Install latest antivirus"],
-                c: 1,
-                e: "Encrypt data no removable media ensures que mesmo se lost/stolen, data cannot be accessed sem encryption key."
-            },
-            {
-                q: "IT company: server usa default settings, potential vulnerability. Qual change?",
-                o: ["Switch off server quando não em uso", "Limit privileges de each user", "Continue default mas increase monitoring", "Ignore software/security patches"],
-                c: 1,
-                e: "Limit user privileges para least necessary (principle of least privilege) reduz impact de compromised account. Part of hardening."
-            },
-            {
-                q: "IT Security Manager: new servers para critical apps. OS hardening, first step?",
-                o: ["Connect servers to network", "Install latest antivirus", "Enforce strict password policy", "Apply configuration baseline template"],
-                c: 3,
-                e: "Apply configuration baseline template = first step. Ensures servers configured according to industry security standards. Reduz attack surface."
-            },
-            {
-                q: "O que MELHOR descreve configuration baseline?",
-                o: ["Set de performance statistics", "List de common security settings que group/all devices share", "Minimum services required", "Collection de security settings auto-applied"],
-                c: 1,
-                e: "Configuration baseline = set de consistent requirements para workstation/server. List de common security settings. Security template = saved config values."
-            },
-            {
-                q: "Tools para automatically distribute/install patches em Windows network? (Select two)",
-                o: ["Security Configuration and Analysis", "Group Policy", "Configuration baseline", "Security Templates", "WSUS"],
-                c: [1, 4],
-                e: "WSUS (Windows Software Update Services) = patch management, clients download do WSUS server. Group Policy = distribute/auto-install patches (incluindo non-Microsoft software)."
             }
         ];
 
+        // ========== VARIÁVEIS DE ESTADO ==========
+        
+        /**
+         * currentCard: POSIÇÃO no array filteredCards (NÃO é o índice original!)
+         * Exemplo: Se filteredCards = [5, 2, 8, 1] e currentCard = 2
+         * Isso significa que estamos mostrando o card na posição 2 da lista atual,
+         * que corresponde ao índice original 8.
+         */
         let currentCard = 0;
+        
+        /**
+         * flipped: controla se estamos mostrando a frente (false) ou o verso (true)
+         */
         let flipped = false;
+        
+        /**
+         * mastered: Set (conjunto) que armazena os ÍNDICES ORIGINAIS dos cards dominados
+         * Usamos Set porque é eficiente para verificar se um índice está presente
+         * e não permite duplicatas automaticamente.
+         */
         let mastered = new Set();
+        
+        /**
+         * answers: objeto que armazena as respostas do usuário no quiz
+         * Formato: { número_da_questão: índice_da_opção_selecionada }
+         */
         let answers = {};
+        
+        /**
+         * checked: flag que indica se o quiz já foi verificado
+         * Quando true, impede que o usuário mude as respostas
+         */
         let checked = false;
-        let filteredCards = [...Array(cards.length).keys()];
+        
+        /**
+         * filteredCards: array que contém os ÍNDICES ORIGINAIS dos cards
+         * na ORDEM ATUAL de exibição.
+         * 
+         * Este é o coração do sistema de navegação e embaralhamento.
+         * Inicialmente: [...Array(cards.length).keys()] = [0,1,2,3,...]
+         * 
+         * Quando embaralhamos: reordenamos este array aleatoriamente
+         * Quando filtramos: criamos um novo array apenas com índices que atendem ao filtro
+         */
+        let filteredCards = [...Array(cards.length).keys()]; // Gera [0,1,2,3,...,115]
+        
+        /**
+         * currentFilter: string que indica qual filtro está ativo
+         * Valores possíveis: 'all', 'mastered', 'unmastered'
+         */
         let currentFilter = 'all';
 
-        // ========== LOCALSTORAGE ==========
-        // Carregar progresso salvo
+        // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
+        
+        /**
+         * loadProgress(): Carrega os cards dominados do localStorage
+         * 
+         * localStorage é uma API do navegador que permite armazenar dados
+         * de forma persistente (mesmo após fechar a página).
+         * 
+         * Os dados são armazenados como strings, por isso usamos:
+         * - JSON.stringify() para salvar
+         * - JSON.parse() para recuperar
+         */
         function loadProgress() {
+            // Tenta recuperar a string salva com a chave 'security_plus_cap5_mastered'
             const saved = localStorage.getItem('security_plus_cap5_mastered');
+            
             if (saved) {
+                // JSON.parse converte a string de volta para array
+                // new Set() converte o array em um Set (conjunto)
                 mastered = new Set(JSON.parse(saved));
             }
         }
 
-        // Salvar progresso
+        /**
+         * saveProgress(): Salva os cards dominados no localStorage
+         */
         function saveProgress() {
+            // [...mastered] usa o operador spread para converter o Set em array
+            // JSON.stringify converte o array para string
             localStorage.setItem('security_plus_cap5_mastered', JSON.stringify([...mastered]));
         }
 
-        // Chamar loadProgress assim que o script carregar
+        // Carrega o progresso assim que o script é executado
         loadProgress();
 
+        // ========== FUNÇÕES DAS ABAS ==========
+        
+        /**
+         * showTab(n): Alterna entre as abas (Flashcards, Resumo, Quiz)
+         * @param {number} n - Índice da aba (0, 1 ou 2)
+         */
         function showTab(n) {
+            // Para cada elemento com classe 'content', remove a classe 'active'
+            // e adiciona apenas se o índice for igual a n
             document.querySelectorAll('.content').forEach((c, i) => {
                 c.classList.toggle('active', i === n);
             });
+            
+            // Mesma coisa para os botões das abas
             document.querySelectorAll('.tab-btn').forEach((b, i) => {
                 b.classList.toggle('active', i === n);
             });
-            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+            
+            // Se for a aba do quiz (2) e o quiz ainda não foi carregado, carrega
+            if (n === 2 && !document.getElementById('questions').innerHTML) {
+                loadQuiz();
+            }
         }
 
+        // ========== FUNÇÕES DOS FLASHCARDS ==========
+        
+        /**
+         * updateCard(): Atualiza a interface com base no estado atual
+         * 
+         * Esta função é chamada sempre que algo muda:
+         * - Ao navegar entre cards
+         * - Ao virar o card
+         * - Ao marcar/desmarcar como dominado
+         * - Ao embaralhar
+         * - Ao filtrar
+         */
         function updateCard() {
+            // Se não há cards no filtro atual, mostra mensagem
             if (filteredCards.length === 0) {
                 document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                document.getElementById('card-counter').textContent = 'Card 0 de 0';
+                document.getElementById('side-indicator').textContent = 'FRENTE';
                 return;
             }
+            
+            // PASSO 1: Pegar o índice ORIGINAL do card atual
+            // filteredCards[currentCard] nos dá o índice original
             const cardIndex = filteredCards[currentCard];
+            
+            // PASSO 2: Pegar o card correspondente no array original
             const card = cards[cardIndex];
+            
+            // PASSO 3: Mostrar frente ou verso baseado em 'flipped'
             document.getElementById('card-text').textContent = flipped ? card.b : card.f;
-            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            
+            // PASSO 4: Atualizar contador (currentCard+1 porque mostramos 1-based)
+            document.getElementById('card-counter').textContent = 
+                `Card ${currentCard + 1} de ${filteredCards.length}`;
+            
+            // PASSO 5: Mostrar total de cards dominados
             document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            
+            // PASSO 6: Atualizar botão "Marcar Dominado"
             const btn = document.getElementById('master-btn');
-            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
-            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            const isMastered = mastered.has(cardIndex);
+            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', isMastered);
+            
+            // PASSO 7: Atualizar indicador de frente/verso
             document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
             
+            // PASSO 8: Atualizar barra de progresso e estatística
             const progress = (mastered.size / cards.length) * 100;
             document.getElementById('progress-fill').style.width = progress + '%';
             document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
         }
 
+        /**
+         * flipCard(): Vira o card (alterna entre frente e verso)
+         * Chamado quando o usuário clica no card
+         */
         function flipCard() {
-            flipped = !flipped;
-            updateCard();
+            flipped = !flipped; // Inverte o estado
+            updateCard();       // Atualiza a tela
         }
 
+        /**
+         * nextCard(): Avança para o próximo card
+         * Usa operador módulo (%) para voltar ao início quando chegar ao final
+         */
         function nextCard() {
-            currentCard = (currentCard + 1) % filteredCards.length;
-            flipped = false;
-            updateCard();
-        }
-
-        function prevCard() {
-            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
-            flipped = false;
-            updateCard();
-        }
-
-        function toggleMaster() {
-            const cardIndex = filteredCards[currentCard];
-            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
-            else mastered.add(cardIndex);
+            if (filteredCards.length === 0) return; // Não faz nada se não há cards
             
-            // ========== SALVAR PROGRESSO ==========
+            // Fórmula: (currentCard + 1) % tamanho
+            // Ex: se tamanho=5 e currentCard=4, (4+1)%5 = 5%5 = 0 (volta ao início)
+            currentCard = (currentCard + 1) % filteredCards.length;
+            
+            flipped = false; // Sempre mostra a frente ao mudar de card
+            updateCard();
+        }
+
+        /**
+         * prevCard(): Volta para o card anterior
+         * Fórmula especial para evitar números negativos
+         */
+        function prevCard() {
+            if (filteredCards.length === 0) return;
+            
+            // Fórmula: (currentCard - 1 + tamanho) % tamanho
+            // Ex: se tamanho=5 e currentCard=0, (0-1+5)%5 = 4%5 = 4 (último card)
+            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
+            
+            flipped = false;
+            updateCard();
+        }
+
+        /**
+         * toggleMaster(): Marca/desmarca o card atual como dominado
+         * 
+         * IMPORTANTE: Usamos o ÍNDICE ORIGINAL (cardIndex) para marcar,
+         * não a posição atual. Isso garante que um card continue marcado
+         * mesmo depois de embaralhado ou filtrado.
+         */
+        function toggleMaster() {
+            if (filteredCards.length === 0) return;
+            
+            // Pega o índice ORIGINAL do card atual
+            const cardIndex = filteredCards[currentCard];
+            
+            // Se já está no Set, remove; senão, adiciona
+            if (mastered.has(cardIndex)) {
+                mastered.delete(cardIndex);
+            } else {
+                mastered.add(cardIndex);
+            }
+            
+            // Salva no localStorage
             saveProgress();
             
+            // Atualiza a tela
             updateCard();
         }
 
+        // ========== FUNÇÃO DE EMBARALHAR ==========
+        
+        /**
+         * shuffleCards(): Embaralha os cards APENAS do filtro atual
+         * 
+         * Usa o algoritmo Fisher-Yates (também chamado de Knuth shuffle),
+         * que é o método mais eficiente e verdadeiramente aleatório para
+         * embaralhar arrays.
+         */
         function shuffleCards() {
+            // Algoritmo Fisher-Yates
+            // Percorre o array do final para o início
             for (let i = filteredCards.length - 1; i > 0; i--) {
+                // Escolhe um índice aleatório entre 0 e i
                 const j = Math.floor(Math.random() * (i + 1));
+                
+                // Troca os elementos nas posições i e j
+                // Usando destructuring assignment para troca em uma linha
                 [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
             }
+            
+            // Volta para o primeiro card
             currentCard = 0;
             flipped = false;
+            
+            // Atualiza a tela
             updateCard();
         }
 
+        // ========== FUNÇÕES DE FILTRO ==========
+        
+        /**
+         * filterCards(): Filtra os cards por status (todos, dominados, não dominados)
+         * @param {string} type - Tipo de filtro: 'all', 'mastered', 'unmastered'
+         * 
+         * NOTA: Esta função usa o parâmetro 'event' global. Isso é um bug potencial
+         * se houver múltiplos eventos. O ideal seria receber o evento como parâmetro.
+         */
         function filterCards(type) {
             currentFilter = type;
+            
+            // Remove a classe 'active' de todos os botões de filtro
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Adiciona 'active' ao botão clicado
+            // OBS: 'event' é uma variável global do JavaScript, mas isso pode causar problemas
             event.target.classList.add('active');
             
+            // Cria o novo array filteredCards baseado no filtro selecionado
             if (type === 'all') {
+                // Array com todos os índices [0,1,2,...]
                 filteredCards = [...Array(cards.length).keys()];
+                
             } else if (type === 'mastered') {
+                // Converte o Set mastered para array
+                // Se não houver cards dominados, filteredCards será vazio []
                 filteredCards = Array.from(mastered);
-            } else {
+                
+            } else { // unmastered
+                // Filtra: mantém apenas os índices que NÃO estão no Set mastered
+                // Array.from({length: cards.length}, (_, i) => i) cria [0,1,2,...]
+                // .filter(i => !mastered.has(i)) mantém só os não dominados
                 filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
             }
             
+            // Volta para o primeiro card
             currentCard = 0;
             flipped = false;
+            
+            // Atualiza a tela
             updateCard();
         }
 
+        // ========== FUNÇÕES DO QUIZ ==========
+        
+        /**
+         * loadQuiz(): Cria dinamicamente os elementos HTML do quiz
+         * 
+         * Para cada questão no array quiz, cria:
+         * - Um div com a pergunta
+         * - Vários divs para as opções
+         * - Um div para a explicação (inicialmente oculto)
+         */
         function loadQuiz() {
             const container = document.getElementById('questions');
+            
+            // Para cada questão no array quiz
             quiz.forEach((q, qi) => {
+                // Cria um div para a questão
                 const div = document.createElement('div');
                 div.className = 'question';
                 div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                
+                // Para cada opção da questão
                 q.o.forEach((opt, oi) => {
                     const odiv = document.createElement('div');
                     odiv.className = 'option';
                     odiv.textContent = opt;
+                    
+                    // Quando clicar na opção, chama selectOpt com os índices
                     odiv.onclick = () => selectOpt(qi, oi);
+                    
+                    // Define um ID único para cada opção: q0o0, q0o1, q1o0, etc.
                     odiv.id = `q${qi}o${oi}`;
+                    
                     div.appendChild(odiv);
                 });
+                
+                // Cria a explicação (inicialmente oculta)
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
                 exp.id = `exp${qi}`;
                 exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
+                
                 div.appendChild(exp);
                 container.appendChild(div);
             });
         }
 
+        /**
+         * selectOpt(): Seleciona uma opção no quiz
+         * @param {number} qi - Índice da questão
+         * @param {number} oi - Índice da opção
+         */
         function selectOpt(qi, oi) {
+            // Se o quiz já foi verificado, não permite mais mudanças
             if (checked) return;
+            
+            // Remove a classe 'selected' de todas as opções desta questão
             quiz[qi].o.forEach((_, i) => {
                 const el = document.getElementById(`q${qi}o${i}`);
-                el.classList.remove('selected');
+                if (el) el.classList.remove('selected');
             });
-            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            
+            // Adiciona a classe 'selected' à opção clicada
+            const selectedEl = document.getElementById(`q${qi}o${oi}`);
+            if (selectedEl) selectedEl.classList.add('selected');
+            
+            // Armazena a resposta (sobrescreve se já existia)
             answers[qi] = oi;
         }
 
+        /**
+         * checkAnswers(): Verifica as respostas do quiz
+         * 
+         * Marca as opções corretas em verde e as incorretas em vermelho,
+         * mostra as explicações e exibe a pontuação.
+         */
         function checkAnswers() {
-            checked = true;
-            let correct = 0;
+            checked = true; // Impede novas mudanças
+            
+            let correct = 0; // Contador de respostas corretas
+            
+            // Para cada questão
             quiz.forEach((q, qi) => {
+                // Verifica se a questão tem múltiplas respostas corretas
+                // q.c pode ser número (ex: 2) ou array (ex: [0,3])
                 const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                
+                // Para cada opção da questão
                 q.o.forEach((_, oi) => {
                     const el = document.getElementById(`q${qi}o${oi}`);
+                    if (!el) return;
+                    
+                    // Se a opção é a correta, marca como correct
                     if (correctAnswer.includes(oi)) {
                         el.classList.add('correct');
-                    } else if (answers[qi] === oi) {
+                    } 
+                    // Se não é a correta mas o usuário selecionou, marca como incorrect
+                    else if (answers[qi] === oi) {
                         el.classList.add('incorrect');
                     }
                 });
-                document.getElementById(`exp${qi}`).style.display = 'block';
-                if (correctAnswer.includes(answers[qi])) correct++;
+                
+                // Mostra a explicação
+                const expEl = document.getElementById(`exp${qi}`);
+                if (expEl) expEl.style.display = 'block';
+                
+                // Se o usuário acertou, incrementa contador
+                if (correctAnswer.includes(answers[qi])) {
+                    correct++;
+                }
             });
             
+            // Calcula porcentagem
             const pct = Math.round((correct / quiz.length) * 100);
+            
+            // Mostra resultado no modal
             document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 80 ? 'APROVADO! ✓' : 'Precisa 80% para passar'}`;
+            document.getElementById('score-text').textContent = 
+                `${correct}/${quiz.length} corretas - ${pct >= 80 ? 'APROVADO! ✓' : 'Precisa 80% para passar'}`;
             document.getElementById('results-modal').classList.add('show');
         }
 
+        /**
+         * resetQuiz(): Reinicia o quiz (limpa respostas e recarrega)
+         */
         function resetQuiz() {
-            checked = false;
-            answers = {};
-            document.getElementById('questions').innerHTML = '';
-            document.getElementById('results-modal').classList.remove('show');
-            loadQuiz();
+            checked = false;          // Permite novas respostas
+            answers = {};              // Limpa respostas
+            document.getElementById('questions').innerHTML = ''; // Limpa HTML
+            document.getElementById('results-modal').classList.remove('show'); // Esconde modal
+            loadQuiz();                // Recarrega as questões
         }
 
+        // ========== INICIALIZAÇÃO ==========
+        // Mostra o primeiro card
         updateCard();
     </script>
 </body>
