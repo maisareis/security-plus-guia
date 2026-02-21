@@ -304,7 +304,8 @@
             <h2>Resultado</h2>
             <div class="score-circle" id="score-circle">0%</div>
             <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()" style="margin: 0 auto;">Refazer Simulado</button>
+            <button class="btn btn-primary" onclick="document.getElementById('results-modal').classList.remove('show')" style="margin: 0 auto 15px auto; display: block;">Ver Revisão</button>
+            <button class="btn btn-primary" onclick="resetQuiz()" style="margin: 0 auto; display: block; opacity: 0.8;">Refazer Simulado</button>
         </div>
     </div>
 
