@@ -186,6 +186,23 @@
             border-left: 4px solid #f093fb;
             display: none; /* Explicação fica oculta até verificar respostas */
         }
+
+        .results-modal {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .results-modal.show { display: flex; }
+        .results-content {
+            background: white; padding: 50px; border-radius: 25px;
+            max-width: 500px; width: 90%; text-align: center;
+        }
+        .score-circle {
+            width: 150px; height: 150px; border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; font-weight: bold; margin: 20px auto;
+        }
     </style>
 </head>
 <body>
@@ -232,6 +249,7 @@
                     <button class="btn btn-nav" onclick="prevCard()">‹</button> <!-- Anterior -->
                     <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
                     <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn" style="background:#10b981;color:white;" onclick="newSession()">🎲 Nova Sessão (15)</button>
                     <button class="btn btn-nav" onclick="nextCard()">›</button> <!-- Próximo -->
                 </div>
             </div>
@@ -456,17 +474,28 @@
                 <div style="text-align: center; margin-top: 30px;">
                     <button class="btn" onclick="checkAnswers()" style="background: #f093fb; color: white; padding: 15px 40px;">Ver Resultados</button>
                 </div>
-                <div id="results" style="display: none; text-align: center; margin-top: 20px;">
-                    <div style="background: white; padding: 30px; border-radius: 15px;">
-                        <h2 id="score"></h2>
-                        <button class="btn" onclick="resetQuiz()" style="margin-top: 15px;">Refazer</button>
-                    </div>
                 </div>
-            </div>
+        </div>
+    </div>
+
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">🎲 Nova Sessão</button>
+            <button class="btn" style="background:#6b7280;color:white;margin-top:10px;width:100%;" onclick="verExplicacoes()">📖 Ver Explicações</button>
+        </div>
         </div>
     </div>
 
     <script>
+        // ========== UTILITÁRIO ==========
+        function getSession(arr, n) {
+            const shuffled = [...arr].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, Math.min(n, arr.length));
+        }
+
         // ========== CARDS DO CAPÍTULO 1 ==========
         // Array de cards. Cada card tem:
         // f: "frente" (a pergunta/conceito)
@@ -534,461 +563,532 @@
 
         // ========== QUIZ DO CAPÍTULO 1 (40 QUESTÕES) ==========
         const quiz = [
-            // CIA Triad (1-12)
-            {q: "O que significa o pilar da confidencialidade (Confidentiality) na segurança da informação?", 
-             o: ["Garantir que os dados não sejam alterados sem permissão", 
-                 "Garantir que apenas pessoas autorizadas possam acessar as informações", 
-                 "Garantir que os sistemas estejam sempre disponíveis quando necessário", 
-                 "Garantir que o usuário é quem diz ser"], 
-             c: 1},
-             
-            {q: "O que significa o pilar da integridade (Integrity) na segurança da informação?", 
-             o: ["Proteger informações contra acesso não autorizado", 
-                 "Garantir que os dados não sejam modificados de forma indevida", 
-                 "Manter os sistemas em funcionamento", 
-                 "Registrar todas as ações dos usuários"], 
-             c: 1},
-             
-            {q: "O que significa o pilar da disponibilidade (Availability) na segurança?", 
-             o: ["Informações acessíveis apenas por autorizados", 
-                 "Dados mantidos sem alterações", 
-                 "Sistemas e dados acessíveis quando os usuários precisam", 
-                 "Identificação correta dos usuários"], 
-             c: 2},
-             
-            {q: "Quando um site fica fora do ar por um ataque DDoS, qual pilar da segurança foi comprometido?", 
-             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Autenticidade"], 
-             c: 2},
-             
-            {q: "Para proteger a confidencialidade dos dados, qual técnica é mais adequada?", 
-             o: ["Hashing", "Criptografia", "Backup", "Assinatura digital"], 
-             c: 1},
-             
-            {q: "Qual técnica é utilizada para verificar se um arquivo não foi alterado?", 
-             o: ["Criptografia", "Hashing", "Firewall", "Backup"], 
-             c: 1},
-             
-            {q: "Se um funcionário acessa dados sigilosos sem permissão, qual pilar foi violado?", 
-             o: ["Disponibilidade", "Integridade", "Confidencialidade", "Não-repúdio"], 
-             c: 2},
-             
-            {q: "A implementação de backups regulares ajuda a garantir qual pilar?", 
-             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Autenticação"], 
-             c: 2},
-             
-            {q: "Qual pilar da segurança é afetado quando um arquivo é modificado por um invasor?", 
-             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Autorização"], 
-             c: 1},
-             
-            {q: "O controle de acesso baseado em funções (RBAC) protege principalmente qual pilar?", 
-             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Auditoria"], 
-             c: 0},
-             
-            {q: "Um sistema de detecção de intrusão (IDS) ajuda a proteger qual pilar?", 
-             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Todos os anteriores"], 
-             c: 3},
-             
-            {q: "A assinatura digital garante quais aspectos de segurança?", 
-             o: ["Confidencialidade e disponibilidade", 
-                 "Integridade e não-repúdio", 
-                 "Autenticação e confidencialidade", 
-                 "Disponibilidade e autorização"], 
-             c: 1},
+            // Tríade CIA (1-12)
+            {q: "O que significa o pilar da confidencialidade (Confidentiality) na segurança da informação?",
+             o: ["Garantir que os dados não sejam modificados",
+                 "Garantir que apenas pessoas autorizadas possam acessar as informações",
+                 "Garantir que os sistemas estejam sempre disponíveis quando necessário",
+                 "Garantir que o usuário é quem diz ser"],
+             c: 1,
+             e: "Confidencialidade garante que dados não sejam divulgados a pessoas não autorizadas. Técnicas como criptografia e controle de acesso protegem esse pilar."},
+
+            {q: "O que significa o pilar da integridade (Integrity) na segurança da informação?",
+             o: ["Proteger informações contra acesso não autorizado",
+                 "Garantir que os dados não sejam modificados de forma indevida",
+                 "Manter os sistemas em funcionamento",
+                 "Registrar todas as ações dos usuários"],
+             c: 1,
+             e: "Integridade garante que dados não sejam modificados ou adulterados. Hashing e assinaturas digitais são técnicas usadas para verificar integridade."},
+
+            {q: "O que significa o pilar da disponibilidade (Availability) na segurança?",
+             o: ["Informações acessíveis apenas por autorizados",
+                 "Dados mantidos sem alterações",
+                 "Sistemas e dados acessíveis quando os usuários precisam",
+                 "Identificação correta dos usuários"],
+             c: 2,
+             e: "Disponibilidade garante que dados e sistemas estejam acessíveis quando necessário. Redundância, backups e alta disponibilidade protegem esse pilar."},
+
+            {q: "Quando um site fica fora do ar por um ataque DDoS, qual pilar da segurança foi comprometido?",
+             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Autenticidade"],
+             c: 2,
+             e: "DDoS (Distributed Denial of Service) inunda o servidor com tráfego falso, tornando o sistema indisponível — afeta diretamente a Disponibilidade."},
+
+            {q: "Para proteger a confidencialidade dos dados, qual técnica é mais adequada?",
+             o: ["Hashing", "Criptografia", "Backup", "Assinatura digital"],
+             c: 1,
+             e: "Criptografia transforma dados em formato ilegível para não autorizados — protege diretamente a Confidencialidade. Hashing protege Integridade."},
+
+            {q: "Qual técnica é utilizada para verificar se um arquivo não foi alterado?",
+             o: ["Criptografia", "Hashing", "Firewall", "Backup"],
+             c: 1,
+             e: "Hashing gera uma impressão digital (hash) do arquivo. Se o hash mudar, o arquivo foi modificado — protege a Integridade."},
+
+            {q: "Se um funcionário acessa dados sigilosos sem permissão, qual pilar foi violado?",
+             o: ["Disponibilidade", "Integridade", "Confidencialidade", "Não-repúdio"],
+             c: 2,
+             e: "Acesso não autorizado a dados sigilosos viola a Confidencialidade — os dados foram expostos a alguém sem permissão."},
+
+            {q: "A implementação de backups regulares ajuda a garantir qual pilar?",
+             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Autenticação"],
+             c: 2,
+             e: "Backups garantem que dados possam ser restaurados após incidentes, mantendo a Disponibilidade do sistema."},
+
+            {q: "Qual pilar da segurança é afetado quando um arquivo é modificado por um invasor?",
+             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Autorização"],
+             c: 1,
+             e: "Modificação não autorizada de dados viola a Integridade — os dados não estão mais em seu estado original e confiável."},
+
+            {q: "O controle de acesso baseado em funções (RBAC) protege principalmente qual pilar?",
+             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Auditoria"],
+             c: 0,
+             e: "RBAC garante que apenas usuários autorizados acessem dados específicos — protege diretamente a Confidencialidade."},
+
+            {q: "Um sistema de detecção de intrusão (IDS) ajuda a proteger qual pilar?",
+             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Todos os anteriores"],
+             c: 3,
+             e: "IDS detecta intrusões que podem comprometer qualquer pilar: acesso indevido (Confidencialidade), alteração de dados (Integridade) ou ataques de negação (Disponibilidade)."},
+
+            {q: "A assinatura digital garante quais aspectos de segurança?",
+             o: ["Confidencialidade e disponibilidade",
+                 "Integridade e não-repúdio",
+                 "Autenticação e confidencialidade",
+                 "Disponibilidade e autorização"],
+             c: 1,
+             e: "Assinatura digital garante que o conteúdo não foi alterado (Integridade) e que o remetente não pode negar o envio (Não-repúdio)."},
 
             // AAA Framework (13-18)
-            {q: "No modelo AAA, o que significa autenticação (Authentication)?", 
-             o: ["Verificar se o usuário é realmente quem ele diz ser", 
-                 "Definir quais recursos o usuário pode acessar", 
-                 "Registrar as ações realizadas pelo usuário", 
-                 "Criptografar os dados do usuário"], 
-             c: 0},
-             
-            {q: "No modelo AAA, o que significa autorização (Authorization)?", 
-             o: ["Confirmar a identidade do usuário", 
-                 "Determinar quais recursos o usuário tem permissão para acessar", 
-                 "Manter logs das atividades do usuário", 
-                 "Proteger a senha do usuário"], 
-             c: 1},
-             
-            {q: "No modelo AAA, o que significa auditoria (Accounting)?", 
-             o: ["Verificação de identidade por biometria", 
-                 "Controle de permissões de acesso", 
-                 "Registro e monitoramento das ações dos usuários", 
-                 "Criptografia de dados em trânsito"], 
-             c: 2},
-             
-            {q: "O não-repúdio (Non-repudiation) está mais relacionado a qual componente do AAA?", 
-             o: ["Autenticação", "Autorização", "Auditoria", "Todos igualmente"], 
-             c: 2},
-             
-            {q: "Qual tecnologia garante que uma pessoa não possa negar que realizou uma ação?", 
-             o: ["Criptografia simétrica", "Firewall de aplicação", "Assinatura digital", "Sistema biométrico"], 
-             c: 2},
-             
-            {q: "Em um sistema que usa AAA, a verificação de senha acontece em qual etapa?", 
-             o: ["Autenticação", "Autorização", "Auditoria", "Todas as etapas"], 
-             c: 0},
+            {q: "No modelo AAA, o que significa autenticação (Authentication)?",
+             o: ["Verificar se o usuário é realmente quem ele diz ser",
+                 "Definir quais recursos o usuário pode acessar",
+                 "Registrar as ações realizadas pelo usuário",
+                 "Criptografar os dados do usuário"],
+             c: 0,
+             e: "Autenticação confirma a identidade do usuário — ex: senha, biometria, token. É o primeiro passo do modelo AAA."},
+
+            {q: "No modelo AAA, o que significa autorização (Authorization)?",
+             o: ["Confirmar a identidade do usuário",
+                 "Determinar quais recursos o usuário tem permissão para acessar",
+                 "Manter logs das atividades do usuário",
+                 "Proteger a senha do usuário"],
+             c: 1,
+             e: "Autorização define o que o usuário autenticado pode fazer ou acessar. Ocorre após a autenticação — ex: RBAC, ACLs."},
+
+            {q: "No modelo AAA, o que significa auditoria (Accounting)?",
+             o: ["Verificação de identidade por biometria",
+                 "Controle de permissões de acesso",
+                 "Registro e monitoramento das ações dos usuários",
+                 "Criptografia de dados em trânsito"],
+             c: 2,
+             e: "Accounting (Auditoria/Contabilização) registra e monitora as ações dos usuários — essencial para investigações e conformidade."},
+
+            {q: "O não-repúdio (Non-repudiation) está mais relacionado a qual componente do AAA?",
+             o: ["Autenticação", "Autorização", "Auditoria", "Todos igualmente"],
+             c: 2,
+             e: "Não-repúdio está ligado à Auditoria — os logs e assinaturas digitais provam que uma ação ocorreu, impedindo que o usuário negue a ação."},
+
+            {q: "Qual tecnologia garante que uma pessoa não possa negar que realizou uma ação?",
+             o: ["Criptografia simétrica", "Firewall de aplicação", "Assinatura digital", "Sistema biométrico"],
+             c: 2,
+             e: "Assinatura digital implementa o não-repúdio — usa chave privada exclusiva do usuário, provando matematicamente que ele assinou o documento."},
+
+            {q: "Em um sistema que usa AAA, a verificação de senha acontece em qual etapa?",
+             o: ["Autenticação", "Autorização", "Auditoria", "Todas as etapas"],
+             c: 0,
+             e: "A senha é verificada na etapa de Autenticação — confirma que o usuário é quem diz ser antes de conceder qualquer acesso."},
 
             // Categorias de Controles (19-32)
-            {q: "Um firewall é classificado como qual tipo de controle de segurança?", 
-             o: ["Preventivo - pois bloqueia ameaças antes que elas entrem", 
-                 "Detectivo - pois identifica ataques em andamento", 
-                 "Corretivo - pois corrige problemas após ocorrerem", 
-                 "Compensatório - pois substitui outros controles"], 
-             c: 0},
-             
-            {q: "Um sistema de detecção de intrusão (IDS) se enquadra em qual categoria?", 
-             o: ["Preventivo - impede ataques", 
-                 "Detectivo - identifica ataques em andamento", 
-                 "Corretivo - recupera sistemas após ataques", 
-                 "Deterrente - desencoraja atacantes"], 
-             c: 1},
-             
-            {q: "A realização de backups periódicos é um exemplo de controle:", 
-             o: ["Preventivo - evita perda de dados", 
-                 "Detectivo - identifica falhas", 
-                 "Corretivo - permite recuperação após incidentes", 
-                 "Compensatório - alternativa a outro controle"], 
-             c: 2},
-             
-            {q: "A autenticação multifator (MFA) é frequentemente considerada um controle:", 
-             o: ["Preventivo - pois dificulta acessos não autorizados", 
-                 "Detectivo - pois alerta sobre tentativas de acesso", 
-                 "Compensatório - pois compensa senhas fracas", 
-                 "Diretivo - pois orienta comportamento"], 
-             c: 2},
-             
-            {q: "Placas de aviso como 'Área restrita' ou 'Proibido entrar' são controles de qual categoria?", 
-             o: ["Preventivo - impedem fisicamente a entrada", 
-                 "Deterrente - desencorajam tentativas de invasão", 
-                 "Detectivo - identificam invasores", 
-                 "Corretivo - corrigem comportamento"], 
-             c: 1},
-             
-            {q: "Documentos com políticas de segurança da empresa são controles de qual tipo?", 
-             o: ["Técnico - pois usam tecnologia", 
-                 "Gerencial - pois administram e orientam", 
-                 "Operacional - pois envolvem pessoas", 
-                 "Físico - pois são documentos"], 
-             c: 1},
-             
-            {q: "Um vigilante ou guarda de segurança se enquadra em qual tipo de controle?", 
-             o: ["Técnico - usa equipamentos", 
-                 "Gerencial - aplica políticas", 
-                 "Operacional - envolve ação humana direta", 
-                 "Físico - barreira física"], 
-             c: 2},
-             
-            {q: "Câmeras de vigilância (CFTV) são classificadas como controles:", 
-             o: ["Preventivos - impedem crimes", 
-                 "Detectivos - monitoram e registram atividades", 
-                 "Corretivos - recuperam evidências", 
-                 "Compensatórios - substituem guardas"], 
-             c: 1},
-             
-            {q: "Cercas elétricas e muros são exemplos de controles:", 
-             o: ["Técnicos", "Gerenciais", "Operacionais", "Físicos"], 
-             c: 3},
-             
-            {q: "Treinamentos de conscientização em segurança para funcionários são controles:", 
-             o: ["Técnicos - ensinam a usar ferramentas", 
-                 "Gerenciais - definem regras", 
-                 "Operacionais - mudam comportamento das pessoas", 
-                 "Físicos - protegem o ambiente"], 
-             c: 2},
-             
-            {q: "A criptografia de dados é um controle de qual tipo?", 
-             o: ["Técnico - implementado por software/hardware", 
-                 "Gerencial - definido em políticas", 
-                 "Operacional - executado por pessoas", 
-                 "Físico - protege o hardware"], 
-             c: 0},
-             
-            {q: "Um plano de recuperação de desastres é um controle:", 
-             o: ["Preventivo - evita desastres", 
-                 "Detectivo - identifica desastres", 
-                 "Corretivo - recupera após desastres", 
-                 "Deterrente - desencoraja desastres"], 
-             c: 2},
-             
-            {q: "Um sistema SIEM (Security Information and Event Management) é classificado como controle:", 
-             o: ["Preventivo - bloqueia ameaças", 
-                 "Detectivo - correlaciona eventos e alerta", 
-                 "Corretivo - corrige vulnerabilidades", 
-                 "Compensatório - substitui outros controles"], 
-             c: 1},
-             
-            {q: "Um software antivírus é um exemplo de controle:", 
-             o: ["Preventivo e técnico", 
-                 "Detectivo e físico", 
-                 "Corretivo e gerencial", 
-                 "Compensatório e operacional"], 
-             c: 0},
+            {q: "Um firewall é classificado como qual tipo de controle de segurança?",
+             o: ["Preventivo - pois bloqueia ameaças antes que elas entrem",
+                 "Detectivo - pois identifica ataques em andamento",
+                 "Corretivo - pois corrige problemas após ocorrerem",
+                 "Compensatório - pois substitui outros controles"],
+             c: 0,
+             e: "Firewall é controle Preventivo e Técnico — bloqueia tráfego não autorizado antes que entre na rede, agindo antes do incidente."},
+
+            {q: "Um sistema de detecção de intrusão (IDS) se enquadra em qual categoria?",
+             o: ["Preventivo - impede ataques",
+                 "Detectivo - identifica ataques em andamento",
+                 "Corretivo - recupera sistemas após ataques",
+                 "Deterrente - desencoraja atacantes"],
+             c: 1,
+             e: "IDS é controle Detectivo — não bloqueia o ataque, mas identifica e registra intrusões em andamento para que a equipe possa responder."},
+
+            {q: "A realização de backups periódicos é um exemplo de controle:",
+             o: ["Preventivo - evita perda de dados",
+                 "Detectivo - identifica falhas",
+                 "Corretivo - permite recuperação após incidentes",
+                 "Compensatório - alternativa a outro controle"],
+             c: 2,
+             e: "Backup é controle Corretivo — não evita o incidente, mas permite recuperar dados após um ataque, falha ou desastre."},
+
+            {q: "A autenticação multifator (MFA) é frequentemente considerada um controle:",
+             o: ["Preventivo - pois dificulta acessos não autorizados",
+                 "Detectivo - pois alerta sobre tentativas de acesso",
+                 "Compensatório - pois compensa senhas fracas",
+                 "Diretivo - pois orienta comportamento"],
+             c: 2,
+             e: "MFA é Compensatório quando substitui ou reforça senhas fracas, e Preventivo quando dificulta acessos não autorizados. Em muitos contextos é aceita como ambos."},
+
+            {q: "Placas de aviso como 'Área restrita' ou 'Proibido entrar' são controles de qual categoria?",
+             o: ["Preventivo - impedem fisicamente a entrada",
+                 "Deterrente - desencorajam tentativas de invasão",
+                 "Detectivo - identificam invasores",
+                 "Corretivo - corrigem comportamento"],
+             c: 1,
+             e: "Placas de aviso são controles Deterrentes — não impedem fisicamente, mas desencorajam psicologicamente o invasor ao criar percepção de risco."},
+
+            {q: "Documentos com políticas de segurança da empresa são controles de qual tipo?",
+             o: ["Técnico - pois usam tecnologia",
+                 "Gerencial - pois administram e orientam",
+                 "Operacional - pois envolvem pessoas",
+                 "Físico - pois são documentos"],
+             c: 1,
+             e: "Políticas de segurança são controles Gerenciais (Managerial) — fornecem supervisão organizacional e orientam como a segurança deve ser implementada."},
+
+            {q: "Um vigilante ou guarda de segurança se enquadra em qual tipo de controle?",
+             o: ["Técnico - usa equipamentos",
+                 "Gerencial - aplica políticas",
+                 "Operacional - envolve ação humana direta",
+                 "Físico - barreira física"],
+             c: 2,
+             e: "Guarda de segurança é controle Operacional — implementado principalmente por pessoas, dependendo de processos e procedimentos humanos."},
+
+            {q: "Câmeras de vigilância (CFTV) são classificadas como controles:",
+             o: ["Preventivos - impedem crimes",
+                 "Detectivos - monitoram e registram atividades",
+                 "Corretivos - recuperam evidências",
+                 "Compensatórios - substituem guardas"],
+             c: 1,
+             e: "Câmeras são controles Detectivos — monitoram e registram atividades. Também podem ser Deterrentes ao desincentivar comportamentos ilícitos."},
+
+            {q: "Cercas elétricas e muros são exemplos de controles:",
+             o: ["Técnicos", "Gerenciais", "Operacionais", "Físicos"],
+             c: 3,
+             e: "Cercas e muros são controles Físicos — impedem e detectam acesso físico não autorizado a instalações e hardware."},
+
+            {q: "Treinamentos de conscientização em segurança para funcionários são controles:",
+             o: ["Técnicos - ensinam a usar ferramentas",
+                 "Gerenciais - definem regras",
+                 "Operacionais - mudam comportamento das pessoas",
+                 "Físicos - protegem o ambiente"],
+             c: 2,
+             e: "Treinamentos são controles Operacionais — dependem de pessoas e processos, visando mudar comportamento e aumentar conscientização."},
+
+            {q: "A criptografia de dados é um controle de qual tipo?",
+             o: ["Técnico - implementado por software/hardware",
+                 "Gerencial - definido em políticas",
+                 "Operacional - executado por pessoas",
+                 "Físico - protege o hardware"],
+             c: 0,
+             e: "Criptografia é controle Técnico — implementado como sistema (software ou hardware), automatizado e baseado em tecnologia."},
+
+            {q: "Um plano de recuperação de desastres é um controle:",
+             o: ["Preventivo - evita desastres",
+                 "Detectivo - identifica desastres",
+                 "Corretivo - recupera após desastres",
+                 "Deterrente - desencoraja desastres"],
+             c: 2,
+             e: "Plano de recuperação de desastres é controle Corretivo — age após o incidente para restaurar operações e reduzir o impacto."},
+
+            {q: "Um sistema SIEM (Security Information and Event Management) é classificado como controle:",
+             o: ["Preventivo - bloqueia ameaças",
+                 "Detectivo - correlaciona eventos e alerta",
+                 "Corretivo - corrige vulnerabilidades",
+                 "Compensatório - substitui outros controles"],
+             c: 1,
+             e: "SIEM é controle Detectivo — coleta e correlaciona logs de múltiplas fontes para identificar padrões de ataque e gerar alertas."},
+
+            {q: "Um software antivírus é um exemplo de controle:",
+             o: ["Preventivo e técnico",
+                 "Detectivo e físico",
+                 "Corretivo e gerencial",
+                 "Compensatório e operacional"],
+             c: 0,
+             e: "Antivírus é Preventivo (bloqueia malware antes de executar) e Técnico (implementado como software). Também pode ter função Detectiva ao escanear arquivos."},
 
             // Princípios e Frameworks (33-40)
-            {q: "O que significa o princípio da defesa em profundidade (Defense in Depth)?", 
-             o: ["Concentrar toda a segurança em uma única camada forte", 
-                 "Implementar múltiplas camadas de segurança para proteção em conjunto", 
-                 "Usar apenas firewall como medida de segurança", 
-                 "Eliminar todos os controles para simplificar"], 
-             c: 1},
-             
-            {q: "O princípio do menor privilégio (Least Privilege) determina que:", 
-             o: ["Todos os usuários devem ter acesso total a tudo", 
-                 "Cada usuário deve ter apenas as permissões mínimas necessárias", 
-                 "Nenhum usuário deve ter acesso a nada", 
-                 "Apenas administradores devem ter acesso"], 
-             c: 1},
-             
-            {q: "A segregação de funções (Separation of Duties) é importante para:", 
-             o: ["Proteger contra malware", 
-                 "Prevenir fraudes e conflitos de interesse", 
-                 "Melhorar performance do sistema", 
-                 "Facilitar o trabalho dos administradores"], 
-             c: 1},
-             
-            {q: "Quais são as cinco funções do framework NIST Cybersecurity?", 
-             o: ["Planejar, Fazer, Verificar, Agir, Revisar", 
-                 "Identificar, Proteger, Detectar, Responder, Recuperar", 
-                 "Prevenir, Detectar, Corrigir, Analisar, Reportar", 
-                 "Confidencialidade, Integridade, Disponibilidade, Autenticidade, Não-repúdio"], 
-             c: 1},
-             
-            {q: "A norma ISO 27001 estabelece requisitos para:", 
-             o: ["Segurança de redes corporativas", 
-                 "Sistema de gestão de segurança da informação (ISMS)", 
-                 "Proteção de dados em nuvem", 
-                 "Criptografia de dados sensíveis"], 
-             c: 1},
-             
-            {q: "O padrão PCI-DSS se aplica a organizações que:", 
-             o: ["Trabalham com dados de saúde", 
-                 "Processam, armazenam ou transmitem dados de cartões de pagamento", 
-                 "Coletam dados pessoais de usuários", 
-                 "Prestam serviços para o governo"], 
-             c: 1},
-             
-            {q: "A HIPAA é uma regulamentação dos EUA que protege:", 
-             o: ["Dados financeiros bancários", 
-                 "Informações de saúde dos pacientes", 
-                 "Dados de cartões de crédito", 
-                 "Informações de crianças online"], 
-             c: 1},
-             
-            {q: "Qual é a principal diferença entre privacidade (privacy) e segurança (security)?", 
-             o: ["São termos idênticos e podem ser usados como sinônimos", 
-                 "Privacidade: controle sobre dados pessoais; Segurança: proteção contra ameaças", 
-                 "Privacidade: proteção técnica; Segurança: proteção física", 
-                 "Privacidade se aplica a pessoas; Segurança se aplica a empresas"], 
-             c: 1},
+            {q: "O que significa o princípio da defesa em profundidade (Defense in Depth)?",
+             o: ["Concentrar toda a segurança em uma única camada forte",
+                 "Implementar múltiplas camadas de segurança para proteção em conjunto",
+                 "Usar apenas firewall como medida de segurança",
+                 "Eliminar todos os controles para simplificar"],
+             c: 1,
+             e: "Defense in Depth usa múltiplas camadas de segurança — se uma falhar, as outras ainda protegem. Elimina pontos únicos de falha."},
 
-            // Novas questões - Tríade CIA
+            {q: "O princípio do menor privilégio (Least Privilege) determina que:",
+             o: ["Todos os usuários devem ter acesso total a tudo",
+                 "Cada usuário deve ter apenas as permissões mínimas necessárias",
+                 "Nenhum usuário deve ter acesso a nada",
+                 "Apenas administradores devem ter acesso"],
+             c: 1,
+             e: "Least Privilege limita o acesso ao mínimo necessário para cada função — reduz a superfície de ataque e o impacto de contas comprometidas."},
+
+            {q: "A segregação de funções (Separation of Duties) é importante para:",
+             o: ["Proteger contra malware",
+                 "Prevenir fraudes e conflitos de interesse",
+                 "Melhorar performance do sistema",
+                 "Facilitar o trabalho dos administradores"],
+             c: 1,
+             e: "Separation of Duties divide tarefas críticas entre pessoas diferentes — nenhuma pessoa sozinha controla um processo completo, prevenindo fraudes."},
+
+            {q: "Quais são as cinco funções do framework NIST Cybersecurity?",
+             o: ["Planejar, Fazer, Verificar, Agir, Revisar",
+                 "Identificar, Proteger, Detectar, Responder, Recuperar",
+                 "Prevenir, Detectar, Corrigir, Analisar, Reportar",
+                 "Confidencialidade, Integridade, Disponibilidade, Autenticidade, Não-repúdio"],
+             c: 1,
+             e: "NIST CSF: Identify (conhecer ativos), Protect (implementar controles), Detect (identificar eventos), Respond (agir) e Recover (restaurar operações)."},
+
+            {q: "A norma ISO 27001 estabelece requisitos para:",
+             o: ["Segurança de redes corporativas",
+                 "Sistema de gestão de segurança da informação (ISMS)",
+                 "Proteção de dados em nuvem",
+                 "Criptografia de dados sensíveis"],
+             c: 1,
+             e: "ISO 27001 define requisitos para um ISMS (Information Security Management System) — framework para gestão sistemática da segurança da informação."},
+
+            {q: "O padrão PCI-DSS se aplica a organizações que:",
+             o: ["Trabalham com dados de saúde",
+                 "Processam, armazenam ou transmitem dados de cartões de pagamento",
+                 "Coletam dados pessoais de usuários",
+                 "Prestam serviços para o governo"],
+             c: 1,
+             e: "PCI-DSS (Payment Card Industry Data Security Standard) protege dados de cartões de pagamento. Obrigatório para qualquer organização que processa transações com cartão."},
+
+            {q: "A HIPAA é uma regulamentação dos EUA que protege:",
+             o: ["Dados financeiros bancários",
+                 "Informações de saúde dos pacientes",
+                 "Dados de cartões de crédito",
+                 "Informações de crianças online"],
+             c: 1,
+             e: "HIPAA (Health Insurance Portability and Accountability Act) protege PHI (Protected Health Information) nos EUA — aplicada a hospitais, planos de saúde e parceiros."},
+
+            {q: "Qual é a principal diferença entre privacidade (privacy) e segurança (security)?",
+             o: ["São termos idênticos e podem ser usados como sinônimos",
+                 "Privacidade: controle sobre dados pessoais; Segurança: proteção contra ameaças",
+                 "Privacidade: proteção técnica; Segurança: proteção física",
+                 "Privacidade se aplica a pessoas; Segurança se aplica a empresas"],
+             c: 1,
+             e: "Privacidade é o direito de controlar como dados pessoais são usados. Segurança são os controles técnicos e administrativos que protegem dados contra ameaças."},
+
+            // Tríade CIA - novas (41-48)
             {q: "Qual pilar da tríade CIA garante que informações sejam acessíveis apenas por pessoas autorizadas?",
              o: ["Disponibilidade", "Integridade", "Confidencialidade", "Autenticidade"],
-             c: 2},
+             c: 2,
+             e: "Confidencialidade garante que dados só sejam acessados por pessoas autorizadas. Criptografia, controle de acesso e classificação de dados são exemplos de proteção."},
 
             {q: "Qual pilar da tríade CIA garante que os dados não sejam modificados indevidamente?",
              o: ["Confidencialidade", "Integridade", "Disponibilidade", "Não-repúdio"],
-             c: 1},
+             c: 1,
+             e: "Integridade garante que dados sejam precisos e não alterados sem autorização. Hashing, checksums e assinaturas digitais verificam a integridade."},
 
             {q: "Qual pilar da tríade CIA é comprometido em um ataque DDoS?",
              o: ["Confidencialidade", "Integridade", "Disponibilidade", "Autenticidade"],
-             c: 2},
+             c: 2,
+             e: "DDoS torna o serviço inacessível — compromete diretamente a Disponibilidade, que garante que sistemas estejam acessíveis quando necessário."},
 
             {q: "Qual técnica é usada para verificar a integridade de um arquivo?",
              o: ["Criptografia", "Hashing", "Backup", "Firewall"],
-             c: 1},
+             c: 1,
+             e: "Hashing gera um valor único (hash/digest) do arquivo. Qualquer alteração no arquivo gera um hash diferente, detectando modificações."},
 
             {q: "Qual técnica protege a confidencialidade dos dados em trânsito?",
              o: ["Hashing", "Backup", "Criptografia", "IDS"],
-             c: 2},
+             c: 2,
+             e: "Criptografia embaralha os dados em trânsito, tornando-os ilegíveis para interceptadores — protege a Confidencialidade. Ex: TLS/HTTPS."},
 
             {q: "Redundância e backups são técnicas para garantir qual pilar da CIA?",
              o: ["Confidencialidade", "Integridade", "Disponibilidade", "Não-repúdio"],
-             c: 2},
+             c: 2,
+             e: "Redundância e backups garantem que sistemas e dados continuem acessíveis mesmo após falhas ou ataques — protegem a Disponibilidade."},
 
             {q: "Um ransomware que criptografa arquivos afeta principalmente qual pilar da CIA?",
              o: ["Confidencialidade", "Integridade", "Disponibilidade", "Autenticidade"],
-             c: 2},
+             c: 2,
+             e: "Ransomware torna os arquivos inacessíveis ao criptografá-los — afeta principalmente a Disponibilidade. A melhor defesa é ter backups offline."},
 
             {q: "Assinaturas digitais protegem principalmente qual pilar da CIA?",
              o: ["Disponibilidade", "Confidencialidade", "Integridade", "Autenticidade"],
-             c: 2},
+             c: 2,
+             e: "Assinaturas digitais garantem que dados não foram alterados (Integridade) e provam a autoria (Não-repúdio). O pilar primário é a Integridade."},
 
-            // Novas questões - AAA
+            // AAA - novas (49-53)
             {q: "Qual etapa do AAA confirma a identidade do usuário?",
              o: ["Autorização", "Auditoria", "Autenticação", "Contabilização"],
-             c: 2},
+             c: 2,
+             e: "Autenticação (Authentication) é a etapa que verifica se o usuário é quem afirma ser — ex: senha, token, biometria."},
 
             {q: "Qual etapa do AAA define o que o usuário pode acessar?",
              o: ["Autenticação", "Autorização", "Auditoria", "Identificação"],
-             c: 1},
+             c: 1,
+             e: "Autorização (Authorization) ocorre após a autenticação e define quais recursos e operações o usuário tem permissão de usar."},
 
             {q: "Qual etapa do AAA registra as ações realizadas pelo usuário?",
              o: ["Autenticação", "Autorização", "Auditoria/Contabilização", "Não-repúdio"],
-             c: 2},
+             c: 2,
+             e: "Accounting (Auditoria/Contabilização) registra o que o usuário fez, quando e onde — fundamental para investigações forenses e conformidade."},
 
             {q: "Qual tecnologia implementa o não-repúdio (Non-repudiation)?",
              o: ["Firewall", "VPN", "Assinatura digital", "Antivírus"],
-             c: 2},
+             c: 2,
+             e: "Assinatura digital usa a chave privada exclusiva do usuário — matematicamente prova que ele realizou a ação, impedindo que negue posteriormente."},
 
             {q: "O não-repúdio está mais relacionado a qual componente do AAA?",
              o: ["Autenticação", "Autorização", "Auditoria", "Todos igualmente"],
-             c: 2},
+             c: 2,
+             e: "Não-repúdio é parte da Auditoria — logs detalhados com assinaturas digitais provam que uma ação específica foi realizada por um usuário específico."},
 
-            // Novas questões - Controles por Função
+            // Controles por Função - novas (54-59)
             {q: "Qual tipo de controle atua ANTES do incidente para evitar que ele ocorra?",
              o: ["Detectivo", "Corretivo", "Preventivo", "Compensatório"],
-             c: 2},
+             c: 2,
+             e: "Controle Preventivo age antes do ataque — elimina ou reduz a probabilidade de sucesso do ataque. Ex: firewall, ACLs, patches, antimalware."},
 
             {q: "Qual tipo de controle identifica incidentes durante ou depois de ocorrerem?",
              o: ["Preventivo", "Detectivo", "Corretivo", "Diretivo"],
-             c: 1},
+             c: 1,
+             e: "Controle Detectivo identifica e registra incidentes — não impede o ataque, mas documenta para resposta. Ex: IDS, logs, câmeras, SIEM."},
 
             {q: "Qual tipo de controle age após o incidente para recuperar ou corrigir?",
              o: ["Preventivo", "Detectivo", "Corretivo", "Deterrente/Dissuassor"],
-             c: 2},
+             c: 2,
+             e: "Controle Corretivo reduz impacto e restaura operações após um incidente. Ex: backups, patches corretivos, planos de recuperação de desastres."},
 
             {q: "Qual a diferença entre controle preventivo e deterrente/dissuassor?",
              o: ["São o mesmo tipo de controle",
                  "Preventivo bloqueia fisicamente, deterrente/dissuassor desencoraja psicologicamente",
                  "Deterrente bloqueia fisicamente, preventivo desencoraja psicologicamente",
                  "Preventivo age depois, deterrente age antes"],
-             c: 1},
+             c: 1,
+             e: "Preventivo bloqueia o ataque tecnicamente (firewall bloqueia pacotes). Deterrente desencoraja psicologicamente (placa 'área monitorada' faz o atacante desistir)."},
 
             {q: "Qual tipo de controle é usado quando o controle primário não é viável?",
              o: ["Diretivo", "Detectivo", "Corretivo", "Compensatório"],
-             c: 3},
+             c: 3,
+             e: "Controle Compensatório substitui o controle principal quando ele não pode ser implementado — oferece proteção equivalente com metodologia diferente."},
 
             {q: "Políticas de segurança e códigos de conduta são exemplos de qual tipo de controle por função?",
              o: ["Preventivo", "Detectivo", "Diretivo", "Compensatório"],
-             c: 2},
+             c: 2,
+             e: "Controle Diretivo impõe regras de comportamento — políticas, SOPs, contratos com cláusulas disciplinares e programas de treinamento."},
 
-            // Novas questões - Controles por Implementação
+            // Controles por Implementação - novas (60-65)
             {q: "Firewalls, antivírus e criptografia são exemplos de qual tipo de controle por implementação?",
              o: ["Gerencial", "Operacional", "Técnico", "Físico"],
-             c: 2},
+             c: 2,
+             e: "Controles Técnicos são implementados como sistema (hardware, software ou firmware) — automatizados e baseados em tecnologia."},
 
             {q: "Guardas de segurança e treinamentos são exemplos de qual tipo de controle por implementação?",
              o: ["Técnico", "Gerencial", "Físico", "Operacional"],
-             c: 3},
+             c: 3,
+             e: "Controles Operacionais são implementados principalmente por pessoas — dependem de processos e procedimentos humanos para funcionar."},
 
             {q: "Cercas, travas e câmeras são exemplos de qual tipo de controle por implementação?",
              o: ["Técnico", "Físico", "Operacional", "Gerencial"],
-             c: 1},
+             c: 1,
+             e: "Controles Físicos impedem e detectam acesso físico não autorizado a instalações e hardware. Frequentemente separados dos controles técnicos."},
 
             {q: "Avaliações de risco e planos de continuidade são exemplos de qual tipo de controle por implementação?",
              o: ["Técnico", "Operacional", "Gerencial", "Físico"],
-             c: 2},
+             c: 2,
+             e: "Controles Gerenciais (Managerial) fornecem supervisão organizacional — identificação de riscos, ferramentas de avaliação e seleção de controles."},
 
             {q: "IDS, firewall e backup são controles de qual tipo quanto à implementação?",
              o: ["Físico", "Operacional", "Gerencial", "Técnico"],
-             c: 3},
+             c: 3,
+             e: "IDS, firewall e backup são controles Técnicos — implementados como sistemas automatizados de hardware ou software."},
 
             {q: "Treinamentos de conscientização são controles de qual tipo quanto à implementação?",
              o: ["Técnico", "Gerencial", "Operacional", "Físico"],
-             c: 2},
+             c: 2,
+             e: "Treinamentos de conscientização são Operacionais — dependem de pessoas para execução e visam mudar comportamentos e hábitos de segurança."},
 
-            // Novas questões - Princípios e Frameworks
+            // Princípios e Frameworks - novas (66-71)
             {q: "O que caracteriza a estratégia de defesa em profundidade (Defense in Depth)?",
              o: ["Concentrar toda a segurança em um único controle forte",
                  "Implementar múltiplas camadas de segurança",
                  "Usar apenas controles técnicos",
                  "Eliminar controles redundantes"],
-             c: 1},
+             c: 1,
+             e: "Defense in Depth implementa múltiplas camadas de segurança — cada camada independente, eliminando pontos únicos de falha."},
 
             {q: "O princípio do menor privilégio (Least Privilege) determina que:",
              o: ["Todos os usuários devem ter acesso total",
                  "Apenas administradores devem ter acesso",
                  "Cada usuário deve ter apenas as permissões mínimas necessárias",
                  "Nenhum usuário deve ter acesso sem aprovação manual"],
-             c: 2},
+             c: 2,
+             e: "Least Privilege concede apenas as permissões mínimas necessárias para cada função — limita o impacto de contas comprometidas."},
 
             {q: "Qual princípio divide tarefas críticas entre diferentes pessoas para prevenir fraudes?",
              o: ["Menor privilégio", "Defesa em profundidade", "Segregação de funções", "Não-repúdio"],
-             c: 2},
+             c: 2,
+             e: "Separation of Duties (Segregação de Funções) exige que tarefas críticas sejam divididas — ninguém controla sozinho um processo completo."},
 
             {q: "Quando um sistema falha e bloqueia todo o acesso, qual comportamento está sendo aplicado?",
              o: ["Fail-Open", "Fail-Closed", "Fail-Safe", "Fail-Secure"],
-             c: 1},
+             c: 1,
+             e: "Fail-Closed bloqueia todo acesso em caso de falha — prioriza Segurança sobre Disponibilidade. Fail-Open mantém acesso, priorizando Disponibilidade."},
 
             {q: "Fail-Open prioriza qual pilar da CIA?",
              o: ["Confidencialidade", "Integridade", "Disponibilidade", "Não-repúdio"],
-             c: 2},
+             c: 2,
+             e: "Fail-Open mantém o sistema acessível mesmo após falha — prioriza Disponibilidade em detrimento da Segurança. Ex: portas que abrem no corte de energia."},
 
             {q: "Quais são as 5 funções do NIST Cybersecurity Framework (CSF)?",
              o: ["Planejar, Fazer, Verificar, Agir, Revisar",
                  "Identificar, Proteger, Detectar, Responder, Recuperar",
                  "Prevenir, Detectar, Corrigir, Analisar, Reportar",
                  "Confidencialidade, Integridade, Disponibilidade, Autenticidade, Não-repúdio"],
-             c: 1},
+             c: 1,
+             e: "NIST CSF: Identify → Protect → Detect → Respond → Recover. Framework voluntário para gerenciar e reduzir riscos de cibersegurança."},
 
-            // Novas questões - Estrutura Organizacional
+            // Estrutura Organizacional - novas (72-75)
             {q: "Qual unidade organizacional realiza monitoramento de segurança 24/7?",
              o: ["CIRT", "DevSecOps", "SOC", "Auditoria interna"],
-             c: 2},
+             c: 2,
+             e: "SOC (Security Operations Center) monitora e protege ativos de informação 24/7 — usa dashboards, mapas de ameaças e múltiplos monitores por estação."},
 
             {q: "Qual equipe é o ponto único de contato para notificação e resposta a incidentes de segurança?",
              o: ["SOC", "DevOps", "CIRT/CSIRT/CERT", "NOC"],
-             c: 2},
+             c: 2,
+             e: "CIRT/CSIRT/CERT é o ponto único de contato para incidentes — coordena resposta, análise e contenção. Pode ser gerenciado pelo SOC ou operar independentemente."},
 
             {q: "O que é DevSecOps?",
              o: ["Equipe de desenvolvimento sem envolvimento de segurança",
                  "Prática que integra segurança em todas as etapas do desenvolvimento",
                  "Ferramenta de monitoramento de redes",
                  "Framework de resposta a incidentes"],
-             c: 1},
+             c: 1,
+             e: "DevSecOps estende o DevOps para incluir segurança em cada etapa do desenvolvimento — segurança como consideração primária, não adicionada no final."},
 
             {q: "O que significa Shift Left em segurança?",
              o: ["Mover a segurança para o final do projeto",
                  "Incorporar segurança desde o início do desenvolvimento",
                  "Transferir responsabilidade de segurança para operações",
                  "Usar apenas controles físicos"],
-             c: 1},
+             c: 1,
+             e: "Shift Left incorpora segurança desde os requisitos e planejamento — não enxertada no final. Reduz custo e risco ao detectar problemas cedo."},
 
-            // Novas questões - Normas e Regulamentações
+            // Normas e Regulamentações - novas (76-80)
             {q: "Qual regulamentação americana protege informações de saúde dos pacientes?",
              o: ["PCI-DSS", "GDPR", "ISO 27001", "HIPAA"],
-             c: 3},
+             c: 3,
+             e: "HIPAA protege PHI (Protected Health Information) nos EUA — aplica-se a hospitais, clínicas, planos de saúde e seus parceiros de negócio."},
 
             {q: "Qual padrão de segurança se aplica a organizações que processam dados de cartões de pagamento?",
              o: ["HIPAA", "LGPD", "PCI-DSS", "ISO 27001"],
-             c: 2},
+             c: 2,
+             e: "PCI-DSS (Payment Card Industry Data Security Standard) é obrigatório para qualquer organização que processa, armazena ou transmite dados de cartões."},
 
             {q: "Qual padrão internacional estabelece requisitos para um Sistema de Gestão de Segurança da Informação (ISMS)?",
              o: ["PCI-DSS", "HIPAA", "ISO 27001", "NIST CSF"],
-             c: 2},
+             c: 2,
+             e: "ISO 27001 é o padrão internacional para ISMS — define como gerenciar sistematicamente a segurança da informação em uma organização."},
 
             {q: "Qual lei brasileira regula a proteção de dados pessoais?",
              o: ["GDPR", "HIPAA", "PCI-DSS", "LGPD"],
-             c: 3},
+             c: 3,
+             e: "LGPD (Lei Geral de Proteção de Dados) é a lei brasileira equivalente ao GDPR europeu — regula coleta, uso e proteção de dados pessoais no Brasil."},
 
             {q: "Qual a diferença entre LGPD e GDPR?",
              o: ["São o mesmo padrão com nomes diferentes",
                  "LGPD é brasileira e GDPR é europeia, ambas protegem dados pessoais",
                  "LGPD protege dados de saúde e GDPR protege dados financeiros",
                  "LGPD é americana e GDPR é brasileira"],
-             c: 1}
+             c: 1,
+             e: "LGPD é a lei brasileira de proteção de dados pessoais; GDPR é a europeia. Ambas regulam como organizações coletam, processam e protegem dados pessoais."}
         ];
 
         // ========== VARIÁVEIS DE ESTADO ==========
-        
-        let currentCard = 0;        // POSIÇÃO no array filteredCards (NÃO é o índice original!)
-        let flipped = false;        // Estado do card: false = frente, true = verso
-        let mastered = new Set();   // Conjunto dos ÍNDICES ORIGINAIS dos cards dominados
-        let answers = {};           // Objeto que armazena as respostas do quiz {questão: opção_selecionada}
-        let checked = false;        // Flag que indica se o quiz já foi verificado
-        // Sorteia 20 cards aleatórios para exibir inicialmente
-        function getInitialCards() {
-            const all = [...Array(cards.length).keys()];
-            for (let i = all.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [all[i], all[j]] = [all[j], all[i]];
-            }
-            return all.slice(0, 20);
-        }
-        let filteredCards = getInitialCards(); // Inicia com 20 cards aleatórios
-        let currentFilter = 'all';   // Filtro atual: 'all', 'mastered', ou 'unmastered'
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = getSession([...Array(cards.length).keys()], 15);
+        let currentFilter = 'all';
+        let sessionQuiz = getSession([...Array(quiz.length).keys()], 15).map(i => quiz[i]);
 
         // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
         
@@ -1123,67 +1223,36 @@
         }
 
         // ========== FUNÇÕES DE FILTRO ==========
-        
-        // Filtra os cards por status (todos, dominados, não dominados)
-        // Embaralha um array usando Fisher-Yates e retorna os primeiros N elementos
-        function getRandomSubset(arr, n) {
-            const shuffled = [...arr];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled.slice(0, Math.min(n, shuffled.length));
-        }
-
         function filterCards(type, event) {
             currentFilter = type;
-            
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
-            if (type === 'all') {
-                // Sorteia 20 cards aleatórios de todos
-                filteredCards = getRandomSubset([...Array(cards.length).keys()], 20);
-            } else if (type === 'mastered') {
-                // Mostra todos os dominados
-                filteredCards = Array.from(mastered);
-            } else { // unmastered
-                // Sorteia 20 cards aleatórios dos não dominados
-                const unmastered = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
-                filteredCards = getRandomSubset(unmastered, 20);
-            }
-            
-            currentCard = 0;
-            flipped = false;
+            let pool;
+            if (type === 'all') pool = [...Array(cards.length).keys()];
+            else if (type === 'mastered') pool = Array.from(mastered);
+            else pool = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            filteredCards = getSession(pool, 15);
+            currentCard = 0; flipped = false; updateCard();
+        }
+
+        function newSession() {
+            filteredCards = getSession([...Array(cards.length).keys()], 15);
+            currentCard = 0; flipped = false;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.filter-btn')[0].classList.add('active');
             updateCard();
         }
 
         // ========== FUNÇÕES DO QUIZ ==========
-        
-        // Carrega as questões do quiz na tela
-        function getRandomQuestions(n) {
-            const all = [...Array(quiz.length).keys()];
-            for (let i = all.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [all[i], all[j]] = [all[j], all[i]];
-            }
-            return all.slice(0, Math.min(n, all.length));
-        }
-
-        let quizIndices = [];
-
         function loadQuiz() {
-            quizIndices = getRandomQuestions(20);
+            sessionQuiz = getSession([...Array(quiz.length).keys()], 15).map(i => quiz[i]);
             answers = {};
             checked = false;
             const container = document.getElementById('questions');
-            
-            quizIndices.forEach((qi, displayIndex) => {
-                const q = quiz[qi];
+            sessionQuiz.forEach((q, qi) => {
                 const div = document.createElement('div');
                 div.className = 'question';
-                div.innerHTML = `<h3>${displayIndex + 1}. ${q.q}</h3>`;
-                
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
                 q.o.forEach((opt, oi) => {
                     const odiv = document.createElement('div');
                     odiv.className = 'option';
@@ -1192,62 +1261,55 @@
                     odiv.id = `q${qi}o${oi}`;
                     div.appendChild(odiv);
                 });
-                
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
                 exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>Resposta correta:</strong> ${q.o[q.c]}`;
+                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
                 div.appendChild(exp);
-                
                 container.appendChild(div);
             });
         }
 
-        // Seleciona uma opção no quiz
         function selectOpt(qi, oi) {
             if (checked) return;
-            
-            quiz[qi].o.forEach((_, i) => {
+            sessionQuiz[qi].o.forEach((_, i) => {
                 document.getElementById(`q${qi}o${i}`).classList.remove('selected');
             });
-            
             document.getElementById(`q${qi}o${oi}`).classList.add('selected');
             answers[qi] = oi;
         }
 
-        // Verifica as respostas do quiz
         function checkAnswers() {
             checked = true;
             let correct = 0;
-            
-            quiz.forEach((q, qi) => {
+            sessionQuiz.forEach((q, qi) => {
                 const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
-                
                 q.o.forEach((_, oi) => {
                     const el = document.getElementById(`q${qi}o${oi}`);
-                    if (correctAnswer.includes(oi)) {
-                        el.classList.add('correct');
-                    } else if (answers[qi] === oi) {
-                        el.classList.add('incorrect');
-                    }
+                    if (correctAnswer.includes(oi)) el.classList.add('correct');
+                    else if (answers[qi] === oi) el.classList.add('incorrect');
                 });
-                
                 document.getElementById(`exp${qi}`).style.display = 'block';
                 if (correctAnswer.includes(answers[qi])) correct++;
             });
-            
-            const pct = Math.round((correct / quiz.length) * 100);
-            document.getElementById('score').textContent = `${correct}/${quiz.length} (${pct}%)`;
-            document.getElementById('results').style.display = 'block';
+            const pct = Math.round((correct / sessionQuiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = `${correct}/${sessionQuiz.length} corretas — ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Reinicia o quiz
         function resetQuiz() {
             checked = false;
             answers = {};
             document.getElementById('questions').innerHTML = '';
-            document.getElementById('results').style.display = 'none';
+            document.getElementById('results-modal').classList.remove('show');
             loadQuiz();
+        }
+
+        function verExplicacoes() {
+            document.getElementById('results-modal').classList.remove('show');
+            document.getElementById('questions').scrollIntoView({ behavior: 'smooth' });
         }
 
         // Inicializa: mostra o primeiro card

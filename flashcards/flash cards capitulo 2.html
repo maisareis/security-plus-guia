@@ -485,7 +485,7 @@
                     <button class="btn btn-nav" onclick="prevCard()">‹</button>
                     <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
                     <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
-                    <button class="btn" style="background:#10b981;color:white;" onclick="newSession()">🎲 Nova Sessão (20)</button>
+                    <button class="btn" style="background:#10b981;color:white;" onclick="newSession()">🎲 Nova Sessão (15)</button>
                     <button class="btn btn-nav" onclick="nextCard()">›</button>
                 </div>
             </div>
@@ -938,9 +938,9 @@
         let answers = {};
         let checked = false;
         let allCardIndexes = [...Array(cards.length).keys()];
-        let filteredCards = getSession(allCardIndexes, 20);
+        let filteredCards = getSession(allCardIndexes, 15);
         let currentFilter = 'all';
-        let sessionQuiz = getSession([...Array(quiz.length).keys()], 20).map(i => quiz[i]);
+        let sessionQuiz = getSession([...Array(quiz.length).keys()], 15).map(i => quiz[i]);
 
         function loadProgress() {
             const saved = localStorage.getItem('security_plus_cap2_mastered');
@@ -1022,12 +1022,12 @@
             if (type === 'all') pool = [...Array(cards.length).keys()];
             else if (type === 'mastered') pool = Array.from(mastered);
             else pool = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
-            filteredCards = getSession(pool, 20);
+            filteredCards = getSession(pool, 15);
             currentCard = 0; flipped = false; updateCard();
         }
 
         function newSession() {
-            filteredCards = getSession([...Array(cards.length).keys()], 20);
+            filteredCards = getSession([...Array(cards.length).keys()], 15);
             currentCard = 0; flipped = false;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.filter-btn')[0].classList.add('active');
@@ -1035,7 +1035,7 @@
         }
 
         function loadQuiz() {
-            sessionQuiz = getSession([...Array(quiz.length).keys()], 20).map(i => quiz[i]);
+            sessionQuiz = getSession([...Array(quiz.length).keys()], 15).map(i => quiz[i]);
             const container = document.getElementById('questions');
             sessionQuiz.forEach((q, qi) => {
                 const div = document.createElement('div');
