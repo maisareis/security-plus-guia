@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security+ Cap 2 - Threats & Vulnerabilities</title>
+    <title>Security+ Cap 2 — Threats & Vulnerabilities</title>
     <style>
         /* ===== ESTILOS GLOBAIS ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -442,10 +442,10 @@
     <div class="container">
         <div class="header">
             <h1>⚠️ Security+ Capítulo 2</h1>
-            <p>Threats & Vulnerabilities - 60 Cards | 30 Questões</p>
+            <p>Threats & Vulnerabilities — 50 Cards | 49 Questões</p>
             <div class="stats-bar">
-                <div class="stat-card">📚 60 Flashcards</div>
-                <div class="stat-card">❓ 30 Questões</div>
+                <div class="stat-card">📚 50 Flashcards</div>
+                <div class="stat-card">❓ 49 Questões</div>
                 <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
             </div>
         </div>
@@ -461,8 +461,8 @@
                 <div class="card-info">
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
                         <div>
-                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 60</div>
-                            <div id="mastered-count">0 dominados</div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 20</div>
+                            <div id="mastered-count">0 dominados — sessão aleatória de 20</div>
                         </div>
                         <div class="filter-buttons">
                             <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
@@ -485,6 +485,7 @@
                     <button class="btn btn-nav" onclick="prevCard()">‹</button>
                     <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
                     <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn" style="background:#10b981;color:white;" onclick="newSession()">🎲 Nova Sessão (20)</button>
                     <button class="btn btn-nav" onclick="nextCard()">›</button>
                 </div>
             </div>
@@ -586,11 +587,11 @@
         <div id="tab2" class="content">
             <div class="quiz-area">
                 <div class="quiz-header">
-                    <h2>Quiz - 30 Questões</h2>
-                    <p>Passing Score: 70% (21/30 corretas)</p>
+                    <h2 id="quiz-title">Quiz — Sessão Aleatória (20 questões)</h2>
+                    <p>Passing Score: 70% (14/20 corretas)</p>
                 </div>
                 <div id="questions"></div>
-                <div style="text-align: center; margin-top: 30px;">
+                <div style="text-align: center; margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
                     <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
                 </div>
             </div>
@@ -602,282 +603,343 @@
             <h2>Resultado</h2>
             <div class="score-circle" id="score-circle">0%</div>
             <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+            <button class="btn btn-primary" onclick="resetQuiz()">🎲 Nova Sessão</button>
         </div>
     </div>
 
     <script>
-        // ========== CARDS DO CAPÍTULO 2 - 60 CARDS COMPLETOS ==========
+        // ========== UTILITÁRIO ==========
+        function getSession(arr, n) {
+            const shuffled = [...arr].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, Math.min(n, arr.length));
+        }
+
+        // ========== CARDS DO CAPÍTULO 2 - 50 CARDS COMPLETOS ==========
         const cards = [
-            // Threat Actors (1-6)
-            {f: "O que é um ator de ameaça do tipo Nation-state?", 
-             b: "São governos com recursos ilimitados. Realizam espionagem e ataques avançados (APT - Advanced Persistent Threat). Alvos estratégicos."},
-            {f: "O que é Organized Crime (Crime Organizado)?", 
-             b: "Grupos criminosos com motivação financeira. Utilizam ransomware, fraudes bancárias e roubo de dados."},
-            {f: "O que são Hacktivists?", 
-             b: "Ativistas com motivação política ou social. Realizam ataques DDoS, desfiguração de sites (defacement) e vazamentos."},
-            {f: "O que é Insider Threat (Ameaça Interna)?", 
-             b: "Funcionários ou pessoas com acesso legítimo que comprometem a segurança por vingança, ganho financeiro ou negligência."},
-            {f: "O que são Script Kiddies?", 
-             b: "Atacantes com baixa habilidade técnica que usam ferramentas prontas. Motivação: diversão e reconhecimento."},
-            {f: "O que é APT (Advanced Persistent Threat)?", 
-             b: "Ameaça avançada e persistente: ataques sofisticados e prolongados, geralmente patrocinados por governos, com objetivos de espionagem."},
+    // === BLOCO 1: ATORES DE AMEAÇAS (1-12) ===
+    {f: "Quais são os 4 atributos usados para criar perfil de um ator de ameaça (threat actor)?",
+     b: "Localização (interno/externo), capacidade/sofisticação, recursos/financiamento e motivação."},
+    {f: "Qual a diferença entre ator de ameaça externo e interno (insider)?",
+     b: "Externo não tem acesso autorizado e precisa invadir; interno já possui acesso legítimo (funcionário, contratado ou parceiro)."},
+    {f: "O que caracteriza um ator de ameaça com capacidade baixa (low capability / unskilled attacker)?",
+     b: "Usa ferramentas de ataque prontas (commodity tools) sem entender como funcionam; não cria exploits próprios. Também chamado de script kiddie."},
+    {f: "O que é um APT (Advanced Persistent Threat)?",
+     b: "Ator — geralmente estado-nação — com capacidade de manter acesso contínuo e prolongado à rede usando múltiplas ferramentas e técnicas."},
+    {f: "Qual a principal motivação de grupos hacktivistas como Anonymous e LulzSec?",
+     b: "Promover agenda política usando armas cibernéticas: exfiltração de dados, interrupção de serviço e desfiguração de websites (defacement)."},
+    {f: "O que são campanhas de false flag (bandeira falsa) usadas por estados-nação?",
+     b: "Ataques atribuídos falsamente a outro país ou grupo para manter 'negação plausível' (plausible deniability)."},
+    {f: "Qual a diferença entre chantagem (blackmail) e extorsão (extortion) como motivação financeira?",
+     b: "Blackmail: pagamento para prevenir divulgação de informações. Extortion: pagamento para prevenir ou parar um ataque em curso (ex: ransomware)."},
+    {f: "Quais são os 3 tipos de insiders (ameaças internas)?",
+     b: "Permanentes (funcionários), temporários (contratados/convidados) e ex-insiders (ex-funcionários demitidos com queixas)."},
+    {f: "O que é Shadow IT e por que representa risco de segurança?",
+     b: "Hardware/software adquirido por usuários sem aprovação de TI; cria superfície de ataque não monitorada, exacerbada por cloud e dispositivos móveis."},
+    {f: "Como a exfiltração de dados (data exfiltration) afeta a tríade CIA?",
+     b: "Afeta a Confidencialidade — cópia de dados é transferida sem autorização. Desinformação afeta Integridade; interrupção de serviço afeta Disponibilidade."},
+    {f: "O que é espionagem comercial (corporate espionage)?",
+     b: "Empresa que tenta roubar segredos industriais ou estratégicos de um concorrente; frequentemente facilitada por funcionários que mudaram de empresa."},
+    {f: "O que é um MSP (Managed Services Provider) e qual o risco de segurança associado?",
+     b: "Empresa que gerencia recursos de TI de terceiros. Risco: funcionários do MSP são fontes potenciais de ameaça interna e difíceis de monitorar."},
 
-            // Cyber Kill Chain (7-13)
-            {f: "O que é Reconnaissance (Reconhecimento)?", 
-             b: "Primeira fase do ataque. Coleta de informações sobre o alvo: varreduras, engenharia social, OSINT."},
-            {f: "O que é Weaponization (Preparação)?", 
-             b: "Segunda fase. Criação ou preparação do exploit para explorar uma vulnerabilidade."},
-            {f: "O que é Delivery (Entrega)?", 
-             b: "Terceira fase. Entrega do exploit ao alvo via email, USB, site comprometido ou outro vetor."},
-            {f: "O que é Exploitation (Exploração)?", 
-             b: "Quarta fase. Execução do exploit para ganhar acesso inicial ao sistema alvo."},
-            {f: "O que é Installation (Instalação)?", 
-             b: "Quinta fase. Instalação de backdoor, malware ou persistência no sistema comprometido."},
-            {f: "O que é C2 (Command & Control)?", 
-             b: "Sexta fase. Estabelecimento de comunicação entre o sistema comprometido e o servidor do atacante."},
-            {f: "O que é Actions on Objectives?", 
-             b: "Sétima e última fase. Ações finais do atacante: roubo de dados, destruição, espionagem ou movimentação lateral."},
+    // === BLOCO 2: SUPERFÍCIES E VETORES DE ATAQUE (13-23) ===
+    {f: "O que é superfície de ataque (attack surface)?",
+     b: "Todos os pontos onde um ator malicioso pode tentar explorar uma vulnerabilidade para interagir com rede, app, computador ou usuário."},
+    {f: "Qual a diferença entre vetor de ameaça (threat vector) e vetor de ataque (attack vector)?",
+     b: "Threat vector: análise de superfície de ataque potencial. Attack vector: análise de exploit efetivamente executado com sucesso."},
+    {f: "O que é um sistema sem suporte (unsupported system) e qual a estratégia de mitigação?",
+     b: "Sistema cujo fabricante não lança mais patches; altamente vulnerável. Mitigação: isolar de outros sistemas e aplicar controles compensatórios."},
+    {f: "Qual a diferença entre exploit remoto e exploit local?",
+     b: "Remoto: enviado pela rede sem sessão autenticada. Local: requer sessão autenticada ou sequestro de sessão para executar o código malicioso."},
+    {f: "O que é um drop attack com USB?",
+     b: "Deixar pen drives infectados em áreas da empresa (parking lot attack) esperando que alguém os conecte, executando malware automaticamente."},
+    {f: "O que é um ataque watering hole?",
+     b: "Comprometer um site de terceiros frequentado pelo grupo-alvo para infectar visitantes e penetrar indiretamente na organização alvo."},
+    {f: "O que é drive-by download?",
+     b: "Infecção automática ao visitar um site comprometido, sem necessidade de ação deliberada do usuário além de acessar a página."},
+    {f: "O que é um exploit zero-click?",
+     b: "Exploit acionado apenas ao receber um anexo ou visualizar uma imagem, sem necessidade de abertura deliberada — mais poderoso que exploits comuns."},
+    {f: "O que é um ataque à cadeia de suprimentos (supply chain attack)?",
+     b: "Infiltrar o alvo através de fornecedores, vendedores ou parceiros da cadeia de suprimentos, em vez de atacá-lo diretamente."},
+    {f: "O que é scanning agentless vs. baseado em cliente (agent-based)?",
+     b: "Agent-based: agente instalado em cada host reporta ao servidor de gerenciamento. Agentless: escaneia o host sem instalação — mais usado em reconhecimento por atacantes."},
+    {f: "Quais são as 5 metodologias de defesa em profundidade?",
+     b: "Camadas (layering), princípio do menor privilégio (least privilege), variedade (variety), aleatoriedade (randomness) e simplicidade (simplicity)."},
 
-            // Engenharia Social (14-35)
-            {f: "O que é Social Engineering (Engenharia Social)?", 
-             b: "Manipulação psicológica para induzir pessoas a comprometerem a segurança, revelando informações ou executando ações."},
-            {f: "O que é Phishing?", 
-             b: "Golpe onde o atacante envia emails falsos fingindo ser uma entidade legítima para roubar credenciais ou instalar malware."},
-            {f: "O que é Spear Phishing?", 
-             b: "Phishing direcionado a uma pessoa ou organização específica, com informações personalizadas para aumentar a credibilidade."},
-            {f: "O que é Whaling?", 
-             b: "Spear phishing focado em executivos, CEOs e VIPs. O alvo é considerado uma 'baleia' pelo seu alto valor."},
-            {f: "O que é Vishing (Voice Phishing)?", 
-             b: "Engenharia social realizada por telefone. O atacante se passa por suporte técnico, banco ou autoridade."},
-            {f: "O que é Smishing (SMS Phishing)?", 
-             b: "Golpe realizado via mensagens de texto (SMS), com links maliciosos ou pedidos de informação."},
-            {f: "O que é Pretexting?", 
-             b: "Criação de um cenário ou história falsa para obter informações da vítima."},
-            {f: "O que é Baiting?", 
-             b: "Oferecer algo atraente (USB infectada, download gratuito) para que a vítima comprometa a segurança."},
-            {f: "O que é Quid Pro Quo?", 
-             b: "Oferecer um serviço ou benefício em troca de informação. Ex: 'falso suporte' que pede senha."},
-            {f: "O que é Tailgating (ou Piggybacking)?", 
-             b: "Seguir uma pessoa autorizada para entrar em uma área restrita, aproveitando a porta aberta."},
-            {f: "O que é Shoulder Surfing?", 
-             b: "Observar por cima do ombro da vítima para capturar senhas, códigos ou informações na tela."},
-            {f: "O que é Dumpster Diving?", 
-             b: "Procurar informações confidenciais no lixo da organização: papéis, discos, anotações."},
-            {f: "O que é Watering Hole?", 
-             b: "Comprometer um site frequentado pelo alvo para infectar os visitantes."},
-            {f: "O que é Pharming?", 
-             b: "Redirecionar o tráfego de um site legítimo para um site falso, geralmente manipulando DNS."},
-            {f: "O que é Typosquatting (URL Hijacking)?", 
-             b: "Registrar domínios com erros de digitação comuns (ex: gooogle.com) para capturar tráfego ou aplicar golpes."},
-            {f: "O que é o princípio de Authority na engenharia social?", 
-             b: "Explorar o respeito à autoridade: atacantes se passam por chefes, polícia, suporte técnico."},
-            {f: "O que é o princípio de Urgency (Urgência)?", 
-             b: "Criar senso de urgência: 'Resolva agora ou sua conta será bloqueada' para impedir que a vítima pense."},
-            {f: "O que é o princípio de Scarcity (Escassez)?", 
-             b: "Usar ofertas limitadas: 'últimas vagas', 'promoção por tempo limitado' para pressionar a decisão."},
-            {f: "O que é o princípio de Social Proof?", 
-             b: "Persuadir mostrando que outros já fizeram: 'todo mundo está aderindo', 'seus colegas já usam'."},
-            {f: "O que é Invoice Scam?", 
-             b: "Golpe onde o atacante envia uma fatura falsa para pagamento, fingindo ser um fornecedor legítimo."},
-            {f: "Indicadores de um phishing", 
-             b: "Urgência, remetente suspeito, erros gramaticais, links diferentes, anexos inesperados."},
-            {f: "O que é o princípio de Fear (Medo)?", 
-             b: "Ameaçar a vítima com consequências negativas para que ela aja impulsivamente."},
+    // === BLOCO 3: ENGENHARIA SOCIAL (24-35) ===
+    {f: "Quais são as 3 fases do processo de engenharia social (social engineering)?",
+     b: "1. Pesquisa (research/footprinting). 2. Desenvolvimento (development — criar relacionamento). 3. Exploração (exploitation — obter acesso/informação)."},
+    {f: "O que é pretexting?",
+     b: "Criação de uma história detalhada e convincente (pretext) para tornar uma personificação crível e obter informações ou acesso privilegiado."},
+    {f: "O que é typosquatting? Dê um exemplo.",
+     b: "Registrar domínio muito similar ao legítimo esperando que usuários não percebam a diferença. Ex: examp1e.com vs. example.com. Também chamado de domínio doppelganger ou lookalike."},
+    {f: "O que é pharming e como difere do phishing?",
+     b: "Pharming redireciona usuários corrompendo a resolução de nomes DNS — o usuário pode digitar o endereço correto e ainda ser redirecionado. Não depende de clicar em links como o phishing."},
+    {f: "Qual a diferença entre phishing, spear phishing e whaling?",
+     b: "Phishing: massa, genérico. Spear phishing: direcionado a indivíduo específico com reconhecimento prévio. Whaling: spear phishing focado em executivos sênior (CEO, CFO)."},
+    {f: "O que é vishing? E smishing?",
+     b: "Vishing: phishing por canal de voz (telefone/VoIP). SMiShing: phishing via SMS (Short Message Service)."},
+    {f: "O que é angler phishing?",
+     b: "Phishing realizado através de mídias sociais, geralmente se passando por conta de suporte de empresas legítimas."},
+    {f: "O que é Business Email Compromise (BEC)?",
+     b: "Ataque sofisticado que visa executivos; o ator primeiro compromete uma conta de e-mail legítima para enviar mensagens de phishing com credibilidade real."},
+    {f: "Qual a diferença entre desinformação (disinformation) e misinformação (misinformation)?",
+     b: "Disinformation: intenção proposital de enganar. Misinformation: repetir alegações falsas sem intenção deliberada — mas campanhas de desinformação tentam fazer outros repetirem fatos falsos."},
+    {f: "O que é dumpster diving no contexto de engenharia social?",
+     b: "Vasculhar o lixo físico da organização para coletar informações úteis (nomes, e-mails, faturas, documentos) durante a fase de pesquisa (research)."},
+    {f: "Quais são os 3 princípios psicológicos mais usados em engenharia social?",
+     b: "Autoridade e medo (authority/fear), urgência (urgency) e escassez (scarcity) — além de simpatia (likeability), prova social (social proof) e obrigação moral."},
+    {f: "O que é um deep fake e qual o risco para segurança corporativa?",
+     b: "Mídia gerada por IA que imita aparência ou voz de uma pessoa — usada para criar pretexts convincentes em ataques de BEC e campanhas de desinformação."},
 
-            // Malware (36-56)
-            {f: "O que é um Vírus?", 
-             b: "Malware que infecta arquivos executáveis e se replica, precisando de ação do usuário para ser executado."},
-            {f: "O que é um Worm (Verme)?", 
-             b: "Malware auto-replicante que se espalha sem precisar de um arquivo hospedeiro, explorando redes."},
-            {f: "O que é um Trojan (Cavalo de Troia)?", 
-             b: "Malware que parece legítimo mas é malicioso. Não se replica."},
-            {f: "O que é Ransomware?", 
-             b: "Malware que criptografa os dados da vítima e exige pagamento (resgate) para liberar o acesso."},
-            {f: "O que é Spyware?", 
-             b: "Malware que monitora atividades do usuário, coleta informações e rouba dados."},
-            {f: "O que é Keylogger?", 
-             b: "Malware que registra todas as teclas digitadas pela vítima para capturar senhas e informações."},
-            {f: "O que é Rootkit?", 
-             b: "Malware que se esconde no sistema, muitas vezes em nível de kernel, para evitar detecção e manter acesso."},
-            {f: "O que é Botnet?", 
-             b: "Rede de computadores infectados (zumbis) controlados remotamente por um atacante para ataques coordenados."},
-            {f: "O que é RAT (Remote Access Trojan)?", 
-             b: "Trojan que permite acesso e controle remoto completo do sistema infectado."},
-            {f: "O que é Logic Bomb?", 
-             b: "Código malicioso programado para executar quando certas condições são atendidas (data, evento)."},
-            {f: "O que é Backdoor?", 
-             b: "Método de acesso não autorizado que contorna mecanismos normais de autenticação."},
-            {f: "O que é Fileless Malware?", 
-             b: "Malware que executa diretamente na memória, sem gravar arquivos em disco, dificultando detecção."},
-            {f: "O que é Adware?", 
-             b: "Malware que exibe anúncios indesejados, pode rastrear hábitos de navegação."},
-            {f: "O que é PUP (Potentially Unwanted Program)?", 
-             b: "Programa potencialmente indesejado: não é claramente malware, mas causa problemas ou reduz desempenho."},
-            {f: "O que é Crimeware?", 
-             b: "Malware projetado para automatizar fraudes financeiras e roubo de identidade."},
-            {f: "O que é Scareware?", 
-             b: "Malware que assusta o usuário com alertas falsos para comprar software desnecessário."},
-            {f: "O que é Bootkit?", 
-             b: "Rootkit que infecta o Master Boot Record (MBR), executando antes do sistema operacional."},
-            {f: "O que é Dropper?", 
-             b: "Malware projetado para instalar outros malwares no sistema alvo."},
-            {f: "O que é Downloader?", 
-             b: "Malware que baixa outros malwares da internet."},
-            {f: "O que é Stealer?", 
-             b: "Malware focado em roubar informações específicas como senhas, cookies e dados bancários."},
-            {f: "O que é Formjacking?", 
-             b: "Ataque que injeta código malicioso em formulários de pagamento para roubar dados de cartão."},
+    // === BLOCO 4: MALWARE (36-50) ===
+    {f: "Qual a diferença entre vírus (virus) e worm no modo de propagação?",
+     b: "Vírus precisa de ação do usuário para executar e infectar. Worm pode executar sozinho explorando vulnerabilidade em processo, sem interação humana."},
+    {f: "O que é um vírus polimórfico (polymorphic virus)?",
+     b: "Vírus que muda dinamicamente seu próprio código para evitar detecção por assinatura (signature-based detection)."},
+    {f: "O que é um vírus de boot (boot sector virus)?",
+     b: "Vírus escrito no setor de boot do disco ou tabela de partição; executa como processo memory-resident quando o SO inicia ou mídia é conectada."},
+    {f: "O que é malware fileless e o que significa 'live off the land'?",
+     b: "Fileless malware não grava arquivos em disco; usa técnicas memory-resident. 'Live off the land': usa ferramentas legítimas do SO (PowerShell, WMI) para executar ações maliciosas."},
+    {f: "O que é um RAT (Remote Access Trojan)?",
+     b: "Malware backdoor que imita programas legítimos de controle remoto, dando acesso secreto ao host, permitindo upload de arquivos e instalação de software."},
+    {f: "O que é Command and Control (C2/C&C)?",
+     b: "Conexão de rede de um host comprometido para servidor de controle do atacante. Principal forma de identificar presença de RAT, backdoor ou bot; pode usar HTTPS ou DNS como canal secreto."},
+    {f: "O que é um rootkit e o que o diferencia de outros malwares?",
+     b: "Malware que opera com privilégios SYSTEM/root, capaz de ocultar sua presença das ferramentas do SO (processos, logs, netstat). Pode comprometer interfaces de programação do sistema."},
+    {f: "O que é um rootkit de firmware (firmware rootkit)?",
+     b: "Rootkit que reside no firmware do hardware (UEFI/BIOS); sobrevive à formatação do disco e reinstalação do SO. Exemplos: DarkMatter e Quark Matter."},
+    {f: "Qual a diferença entre ransomware e crypto-ransomware?",
+     b: "Ransomware genérico pode bloquear acesso ao sistema exibindo mensagens ameaçadoras. Crypto-ransomware criptografa arquivos usando chave mantida pelo atacante — extremamente difícil sem backups."},
+    {f: "O que é cryptojacking?",
+     b: "Malware que sequestra recursos computacionais do host para mineração de criptomoeda (crypto-mining) sem autorização — frequentemente operado via botnets."},
+    {f: "O que é uma logic bomb? E uma time bomb?",
+     b: "Logic bomb: malware acionado por evento de sistema ou usuário. Time bomb: variante acionada por data/hora pré-configurada. Difíceis de detectar por antivírus."},
+    {f: "O que é um keylogger de hardware?",
+     b: "Dispositivo físico (ex: adaptador USB entre teclado e porta) que captura pressionamentos de tecla, armazenando localmente ou transmitindo via Wi-Fi."},
+    {f: "O que é um Trojan e o que são PUPs/PUAs?",
+     b: "Trojan: malware escondido em instalador aparentemente legítimo, opera secretamente. PUPs (Potentially Unwanted Programs): instalados sem consentimento ativo junto com outro software; 'grayware' ou 'bloatware'."},
+    {f: "Quais são as 3 ações de um antivírus ao detectar malware?",
+     b: "Reparar (repair) — possível para vírus em arquivos válidos. Quarentena (quarantine) — move para pasta segura. Deletar (delete) — para Trojans, worms, spyware."},
+    {f: "O que é spyware e quais são seus 3 níveis de monitoramento?",
+     b: "Malware que monitora atividade local, captura screenshots e ativa microfone/webcam. Níveis: tracking cookies (menos invasivo), adware (reconfigura navegador), spyware (monitoramento total + redirecionamento DNS)."}
+];
 
-            // Métodos de Proteção (57-60)
-            {f: "O que é detecção Signature-based?", 
-             b: "Método que compara arquivos com um banco de assinaturas de malwares conhecidos."},
-            {f: "O que é detecção Heuristic?", 
-             b: "Método que analisa comportamento e características suspeitas para detectar variações de malware."},
-            {f: "O que é detecção Behavioral?", 
-             b: "Método que monitora ações em tempo real para identificar comportamentos maliciosos."},
-            {f: "O que é Sandboxing?", 
-             b: "Executar arquivos suspeitos em ambiente isolado para observar comportamento sem arriscar o sistema."}
-        ];
-
-        // ========== QUIZ DO CAPÍTULO 2 (30 QUESTÕES COM EXPLICAÇÕES) ==========
         const quiz = [
-            // Threat Actors (1-5)
-            {q: "Qual ator de ameaça possui recursos praticamente ilimitados e realiza ataques sofisticados como APT?", 
-             o: ["Script Kiddie", "Hacktivist", "Nation-state (Estados Nação)", "Insider Threat"], 
-             c: 2,
-             e: "Nation-state (Estados Nação) possuem recursos ilimitados, realizam espionagem e ataques avançados (APT). Ex: Stuxnet (EUA/Israel contra Irã)."},
-            {q: "Qual é a principal motivação do Organized Crime (Crime Organizado)?", 
-             o: ["Política", "Financeira", "Diversão", "Ideologia"], 
-             c: 1,
-             e: "Crime Organizado tem motivação financeira: ransomware, fraudes bancárias, roubo de dados para venda."},
-            {q: "Um funcionário que compromete a segurança da empresa por vingança se enquadra em qual categoria?", 
-             o: ["Nation-state", "Hacktivist", "Insider Threat (Ameaça Interna)", "APT"], 
-             c: 2,
-             e: "Insider Threat (ameaça interna) são funcionários ou pessoas com acesso legítimo que comprometem a segurança."},
-            {q: "Qual fase da Cyber Kill Chain envolve a coleta de informações sobre o alvo?", 
-             o: ["Exploitation (Exploração)", "Delivery (Entrega)", "Reconnaissance (Reconhecimento)", "Installation (Instalação)"], 
-             c: 2,
-             e: "Reconnaissance (Reconhecimento) é a primeira fase: coleta de informações sobre o alvo usando OSINT, varreduras."},
-            {q: "Na Cyber Kill Chain, qual fase estabelece a comunicação com o servidor do atacante?", 
-             o: ["C2 (Command & Control)", "Reconnaissance", "Delivery", "Weaponization"], 
-             c: 0,
-             e: "C2 (Command & Control) é a sexta fase, onde o atacante estabelece comunicação com o sistema comprometido."},
+    // === THREAT ACTORS (1-8) ===
+    {q: "Qual ator de ameaça possui recursos praticamente ilimitados e realiza ataques sofisticados como APT?",
+     o: ["Script Kiddie", "Hacktivist", "Nation-state (Estado-nação)", "Insider Threat"],
+     c: 2,
+     e: "Nation-state (Estado-nação) possui recursos ilimitados, realiza espionagem e ataques avançados (APT). Ex: Stuxnet (EUA/Israel contra Irã)."},
+    {q: "Qual é a principal motivação do crime organizado (organized crime) em ataques cibernéticos?",
+     o: ["Política", "Financeira", "Espionagem", "Hacktivismo"],
+     c: 1,
+     e: "Crime organizado tem motivação financeira: ransomware, fraudes bancárias, roubo de dados para venda."},
+    {q: "Um funcionário demitido com acesso não revogado que vaza dados representa qual tipo de ator?",
+     o: ["Ator externo com alta capacidade", "Insider permanente", "Ex-insider (insider com queixa)", "Hacktivista"],
+     c: 2,
+     e: "Ex-funcionários demitidos com queixas são ex-insiders; podem ser classificados como ameaça interna ou externa com conhecimento interno privilegiado."},
+    {q: "O que define um ator de ameaça de baixa capacidade (low capability)?",
+     o: ["Usa exploits zero-day exclusivos", "Depende de ferramentas prontas sem entender como funcionam", "Possui financiamento de estado-nação", "Opera apenas dentro da organização"],
+     c: 1,
+     e: "Atores de baixa capacidade (script kiddies / unskilled attackers) usam ferramentas de ataque commodity amplamente disponíveis, sem capacidade de criar exploits próprios."},
+    {q: "O que é Shadow IT e qual o risco associado?",
+     o: ["Software antivírus desatualizado", "Hardware/software adquirido sem aprovação de TI, criando superfície de ataque não monitorada", "Ataque realizado às sombras da noite para evitar detecção", "Malware que opera em modo stealth"],
+     c: 1,
+     e: "Shadow IT são dispositivos e serviços adquiridos sem processo de compras e análise de segurança, exacerbado pela proliferação de cloud e dispositivos móveis."},
+    {q: "Qual estratégia de ataque afeta diretamente a Confidencialidade da tríade CIA?",
+     o: ["Interrupção de serviço (DoS)", "Desfiguração de website (defacement)", "Exfiltração de dados (data exfiltration)", "Ataques on-path"],
+     c: 2,
+     e: "Exfiltração de dados transfere cópia de informação valiosa sem autorização — afeta diretamente a Confidencialidade. Interrupção afeta Disponibilidade; desinformação afeta Integridade."},
+    {q: "O que são campanhas de false flag em contexto de ciberataques?",
+     o: ["Ataques que usam bandeiras de países como ícones", "Operações que implicam falsamente outro estado ou grupo para manter negação plausível", "Malware que se disfarça de arquivo de imagem", "Técnica de phishing usando logos falsos"],
+     c: 1,
+     e: "False flag operations são usadas por estados-nação para atribuir ataques a outros países ou grupos, mantendo 'plausible deniability' (negação plausível)."},
+    {q: "O que é espionagem comercial (corporate espionage) e quem a facilita frequentemente?",
+     o: ["Espionagem exclusivamente realizada por estados-nação", "Roubo de segredos de concorrentes, frequentemente facilitado por funcionários que mudaram de empresa", "Monitoramento legal de concorrentes via fontes abertas", "Ataque DDoS contra sites de concorrentes"],
+     c: 1,
+     e: "Corporate espionage visa roubar segredos industriais de concorrentes; é frequentemente facilitada por funcionários que mudaram de empresa recentemente e carregam conhecimento interno."},
 
-            // Engenharia Social (6-15)
-            {q: "Qual técnica de engenharia social utiliza emails falsos em massa?", 
-             o: ["Vishing", "Phishing", "Smishing", "Baiting"], 
-             c: 1,
-             e: "Phishing: emails falsos em massa fingindo ser entidades legítimas para roubar credenciais."},
-            {q: "Phishing direcionado a executivos e VIPs é chamado de:", 
-             o: ["Spear Phishing", "Whaling", "Vishing", "Pretexting"], 
-             c: 1,
-             e: "Whaling é phishing focado em executivos (baleias). Spear phishing é direcionado a pessoas específicas."},
-            {q: "Qual técnica é realizada por telefone?", 
-             o: ["Phishing", "Smishing", "Vishing", "Pharming"], 
-             c: 2,
-             e: "Vishing (voice phishing) é engenharia social por telefone."},
-            {q: "Criar um cenário falso para obter informações é conhecido como:", 
-             o: ["Phishing", "Pretexting", "Baiting", "Tailgating"], 
-             c: 1,
-             e: "Pretexting: criação de um cenário ou história falsa para obter informações da vítima."},
-            {q: "Deixar um USB infectado em local público é um exemplo de:", 
-             o: ["Pretexting", "Baiting", "Quid Pro Quo", "Phishing"], 
-             c: 1,
-             e: "Baiting: oferecer algo atraente (USB infectada, download gratuito) para que a vítima comprometa a segurança."},
-            {q: "Seguir uma pessoa autorizada para entrar em área restrita é:", 
-             o: ["Shoulder Surfing", "Tailgating", "Dumpster Diving", "Baiting"], 
-             c: 1,
-             e: "Tailgating (ou piggybacking) é seguir uma pessoa autorizada para entrar em uma área restrita."},
-            {q: "Observar por cima do ombro para capturar senhas é:", 
-             o: ["Tailgating", "Shoulder Surfing", "Pretexting", "Vishing"], 
-             c: 1,
-             e: "Shoulder Surfing é observar por cima do ombro para capturar informações na tela ou teclado."},
-            {q: "Procurar informações confidenciais no lixo é:", 
-             o: ["Baiting", "Pretexting", "Dumpster Diving", "Pharming"], 
-             c: 2,
-             e: "Dumpster Diving é procurar informações confidenciais no lixo da organização."},
-            {q: "Redirecionar DNS para um site falso é:", 
-             o: ["Phishing", "Typosquatting", "Pharming", "Watering Hole"], 
-             c: 2,
-             e: "Pharming redireciona o tráfego de um site legítimo para um site falso, manipulando DNS."},
-            {q: "Comprometer um site frequentado pelo alvo é:", 
-             o: ["Phishing", "Pharming", "Watering Hole", "Typosquatting"], 
-             c: 2,
-             e: "Watering Hole compromete um site frequentado pelo alvo para infectar os visitantes."},
+    // === SUPERFÍCIES E VETORES DE ATAQUE (9-18) ===
+    {q: "Qual é a definição de superfície de ataque (attack surface)?",
+     o: ["Número total de vulnerabilidades conhecidas em um sistema", "Todos os pontos onde um ator malicioso pode tentar explorar uma vulnerabilidade", "Área física de um data center que deve ser protegida", "Lista de endereços IP expostos à internet"],
+     c: 1,
+     e: "Attack surface são todos os pontos onde um ator malicioso pode interagir com porta de rede, app, computador ou usuário para tentar explorar uma vulnerabilidade."},
+    {q: "O que é um ataque à cadeia de suprimentos (supply chain attack)?",
+     o: ["Ataque direto ao servidor principal da organização", "Infiltrar o alvo através de fornecedores ou parceiros da cadeia de suprimentos", "Interromper entregas físicas de hardware", "Ataque ao sistema ERP da empresa"],
+     c: 1,
+     e: "Supply chain attack infiltra o alvo via empresas na cadeia de suprimentos. Exemplo clássico: violação da Target através de credenciais de fornecedor de sistemas prediais."},
+    {q: "Qual é a principal diferença entre exploit remoto e exploit local?",
+     o: ["Remoto usa GUI, local usa linha de comando", "Remoto é enviado pela rede sem sessão autenticada; local requer sessão autenticada ou sequestro de sessão", "Remoto afeta servidores, local afeta workstations", "Remoto é mais fácil de detectar que local"],
+     c: 1,
+     e: "Exploit remoto pode ser executado pela rede sem autenticação. Exploit local requer que o código seja executado de uma sessão autenticada — ainda pode ocorrer via rede."},
+    {q: "O que é um drop attack no contexto de vetores baseados em isca (lure-based)?",
+     o: ["Ataque que derruba servidores por inundação de pacotes", "Deixar dispositivos USB infectados em áreas da empresa para que funcionários os conectem", "Enviar e-mail com anexo malicioso para todos os funcionários", "Comprometer o site corporativo com código malicioso"],
+     c: 1,
+     e: "Drop attack (ou parking lot attack) consiste em deixar USB sticks infectados em áreas visíveis da empresa esperando que alguém os conecte, executando o malware automaticamente."},
+    {q: "O que é um exploit zero-click?",
+     o: ["Exploit que não deixa rastros nos logs do sistema", "Exploit que dispara apenas ao receber um anexo ou visualizar imagem, sem abertura deliberada", "Ataque que usa zero vulnerabilidades conhecidas", "Malware que não precisa de conexão à internet"],
+     c: 1,
+     e: "Zero-click exploits são acionados simplesmente recebendo um anexo ou visualizando uma imagem — mais poderosos que exploits que requerem abertura deliberada pelo usuário."},
+    {q: "Que vetor de ameaça é explorado quando um atacante conecta dispositivo não autorizado a porta física de rede?",
+     o: ["Acesso à nuvem (cloud access)", "Rede sem fio (wireless)", "Rede cabeada (wired network)", "Bluetooth"],
+     c: 2,
+     e: "Conectar dispositivo não autorizado a porta física de rede permite ataques de escuta (eavesdropping), on-path e DoS na rede cabeada."},
+    {q: "O que é um sistema sem suporte (unsupported system) e qual a estratégia de mitigação?",
+     o: ["Sistema offline sem conexão à internet; mitigação: manter atualizado", "Sistema sem patches disponíveis do fabricante; mitigação: isolar e aplicar controles compensatórios", "Sistema com antivírus desatualizado; mitigação: atualizar definições", "Sistema legado sem backup; mitigação: criar backup imediato"],
+     c: 1,
+     e: "Unsupported systems não recebem mais patches do fabricante. A estratégia de mitigação é isolá-los de outros sistemas e reduzir oportunidades de acesso como controle compensatório."},
+    {q: "O que é scanning agentless em comparação com agent-based?",
+     o: ["Agentless é mais seguro; agent-based é mais vulnerável", "Agentless escaneia sem instalar software no host; agent-based instala um agente em cada máquina", "Agentless usa IA; agent-based usa assinaturas", "Agentless é apenas para cloud; agent-based é para on-premise"],
+     c: 1,
+     e: "Agentless scanning verifica hosts sem instalação de software — é mais provável de ser usado por atores de ameaça em reconhecimento. Agent-based instala agente que reporta a servidor de gerenciamento."},
+    {q: "Qual princípio de defesa estabelece que usuários devem receber apenas o acesso estritamente necessário?",
+     o: ["Variedade (variety)", "Aleatoriedade (randomness)", "Princípio do menor privilégio (least privilege)", "Simplicidade (simplicity)"],
+     c: 2,
+     e: "Least privilege garante que usuários/grupos recebam apenas o acesso necessário para seu trabalho — mais fácil dar mais acesso depois do que remover acesso já concedido."},
+    {q: "Um ator registra 'example.onmicrosoft.com' para enganar usuários. Que técnica é essa?",
+     o: ["Pharming", "Vishing", "Typosquatting por subdomínio sequestrado", "Watering hole"],
+     c: 2,
+     e: "Registrar subdomínio usando domínio primário de provedor confiável (como onmicrosoft.com) é uma variação de typosquatting — usuários tendem a confiar ao reconhecer o domínio base."},
 
-            // Malware (16-25)
-            {q: "Qual malware infecta arquivos e precisa ser executado para se replicar?", 
-             o: ["Worm", "Vírus", "Trojan", "Spyware"], 
-             c: 1,
-             e: "Vírus infecta arquivos executáveis e precisa de ação do usuário para ser executado e se replicar."},
-            {q: "Qual malware se auto-replica sem precisar de arquivo hospedeiro?", 
-             o: ["Vírus", "Worm", "Trojan", "Ransomware"], 
-             c: 1,
-             e: "Worm (verme) é auto-replicante e se espalha explorando redes, sem precisar de arquivo hospedeiro."},
-            {q: "Qual malware parece legítimo mas é malicioso?", 
-             o: ["Vírus", "Worm", "Trojan (Cavalo de Troia)", "Rootkit"], 
-             c: 2,
-             e: "Trojan (Cavalo de Troia) parece um software legítimo mas é malicioso. Não se replica."},
-            {q: "Qual malware criptografa dados e exige pagamento?", 
-             o: ["Spyware", "Ransomware", "Adware", "Keylogger"], 
-             c: 1,
-             e: "Ransomware criptografa os dados da vítima e exige pagamento (resgate) para liberar o acesso."},
-            {q: "Qual malware registra as teclas digitadas?", 
-             o: ["Spyware", "Adware", "Keylogger", "Rootkit"], 
-             c: 2,
-             e: "Keylogger registra todas as teclas digitadas pela vítima para capturar senhas e informações."},
-            {q: "Qual malware se esconde no sistema para evitar detecção?", 
-             o: ["Vírus", "Trojan", "Rootkit", "Worm"], 
-             c: 2,
-             e: "Rootkit se esconde no sistema, muitas vezes em nível de kernel, para evitar detecção e manter acesso."},
-            {q: "Rede de computadores infectados controlados remotamente é:", 
-             o: ["Botnet", "Worm", "Vírus", "Spyware"], 
-             c: 0,
-             e: "Botnet é uma rede de computadores infectados (zumbis) controlados remotamente para ataques coordenados."},
-            {q: "Qual malware executa na memória sem gravar em disco?", 
-             o: ["Vírus", "Worm", "Fileless Malware", "Trojan"], 
-             c: 2,
-             e: "Fileless malware executa diretamente na memória, sem gravar arquivos em disco, dificultando detecção."},
-            {q: "Qual malware permite controle remoto completo do sistema?", 
-             o: ["RAT (Remote Access Trojan)", "Botnet", "Keylogger", "Adware"], 
-             c: 0,
-             e: "RAT (Remote Access Trojan) permite acesso e controle remoto completo do sistema infectado."},
-            {q: "Qual malware é programado para disparar sob condições específicas?", 
-             o: ["Logic Bomb", "Time Bomb", "Backdoor", "RAT"], 
-             c: 0,
-             e: "Logic Bomb é código malicioso programado para executar quando certas condições são atendidas (data, evento)."},
+    // === ENGENHARIA SOCIAL (19-32) ===
+    {q: "Qual técnica de engenharia social utiliza e-mails falsos em massa fingindo ser entidade legítima?",
+     o: ["Vishing", "Phishing", "SMiShing", "Baiting"],
+     c: 1,
+     e: "Phishing usa e-mails falsos em massa combinando engenharia social e spoofing para persuadir alvos a interagir com recurso malicioso disfarçado de confiável."},
+    {q: "Qual fase da engenharia social envolve footprinting, dumpster diving e observação on-site?",
+     o: ["Desenvolvimento (Development)", "Exploração (Exploitation)", "Pesquisa (Research)", "Saída (Exit)"],
+     c: 2,
+     e: "A fase de Pesquisa (Research) coleta informações sobre a organização usando todos os recursos disponíveis: websites, mídias sociais, dumpster diving, nomes e e-mails de funcionários."},
+    {q: "O que é pretexting em engenharia social?",
+     o: ["Enviar e-mail malicioso antes do horário comercial", "Criar história detalhada e convincente para tornar uma personificação crível e obter informações", "Comprometer o DNS da organização-alvo", "Atacar via SMS antes do phishing por e-mail"],
+     c: 1,
+     e: "Pretexting é uma história cuidadosamente criada com detalhes convincentes. Uma personificação convincente depende de obter informações privilegiadas sobre a pessoa personificada e o alvo."},
+    {q: "O que é Business Email Compromise (BEC)?",
+     o: ["Phishing em massa sem personalização", "Ataque sofisticado onde o ator compromete conta de e-mail legítima de executivo para enviar phishing com credibilidade real", "Malware que intercepta e-mails corporativos", "Ataque DDoS contra servidores de e-mail"],
+     c: 1,
+     e: "BEC é campanha sofisticada visando executivos. O ator primeiro obtém controle de conta legítima, depois envia mensagens de phishing sem links falsificados ou malware óbvio."},
+    {q: "Phishing direcionado a executivos e C-level é chamado de:",
+     o: ["Spear phishing", "Whaling", "Vishing", "Angler phishing"],
+     c: 1,
+     e: "Whaling é spear phishing focado em executivos sênior (CEO, CFO, etc.). O termo 'baleia' reflete o alto valor do alvo para o atacante."},
+    {q: "O que é vishing?",
+     o: ["Phishing via SMS", "Phishing via canal de voz (telefone ou VoIP)", "Phishing via mídias sociais", "Phishing via Bluetooth"],
+     c: 1,
+     e: "Vishing (voice phishing) é engenharia social por telefone ou VoIP — muito difícil recusar um pedido durante uma chamada ao vivo comparado a um e-mail."},
+    {q: "O que é SMiShing?",
+     o: ["Phishing via redes sociais", "Phishing via chamadas de voz", "Phishing via SMS (Short Message Service)", "Phishing via e-mail corporativo comprometido"],
+     c: 2,
+     e: "SMiShing é phishing via mensagens de texto SMS. Usa o protocolo SS7 e apresenta inúmeras vulnerabilidades; organizações também não têm capacidade de monitoramento sobre SMS pessoais."},
+    {q: "O que é pharming e como difere do phishing?",
+     o: ["São sinônimos — ambos usam e-mail falso", "Pharming redireciona usuários corrompendo DNS sem precisar enganá-los com links; phishing depende de clicar em link falso", "Pharming usa SMS; phishing usa e-mail", "Pharming é versão avançada de spear phishing"],
+     c: 1,
+     e: "Pharming corrompe a resolução de nomes DNS — o usuário pode digitar o endereço correto (ex: mybank.com → 2.2.2.2 corrompido para 6.6.6.6) e ainda ser redirecionado para site malicioso."},
+    {q: "O que é typosquatting? Dê um exemplo.",
+     o: ["Comprometer servidor DNS para redirecionar tráfego", "Registrar domínio com grafia similar ao legítimo (ex: examp1e.com vs example.com) para enganar usuários", "Criar subdomínio malicioso em domínio legítimo existente", "Falsificar cabeçalho de e-mail para parecer legítimo"],
+     c: 1,
+     e: "Typosquatting (domínios cousin, lookalike ou doppelganger) registra domínios com erros sutis de grafia. Também inclui subdomínios sequestrados usando domínio de provedor confiável."},
+    {q: "O que é um ataque watering hole?",
+     o: ["Atacar diretamente o servidor web da organização-alvo", "Comprometer site de terceiros frequentado pelo grupo-alvo para infectar visitantes indiretamente", "Enviar phishing via fontes de água ou cantinas corporativas", "Instalar keylogger em bebedouros smart"],
+     c: 1,
+     e: "Watering hole confia em que o grupo-alvo usa um site de terceiro inseguro. O ator compromete esse site, executa código de exploit nos visitantes e pode assim penetrar na organização-alvo."},
+    {q: "Qual a diferença entre desinformação (disinformation) e misinformação (misinformation)?",
+     o: ["São sinônimos na área de segurança", "Disinformation é intencional para enganar; misinformation é repetir alegações falsas sem intenção", "Disinformation usa deepfakes; misinformation usa texto simples", "Disinformation é interna; misinformation é externa"],
+     c: 1,
+     e: "Disinformation tem motivação proposital para enganar. Misinformation é repetir alegações falsas sem intenção de enganar. Campanhas de disinformation tentam fazer outros repetirem e amplificarem fatos falsos."},
+    {q: "Qual princípio psicológico é explorado quando o atacante diz 'sua conta será bloqueada em 1 hora'?",
+     o: ["Prova social (social proof)", "Escassez (scarcity)", "Urgência (urgency)", "Simpatia (likeability)"],
+     c: 2,
+     e: "Urgency fabrica um cenário de crise que exige ação imediata, impedindo que a vítima avalie racionalmente a situação ou verifique a autenticidade do pedido."},
+    {q: "O que é a fase de Saída (Exit) no processo de engenharia social?",
+     o: ["Primeira fase de pesquisa do alvo", "Fase de criar relacionamento com o alvo", "Finalizar a operação sem levantar suspeitas, apagar rastros digitais e não deixar evidências", "Exfiltrar os dados coletados para servidor remoto"],
+     c: 2,
+     e: "A fase de Exit visa finalizar a operação sem alertar o alvo: apagar pegadas digitais, não deixar itens ou informações para trás. Uma estratégia de saída suave é o objetivo final."},
+    {q: "Qual informação aparentemente inócua pode ajudar um atacante a realizar pretexting eficaz?",
+     o: ["Apenas senhas e tokens de acesso", "Listas de funcionários, títulos de trabalho, números de telefone, faturas e ordens de compra", "Endereços IP internos e configurações de firewall", "Hashes de senhas do Active Directory"],
+     c: 1,
+     e: "Informações aparentemente inócuas como listas de funcionários, títulos, telefones e documentos financeiros ajudam a criar pretexts convincentes e penetrar a organização via engenharia social."},
 
-            // Métodos de Proteção (26-30)
-            {q: "Método de detecção que compara com banco de malwares conhecidos:", 
-             o: ["Signature-based (Baseado em assinaturas)", "Heuristic", "Behavioral", "Sandboxing"], 
-             c: 0,
-             e: "Signature-based compara arquivos com um banco de assinaturas de malwares conhecidos."},
-            {q: "Método que analisa comportamento suspeito para detectar variações de malware:", 
-             o: ["Signature-based", "Heuristic", "Behavioral", "Sandboxing"], 
-             c: 1,
-             e: "Heuristic analisa comportamento e características suspeitas para detectar variações de malware."},
-            {q: "Executar arquivo suspeito em ambiente isolado é:", 
-             o: ["Quarentena", "Sandboxing", "Whitelisting", "Blacklisting"], 
-             c: 1,
-             e: "Sandboxing executa arquivos suspeitos em ambiente isolado para observar comportamento sem risco."},
-            {q: "Técnica que permite apenas aplicativos aprovados de executar:", 
-             o: ["Blacklisting", "Whitelisting", "Heuristic", "Behavioral"], 
-             c: 1,
-             e: "Application Whitelisting permite apenas aplicativos aprovados, bloqueando todo o resto."},
-            {q: "Solução avançada que monitora endpoints continuamente:", 
-             o: ["Antivírus", "Firewall", "EDR (Endpoint Detection & Response)", "IDS"], 
-             c: 2,
-             e: "EDR (Endpoint Detection & Response) é uma solução avançada que monitora endpoints continuamente."}
-        ];
+    // === MALWARE (33-50) ===
+    {q: "Qual a diferença entre vírus e worm no modo de propagação?",
+     o: ["Vírus usa e-mail; worm usa USB", "Vírus precisa de ação do usuário para executar; worm pode executar sozinho explorando vulnerabilidade", "Vírus afeta Linux; worm afeta Windows", "Vírus é mais novo que worm"],
+     c: 1,
+     e: "Vírus executa apenas quando o usuário realiza uma ação (abre arquivo, etc.). Worm pode executar automaticamente explorando vulnerabilidade em processo, sem intervenção humana."},
+    {q: "O que é um vírus polimórfico (polymorphic virus)?",
+     o: ["Vírus que infecta múltiplos tipos de arquivo simultaneamente", "Vírus que muda dinamicamente seu código para evitar detecção por assinatura", "Vírus que afeta múltiplos sistemas operacionais", "Vírus que usa múltiplos vetores de infecção"],
+     c: 1,
+     e: "Polymorphic virus muda dinamicamente seu código para evitar detecção por signature-based detection — cada cópia tem aparência diferente, mas mesmo comportamento malicioso."},
+    {q: "O que é malware fileless?",
+     o: ["Malware que deleta todos os arquivos do sistema", "Malware sem autor identificado (sem assinatura digital)", "Malware que executa na memória sem gravar em disco, usando ferramentas legítimas do SO", "Malware distribuído sem arquivo de instalação"],
+     c: 2,
+     e: "Fileless malware usa técnicas memory-resident e vive 'off the land' usando ferramentas como PowerShell e WMI. É classificado como APT, AVT ou LOC (Low-Observable Characteristic) Attack."},
+    {q: "O que é 'live off the land' em ataques de malware?",
+     o: ["Malware que afeta sistemas agrícolas industriais", "Usar ferramentas legítimas do SO (PowerShell, WMI) para executar ações maliciosas sem usar executáveis próprios", "Ataque físico a infraestrutura de energia rural", "Malware que só opera quando o sistema está conectado à internet"],
+     c: 1,
+     e: "'Live off the land' usa o que já existe no sistema — PowerShell, WMI e outros utilitários legítimos — para scanning, reconfiguração e exfiltração, dificultando detecção por antivírus."},
+    {q: "O que é um RAT (Remote Access Trojan)?",
+     o: ["Antivírus para sistemas UNIX/Linux", "Malware backdoor que imita programas legítimos de controle remoto, dando acesso secreto ao host", "Protocolo de acesso remoto seguro", "Ferramenta de pentest para testar acessos remotos"],
+     c: 1,
+     e: "RAT (Remote Access Trojan) é malware backdoor projetado para operar secretamente, permitindo acesso ao host, upload de arquivos, instalação de software e técnicas 'live off the land'."},
+    {q: "Como funciona o Command and Control (C2/C&C)?",
+     o: ["Protocolo de comunicação segura entre administradores", "Conexão de host comprometido para servidor do atacante; pode usar HTTPS ou DNS como canal secreto", "Sistema de controle de versão para malware", "Ferramenta de monitoramento de rede legítima"],
+     c: 1,
+     e: "C2/C&C é a principal forma de identificar presença de RAT, backdoor ou bot. Historicamente usava IRC; modernamente usa HTTPS ou sequências em tráfego DNS como canal secreto."},
+    {q: "O que é um rootkit e qual sua capacidade de ocultação?",
+     o: ["Malware que infecta arquivos de boot do sistema", "Malware com privilégios SYSTEM/root que oculta presença das ferramentas do SO (processos, logs, conexões)", "Ferramenta de diagnóstico do kernel do sistema", "Vírus que infecta o registro do Windows"],
+     c: 1,
+     e: "Rootkit opera com privilégios máximos e pode comprometer interfaces de programação do sistema — tornando-se invisível para Explorer, taskmgr, tasklist (Windows) e ps, top, netstat (Linux)."},
+    {q: "O que distingue um rootkit de firmware dos demais tipos?",
+     o: ["É mais fácil de detectar por antivírus", "Reside no firmware (UEFI/BIOS) e sobrevive à formatação de disco e reinstalação do SO", "Só afeta dispositivos móveis", "Opera apenas em modo usuário (user mode)"],
+     c: 1,
+     e: "Firmware rootkits residem no firmware do hardware (computador, adaptador, drive, periférico). Sobrevivem formatação e reinstalação do SO. Exemplos: DarkMatter e Quark Matter (UEFI rootkits)."},
+    {q: "O que é crypto-ransomware e por que é difícil de mitigar?",
+     o: ["Malware que minera criptomoeda sem autorização", "Malware que criptografa arquivos do usuário mantendo a chave privada com o atacante", "Ransomware que exige pagamento em dinheiro físico", "Vírus que corrompe carteiras de criptomoeda"],
+     c: 1,
+     e: "Crypto-ransomware criptografa drives fixos, removíveis e de rede. Sem a chave privada do atacante, os arquivos são irrecuperáveis. A melhor defesa são backups offline. Exemplo: CryptoLocker."},
+    {q: "O que é cryptojacking?",
+     o: ["Criptografar dados da vítima e exigir resgate", "Sequestrar recursos computacionais do host para mineração de criptomoeda sem autorização", "Roubar carteira de criptomoeda da vítima", "Quebrar chaves de criptografia por força bruta"],
+     c: 1,
+     e: "Cryptojacking sequestra CPU/GPU do host para crypto-mining. O atacante não quer os dados — quer capacidade computacional. Frequentemente opera via botnets distribuídos."},
+    {q: "O que é uma logic bomb?",
+     o: ["Malware que executa imediatamente após instalação", "Worm que se auto-replica em bombas de tempo", "Código malicioso que aguarda evento ou condição específica para ser acionado", "Exploração de vulnerabilidade de buffer overflow"],
+     c: 2,
+     e: "Logic bomb aguarda evento de sistema ou usuário. Time bomb aguarda data/hora. São difíceis de detectar por antivírus. Administradores descontentes podem deixar logic bombs em scripts."},
+    {q: "O que é um keylogger de hardware?",
+     o: ["Software que captura teclas digitadas no modo kernel", "Dispositivo físico entre teclado e porta que captura pressionamentos de tecla", "Extensão de navegador que registra formulários", "Driver malicioso instalado no sistema"],
+     c: 1,
+     e: "Hardware keyloggers são dispositivos físicos (ex: adaptador USB entre teclado e porta) que armazenam dados localmente ou transmitem via Wi-Fi. Incluem sniffers wireless e overlays de PIN pad de ATM."},
+    {q: "O que são PUPs/PUAs (Potentially Unwanted Programs/Applications)?",
+     o: ["Vírus altamente destrutivos disfarçados de apps úteis", "Programas instalados sem consentimento ativo junto com outro software; podem ser adware ou bloatware", "Aplicações com vulnerabilidades críticas não corrigidas", "Software legítimo usado por atacantes para espionagem"],
+     c: 1,
+     e: "PUPs/PUAs são 'grayware' ou 'bloatware' instalados com bundling; presença não é automaticamente maliciosa mas pode incluir adware, tracking cookies e reconfigurações de navegador."},
+    {q: "Quais são as 3 ações possíveis de um antivírus ao detectar malware?",
+     o: ["Ignorar, alertar, bloquear", "Reparar (repair), quarentena (quarantine) e deletar (delete)", "Isolar, criptografar, reportar", "Bloquear, registrar, notificar administrador"],
+     c: 1,
+     e: "Repair: possível para vírus anexados a arquivos válidos (remove vírus, restaura arquivo). Quarantine: move para pasta segura sem executar. Delete: obrigatório para Trojans, worms, spyware e adware."},
+    {q: "O que é scareware?",
+     o: ["Malware que criptografa arquivos e exige resgate", "Malware que exibe mensagens alarmantes falsas disfarçadas de alertas legítimos do SO para assustar o usuário", "Ransomware que ameaça vazar dados", "Keylogger que captura informações bancárias"],
+     c: 1,
+     e: "Scareware exibe caixas de diálogo falsas simulando alertas genuínos do sistema operacional, tentando alarmar o usuário com sugestões de infecção ou sequestro para forçar ação precipitada."},
+    {q: "O que é um vírus de boot (boot sector virus)?",
+     o: ["Vírus que infecta apenas arquivos .exe", "Vírus escrito no setor de boot do disco; executa como processo memory-resident durante inicialização do SO", "Vírus que impede o sistema de iniciar normalmente", "Malware ativado durante o processo de login"],
+     c: 1,
+     e: "Boot sector virus é escrito no setor de boot do disco ou tabela de partição. Executa como processo memory-resident quando o SO inicia ou mídia contaminada é conectada."},
+    {q: "O que é um worm de computador e qual seu principal efeito colateral?",
+     o: ["Vírus que se replica apenas por e-mail", "Malware memory-resident que replica sobre recursos de rede sem interação do usuário; principal efeito: consumir banda rapidamente", "Trojan disfarçado de protetor de tela", "Rootkit que se instala no setor de boot"],
+     c: 1,
+     e: "Worm replica exploits sobre rede sem intervenção do usuário. Efeito primário: consumir banda rapidamente. Pode travar SO/aplicação servidor (DoS) e carregar payload para qualquer ação maliciosa. Ex: Code Red."}
+];
 
         let currentCard = 0;
         let flipped = false;
         let mastered = new Set();
         let answers = {};
         let checked = false;
-        let filteredCards = [...Array(cards.length).keys()];
+        let allCardIndexes = [...Array(cards.length).keys()];
+        let filteredCards = getSession(allCardIndexes, 20);
         let currentFilter = 'all';
+        let sessionQuiz = getSession([...Array(quiz.length).keys()], 20).map(i => quiz[i]);
 
         function loadProgress() {
             const saved = localStorage.getItem('security_plus_cap2_mastered');
@@ -955,15 +1017,26 @@
             currentFilter = type;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            if (type === 'all') filteredCards = [...Array(cards.length).keys()];
-            else if (type === 'mastered') filteredCards = Array.from(mastered);
-            else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            let pool;
+            if (type === 'all') pool = [...Array(cards.length).keys()];
+            else if (type === 'mastered') pool = Array.from(mastered);
+            else pool = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            filteredCards = getSession(pool, 20);
             currentCard = 0; flipped = false; updateCard();
         }
 
+        function newSession() {
+            filteredCards = getSession([...Array(cards.length).keys()], 20);
+            currentCard = 0; flipped = false;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.filter-btn')[0].classList.add('active');
+            updateCard();
+        }
+
         function loadQuiz() {
+            sessionQuiz = getSession([...Array(quiz.length).keys()], 20).map(i => quiz[i]);
             const container = document.getElementById('questions');
-            quiz.forEach((q, qi) => {
+            sessionQuiz.forEach((q, qi) => {
                 const div = document.createElement('div');
                 div.className = 'question';
                 div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
@@ -986,7 +1059,7 @@
 
         function selectOpt(qi, oi) {
             if (checked) return;
-            quiz[qi].o.forEach((_, i) => {
+            sessionQuiz[qi].o.forEach((_, i) => {
                 document.getElementById(`q${qi}o${i}`).classList.remove('selected');
             });
             document.getElementById(`q${qi}o${oi}`).classList.add('selected');
@@ -996,7 +1069,7 @@
         function checkAnswers() {
             checked = true;
             let correct = 0;
-            quiz.forEach((q, qi) => {
+            sessionQuiz.forEach((q, qi) => {
                 const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
                 q.o.forEach((_, oi) => {
                     const el = document.getElementById(`q${qi}o${oi}`);
@@ -1009,9 +1082,9 @@
                 document.getElementById(`exp${qi}`).style.display = 'block';
                 if (correctAnswer.includes(answers[qi])) correct++;
             });
-            const pct = Math.round((correct / quiz.length) * 100);
+            const pct = Math.round((correct / sessionQuiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('score-text').textContent = `${correct}/${sessionQuiz.length} corretas — ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
             document.getElementById('results-modal').classList.add('show');
         }
 

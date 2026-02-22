@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security+ Cap 1 - Security Concepts</title>
+    <title>Security+ Cap 1 - Conceitos de Segurança</title>
     <style>
         /* ===== ESTILOS GLOBAIS ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; } /* Reset CSS: remove margens/paddings padrão e faz box-sizing incluir bordas no tamanho total */
@@ -126,6 +126,17 @@
         .btn:hover { transform: translateY(-2px); } /* Efeito de elevação ao passar mouse */
         
         .btn-shuffle { background: #f59e0b; color: white; } /* Botão laranja específico para embaralhar */
+
+        .timeline { display: flex; justify-content: space-between; margin: 20px 0; text-align: center; gap: 10px; }
+        .timeline-item { flex: 1; padding: 15px; border-radius: 10px; }
+        .timeline-item.preventive { background: #d1fae5; border-left: 5px solid #10b981; }
+        .timeline-item.detective { background: #fef3c7; border-left: 5px solid #f59e0b; }
+        .timeline-item.corrective { background: #fee2e2; border-left: 5px solid #ef4444; }
+        .info-box { background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .info-box strong { color: #ec4899; font-size: 1.1rem; }
+        .golden-rule { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .golden-rule strong { color: #f59e0b; font-size: 1.1rem; }
+        .tip-box { background: #eff6ff; border-left: 5px solid #3b82f6; padding: 20px; margin: 20px 0; border-radius: 8px; }
         
         .btn-nav { background: white; font-size: 1.5rem; width: 50px; height: 50px; } /* Botões de navegação (‹ e ›) */
         
@@ -182,7 +193,7 @@
         <!-- CABEÇALHO -->
         <div class="header">
             <h1>🔐 Security+ Capítulo 1</h1>
-            <p>Security Concepts - 40 Cards | 40 Questões</p>
+            <p>Conceitos de Segurança (Security Concepts) - 50 Cards | 80 Questões</p>
         </div>
 
         <!-- ABAS DE NAVEGAÇÃO -->
@@ -229,47 +240,209 @@
         <!-- ABA 1: RESUMO -->
         <div id="tab1" class="content">
             <div class="summary">
-                <h1>Capítulo 1: Security Concepts</h1>
-                
-                <h2>1.1 CIA Triad</h2>
+                <h1>Capítulo 1: Conceitos de Segurança (Security Concepts)</h1>
+
+                <div class="info-box">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Tríade CIA: Confidencialidade, Integridade, Disponibilidade</li>
+                        <li>Framework AAA: Authentication, Authorization, Accounting</li>
+                        <li>Controles por função: Preventivo (antes), Detectivo (durante), Corretivo (depois)</li>
+                        <li>Preventivo bloqueia fisicamente — Deterrente/Dissuassor desencoraja psicologicamente</li>
+                        <li>Fail-Open = disponibilidade | Fail-Closed = confidencialidade</li>
+                        <li>NIST CSF: Identify, Protect, Detect, Respond, Recover</li>
+                    </ul>
+                </div>
+
+                <h2>1️⃣ Tríade CIA (CIA Triad)</h2>
+                <p>Todos os controles de segurança são projetados para cumprir três objetivos principais:</p>
+                <table>
+                    <tr>
+                        <th>Pilar</th>
+                        <th>Objetivo</th>
+                        <th>Técnicas</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Confidencialidade (Confidentiality)</strong></td>
+                        <td>Garantir que dados não sejam divulgados a pessoas não autorizadas</td>
+                        <td>Criptografia, controle de acesso, classificação de dados</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Integridade (Integrity)</strong></td>
+                        <td>Garantir que dados não sejam modificados ou adulterados</td>
+                        <td>Hashing, checksums, assinaturas digitais</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Disponibilidade (Availability)</strong></td>
+                        <td>Garantir que dados estejam disponíveis quando necessário</td>
+                        <td>Redundância, backups, balanceamento de carga</td>
+                    </tr>
+                </table>
+
+                <h2>2️⃣ Framework AAA</h2>
                 <ul>
-                    <li><strong>Confidencialidade:</strong> Acesso apenas autorizado (criptografia, controle acesso)</li>
-                    <li><strong>Integridade:</strong> Dados não alterados (hashing, assinaturas)</li>
-                    <li><strong>Disponibilidade:</strong> Sistemas acessíveis (redundância, backups)</li>
+                    <li><strong>Autenticação (Authentication):</strong> Verificar se o usuário é quem diz ser. Métodos: senhas, biometria, certificados digitais.</li>
+                    <li><strong>Autorização (Authorization):</strong> Definir quais recursos o usuário autenticado pode acessar. Técnicas: ACLs, RBAC.</li>
+                    <li><strong>Auditoria/Contabilização (Accounting):</strong> Registrar e monitorar ações dos usuários. Inclui logs, SIEM e análise forense.</li>
+                    <li><strong>Não-repúdio (Non-repudiation):</strong> Garantia de que uma pessoa não pode negar ter realizado uma ação. Implementado com assinaturas digitais.</li>
                 </ul>
 
-                <h2>AAA Framework</h2>
+                <h2>3️⃣ Controles por Função/Objetivo</h2>
+
+                <div class="timeline">
+                    <div class="timeline-item preventive">
+                        <strong>ANTES</strong><br>PREVENTIVO
+                    </div>
+                    <div class="timeline-item detective">
+                        <strong>DURANTE</strong><br>DETECTIVO
+                    </div>
+                    <div class="timeline-item corrective">
+                        <strong>DEPOIS</strong><br>CORRETIVO
+                    </div>
+                </div>
+
+                <table>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Função</th>
+                        <th>Exemplos</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Preventivo (Preventive)</strong></td>
+                        <td>Elimina ou reduz probabilidade de ataque ter sucesso — opera ANTES</td>
+                        <td>Firewalls, ACLs, antimalware, gerenciamento de patches</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Detectivo (Detective)</strong></td>
+                        <td>Identifica e registra intrusão — opera DURANTE</td>
+                        <td>Logs de sistema, IDS, monitoramento de rede, câmeras</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Corretivo (Corrective)</strong></td>
+                        <td>Elimina ou reduz impacto da violação — usado APÓS</td>
+                        <td>Backups, patches pós-descoberta, recuperação de desastres</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deterrente/Dissuassor (Deterrent)</strong></td>
+                        <td>Desencoraja psicologicamente o atacante (não bloqueia fisicamente)</td>
+                        <td>Placas de aviso, avisos de penalidades legais</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Compensatório (Compensating)</strong></td>
+                        <td>Substituto para controle principal quando este não é viável</td>
+                        <td>MFA compensando senhas fracas, isolamento quando patch não disponível</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Diretivo (Directive)</strong></td>
+                        <td>Orienta comportamento através de políticas e procedimentos</td>
+                        <td>Políticas de segurança, SOPs, códigos de conduta</td>
+                    </tr>
+                </table>
+
+                <div class="golden-rule">
+                    <strong>💡 DICA CRÍTICA:</strong> Preventivo <em>bloqueia fisicamente</em> a ameaça. Deterrente/Dissuassor <em>desencoraja psicologicamente</em> — não impede fisicamente.
+                </div>
+
+                <h2>4️⃣ Controles por Implementação</h2>
+                <table>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Exemplos</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Técnico (Technical)</strong></td>
+                        <td>Implementado por hardware, software ou firmware</td>
+                        <td>Firewalls, antivírus, criptografia, biometria</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gerencial (Managerial)</strong></td>
+                        <td>Supervisão e orientação administrativa</td>
+                        <td>Políticas de segurança, avaliações de risco, planos de continuidade</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Operacional (Operational)</strong></td>
+                        <td>Implementado principalmente por pessoas</td>
+                        <td>Guardas de segurança, treinamentos, conscientização</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Físico (Physical)</strong></td>
+                        <td>Impedem e detectam acesso a instalações e hardware</td>
+                        <td>Alarmes, portões, fechaduras, iluminação, câmeras</td>
+                    </tr>
+                </table>
+
+                <h2>5️⃣ Princípios Importantes</h2>
                 <ul>
-                    <li><strong>Autenticação (Authentication):</strong> Verificar identidade</li>
-                    <li><strong>Autorização (Authorization):</strong> Definir permissões</li>
-                    <li><strong>Auditoria (Accounting):</strong> Registrar ações</li>
+                    <li><strong>Defesa em Profundidade (Defense in Depth):</strong> Múltiplas camadas de segurança — se uma falhar, as outras ainda protegem.</li>
+                    <li><strong>Menor Privilégio (Least Privilege):</strong> Cada usuário recebe apenas as permissões mínimas necessárias.</li>
+                    <li><strong>Segregação de Funções (Separation of Duties):</strong> Tarefas críticas divididas entre pessoas para prevenir fraudes.</li>
+                    <li><strong>Não-repúdio (Non-repudiation):</strong> Garantia de que ações não podem ser negadas — implementado com assinaturas digitais.</li>
+                    <li><strong>Fail-Open:</strong> Em caso de falha, mantém acesso — prioriza disponibilidade.</li>
+                    <li><strong>Fail-Closed:</strong> Em caso de falha, bloqueia acesso — prioriza confidencialidade.</li>
                 </ul>
 
-                <h2>1.2 Categorias de Controles</h2>
+                <h2>6️⃣ Estrutura Organizacional de Segurança</h2>
+
+                <h3>Liderança Executiva</h3>
                 <ul>
-                    <li><strong>Preventivo:</strong> Previne antes (firewall, criptografia)</li>
-                    <li><strong>Detectivo:</strong> Detecta durante/depois (IDS, logs)</li>
-                    <li><strong>Corretivo:</strong> Corrige depois (backup, patches)</li>
-                    <li><strong>Deterrente:</strong> Desencorajam (avisos, guardas)</li>
-                    <li><strong>Compensatório:</strong> Substitui controle primário (MFA)</li>
-                    <li><strong>Diretivo:</strong> Orienta comportamento (políticas)</li>
+                    <li><strong>CIO (Chief Information Officer):</strong> Responsabilidade geral pela função de TI.</li>
+                    <li><strong>CTO (Chief Technology Officer):</strong> Uso eficaz de produtos de TI e novas soluções.</li>
+                    <li><strong>CISO/CSO (Chief Information Security Officer):</strong> Responsabilidade pela estratégia e governança de segurança.</li>
                 </ul>
 
-                <h2>Tipos de Controles</h2>
+                <h3>Unidades Especializadas</h3>
                 <ul>
-                    <li><strong>Técnico:</strong> Via tecnologia (firewall, IDS)</li>
-                    <li><strong>Gerencial:</strong> Políticas e procedimentos</li>
-                    <li><strong>Operacional:</strong> Por pessoas (guardas, treinamento)</li>
-                    <li><strong>Físico:</strong> Barreiras físicas (travas, cercas)</li>
+                    <li><strong>SOC (Security Operations Center):</strong> Monitoramento 24/7 de ativos de informação críticos, com dashboards e mapas de ameaças em tempo real.</li>
+                    <li><strong>CIRT/CSIRT/CERT:</strong> Equipe de resposta a incidentes — ponto único de contato para notificação, coordenação e contenção.</li>
                 </ul>
 
-                <h2>Princípios Importantes</h2>
+                <h3>DevOps e DevSecOps</h3>
                 <ul>
-                    <li><strong>Defesa em Profundidade (Defense in Depth):</strong> Múltiplas camadas</li>
-                    <li><strong>Menor Privilégio (Least Privilege):</strong> Mínimo necessário</li>
-                    <li><strong>Segregação de Funções (Separation of Duties):</strong> Tarefas divididas</li>
-                    <li><strong>Não-repúdio (Non-repudiation):</strong> Não pode negar ação</li>
+                    <li><strong>DevOps:</strong> Colaboração entre desenvolvedores e administradores de sistemas.</li>
+                    <li><strong>DevSecOps:</strong> Segurança integrada em todas as etapas do desenvolvimento.</li>
+                    <li><strong>Shift Left:</strong> Considerações de segurança desde os requisitos e planejamento, não apenas no final.</li>
                 </ul>
+
+                <h2>7️⃣ Frameworks e Normas</h2>
+                <table>
+                    <tr>
+                        <th>Framework/Norma</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td><strong>NIST CSF</strong></td>
+                        <td>5 funções: Identify, Protect, Detect, Respond, Recover</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ISO 27001</strong></td>
+                        <td>Requisitos para Sistema de Gestão de Segurança da Informação (ISMS)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PCI-DSS</strong></td>
+                        <td>Padrão para organizações que processam dados de cartões de pagamento</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HIPAA</strong></td>
+                        <td>Lei americana que protege informações de saúde dos pacientes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LGPD / GDPR</strong></td>
+                        <td>Leis de proteção de dados pessoais: LGPD (Brasil) e GDPR (Europa)</td>
+                    </tr>
+                </table>
+
+                <div class="tip-box">
+                    <strong>📌 DICAS FINAIS PARA PROVA:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Preventivo = ANTES | Detectivo = DURANTE | Corretivo = DEPOIS</li>
+                        <li>Preventivo bloqueia fisicamente, Deterrente/Dissuassor desencoraja psicologicamente</li>
+                        <li>Fail-Open = disponibilidade | Fail-Closed = confidencialidade</li>
+                        <li>Defesa em Profundidade = múltiplas camadas</li>
+                        <li>NIST CSF: Identify, Protect, Detect, Respond, Recover</li>
+                        <li>Shift Left = segurança desde o início do desenvolvimento</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -277,7 +450,7 @@
         <div id="tab2" class="content">
             <div class="quiz-area">
                 <div class="quiz-header">
-                    <h2>Quiz - 40 Questões</h2>
+                    <h2>Quiz - 20 Questões Aleatórias</h2>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
@@ -299,46 +472,64 @@
         // f: "frente" (a pergunta/conceito)
         // b: "verso" (a resposta/definição)
         const cards = [
-            {f: "O que é a tríade CIA (Confidentiality, Integrity, Availability)?", b: "São os três pilares da segurança da informação: Confidencialidade (acesso apenas autorizado), Integridade (dados não alterados) e Disponibilidade (sistemas acessíveis quando necessário)."},
-            {f: "O que significa confidencialidade (Confidentiality) na segurança?", b: "Garantir que as informações sejam acessíveis apenas por pessoas autorizadas. Técnicas: criptografia, controle de acesso, classificação de dados."},
-            {f: "O que significa integridade (Integrity) na segurança?", b: "Garantir que os dados não sejam alterados ou corrompidos indevidamente. Técnicas: hashing, checksums, assinaturas digitais."},
-            {f: "O que significa disponibilidade (Availability) na segurança?", b: "Garantir que sistemas e dados estejam acessíveis quando os usuários precisarem. Técnicas: redundância, backups, balanceamento de carga."},
-            {f: "O que é o framework AAA?", b: "É um modelo de segurança com três componentes: Authentication (autenticação - verificar identidade), Authorization (autorização - definir permissões) e Accounting (auditoria - registrar ações)."},
-            {f: "O que é autenticação (Authentication)?", b: "Processo de verificar se o usuário é realmente quem ele diz ser. Métodos: senhas, biometria, cartões inteligentes, certificados digitais."},
-            {f: "O que é autorização (Authorization)?", b: "Processo de determinar quais recursos e ações um usuário autenticado pode acessar. Técnicas: ACLs (listas de controle de acesso), RBAC (controle baseado em funções)."},
-            {f: "O que é auditoria (Accounting) em segurança?", b: "Registro e monitoramento das ações dos usuários e sistemas. Inclui logs, trilhas de auditoria, SIEM e análise forense."},
+            // CIA Triad
+            {f: "O que é a tríade CIA (CIA Triad)?", b: "São os três pilares da segurança da informação: Confidencialidade (acesso apenas autorizado), Integridade (dados não alterados) e Disponibilidade (sistemas acessíveis quando necessário)."},
+            {f: "O que é confidencialidade (Confidentiality)?", b: "Garantir que informações sejam acessíveis apenas por pessoas autorizadas. Técnicas: criptografia, controle de acesso, classificação de dados."},
+            {f: "O que é integridade (Integrity)?", b: "Garantir que os dados não sejam alterados ou corrompidos indevidamente. Técnicas: hashing, checksums, assinaturas digitais."},
+            {f: "O que é disponibilidade (Availability)?", b: "Garantir que sistemas e dados estejam acessíveis quando os usuários precisarem. Técnicas: redundância, backups, balanceamento de carga."},
+            // AAA Framework
+            {f: "O que é o framework AAA?", b: "Modelo de segurança com três componentes: Authentication (autenticação - verificar identidade), Authorization (autorização - definir permissões) e Accounting (auditoria - registrar ações)."},
+            {f: "O que é autenticação (Authentication)?", b: "Processo de verificar se o usuário é realmente quem diz ser. Métodos: senhas, biometria, cartões inteligentes, certificados digitais."},
+            {f: "O que é autorização (Authorization)?", b: "Processo de determinar quais recursos e ações um usuário autenticado pode acessar. Técnicas: ACLs, RBAC."},
+            {f: "O que é auditoria/contabilização (Accounting)?", b: "Registro e monitoramento das ações dos usuários e sistemas. Inclui logs, trilhas de auditoria e SIEM."},
             {f: "O que é não-repúdio (Non-repudiation)?", b: "Garantia de que uma pessoa não pode negar ter realizado uma ação. Implementado com assinaturas digitais e logs detalhados."},
-            {f: "O que é um controle preventivo?", b: "Controle que atua antes do incidente para evitar que ele ocorra. Exemplos: firewall, antivírus, autenticação forte, criptografia."},
-            {f: "O que é um controle detectivo?", b: "Controle que identifica incidentes durante ou depois de ocorrerem. Exemplos: IDS, SIEM, logs, câmeras de vigilância."},
-            {f: "O que é um controle corretivo?", b: "Controle que age após o incidente para corrigir ou recuperar. Exemplos: backups, planos de recuperação, aplicação de patches."},
-            {f: "O que é um controle deterrente?", b: "Controle que desencoraja potenciais atacantes. Exemplos: avisos legais, placas de advertência, presença de guardas."},
-            {f: "O que é um controle compensatório?", b: "Controle alternativo usado quando o controle primário não é viável. Exemplo: MFA (autenticação multifator) compensando senhas fracas."},
-            {f: "O que é um controle diretivo?", b: "Controle que orienta comportamentos através de políticas e procedimentos. Exemplos: políticas de segurança, códigos de conduta."},
-            {f: "O que é um controle técnico?", b: "Controle implementado através de tecnologia. Exemplos: firewalls, criptografia, sistemas biométricos, antivírus."},
-            {f: "O que é um controle gerencial?", b: "Controle baseado em políticas, procedimentos e diretrizes administrativas. Exemplos: políticas de segurança, planos de continuidade."},
-            {f: "O que é um controle operacional?", b: "Controle executado por pessoas em suas atividades diárias. Exemplos: guardas de segurança, treinamentos, conscientização."},
-            {f: "O que é um controle físico?", b: "Barreiras físicas que protegem instalações e equipamentos. Exemplos: cercas, travas, câmeras, biometria física."},
-            {f: "Firewall se enquadra em quais categorias?", b: "Preventivo (bloqueia ameaças antes) e Técnico (implementado por software/hardware)."},
-            {f: "IDS se enquadra em quais categorias?", b: "Detectivo (identifica intrusões) e Técnico (baseado em tecnologia)."},
-            {f: "Backup se enquadra em quais categorias?", b: "Corretivo (recupera após perda) e Técnico (realizado por software)."},
-            {f: "Guarda de segurança se enquadra em quais categorias?", b: "Deterrente/Preventivo (desencoraja e impede) e Físico/Operacional (presença física e ação humana)."},
+            {f: "Qual tecnologia garante o não-repúdio (Non-repudiation)?", b: "Assinatura digital — vincula a ação à identidade do usuário de forma irrefutável."},
+            // Controles por Função
+            {f: "O que é um controle preventivo (Preventive Control)?", b: "Controle que atua ANTES do incidente para evitar que ele ocorra. Exemplos: firewall, autenticação forte, criptografia."},
+            {f: "O que é um controle detectivo (Detective Control)?", b: "Controle que identifica incidentes DURANTE ou depois de ocorrerem. Exemplos: IDS, SIEM, logs, câmeras."},
+            {f: "O que é um controle corretivo (Corrective Control)?", b: "Controle que age APÓS o incidente para corrigir ou recuperar. Exemplos: backups, planos de recuperação, patches."},
+            {f: "O que é um controle deterrente/dissuassor (Deterrent Control)?", b: "Controle que desencoraja psicologicamente potenciais atacantes, sem bloquear fisicamente. Exemplos: avisos legais, placas de advertência."},
+            {f: "O que é um controle compensatório (Compensating Control)?", b: "Controle alternativo usado quando o controle primário não é viável, oferecendo nível equivalente de proteção. Exemplo: MFA compensando senhas fracas."},
+            {f: "O que é um controle diretivo (Directive Control)?", b: "Controle que orienta comportamentos através de políticas e procedimentos. Exemplos: políticas de segurança, códigos de conduta, SOPs."},
+            {f: "Qual a diferença entre controle preventivo e deterrente/dissuassor?", b: "Preventivo bloqueia fisicamente ou tecnicamente a ameaça. Deterrente/dissuassor desencoraja psicologicamente o atacante, mas não impede fisicamente."},
+            // Controles por Implementação
+            {f: "O que é um controle técnico (Technical Control)?", b: "Controle implementado através de tecnologia (hardware, software ou firmware). Exemplos: firewalls, criptografia, antivírus, biometria."},
+            {f: "O que é um controle gerencial (Managerial Control)?", b: "Controle baseado em políticas, procedimentos e supervisão administrativa. Exemplos: avaliações de risco, políticas de segurança, planos de continuidade."},
+            {f: "O que é um controle operacional (Operational Control)?", b: "Controle executado por pessoas em suas atividades diárias. Exemplos: guardas de segurança, treinamentos, conscientização."},
+            {f: "O que é um controle físico (Physical Control)?", b: "Barreiras físicas que protegem instalações e equipamentos. Exemplos: cercas, travas, câmeras, alarmes, iluminação."},
+            // Aplicação dos Controles
+            {f: "Quanto à função, o firewall é um controle de qual tipo?", b: "Preventivo — bloqueia ameaças antes que entrem na rede."},
+            {f: "Quanto à função, o IDS é um controle de qual tipo?", b: "Detectivo — identifica e registra intrusões em andamento."},
+            {f: "Quanto à função, o backup é um controle de qual tipo?", b: "Corretivo — permite recuperação após perda ou dano de dados."},
+            {f: "IDS, firewall e backup são controles de qual tipo quanto à implementação?", b: "Técnico — todos são implementados por software ou hardware."},
+            {f: "Quanto à função, um guarda de segurança é um controle de qual tipo?", b: "Preventivo e deterrente/dissuassor — impede e desencoraja tentativas de invasão."},
+            {f: "Quanto à implementação, um guarda de segurança é um controle de qual tipo?", b: "Físico e operacional — presença física executada por pessoa."},
+            {f: "O antivírus é um controle de qual tipo quanto à função e implementação?", b: "Função: preventivo e detectivo (bloqueia e identifica malware). Implementação: técnico."},
+            {f: "Câmeras de vigilância (CCTV) são controles de qual tipo quanto à função?", b: "Detectivo — monitoram e registram atividades."},
+            {f: "Treinamentos de conscientização são controles de qual tipo quanto à implementação?", b: "Operacional — envolvem pessoas e mudança de comportamento."},
+            {f: "Políticas de segurança são controles de qual tipo quanto à implementação?", b: "Gerencial — orientam e supervisionam através de diretrizes administrativas."},
+            // Princípios e Frameworks
             {f: "O que é defesa em profundidade (Defense in Depth)?", b: "Estratégia de implementar múltiplas camadas de segurança. Se uma camada falhar, as outras ainda protegem."},
-            {f: "O que é princípio do menor privilégio (Least Privilege)?", b: "Conceder a cada usuário apenas as permissões mínimas necessárias para realizar suas funções."},
+            {f: "O que é o princípio do menor privilégio (Least Privilege)?", b: "Conceder a cada usuário apenas as permissões mínimas necessárias para realizar suas funções."},
             {f: "O que é segregação de funções (Separation of Duties)?", b: "Dividir tarefas críticas entre diferentes pessoas para prevenir fraudes e conflitos de interesse."},
-            {f: "O que é o framework NIST Cybersecurity?", b: "Framework com 5 funções: Identify (identificar), Protect (proteger), Detect (detectar), Respond (responder), Recover (recuperar)."},
+            {f: "O que é o NIST e o NIST Cybersecurity Framework (CSF)?", b: "NIST (National Institute of Standards and Technology) é um órgão americano que cria padrões de segurança. O CSF define 5 funções para gerenciar riscos cibernéticos."},
+            {f: "Quais são as 5 funções do NIST CSF?", b: "Identify (Identificar), Protect (Proteger), Detect (Detectar), Respond (Responder), Recover (Recuperar)."},
+            {f: "O que é Fail-Open?", b: "Quando um sistema falha, ele permanece aberto/acessível. Prioriza disponibilidade em detrimento da segurança."},
+            {f: "O que é Fail-Closed?", b: "Quando um sistema falha, ele bloqueia o acesso. Prioriza confidencialidade e segurança em detrimento da disponibilidade."},
+            {f: "Qual a diferença entre Fail-Open e Fail-Closed?", b: "Fail-Open mantém acesso em caso de falha (prioriza disponibilidade). Fail-Closed bloqueia acesso em caso de falha (prioriza confidencialidade)."},
+            {f: "Qual a diferença entre privacidade (Privacy) e segurança (Security)?", b: "Privacidade: controle sobre como dados pessoais são coletados e usados. Segurança: proteção contra ameaças e acessos não autorizados."},
+            {f: "Qual a diferença entre segurança (Security) e proteção (Safety)?", b: "Safety: proteção contra acidentes e perigos não intencionais. Security: proteção contra ações maliciosas e intencionais."},
+            // Estrutura Organizacional
+            {f: "O que é um SOC (Security Operations Center)?", b: "Local onde profissionais monitoram e protegem ativos de informação críticos, geralmente 24/7, com dashboards e mapas de ameaças em tempo real."},
+            {f: "O que é um CIRT/CSIRT/CERT?", b: "Equipe de resposta a incidentes de segurança. Ponto único de contato para notificação, coordenação e contenção de incidentes."},
+            {f: "O que é DevSecOps?", b: "Prática que integra segurança em todas as etapas do desenvolvimento de software, em vez de adicioná-la no final."},
+            {f: "O que significa Shift Left em segurança?", b: "Incorporar considerações de segurança desde o início do projeto (requisitos e planejamento), não apenas no final do desenvolvimento."},
+            {f: "Qual a função do CISO (Chief Information Security Officer)?", b: "Liderança executiva responsável pela estratégia, governança e supervisão de toda a função de segurança da informação na organização."},
+            // Normas e Regulamentações
             {f: "O que é a ISO 27001?", b: "Padrão internacional que estabelece requisitos para implementar e manter um Sistema de Gestão de Segurança da Informação (ISMS)."},
-            {f: "O que é PCI-DSS?", b: "Padrão de segurança para organizações que processam, armazenam ou transmitem dados de cartões de pagamento."},
-            {f: "O que é HIPAA?", b: "Lei americana que estabelece requisitos de privacidade e segurança para proteger informações de saúde dos pacientes."},
-            {f: "O que são LGPD e GDPR?", b: "Leis de proteção de dados pessoais: LGPD (Brasil) e GDPR (Europa). Estabelecem direitos sobre dados e obrigações para empresas."},
-            {f: "O que faz um Security Analyst?", b: "Monitora sistemas, detecta ameaças, analisa alertas e responde a incidentes de segurança."},
-            {f: "O que faz um Penetration Tester?", b: "Simula ataques controlados para identificar vulnerabilidades em sistemas, redes e aplicações."},
-            {f: "O que faz um Security Architect?", b: "Projeta e planeja arquiteturas de segurança, define controles e padrões para proteger a organização."},
-            {f: "O que faz um CISO?", b: "Chief Information Security Officer. Liderança executiva responsável pela estratégia e governança de segurança da informação."},
-            {f: "O que faz um Incident Responder?", b: "Atua durante e após incidentes de segurança para conter ameaças, erradicar problemas e recuperar sistemas."},
-            {f: "O que faz um Forensic Analyst?", b: "Investiga crimes digitais, coleta e analisa evidências para determinar como o incidente ocorreu."},
-            {f: "O que faz um Security Auditor?", b: "Avalia se os controles de segurança estão em conformidade com políticas, padrões e regulamentações."},
-            {f: "Qual a diferença entre privacidade (privacy) e segurança (security)?", b: "Privacidade: controle sobre como dados pessoais são coletados e usados. Segurança: proteção contra ameaças e acessos não autorizados."},
-            {f: "Qual a diferença entre safety e security?", b: "Safety: proteção contra acidentes e perigos não intencionais. Security: proteção contra ações maliciosas e intencionais."}
+            {f: "O que é o PCI-DSS?", b: "Padrão de segurança para organizações que processam, armazenam ou transmitem dados de cartões de pagamento."},
+            {f: "O que é a HIPAA?", b: "Lei americana que estabelece requisitos de privacidade e segurança para proteger informações de saúde dos pacientes."},
+            {f: "O que são LGPD e GDPR?", b: "Leis de proteção de dados pessoais: LGPD (Brasil) e GDPR (Europa). Estabelecem direitos sobre dados pessoais e obrigações para empresas."}
         ];
 
         // ========== QUIZ DO CAPÍTULO 1 (40 QUESTÕES) ==========
@@ -589,6 +780,194 @@
                  "Privacidade: controle sobre dados pessoais; Segurança: proteção contra ameaças", 
                  "Privacidade: proteção técnica; Segurança: proteção física", 
                  "Privacidade se aplica a pessoas; Segurança se aplica a empresas"], 
+             c: 1},
+
+            // Novas questões - Tríade CIA
+            {q: "Qual pilar da tríade CIA garante que informações sejam acessíveis apenas por pessoas autorizadas?",
+             o: ["Disponibilidade", "Integridade", "Confidencialidade", "Autenticidade"],
+             c: 2},
+
+            {q: "Qual pilar da tríade CIA garante que os dados não sejam modificados indevidamente?",
+             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Não-repúdio"],
+             c: 1},
+
+            {q: "Qual pilar da tríade CIA é comprometido em um ataque DDoS?",
+             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Autenticidade"],
+             c: 2},
+
+            {q: "Qual técnica é usada para verificar a integridade de um arquivo?",
+             o: ["Criptografia", "Hashing", "Backup", "Firewall"],
+             c: 1},
+
+            {q: "Qual técnica protege a confidencialidade dos dados em trânsito?",
+             o: ["Hashing", "Backup", "Criptografia", "IDS"],
+             c: 2},
+
+            {q: "Redundância e backups são técnicas para garantir qual pilar da CIA?",
+             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Não-repúdio"],
+             c: 2},
+
+            {q: "Um ransomware que criptografa arquivos afeta principalmente qual pilar da CIA?",
+             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Autenticidade"],
+             c: 2},
+
+            {q: "Assinaturas digitais protegem principalmente qual pilar da CIA?",
+             o: ["Disponibilidade", "Confidencialidade", "Integridade", "Autenticidade"],
+             c: 2},
+
+            // Novas questões - AAA
+            {q: "Qual etapa do AAA confirma a identidade do usuário?",
+             o: ["Autorização", "Auditoria", "Autenticação", "Contabilização"],
+             c: 2},
+
+            {q: "Qual etapa do AAA define o que o usuário pode acessar?",
+             o: ["Autenticação", "Autorização", "Auditoria", "Identificação"],
+             c: 1},
+
+            {q: "Qual etapa do AAA registra as ações realizadas pelo usuário?",
+             o: ["Autenticação", "Autorização", "Auditoria/Contabilização", "Não-repúdio"],
+             c: 2},
+
+            {q: "Qual tecnologia implementa o não-repúdio (Non-repudiation)?",
+             o: ["Firewall", "VPN", "Assinatura digital", "Antivírus"],
+             c: 2},
+
+            {q: "O não-repúdio está mais relacionado a qual componente do AAA?",
+             o: ["Autenticação", "Autorização", "Auditoria", "Todos igualmente"],
+             c: 2},
+
+            // Novas questões - Controles por Função
+            {q: "Qual tipo de controle atua ANTES do incidente para evitar que ele ocorra?",
+             o: ["Detectivo", "Corretivo", "Preventivo", "Compensatório"],
+             c: 2},
+
+            {q: "Qual tipo de controle identifica incidentes durante ou depois de ocorrerem?",
+             o: ["Preventivo", "Detectivo", "Corretivo", "Diretivo"],
+             c: 1},
+
+            {q: "Qual tipo de controle age após o incidente para recuperar ou corrigir?",
+             o: ["Preventivo", "Detectivo", "Corretivo", "Deterrente/Dissuassor"],
+             c: 2},
+
+            {q: "Qual a diferença entre controle preventivo e deterrente/dissuassor?",
+             o: ["São o mesmo tipo de controle",
+                 "Preventivo bloqueia fisicamente, deterrente/dissuassor desencoraja psicologicamente",
+                 "Deterrente bloqueia fisicamente, preventivo desencoraja psicologicamente",
+                 "Preventivo age depois, deterrente age antes"],
+             c: 1},
+
+            {q: "Qual tipo de controle é usado quando o controle primário não é viável?",
+             o: ["Diretivo", "Detectivo", "Corretivo", "Compensatório"],
+             c: 3},
+
+            {q: "Políticas de segurança e códigos de conduta são exemplos de qual tipo de controle por função?",
+             o: ["Preventivo", "Detectivo", "Diretivo", "Compensatório"],
+             c: 2},
+
+            // Novas questões - Controles por Implementação
+            {q: "Firewalls, antivírus e criptografia são exemplos de qual tipo de controle por implementação?",
+             o: ["Gerencial", "Operacional", "Técnico", "Físico"],
+             c: 2},
+
+            {q: "Guardas de segurança e treinamentos são exemplos de qual tipo de controle por implementação?",
+             o: ["Técnico", "Gerencial", "Físico", "Operacional"],
+             c: 3},
+
+            {q: "Cercas, travas e câmeras são exemplos de qual tipo de controle por implementação?",
+             o: ["Técnico", "Físico", "Operacional", "Gerencial"],
+             c: 1},
+
+            {q: "Avaliações de risco e planos de continuidade são exemplos de qual tipo de controle por implementação?",
+             o: ["Técnico", "Operacional", "Gerencial", "Físico"],
+             c: 2},
+
+            {q: "IDS, firewall e backup são controles de qual tipo quanto à implementação?",
+             o: ["Físico", "Operacional", "Gerencial", "Técnico"],
+             c: 3},
+
+            {q: "Treinamentos de conscientização são controles de qual tipo quanto à implementação?",
+             o: ["Técnico", "Gerencial", "Operacional", "Físico"],
+             c: 2},
+
+            // Novas questões - Princípios e Frameworks
+            {q: "O que caracteriza a estratégia de defesa em profundidade (Defense in Depth)?",
+             o: ["Concentrar toda a segurança em um único controle forte",
+                 "Implementar múltiplas camadas de segurança",
+                 "Usar apenas controles técnicos",
+                 "Eliminar controles redundantes"],
+             c: 1},
+
+            {q: "O princípio do menor privilégio (Least Privilege) determina que:",
+             o: ["Todos os usuários devem ter acesso total",
+                 "Apenas administradores devem ter acesso",
+                 "Cada usuário deve ter apenas as permissões mínimas necessárias",
+                 "Nenhum usuário deve ter acesso sem aprovação manual"],
+             c: 2},
+
+            {q: "Qual princípio divide tarefas críticas entre diferentes pessoas para prevenir fraudes?",
+             o: ["Menor privilégio", "Defesa em profundidade", "Segregação de funções", "Não-repúdio"],
+             c: 2},
+
+            {q: "Quando um sistema falha e bloqueia todo o acesso, qual comportamento está sendo aplicado?",
+             o: ["Fail-Open", "Fail-Closed", "Fail-Safe", "Fail-Secure"],
+             c: 1},
+
+            {q: "Fail-Open prioriza qual pilar da CIA?",
+             o: ["Confidencialidade", "Integridade", "Disponibilidade", "Não-repúdio"],
+             c: 2},
+
+            {q: "Quais são as 5 funções do NIST Cybersecurity Framework (CSF)?",
+             o: ["Planejar, Fazer, Verificar, Agir, Revisar",
+                 "Identificar, Proteger, Detectar, Responder, Recuperar",
+                 "Prevenir, Detectar, Corrigir, Analisar, Reportar",
+                 "Confidencialidade, Integridade, Disponibilidade, Autenticidade, Não-repúdio"],
+             c: 1},
+
+            // Novas questões - Estrutura Organizacional
+            {q: "Qual unidade organizacional realiza monitoramento de segurança 24/7?",
+             o: ["CIRT", "DevSecOps", "SOC", "Auditoria interna"],
+             c: 2},
+
+            {q: "Qual equipe é o ponto único de contato para notificação e resposta a incidentes de segurança?",
+             o: ["SOC", "DevOps", "CIRT/CSIRT/CERT", "NOC"],
+             c: 2},
+
+            {q: "O que é DevSecOps?",
+             o: ["Equipe de desenvolvimento sem envolvimento de segurança",
+                 "Prática que integra segurança em todas as etapas do desenvolvimento",
+                 "Ferramenta de monitoramento de redes",
+                 "Framework de resposta a incidentes"],
+             c: 1},
+
+            {q: "O que significa Shift Left em segurança?",
+             o: ["Mover a segurança para o final do projeto",
+                 "Incorporar segurança desde o início do desenvolvimento",
+                 "Transferir responsabilidade de segurança para operações",
+                 "Usar apenas controles físicos"],
+             c: 1},
+
+            // Novas questões - Normas e Regulamentações
+            {q: "Qual regulamentação americana protege informações de saúde dos pacientes?",
+             o: ["PCI-DSS", "GDPR", "ISO 27001", "HIPAA"],
+             c: 3},
+
+            {q: "Qual padrão de segurança se aplica a organizações que processam dados de cartões de pagamento?",
+             o: ["HIPAA", "LGPD", "PCI-DSS", "ISO 27001"],
+             c: 2},
+
+            {q: "Qual padrão internacional estabelece requisitos para um Sistema de Gestão de Segurança da Informação (ISMS)?",
+             o: ["PCI-DSS", "HIPAA", "ISO 27001", "NIST CSF"],
+             c: 2},
+
+            {q: "Qual lei brasileira regula a proteção de dados pessoais?",
+             o: ["GDPR", "HIPAA", "PCI-DSS", "LGPD"],
+             c: 3},
+
+            {q: "Qual a diferença entre LGPD e GDPR?",
+             o: ["São o mesmo padrão com nomes diferentes",
+                 "LGPD é brasileira e GDPR é europeia, ambas protegem dados pessoais",
+                 "LGPD protege dados de saúde e GDPR protege dados financeiros",
+                 "LGPD é americana e GDPR é brasileira"],
              c: 1}
         ];
 
@@ -599,7 +978,16 @@
         let mastered = new Set();   // Conjunto dos ÍNDICES ORIGINAIS dos cards dominados
         let answers = {};           // Objeto que armazena as respostas do quiz {questão: opção_selecionada}
         let checked = false;        // Flag que indica se o quiz já foi verificado
-        let filteredCards = [...Array(cards.length).keys()]; // Array com índices na ordem atual [0,1,2,3,...]
+        // Sorteia 20 cards aleatórios para exibir inicialmente
+        function getInitialCards() {
+            const all = [...Array(cards.length).keys()];
+            for (let i = all.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [all[i], all[j]] = [all[j], all[i]];
+            }
+            return all.slice(0, 20);
+        }
+        let filteredCards = getInitialCards(); // Inicia com 20 cards aleatórios
         let currentFilter = 'all';   // Filtro atual: 'all', 'mastered', ou 'unmastered'
 
         // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
@@ -737,6 +1125,16 @@
         // ========== FUNÇÕES DE FILTRO ==========
         
         // Filtra os cards por status (todos, dominados, não dominados)
+        // Embaralha um array usando Fisher-Yates e retorna os primeiros N elementos
+        function getRandomSubset(arr, n) {
+            const shuffled = [...arr];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled.slice(0, Math.min(n, shuffled.length));
+        }
+
         function filterCards(type, event) {
             currentFilter = type;
             
@@ -744,11 +1142,15 @@
             event.target.classList.add('active');
             
             if (type === 'all') {
-                filteredCards = [...Array(cards.length).keys()];
+                // Sorteia 20 cards aleatórios de todos
+                filteredCards = getRandomSubset([...Array(cards.length).keys()], 20);
             } else if (type === 'mastered') {
+                // Mostra todos os dominados
                 filteredCards = Array.from(mastered);
             } else { // unmastered
-                filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+                // Sorteia 20 cards aleatórios dos não dominados
+                const unmastered = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+                filteredCards = getRandomSubset(unmastered, 20);
             }
             
             currentCard = 0;
@@ -759,13 +1161,28 @@
         // ========== FUNÇÕES DO QUIZ ==========
         
         // Carrega as questões do quiz na tela
+        function getRandomQuestions(n) {
+            const all = [...Array(quiz.length).keys()];
+            for (let i = all.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [all[i], all[j]] = [all[j], all[i]];
+            }
+            return all.slice(0, Math.min(n, all.length));
+        }
+
+        let quizIndices = [];
+
         function loadQuiz() {
+            quizIndices = getRandomQuestions(20);
+            answers = {};
+            checked = false;
             const container = document.getElementById('questions');
             
-            quiz.forEach((q, qi) => {
+            quizIndices.forEach((qi, displayIndex) => {
+                const q = quiz[qi];
                 const div = document.createElement('div');
                 div.className = 'question';
-                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                div.innerHTML = `<h3>${displayIndex + 1}. ${q.q}</h3>`;
                 
                 q.o.forEach((opt, oi) => {
                     const odiv = document.createElement('div');
