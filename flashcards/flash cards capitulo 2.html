@@ -442,7 +442,7 @@
     <div class="container">
         <div class="header">
             <h1>⚠️ Security+ Capítulo 2</h1>
-            <p>Threats & Vulnerabilities — 50 Cards | 49 Questões</p>
+            <p>Ameaças e Vulnerabilidades (Threats & Vulnerabilities) — 50 Cards | 49 Questões</p>
             <div class="stats-bar">
                 <div class="stat-card">📚 50 Flashcards</div>
                 <div class="stat-card">❓ 49 Questões</div>
@@ -604,6 +604,7 @@
             <div class="score-circle" id="score-circle">0%</div>
             <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
             <button class="btn btn-primary" onclick="resetQuiz()">🎲 Nova Sessão</button>
+            <button class="btn" style="background:#6b7280;color:white;margin-top:10px;width:100%;" onclick="verExplicacoes()">📖 Ver Explicações</button>
         </div>
     </div>
 
@@ -1086,6 +1087,7 @@
             document.getElementById('score-circle').textContent = `${pct}%`;
             document.getElementById('score-text').textContent = `${correct}/${sessionQuiz.length} corretas — ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
             document.getElementById('results-modal').classList.add('show');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function resetQuiz() {
@@ -1094,6 +1096,11 @@
             document.getElementById('questions').innerHTML = '';
             document.getElementById('results-modal').classList.remove('show');
             loadQuiz();
+        }
+
+        function verExplicacoes() {
+            document.getElementById('results-modal').classList.remove('show');
+            document.getElementById('questions').scrollIntoView({ behavior: 'smooth' });
         }
 
         updateCard();
