@@ -1811,7 +1811,7 @@
             const pct = Math.round((correct / sessionQuiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
             document.getElementById('score-text').textContent =
-                `${correct}/${sessionQuiz.length} corretas — ${pct >= 70 ? '✅ APROVADO!' : '📚 Precisa estudar mais'}`;
+                `${correct}/${sessionQuiz.length} corretas — ${pct >= 80 ? '🎉 APROVADO!' : pct >= 70 ? '⚠️ Quase lá! Precisa de 80%' : '📚 Precisa estudar mais!'}`;
             document.getElementById('results-modal').classList.add('show');
         }
 

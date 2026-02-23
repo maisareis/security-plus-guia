@@ -603,8 +603,11 @@
             <h2>Resultado</h2>
             <div class="score-circle" id="score-circle">0%</div>
             <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()">🎲 Nova Sessão</button>
-            <button class="btn" style="background:#6b7280;color:white;margin-top:10px;width:100%;" onclick="verExplicacoes()">📖 Ver Explicações</button>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+                <button class="btn btn-primary" onclick="newSession()">🔄 Nova Sessão</button>
+                <button class="btn" style="background:#6b7280;color:white;" onclick="closeModal()">Fechar</button>
+            </div>
+            <button class="btn" style="background:#7c3aed;color:white;margin-top:12px;width:100%;" onclick="verExplicacoes()">💡 Ver Explicações</button>
         </div>
     </div>
 
@@ -1085,7 +1088,7 @@
             });
             const pct = Math.round((correct / sessionQuiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = `${correct}/${sessionQuiz.length} corretas — ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('score-text').textContent = `${correct}/${sessionQuiz.length} corretas — ${pct >= 80 ? '🎉 APROVADO!' : pct >= 70 ? '⚠️ Quase lá! Precisa de 80%' : '📚 Precisa estudar mais!'}`;
             document.getElementById('results-modal').classList.add('show');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -1098,6 +1101,9 @@
             loadQuiz();
         }
 
+        function closeModal() {
+            document.getElementById('results-modal').classList.remove('show');
+        }
         function verExplicacoes() {
             document.getElementById('results-modal').classList.remove('show');
             document.getElementById('questions').scrollIntoView({ behavior: 'smooth' });
