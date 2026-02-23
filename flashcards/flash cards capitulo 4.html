@@ -422,6 +422,9 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         
+        .btn-explain { background: #7c3aed; color: white; }
+        .btn-check { background: #10b981; color: white; }
+        .btn-new-session { background: #6366f1; color: white; }
         .btn-primary {
             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
             color: #333;
@@ -461,7 +464,7 @@
         <!-- ===== CABEÇALHO ===== -->
         <div class="header">
             <h1>👤 Security+ Capítulo 4</h1>
-            <p>Identity & Access Management (IAM) - 70 Cards | 35 Questões</p>
+            <p>Identity & Access Management (IAM) — 85 Cards | Pool de 70 Questões | 15 por Sessão</p>
             <div class="stats-bar">
                 <div class="stat-card">📚 70 Flashcards</div>
                 <div class="stat-card">❓ 35 Questões</div>
@@ -482,7 +485,7 @@
                 <!-- INFO DO CARD E FILTROS -->
                 <div class="card-info">
                     <div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span id="card-counter">Card 1 de 70</span>
+                        <span id="card-counter">Card 1 de 85</span>
                         <span id="mastered-count">0 dominados</span>
                     </div>
                     
@@ -503,10 +506,11 @@
 
                 <!-- BOTÕES DE CONTROLE -->
                 <div class="controls">
-                    <button class="btn btn-nav" onclick="prevCard()">‹</button> <!-- Anterior -->
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
                     <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
                     <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
-                    <button class="btn btn-nav" onclick="nextCard()">›</button> <!-- Próximo -->
+                    <button class="btn btn-new-session" onclick="newFlashSession()">🔄 Nova Sessão (15)</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
                 </div>
             </div>
         </div>
@@ -787,12 +791,15 @@
         <div id="tab2" class="content">
             <div class="quiz-area">
                 <div class="quiz-header">
-                    <h2>Quiz - 35 Questões</h2>
-                    <p>Teste seus conhecimentos sobre Identity & Access Management</p>
+                    <h2>Quiz — Sessão de 15 Questões</h2>
+                    <p>Pool de 70 questões • Nova sessão sorteia 15 aleatórias</p>
+                </div>
+                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:25px;">
+                    <button class="btn btn-primary" onclick="newSession()">🔄 Nova Sessão (15)</button>
                 </div>
                 <div id="questions"></div>
-                <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+                <div style="text-align:center; margin-top:30px; margin-bottom:20px;">
+                    <button class="btn btn-check" id="btn-check" onclick="checkAnswers()" style="display:none;">✅ Ver Resultados</button>
                 </div>
             </div>
         </div>
@@ -801,10 +808,14 @@
     <!-- Modal de Resultados do Quiz -->
     <div class="results-modal" id="results-modal">
         <div class="results-content">
-            <h2>Resultado</h2>
+            <h2>Resultado da Sessão</h2>
             <div class="score-circle" id="score-circle">0%</div>
             <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+            <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                <button class="btn btn-primary" onclick="newSession()">🔄 Nova Sessão</button>
+                <button class="btn" style="background:#6b7280;color:white;" onclick="closeModal()">Fechar</button>
+            </div>
+            <button class="btn btn-explain" onclick="verExplicacoes()" style="margin-top:12px;width:100%;">💡 Ver Explicações</button>
         </div>
     </div>
 
@@ -900,8 +911,8 @@
              b: "Compartilhamento de identidades entre organizações com relação de confiança. Ex: funcionário de uma empresa acessar sistema de parceiro com suas credenciais corporativas."},
 
             // Autorização (26-28)
-            {f: "Qual a diferença entre autenticação e autorização?", 
-             b: "Autenticação verifica QUEM você é. Autorização define O QUE você pode fazer após autenticado."},
+            {f: "O que é autenticação mútua?", 
+             b: "Ambas as partes se autenticam antes da comunicação. O cliente autentica o servidor E o servidor autentica o cliente. Usado em TLS mútuo e Kerberos opcional."},
              
             {f: "Como funcionam as permissões cumulativas no Windows?", 
              b: "A permissão efetiva é a soma das permissões do usuário + todos os grupos. Negar (Deny) sempre prevalece sobre Permitir (Allow)."},
@@ -960,8 +971,8 @@
             {f: "Qual a função do arquivo /etc/shadow no Linux?", 
              b: "Armazena hashes das senhas e informações de expiração. Apenas root pode ler este arquivo."},
              
-            {f: "Qual comando cria um novo usuário no Linux?", 
-             b: "useradd. Ex: useradd -m -s /bin/bash maria (cria com home directory e shell bash)."},
+            {f: "Qual comando POSIX padrão cria um novo usuário no Linux?", 
+             b: "useradd. Ex: useradd -c 'Nome Completo' -m usuario. Após criar, usar passwd usuario para definir a senha. O -m cria o diretório home automaticamente."},
              
             {f: "Qual comando modifica um usuário no Linux?", 
              b: "usermod. Ex: usermod -aG sudo maria (adiciona ao grupo sudo)."},
@@ -1040,7 +1051,53 @@
              b: "Método EAP que usa certificados tanto no servidor quanto no cliente. É o mais seguro, mas requer PKI."},
              
             {f: "O que é PEAP (Protected EAP)?", 
-             b: "Método EAP que cria um túnel TLS protegido, onde a autenticação do cliente ocorre dentro do túnel. Usa certificado apenas no servidor."}
+             b: "Método EAP que cria um túnel TLS protegido, onde a autenticação do cliente ocorre dentro do túnel. Usa certificado apenas no servidor."},
+
+            // Novos Cards (71-85)
+            {f: "O que é a Tríade CIA?",
+             b: "Confidencialidade (apenas autorizados leem), Integridade (dados não alterados sem autorização), Disponibilidade (dados acessíveis quando necessário). Base de toda segurança da informação."},
+
+            {f: "O que é non-repudiação?",
+             b: "Impedir que uma pessoa negue ter realizado uma ação. Implementado com assinaturas digitais e logs de auditoria. Complementa a Tríade CIA no IAM."},
+
+            {f: "Quais são as 5 fases do NIST Cybersecurity Framework?",
+             b: "Identificar (políticas e riscos) → Proteger (implementar controles) → Detectar (monitoramento proativo) → Responder (conter e erradicar ameaças) → Recuperar (restaurar sistemas e dados)."},
+
+            {f: "O que é o modelo Zero Trust?",
+             b: "Nunca confiar, sempre verificar. Verificação contínua baseada em identidade, postura do dispositivo e contexto. Substitui o modelo antigo de confiar automaticamente na rede interna."},
+
+            {f: "No Zero Trust, qual a diferença entre Plano de Controle e Plano de Dados?",
+             b: "Plano de Controle: gerencia políticas (Policy Engine + Policy Administrator). Plano de Dados: estabelece sessões seguras via Policy Enforcement Point (PEP)."},
+
+            {f: "O que é Rule-Based Access Control?",
+             b: "Regras definidas pelo SISTEMA (não pelos usuários). Ex: ACLs em roteadores, acesso condicional baseado em horário ou IP. Diferente de RBAC que usa funções organizacionais."},
+
+            {f: "O que significa 'write up, read down' no modelo MAC?",
+             b: "Usuário pode escrever em nível superior (write up) e ler em nível inferior (read down). Impede vazamento de dados entre níveis de classificação — base do modelo Bell-LaPadula."},
+
+            {f: "O que é two-man control e split knowledge?",
+             b: "Two-man control: duas pessoas devem revisar e aprovar uma ação crítica. Split knowledge: ninguém detém sozinho todas as informações necessárias. Ambos implementam Separation of Duties na prática."},
+
+            {f: "O que fazer com contas de usuários inativos ou demitidos?",
+             b: "Demitidos: desabilitar imediatamente, arquivar dados importantes antes de deletar. Inativos: bloquear após período definido. Nunca usar contas genéricas (Guest, Administrator padrão). Revisar periodicamente."},
+
+            {f: "Quais são os parâmetros de avaliação de um sistema biométrico?",
+             b: "Universal (todos possuem?), Único (distingue indivíduos?), Permanente (resiste ao envelhecimento?), Coletável (fácil de adquirir?), Circunvenção (fácil de enganar?), Acuracidade (resultados precisos?)."},
+
+            {f: "Como funciona a autenticação FIDO2/WebAuthn?",
+             b: "Registro: autenticador gera par de chaves pública/privada → chave pública fica no servidor. Autenticação: gesto local (biometria/PIN) libera chave privada → assina desafio do servidor → servidor verifica com chave pública. Senha nunca é transmitida."},
+
+            {f: "O que é PAM (Pluggable Authentication Modules) no Linux?",
+             b: "Framework modular que permite múltiplos métodos de autenticação de forma independente do aplicativo. Suporta smart cards, LDAP, Kerberos. Configurado em /etc/pam.d/. Permite empilhar módulos de autenticação."},
+
+            {f: "Para que servem os comandos chage e ulimit no Linux?",
+             b: "chage: configura expiração de senha (-M máximo de dias, -W dias de aviso, -m mínimo). ulimit: limita recursos do processo (-c core dumps, -f tamanho de arquivo, -n arquivos abertos, -u processos simultâneos)."},
+
+            {f: "Quais são os tipos de smart card e suas principais vulnerabilidades?",
+             b: "Tipos: Contact (contato físico com leitor), Contactless (RFID/NFC). Vulnerabilidades: Microprobing (acesso direto ao chip), Software attacks (exploração de protocolos), Eavesdropping (captura de transmissões), Fault generation (indução de mau funcionamento)."},
+
+            {f: "O que é HTML5 VPN (Clientless VPN)?",
+             b: "Acesso remoto via navegador sem instalar cliente VPN. Usa WebSocket para comunicação bidirecional. Ex: Apache Guacamole. Permite acesso a RDP, SSH e VNC pelo browser — ideal para dispositivos sem cliente instalado."}
         ];
 
         // ========== QUIZ DO CAPÍTULO 4 (35 QUESTÕES) ==========
@@ -1225,94 +1282,225 @@
             {q: "Qual implementação de MAC (Mandatory Access Control) é comum no Linux?", 
              o: ["AppArmor", "SELinux", "PAM", "sudo"], 
              c: 1,
-             e: "SELinux (Security-Enhanced Linux) é implementação de MAC no Linux. Modos: Enforcing, Permissive, Disabled."}
+             e: "SELinux (Security-Enhanced Linux) é implementação de MAC no Linux. Modos: Enforcing, Permissive, Disabled."},
+
+            // Tríade CIA e Fundamentos (36-38)
+            {q: "Qual componente da Tríade CIA garante que apenas usuários autorizados podem ler os dados?",
+             o: ["Integridade", "Disponibilidade", "Confidencialidade", "Non-repudiação"],
+             c: 2,
+             e: "Confidencialidade garante que apenas usuários autorizados acessam os dados. É o 'C' da Tríade CIA — implementado via controle de acesso, criptografia e classificação de dados."},
+
+            {q: "O que é non-repudiação no contexto do IAM?",
+             o: ["Garantir que dados não sejam alterados", "Garantir disponibilidade do sistema", "Impedir que uma pessoa negue ter realizado uma ação", "Criptografar dados em trânsito"],
+             c: 2,
+             e: "Non-repudiação impede que alguém negue ter realizado uma ação. Implementado com assinaturas digitais e logs de auditoria. Complementa a Tríade CIA."},
+
+            {q: "Qual fase do NIST Cybersecurity Framework envolve monitoramento proativo contínuo?",
+             o: ["Identificar", "Proteger", "Detectar", "Responder"],
+             c: 2,
+             e: "Detectar envolve monitoramento proativo contínuo para identificar eventos de segurança. As 5 fases são: Identificar → Proteger → Detectar → Responder → Recuperar."},
+
+            // Zero Trust (39-40)
+            {q: "No modelo Zero Trust, o que é 'Adaptive Identity'?",
+             o: ["Identidade que nunca expira", "Verificação contínua baseada no contexto atual", "Login único sem MFA", "Identidade baseada em IP fixo"],
+             c: 1,
+             e: "Adaptive Identity verifica continuamente o usuário baseado no contexto atual: localização, dispositivo, horário, comportamento. Zero Trust: nunca confiar, sempre verificar."},
+
+            {q: "No Zero Trust, qual componente estabelece as sessões seguras (Policy Enforcement Point)?",
+             o: ["Plano de Controle", "Plano de Dados", "Identity Provider", "KDC"],
+             c: 1,
+             e: "Plano de Dados contém o Policy Enforcement Point (PEP) que estabelece sessões seguras. Plano de Controle gerencia as políticas via Policy Engine + Policy Administrator."},
+
+            // Modelos de Acesso complementares (41-42)
+            {q: "Qual modelo de controle de acesso usa regras definidas pelo SISTEMA, como ACLs em roteadores?",
+             o: ["DAC", "RBAC", "Rule-Based Access Control", "ABAC"],
+             c: 2,
+             e: "Rule-Based Access Control usa regras definidas pelo sistema (não pelos usuários). Ex: ACLs em roteadores, acesso condicional. Diferente de RBAC que usa funções organizacionais."},
+
+            {q: "No modelo MAC, a regra 'write up, read down' serve para:",
+             o: ["Facilitar a delegação de acesso", "Permitir que usuários modifiquem rótulos", "Impedir vazamento de dados entre níveis de classificação", "Sincronizar permissões entre domínios"],
+             c: 2,
+             e: "'Write up, read down': usuário pode escrever em nível superior e ler em nível inferior. Impede que dados confidenciais 'vazem' para níveis inferiores de classificação."},
+
+            // Boas práticas complementares (43-45)
+            {q: "Qual prática exige que duas pessoas revisem e aprovem uma ação crítica?",
+             o: ["Job Rotation", "Need to Know", "Two-man control", "Mandatory Vacation"],
+             c: 2,
+             e: "Two-man control exige que duas pessoas aprovem ações críticas. Junto com split knowledge (ninguém controla tudo sozinho), implementa Separation of Duties na prática."},
+
+            {q: "O que é Defense in Depth (Defesa em Profundidade)?",
+             o: ["Um único controle de segurança muito forte", "Segmentação de rede apenas", "Múltiplas camadas de controle de segurança", "Firewall com regras complexas"],
+             c: 2,
+             e: "Defense in Depth usa múltiplas camadas de controle de acesso. Se uma camada falhar, as outras ainda protegem. Dificulta o bypass total da segurança."},
+
+            {q: "O que deve ser feito imediatamente com a conta de um funcionário demitido?",
+             o: ["Renomear para o próximo funcionário", "Manter ativa por 30 dias para auditoria", "Desabilitar imediatamente e arquivar dados importantes", "Alterar a senha e manter ativa"],
+             c: 2,
+             e: "Conta de demitido deve ser desabilitada IMEDIATAMENTE. Arquivar dados importantes antes de deletar. Nunca reutilizar sem revisão. Contas inativas são porta de entrada para atacantes."},
+
+            // Biometria complementar (46-47)
+            {q: "Qual dos seguintes é um exemplo de biometria COMPORTAMENTAL?",
+             o: ["Impressão digital", "Íris", "Padrão de digitação (keystroke dynamics)", "Reconhecimento facial"],
+             c: 2,
+             e: "Biometria comportamental mede padrões de comportamento: digitação, marcha, assinatura. Biometria fisiológica mede características físicas: impressão digital, íris, retina, face."},
+
+            {q: "O que é FER (Failure to Enroll Rate) em biometria?",
+             o: ["Taxa de aceitar impostores", "Taxa de rejeitar usuários legítimos", "Taxa de falha no cadastro inicial do usuário", "Ponto onde FAR e FRR se igualam"],
+             c: 2,
+             e: "FER mede a taxa de usuários que não conseguem ser cadastrados no sistema biométrico. Ex: pessoas com impressão digital desgastada. Diferente de FAR (aceitar impostor) e FRR (rejeitar legítimo)."},
+
+            // FIDO2 / Passwordless (48-49)
+            {q: "No padrão FIDO2/WebAuthn, o que o autenticador gera durante o registro?",
+             o: ["Um hash da senha", "Um token TOTP", "Um par de chaves pública/privada", "Um certificado X.509 assinado pela CA"],
+             c: 2,
+             e: "FIDO2: autenticador gera par de chaves pública/privada. Chave pública fica no servidor (relying party). Chave privada fica protegida no dispositivo, liberada apenas pelo gesto local (biometria/PIN)."},
+
+            {q: "Em autenticação passwordless com FIDO2, o gesto local (biometria ou PIN) serve para:",
+             o: ["Transmitir a senha ao servidor", "Substituir o certificado digital", "Liberar a chave privada no autenticador local", "Gerar um TGT no KDC"],
+             c: 2,
+             e: "O gesto local libera a chave privada armazenada no autenticador. A chave privada então assina o desafio do servidor. A senha nunca é transmitida — é autenticação local + prova criptográfica."},
+
+            // Kerberos fluxo (50-51)
+            {q: "No Kerberos, qual ticket o usuário apresenta ao TGS para obter acesso a um serviço específico?",
+             o: ["Service Ticket", "Session Key", "TGT (Ticket Granting Ticket)", "Access Token"],
+             c: 2,
+             e: "O TGT (Ticket Granting Ticket) é apresentado ao TGS para solicitar um Service Ticket específico. Fluxo: AS emite TGT → TGT solicita Service Ticket ao TGS → Service Ticket acessa o recurso."},
+
+            {q: "Por que o Kerberos é considerado mais seguro que NTLM?",
+             o: ["Usa criptografia assimétrica", "A senha não é transmitida pela rede", "Usa UDP em vez de TCP", "Não precisa de sincronização de tempo"],
+             c: 1,
+             e: "No Kerberos a senha nunca trafega pela rede — o cliente usa o hash da senha para obter o TGT localmente. NTLM transmite desafio/resposta baseado na senha, mais vulnerável a ataques."},
+
+            // Federação SAML fluxo (52-53)
+            {q: "No fluxo SAML, quem emite o token (assertion) assinado ao usuário?",
+             o: ["Service Provider (SP)", "O próprio usuário", "Identity Provider (IdP)", "Domain Controller"],
+             c: 2,
+             e: "O IdP (Identity Provider) autentica o usuário e emite o assertion SAML assinado. O SP (Service Provider) recebe o assertion, valida a assinatura e concede acesso — sem nunca ver a senha."},
+
+            {q: "Qual a diferença principal entre OAuth 2.0 e SAML?",
+             o: ["OAuth usa XML; SAML usa JSON", "SAML é mais moderno que OAuth", "OAuth é para autorização de APIs; SAML é para SSO corporativo e federação", "São protocolos idênticos com nomes diferentes"],
+             c: 2,
+             e: "OAuth 2.0: framework de AUTORIZAÇÃO para APIs RESTful, usa JWT. SAML: padrão de SSO/federação corporativo, usa XML. OpenID Connect adiciona autenticação sobre OAuth 2.0."},
+
+            // LDAP (54-56)
+            {q: "Em um DN LDAP como 'CN=Bobby,OU=Users,DC=empresa,DC=local', o que representa 'DC'?",
+             o: ["Data Center", "Domain Controller", "Domain Component", "Directory Container"],
+             c: 2,
+             e: "DC = Domain Component — componente do nome de domínio. CN = Common Name. OU = Organizational Unit. O DN completo identifica unicamente o objeto no diretório."},
+
+            {q: "Qual método de bind LDAP oferece criptografia e integridade?",
+             o: ["Simple Bind", "No Authentication (anônimo)", "STARTTLS", "LDAP porta 389"],
+             c: 2,
+             e: "STARTTLS eleva a conexão LDAP para criptografada e íntegra. Simple Bind transmite credenciais em texto claro. LDAPS (porta 636) também é seguro — usa tunnel SSL/TLS completo."},
+
+            {q: "Qual porta usa o LDAPS (LDAP seguro com SSL/TLS)?",
+             o: ["389", "443", "636", "88"],
+             c: 2,
+             e: "LDAPS usa porta 636 — tunnel seguro com certificado. LDAP padrão usa porta 389 (sem criptografia). Em produção: bloquear porta 389 no firewall e permitir apenas 636 ou STARTTLS."},
+
+            // GPO (57-58)
+            {q: "Qual é a ordem correta de aplicação de GPOs no Active Directory (LSDOU)?",
+             o: ["Domínio → Site → Local → OU", "OU → Domínio → Site → Local", "Local → Site → Domínio → OU", "Site → Local → OU → Domínio"],
+             c: 2,
+             e: "LSDOU: Local → Site → Domínio → OU (da mais alta à mais baixa). A última aplicada prevalece em caso de conflito — ou seja, a GPO da OU mais específica tem precedência."},
+
+            {q: "Quando duas GPOs definem a mesma configuração com valores diferentes, qual prevalece?",
+             o: ["A GPO de nível mais alto (Local)", "A última aplicada (GPO da OU mais específica)", "A GPO do Domain Controller", "A GPO local sempre prevalece"],
+             c: 1,
+             e: "A última GPO aplicada prevalece — a da OU mais específica (mais baixa na hierarquia). Exceção: se uma GPO superior tiver 'No Override' ativado, ela não pode ser sobrescrita."},
+
+            // PAM Linux (59)
+            {q: "O que é PAM (Pluggable Authentication Modules) no Linux?",
+             o: ["Ferramenta de firewall", "Framework modular para múltiplos métodos de autenticação", "Serviço de diretório LDAP", "Módulo do SELinux"],
+             c: 1,
+             e: "PAM é um framework modular que permite configurar múltiplos métodos de autenticação de forma independente do aplicativo. Suporta smart cards, LDAP, Kerberos. Configurado em /etc/pam.d/."},
+
+            // Smart Card (60)
+            {q: "Qual ataque acessa diretamente o chip do smart card para extrair dados?",
+             o: ["Software attack", "Eavesdropping", "Microprobing", "Fault generation"],
+             c: 2,
+             e: "Microprobing acessa diretamente o chip do smart card para extrair dados ou chaves. É um ataque físico sofisticado. Outros ataques: Software attacks (protocolos), Eavesdropping (transmissões), Fault generation (mau funcionamento induzido)."},
+
+            // Linux comandos (61-62)
+            {q: "Qual comando Linux configura expiração e aviso de senha para um usuário?",
+             o: ["passwd -e", "usermod -p", "chage", "useradd -x"],
+             c: 2,
+             e: "chage configura expiração de senha. Exemplos: chage -M 90 usuario (máximo 90 dias), chage -W 7 usuario (aviso 7 dias antes), chage -m 1 usuario (mínimo 1 dia entre trocas)."},
+
+            {q: "Qual comando Linux limita os recursos disponíveis para processos do usuário?",
+             o: ["chage", "passwd", "ulimit", "usermod"],
+             c: 2,
+             e: "ulimit limita recursos de processos: -c (core dumps), -f (tamanho de arquivo), -n (arquivos abertos), -t (tempo de CPU), -u (processos simultâneos). Use ulimit -a para ver todos os limites atuais."},
+
+            // VPN tipos (63)
+            {q: "Qual tipo de VPN conecta um usuário remoto individual à rede corporativa?",
+             o: ["Site-to-site", "Host-to-host", "Client-to-site", "Peer-to-peer"],
+             c: 2,
+             e: "Client-to-site: usuário remoto acessa rede corporativa. Site-to-site: conecta filiais/redes inteiras. Host-to-host: segurança entre dois computadores específicos."},
+
+            // RADIUS fluxo (64)
+            {q: "No fluxo RADIUS com EAP, como o NAS trata as credenciais do supplicant?",
+             o: ["Verifica localmente", "Encaminha diretamente ao servidor sem encapsulamento", "Cria um Access-Request encapsulando o EAP e envia ao servidor RADIUS", "Gera um TGT e encaminha ao KDC"],
+             c: 2,
+             e: "O NAS (Access Point/Switch) encapsula a mensagem EAP em um Access-Request RADIUS e envia ao servidor. O NAS é transparente — não verifica credenciais, apenas retransmite entre supplicant e servidor RADIUS."},
+
+            // Indicadores de comprometimento (65-67)
+            {q: "Login em São Paulo às 9h e em Tóquio às 9h05 na mesma conta representa qual indicador?",
+             o: ["Account Lockout", "Concurrent Session", "Impossible Travel", "Privilege Escalation"],
+             c: 2,
+             e: "Impossible Travel detecta logins em locais geograficamente impossíveis em curto intervalo. É sinal forte de credencial comprometida ou ataque. Sistemas modernos de UEBA detectam automaticamente."},
+
+            {q: "Detectar a mesma conta logada simultaneamente em múltiplos locais é chamado de:",
+             o: ["Impossible Travel", "Concurrent Session", "Account Lockout", "Brute Force"],
+             c: 1,
+             e: "Concurrent Session indica a mesma conta ativa em múltiplos locais ao mesmo tempo. Pode indicar compartilhamento de credenciais ou comprometimento. Diferente de Impossible Travel que analisa a distância geográfica."},
+
+            {q: "Muitas tentativas de login com falha em sequência em uma conta indicam:",
+             o: ["Impossible Travel", "Concurrent Session", "Ataque de força bruta / comprometimento de credenciais", "Privilege Escalation"],
+             c: 2,
+             e: "Múltiplas falhas de login indicam ataque de força bruta ou tentativa de comprometimento de credenciais. Account Lockout é a contramedida — bloqueia a conta após X tentativas configuradas."},
+
+            // HTML5 VPN (68)
+            {q: "Qual tecnologia permite acesso remoto a sistemas internos apenas pelo navegador, sem cliente VPN instalado?",
+             o: ["RDP", "VNC", "HTML5 VPN / Clientless (ex: Apache Guacamole)", "PPTP"],
+             c: 2,
+             e: "HTML5 VPN (Clientless VPN) usa WebSocket para comunicação bidirecional via navegador. Apache Guacamole é o exemplo mais comum — permite acesso a RDP, SSH e VNC pelo browser sem instalar nada."},
+
+            // 802.1X componentes (69)
+            {q: "No padrão 802.1X, qual componente é o dispositivo do usuário que solicita acesso à rede?",
+             o: ["Authenticator", "Authentication Server", "Supplicant", "NAS"],
+             c: 2,
+             e: "Supplicant: dispositivo do usuário que solicita acesso. Authenticator: switch ou AP que controla o acesso à porta. Authentication Server: servidor RADIUS que valida as credenciais."},
+
+            // EAP-TLS vs PEAP (70)
+            {q: "Qual a diferença entre EAP-TLS e PEAP em relação aos certificados?",
+             o: ["PEAP é mais seguro que EAP-TLS", "EAP-TLS usa apenas certificado no servidor", "EAP-TLS requer certificado no cliente E no servidor; PEAP requer apenas no servidor", "São equivalentes em segurança"],
+             c: 2,
+             e: "EAP-TLS: certificado obrigatório no servidor E no cliente — máxima segurança, requer PKI completa. PEAP: certificado apenas no servidor — cria túnel TLS e o cliente autentica dentro do túnel com usuário/senha."}
         ];
 
-        // ========== VARIÁVEIS DE ESTADO ==========
-        
-        /**
-         * currentCard: POSIÇÃO no array filteredCards (NÃO é o índice original!)
-         * Exemplo: Se filteredCards = [5, 2, 8, 1] e currentCard = 2
-         * Isso significa que estamos mostrando o card na posição 2 da lista atual,
-         * que corresponde ao índice original 8.
-         */
+        // ========== ESTADO ==========
         let currentCard = 0;
-        
-        /**
-         * flipped: controla se estamos mostrando a frente (false) ou o verso (true)
-         */
         let flipped = false;
-        
-        /**
-         * mastered: Set (conjunto) que armazena os ÍNDICES ORIGINAIS dos cards dominados
-         * Usamos Set porque é eficiente para verificar se um índice está presente
-         * e não permite duplicatas automaticamente.
-         */
         let mastered = new Set();
-        
-        /**
-         * answers: objeto que armazena as respostas do usuário no quiz
-         * Formato: { número_da_questão: índice_da_opção_selecionada }
-         */
-        let answers = {};
-        
-        /**
-         * checked: flag que indica se o quiz já foi verificado
-         * Quando true, impede que o usuário mude as respostas
-         */
-        let checked = false;
-        
-        /**
-         * filteredCards: array que contém os ÍNDICES ORIGINAIS dos cards
-         * na ORDEM ATUAL de exibição.
-         * 
-         * Este é o coração do sistema de navegação e embaralhamento.
-         * Inicialmente: [...Array(cards.length).keys()] = [0,1,2,3,...]
-         * 
-         * Quando embaralhamos: reordenamos este array aleatoriamente
-         * Quando filtramos: criamos um novo array apenas com índices que atendem ao filtro
-         */
-        let filteredCards = [...Array(cards.length).keys()]; // Gera [0,1,2,3,...,69]
-        
-        /**
-         * currentFilter: string que indica qual filtro está ativo
-         * Valores possíveis: 'all', 'mastered', 'unmastered'
-         */
+        let filteredCards = [...Array(cards.length).keys()];
         let currentFilter = 'all';
+        let sessionQuiz = [];
+        let answers = {};
+        let checked = false;
+        let explanationsVisible = false;
 
-        // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
-        
-        /**
-         * loadProgress(): Carrega os cards dominados do localStorage
-         * 
-         * localStorage é uma API do navegador que permite armazenar dados
-         * de forma persistente (mesmo após fechar a página).
-         * 
-         * Os dados são armazenados como strings, por isso usamos:
-         * - JSON.stringify() para salvar
-         * - JSON.parse() para recuperar
-         */
+        // ========== ARMAZENAMENTO ==========
         function loadProgress() {
-            // Tenta recuperar a string salva com a chave 'security_plus_cap4_mastered'
             const saved = localStorage.getItem('security_plus_cap4_mastered');
-            
-            if (saved) {
-                // JSON.parse converte a string de volta para array
-                // new Set() converte o array em um Set (conjunto)
-                mastered = new Set(JSON.parse(saved));
-            }
+            if (saved) mastered = new Set(JSON.parse(saved));
         }
-
-        /**
-         * saveProgress(): Salva os cards dominados no localStorage
-         */
         function saveProgress() {
-            // [...mastered] usa o operador spread para converter o Set em array
-            // JSON.stringify converte o array para string
             localStorage.setItem('security_plus_cap4_mastered', JSON.stringify([...mastered]));
         }
-
-        // Carrega o progresso assim que o script é executado
+        function getSession(pool, n) {
+            return [...pool].sort(() => Math.random() - 0.5).slice(0, Math.min(n, pool.length));
+        }
         loadProgress();
 
         // ========== FUNÇÕES DAS ABAS ==========
@@ -1333,10 +1521,7 @@
                 b.classList.toggle('active', i === n);
             });
             
-            // Se for a aba do quiz (2) e o quiz ainda não foi carregado, carrega
-            if (n === 2 && !document.getElementById('questions').innerHTML) {
-                loadQuiz();
-            }
+            if (n === 2 && sessionQuiz.length === 0) newSession();
         }
 
         // ========== FUNÇÕES DOS FLASHCARDS ==========
@@ -1553,133 +1738,100 @@
          * - Vários divs para as opções
          * - Um div para a explicação (inicialmente oculto)
          */
+        // ========== NOVA SESSÃO FLASHCARDS ==========
+        function newFlashSession() {
+            filteredCards = getSession([...Array(cards.length).keys()], 15);
+            currentCard = 0; flipped = false; updateCard();
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        }
+
+        // ========== QUIZ ==========
+        function newSession() {
+            sessionQuiz = getSession(quiz, 15);
+            answers = {}; checked = false; explanationsVisible = false;
+            document.getElementById('results-modal').classList.remove('show');
+            document.getElementById('btn-explain').style.display = 'none';
+            document.getElementById('btn-explain').textContent = '💡 Ver Explicações';
+            document.getElementById('btn-check').style.display = 'inline-flex';
+            loadQuiz();
+        }
+
         function loadQuiz() {
             const container = document.getElementById('questions');
-            
-            // Limpa o container antes de carregar (evita duplicação)
             container.innerHTML = '';
-            
-            // Para cada questão no array quiz
-            quiz.forEach((q, qi) => {
-                // Cria um div para a questão
+            sessionQuiz.forEach((q, qi) => {
                 const div = document.createElement('div');
                 div.className = 'question';
                 div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
-                
-                // Para cada opção da questão
                 q.o.forEach((opt, oi) => {
                     const odiv = document.createElement('div');
                     odiv.className = 'option';
                     odiv.textContent = opt;
-                    
-                    // Quando clicar na opção, chama selectOpt com os índices
                     odiv.onclick = () => selectOpt(qi, oi);
-                    
-                    // Define um ID único para cada opção: q0o0, q0o1, q1o0, etc.
                     odiv.id = `q${qi}o${oi}`;
-                    
                     div.appendChild(odiv);
                 });
-                
-                // Cria a explicação (inicialmente oculta)
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
                 exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
-                
+                exp.innerHTML = `<strong>💡 Explicação:</strong> ${q.e}`;
                 div.appendChild(exp);
                 container.appendChild(div);
             });
         }
 
-        /**
-         * selectOpt(): Seleciona uma opção no quiz
-         * @param {number} qi - Índice da questão
-         * @param {number} oi - Índice da opção
-         */
         function selectOpt(qi, oi) {
-            // Se o quiz já foi verificado, não permite mais mudanças
             if (checked) return;
-            
-            // Remove a classe 'selected' de todas as opções desta questão
-            quiz[qi].o.forEach((_, i) => {
+            sessionQuiz[qi].o.forEach((_, i) => {
                 const el = document.getElementById(`q${qi}o${i}`);
                 if (el) el.classList.remove('selected');
             });
-            
-            // Adiciona a classe 'selected' à opção clicada
-            const selectedEl = document.getElementById(`q${qi}o${oi}`);
-            if (selectedEl) selectedEl.classList.add('selected');
-            
-            // Armazena a resposta (sobrescreve se já existia)
+            const el = document.getElementById(`q${qi}o${oi}`);
+            if (el) el.classList.add('selected');
             answers[qi] = oi;
         }
 
-        /**
-         * checkAnswers(): Verifica as respostas do quiz
-         * 
-         * Marca as opções corretas em verde e as incorretas em vermelho,
-         * mostra as explicações e exibe a pontuação.
-         */
         function checkAnswers() {
-            checked = true; // Impede novas mudanças
-            
-            let correct = 0; // Contador de respostas corretas
-            
-            // Para cada questão
-            quiz.forEach((q, qi) => {
-                // Verifica se a questão tem múltiplas respostas corretas
-                // q.c pode ser número (ex: 2) ou array (ex: [0,3])
+            checked = true;
+            let correct = 0;
+            sessionQuiz.forEach((q, qi) => {
                 const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
-                
-                // Para cada opção da questão
                 q.o.forEach((_, oi) => {
                     const el = document.getElementById(`q${qi}o${oi}`);
                     if (!el) return;
-                    
-                    // Se a opção é a correta, marca como correct
-                    if (correctAnswer.includes(oi)) {
-                        el.classList.add('correct');
-                    } 
-                    // Se não é a correta mas o usuário selecionou, marca como incorrect
-                    else if (answers[qi] === oi) {
-                        el.classList.add('incorrect');
-                    }
+                    if (correctAnswer.includes(oi)) el.classList.add('correct');
+                    else if (answers[qi] === oi) el.classList.add('incorrect');
                 });
-                
-                // Mostra a explicação
                 const expEl = document.getElementById(`exp${qi}`);
                 if (expEl) expEl.style.display = 'block';
-                
-                // Se o usuário acertou, incrementa contador
-                if (correctAnswer.includes(answers[qi])) {
-                    correct++;
-                }
+                if (correctAnswer.includes(answers[qi])) correct++;
             });
-            
-            // Calcula porcentagem
-            const pct = Math.round((correct / quiz.length) * 100);
-            
-            // Mostra resultado no modal
+            explanationsVisible = true;
+            document.getElementById('btn-check').style.display = 'none';
+            const pct = Math.round((correct / sessionQuiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = 
-                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa estudar mais'}`;
+            document.getElementById('score-text').textContent =
+                `${correct}/${sessionQuiz.length} corretas — ${pct >= 70 ? '✅ APROVADO!' : '📚 Precisa estudar mais'}`;
             document.getElementById('results-modal').classList.add('show');
         }
 
-        /**
-         * resetQuiz(): Reinicia o quiz (limpa respostas e recarrega)
-         */
-        function resetQuiz() {
-            checked = false;          // Permite novas respostas
-            answers = {};              // Limpa respostas
-            document.getElementById('questions').innerHTML = ''; // Limpa HTML
-            document.getElementById('results-modal').classList.remove('show'); // Esconde modal
-            loadQuiz();                // Recarrega as questões
+        function toggleExplanations() {
+            explanationsVisible = !explanationsVisible;
+            sessionQuiz.forEach((_, qi) => {
+                const el = document.getElementById(`exp${qi}`);
+                if (el) el.style.display = explanationsVisible ? 'block' : 'none';
+            });
+            document.getElementById('btn-explain').textContent =
+                explanationsVisible ? '🙈 Ocultar Explicações' : '💡 Ver Explicações';
         }
 
-        // ========== INICIALIZAÇÃO ==========
-        // Mostra o primeiro card
+        function closeModal() {
+            document.getElementById('results-modal').classList.remove('show');
+            document.getElementById('btn-explain').style.display = 'inline-flex';
+            document.getElementById('btn-check').style.display = 'none';
+        }
+
+        // ========== INIT ==========
         updateCard();
     </script>
 </body>

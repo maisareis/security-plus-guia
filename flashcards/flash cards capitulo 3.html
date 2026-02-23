@@ -315,7 +315,6 @@
             </div>
             <div class="quiz-controls">
                 <button class="btn btn-primary" onclick="newSession()">🔄 Nova Sessão (15)</button>
-                <button class="btn btn-explain" id="btn-explain" onclick="toggleExplanations()" style="display:none;">💡 Ver Explicações</button>
             </div>
             <div id="questions"></div>
             <div style="text-align:center; margin-top:30px; margin-bottom:20px;">
@@ -335,6 +334,7 @@
             <button class="btn btn-primary" onclick="newSession()">🔄 Nova Sessão</button>
             <button class="btn btn-secondary" onclick="closeModal()">Fechar</button>
         </div>
+        <button class="btn btn-explain" onclick="verExplicacoes()" style="margin-top:12px;width:100%;">💡 Ver Explicações</button>
     </div>
 </div>
 
@@ -745,8 +745,6 @@ function newSession() {
     sessionQuiz = getSession(allQuiz, 15);
     answers = {}; checked = false; explanationsVisible = false;
     document.getElementById('results-modal').classList.remove('show');
-    document.getElementById('btn-explain').style.display = 'none';
-    document.getElementById('btn-explain').textContent = '💡 Ver Explicações';
     document.getElementById('btn-check').style.display = 'inline-flex';
     loadQuiz();
 }
@@ -799,7 +797,6 @@ function checkAnswers() {
         if (correctAnswer.includes(answers[qi])) correct++;
     });
     explanationsVisible = true;
-    document.getElementById('btn-explain').style.display = 'none';
     document.getElementById('btn-check').style.display = 'none';
     const pct = Math.round((correct / sessionQuiz.length) * 100);
     document.getElementById('score-circle').textContent = `${pct}%`;
@@ -807,19 +804,16 @@ function checkAnswers() {
         `${correct}/${sessionQuiz.length} corretas — ${pct >= 70 ? '✅ APROVADO!' : '📚 Precisa estudar mais'}`;
     document.getElementById('results-modal').classList.add('show');
 }
-function toggleExplanations() {
-    explanationsVisible = !explanationsVisible;
+function verExplicacoes() {
+    document.getElementById('results-modal').classList.remove('show');
     sessionQuiz.forEach((_, qi) => {
         const el = document.getElementById(`exp${qi}`);
-        if (el) el.style.display = explanationsVisible ? 'block' : 'none';
+        if (el) el.style.display = 'block';
     });
-    document.getElementById('btn-explain').textContent =
-        explanationsVisible ? '🙈 Ocultar Explicações' : '💡 Ver Explicações';
+    document.getElementById('questions').scrollIntoView({ behavior: 'smooth' });
 }
 function closeModal() {
     document.getElementById('results-modal').classList.remove('show');
-    document.getElementById('btn-explain').style.display = 'inline-flex';
-    document.getElementById('btn-check').style.display = 'none';
 }
 
 // ========== INIT ==========
