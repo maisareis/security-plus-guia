@@ -1,125 +1,172 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security+ Cap 3 - Soluções Criptográficas</title>
+    <meta charset="UTF-8"> <!-- Define a codificação de caracteres como UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configura a viewport para responsividade em dispositivos móveis -->
+    <title>Security+ Cap 3 - Soluções Criptográficas</title> <!-- Título da página que aparece na aba do navegador -->
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .header { text-align: center; color: white; margin-bottom: 30px; }
-        .header h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .tabs { display: flex; gap: 10px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
-        .tab-btn { padding: 15px 30px; background: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease; }
-        .tab-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        .tab-btn.active { background: #0072ff; color: white; }
-        .content { display: none; }
-        .content.active { display: block; }
-        .flashcard-area { max-width: 800px; margin: 0 auto; }
-        .card-info { background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; color: white; margin-bottom: 20px; text-align: center; backdrop-filter: blur(5px); }
-        .filter-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
-        .filter-btn { padding: 8px 16px; background: rgba(255,255,255,0.3); border: 2px solid white; border-radius: 8px; color: white; cursor: pointer; transition: all 0.3s ease; font-weight: 600; }
-        .filter-btn:hover { background: rgba(255,255,255,0.5); transform: scale(1.05); }
-        .filter-btn.active { background: white; color: #0072ff; }
-        .flashcard { background: white; border-radius: 20px; padding: 50px; min-height: 300px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .flashcard:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
-        .flashcard-text { font-size: 1.3rem; line-height: 1.8; text-align: center; color: #1f2937; }
-        .side-indicator { position: absolute; top: 20px; left: 20px; padding: 5px 10px; background: #0072ff; color: white; border-radius: 5px; font-size: 0.8rem; font-weight: bold; }
-        .flip-hint { position: absolute; bottom: 20px; right: 20px; color: #9ca3af; font-size: 0.8rem; font-style: italic; }
-        .controls { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
-        .btn { padding: 15px 30px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-        .btn-shuffle { background: #f59e0b; color: white; }
-        .btn-nav { background: white; font-size: 1.5rem; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; padding: 0; }
-        .btn-master { background: #e5e7eb; color: #1f2937; min-width: 160px; }
-        .btn-master.mastered { background: #10b981; color: white; }
-        .summary { max-width: 1000px; margin: 0 auto; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .summary h1 { color: #0072ff; border-bottom: 3px solid #0072ff; padding-bottom: 15px; margin-bottom: 30px; }
-        .summary h2 { color: #0072ff; margin-top: 30px; margin-bottom: 15px; font-size: 1.8rem; }
-        .summary h3 { margin-top: 20px; margin-bottom: 10px; color: #333; font-size: 1.4rem; }
-        .summary ul { margin-left: 20px; margin-bottom: 15px; }
-        .summary li { margin-bottom: 8px; line-height: 1.6; }
-        .highlight { background: #dbeafe; border-left: 5px solid #0072ff; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
-        .quiz-area { max-width: 900px; margin: 0 auto; }
-        .quiz-header { text-align: center; color: white; margin-bottom: 20px; background: rgba(255,255,255,0.2); padding: 20px; border-radius: 15px; backdrop-filter: blur(5px); }
-        .quiz-header h2 { font-size: 2rem; margin-bottom: 10px; }
-        .quiz-controls { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 25px; }
-        .question { background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
-        .question:hover { transform: translateX(5px); }
-        .question h3 { color: #1f2937; margin-bottom: 20px; font-size: 1.2rem; line-height: 1.6; }
-        .option { padding: 15px 20px; border: 2px solid #e5e7eb; border-radius: 10px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s ease; background: white; font-size: 1.05rem; }
-        .option:hover { background: #dbeafe; border-color: #0072ff; transform: translateX(5px); }
-        .option.selected { border-color: #0072ff; background: #dbeafe; font-weight: 600; }
-        .option.correct { border-color: #10b981; background: #d1fae5; font-weight: 600; }
-        .option.incorrect { border-color: #ef4444; background: #fee2e2; font-weight: 600; }
-        .explanation { margin-top: 20px; padding: 20px; background: #dbeafe; border-left: 5px solid #0072ff; border-radius: 8px; display: none; line-height: 1.6; font-size: 1.05rem; }
-        .results-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .results-modal.show { display: flex; }
-        .results-content { background: white; padding: 40px; border-radius: 20px; max-width: 500px; width: 90%; text-align: center; animation: scaleIn 0.3s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .score-circle { width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; margin: 20px auto; box-shadow: 0 10px 20px rgba(0,114,255,0.3); }
-        .btn-primary { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); color: white; padding: 15px 30px; font-size: 1rem; }
-        .btn-secondary { background: #e5e7eb; color: #1f2937; padding: 15px 30px; font-size: 1rem; }
-        .btn-explain { background: #7c3aed; color: white; padding: 15px 30px; font-size: 1rem; }
-        .btn-check { background: #10b981; color: white; padding: 15px 30px; font-size: 1rem; }
-        .btn-new-session { background: #0072ff; color: white; }
+        /* RESET CSS - Remove margens e paddings padrão de todos os elementos */
+        * { margin: 0; padding: 0; box-sizing: border-box; } /* box-sizing border-box inclui bordas no cálculo da largura */
+        
+        /* ESTILOS GERAIS DA PÁGINA */
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); padding: 20px; } /* Fundo com gradiente azul */
+        
+        /* CONTAINER PRINCIPAL - Limita a largura máxima e centraliza */
+        .container { max-width: 1200px; margin: 0 auto; } /* Centraliza horizontalmente */
+        
+        /* CABEÇALHO */
+        .header { text-align: center; color: white; margin-bottom: 30px; } /* Texto centralizado, branco com espaçamento inferior */
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); } /* Título grande com sombra no texto */
+        
+        /* SISTEMA DE ABAS (TABS) */
+        .tabs { display: flex; gap: 10px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; } /* Flexível com espaçamento e quebra em mobile */
+        .tab-btn { padding: 15px 30px; background: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease; } /* Botões das abas com animação suave */
+        .tab-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); } /* Efeito de levantar ao passar mouse */
+        .tab-btn.active { background: #0072ff; color: white; } /* Aba ativa com fundo azul e texto branco */
+        
+        /* CONTEÚDO DAS ABAS */
+        .content { display: none; } /* Esconde todas as abas por padrão */
+        .content.active { display: block; } /* Mostra apenas a aba ativa */
+        
+        /* ÁREA DE FLASHCARDS */
+        .flashcard-area { max-width: 800px; margin: 0 auto; } /* Centraliza com largura máxima */
+        .card-info { background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; color: white; margin-bottom: 20px; text-align: center; backdrop-filter: blur(5px); } /* Informações do card com fundo semi-transparente e efeito blur */
+        
+        /* BOTÕES DE FILTRO */
+        .filter-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap; } /* Botões flexíveis centralizados */
+        .filter-btn { padding: 8px 16px; background: rgba(255,255,255,0.3); border: 2px solid white; border-radius: 8px; color: white; cursor: pointer; transition: all 0.3s ease; font-weight: 600; } /* Botões de filtro com estilo translúcido */
+        .filter-btn:hover { background: rgba(255,255,255,0.5); transform: scale(1.05); } /* Aumenta levemente ao passar mouse */
+        .filter-btn.active { background: white; color: #0072ff; } /* Filtro ativo com fundo branco */
+        
+        /* FLASHCARD PRINCIPAL */
+        .flashcard { background: white; border-radius: 20px; padding: 50px; min-height: 300px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; transition: transform 0.3s ease, box-shadow 0.3s ease; } /* Card branco com sombra e animação */
+        .flashcard:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.3); } /* Levanta e aumenta sombra ao passar mouse */
+        .flashcard-text { font-size: 1.3rem; line-height: 1.8; text-align: center; color: #1f2937; } /* Texto do flashcard */
+        
+        /* INDICADORES DO FLASHCARD */
+        .side-indicator { position: absolute; top: 20px; left: 20px; padding: 5px 10px; background: #0072ff; color: white; border-radius: 5px; font-size: 0.8rem; font-weight: bold; } /* Indicador FRENTE/VERSO no canto superior esquerdo */
+        .flip-hint { position: absolute; bottom: 20px; right: 20px; color: #9ca3af; font-size: 0.8rem; font-style: italic; } /* Dica de clique no canto inferior direito */
+        
+        /* CONTROLES DOS FLASHCARDS */
+        .controls { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; } /* Container flexível para botões */
+        
+        /* ESTILOS BASE PARA BOTÕES */
+        .btn { padding: 15px 30px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); } /* Botão padrão com sombra e animação */
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); } /* Efeito de levantar ao passar mouse */
+        
+        /* VARIAÇÕES DE BOTÕES */
+        .btn-shuffle { background: #f59e0b; color: white; } /* Botão embaralhar laranja */
+        .btn-nav { background: white; font-size: 1.5rem; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; padding: 0; } /* Botões de navegação circulares */
+        .btn-master { background: #e5e7eb; color: #1f2937; min-width: 160px; } /* Botão marcar dominado */
+        .btn-master.mastered { background: #10b981; color: white; } /* Botão dominado - verde */
+        
+        /* ÁREA DE RESUMO */
+        .summary { max-width: 1000px; margin: 0 auto; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); } /* Container do resumo com sombra */
+        .summary h1 { color: #0072ff; border-bottom: 3px solid #0072ff; padding-bottom: 15px; margin-bottom: 30px; } /* Título principal com linha azul abaixo */
+        .summary h2 { color: #0072ff; margin-top: 30px; margin-bottom: 15px; font-size: 1.8rem; } /* Subtítulo */
+        .summary h3 { margin-top: 20px; margin-bottom: 10px; color: #333; font-size: 1.4rem; } /* Título terciário */
+        .summary ul { margin-left: 20px; margin-bottom: 15px; } /* Listas com recuo */
+        .summary li { margin-bottom: 8px; line-height: 1.6; } /* Itens da lista com espaçamento */
+        
+        /* DESTAQUE NO RESUMO */
+        .highlight { background: #dbeafe; border-left: 5px solid #0072ff; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; } /* Bloco de destaque com barra lateral azul */
+        
+        /* ÁREA DO QUIZ */
+        .quiz-area { max-width: 900px; margin: 0 auto; } /* Centraliza área do quiz */
+        .quiz-header { text-align: center; color: white; margin-bottom: 20px; background: rgba(255,255,255,0.2); padding: 20px; border-radius: 15px; backdrop-filter: blur(5px); } /* Cabeçalho do quiz com efeito translúcido */
+        .quiz-header h2 { font-size: 2rem; margin-bottom: 10px; } /* Título do quiz */
+        .quiz-controls { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 25px; } /* Controles do quiz */
+        
+        /* QUESTÕES DO QUIZ */
+        .question { background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s ease; } /* Card da questão */
+        .question:hover { transform: translateX(5px); } /* Move levemente para direita ao passar mouse */
+        .question h3 { color: #1f2937; margin-bottom: 20px; font-size: 1.2rem; line-height: 1.6; } /* Texto da pergunta */
+        
+        /* OPÇÕES DO QUIZ */
+        .option { padding: 15px 20px; border: 2px solid #e5e7eb; border-radius: 10px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s ease; background: white; font-size: 1.05rem; } /* Alternativas das questões */
+        .option:hover { background: #dbeafe; border-color: #0072ff; transform: translateX(5px); } /* Efeito ao passar mouse */
+        .option.selected { border-color: #0072ff; background: #dbeafe; font-weight: 600; } /* Alternativa selecionada */
+        .option.correct { border-color: #10b981; background: #d1fae5; font-weight: 600; } /* Alternativa correta (após verificação) */
+        .option.incorrect { border-color: #ef4444; background: #fee2e2; font-weight: 600; } /* Alternativa incorreta (após verificação) */
+        
+        /* EXPLICAÇÕES DO QUIZ */
+        .explanation { margin-top: 20px; padding: 20px; background: #dbeafe; border-left: 5px solid #0072ff; border-radius: 8px; display: none; line-height: 1.6; font-size: 1.05rem; } /* Área de explicação escondida por padrão */
+        
+        /* MODAL DE RESULTADOS */
+        .results-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; } /* Modal que cobre a tela toda com fundo escuro */
+        .results-modal.show { display: flex; } /* Mostra o modal */
+        .results-content { background: white; padding: 40px; border-radius: 20px; max-width: 500px; width: 90%; text-align: center; animation: scaleIn 0.3s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.3); } /* Conteúdo do modal */
+        
+        /* ANIMAÇÃO DO MODAL */
+        @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } } /* Animação de entrada */
+        
+        /* CÍRCULO DA PONTUAÇÃO */
+        .score-circle { width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; margin: 20px auto; box-shadow: 0 10px 20px rgba(0,114,255,0.3); } /* Círculo com gradiente */
+        
+        /* BOTÕES ESPECÍFICOS */
+        .btn-primary { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); color: white; padding: 15px 30px; font-size: 1rem; } /* Botão principal com gradiente */
+        .btn-secondary { background: #e5e7eb; color: #1f2937; padding: 15px 30px; font-size: 1rem; } /* Botão secundário cinza */
+        .btn-explain { background: #7c3aed; color: white; padding: 15px 30px; font-size: 1rem; } /* Botão de explicações roxo */
+        .btn-check { background: #10b981; color: white; padding: 15px 30px; font-size: 1rem; } /* Botão verificar verde */
+        .btn-new-session { background: #0072ff; color: white; } /* Botão nova sessão azul */
+        
+        /* MEDIA QUERY PARA DISPOSITIVOS MÓVEIS */
         @media (max-width: 768px) {
-            .flashcard { padding: 30px 20px; min-height: 250px; }
-            .flashcard-text { font-size: 1.1rem; }
-            .btn { padding: 12px 20px; }
-            .btn-nav { width: 50px; height: 50px; }
+            .flashcard { padding: 30px 20px; min-height: 250px; } /* Reduz padding em mobile */
+            .flashcard-text { font-size: 1.1rem; } /* Reduz fonte em mobile */
+            .btn { padding: 12px 20px; } /* Reduz padding dos botões */
+            .btn-nav { width: 50px; height: 50px; } /* Reduz botões de navegação */
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <h1>🔐 Security+ Capítulo 3</h1>
-        <p>Soluções Criptográficas (Cryptographic Solutions) — 75 Cards | Pool de 70 Questões | 15 por Sessão</p>
+<div class="container"> <!-- Container principal -->
+    <div class="header"> <!-- Cabeçalho -->
+        <h1>🔐 Security+ Capítulo 3</h1> <!-- Título com ícone -->
+        <p>Soluções Criptográficas (Cryptographic Solutions) — 75 Cards | Pool de 70 Questões | 15 por Sessão</p> <!-- Descrição -->
     </div>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
-        <button class="tab-btn" onclick="showTab(1)">📝 Resumo</button>
-        <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+    <div class="tabs"> <!-- Abas de navegação -->
+        <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button> <!-- Aba de flashcards -->
+        <button class="tab-btn" onclick="showTab(1)">📝 Resumo</button> <!-- Aba de resumo -->
+        <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button> <!-- Aba de quiz -->
     </div>
 
     <!-- ABA 0: FLASHCARDS -->
-    <div id="tab0" class="content active">
-        <div class="flashcard-area">
-            <div class="card-info">
+    <div id="tab0" class="content active"> <!-- Conteúdo da aba flashcards (ativa por padrão) -->
+        <div class="flashcard-area"> <!-- Área dos flashcards -->
+            <div class="card-info"> <!-- Informações dos cards -->
                 <div style="margin-bottom:10px;">
-                    <span id="card-counter">Card 1 de 75</span> | <span id="mastered-count">0 dominados</span>
+                    <span id="card-counter">Card 1 de 75</span> | <span id="mastered-count">0 dominados</span> <!-- Contadores -->
                 </div>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" onclick="filterCards('all',event)">Todos</button>
-                    <button class="filter-btn" onclick="filterCards('unmastered',event)">Não Dominados</button>
-                    <button class="filter-btn" onclick="filterCards('mastered',event)">Dominados</button>
+                <div class="filter-buttons"> <!-- Botões de filtro -->
+                    <button class="filter-btn active" onclick="filterCards('all',event)">Todos</button> <!-- Filtro todos -->
+                    <button class="filter-btn" onclick="filterCards('unmastered',event)">Não Dominados</button> <!-- Filtro não dominados -->
+                    <button class="filter-btn" onclick="filterCards('mastered',event)">Dominados</button> <!-- Filtro dominados -->
                 </div>
             </div>
-            <div class="flashcard" onclick="flipCard()">
-                <div class="side-indicator" id="side-indicator">FRENTE</div>
-                <div class="flashcard-text" id="card-text"></div>
-                <div class="flip-hint">👆 Clique para virar</div>
+            <div class="flashcard" onclick="flipCard()"> <!-- Flashcard clicável -->
+                <div class="side-indicator" id="side-indicator">FRENTE</div> <!-- Indicador frente/verso -->
+                <div class="flashcard-text" id="card-text"></div> <!-- Texto do card -->
+                <div class="flip-hint">👆 Clique para virar</div> <!-- Dica para virar -->
             </div>
-            <div class="controls">
-                <button class="btn btn-nav" onclick="prevCard()">‹</button>
-                <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
-                <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
-                <button class="btn btn-new-session" onclick="newFlashSession()">🔄 Nova Sessão (15)</button>
-                <button class="btn btn-nav" onclick="nextCard()">›</button>
+            <div class="controls"> <!-- Controles dos flashcards -->
+                <button class="btn btn-nav" onclick="prevCard()">‹</button> <!-- Botão anterior -->
+                <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button> <!-- Botão marcar dominado -->
+                <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button> <!-- Botão embaralhar -->
+                <button class="btn btn-new-session" onclick="newFlashSession()">🔄 Nova Sessão (15)</button> <!-- Botão nova sessão -->
+                <button class="btn btn-nav" onclick="nextCard()">›</button> <!-- Botão próximo -->
             </div>
         </div>
     </div>
 
     <!-- ABA 1: RESUMO -->
-    <div id="tab1" class="content">
-        <div class="summary">
-            <h1>Capítulo 3: Criptografia e PKI</h1>
-            <div class="highlight">
-                <strong>🎯 CONCEITOS CRÍTICOS PARA A PROVA:</strong>
-                <ul style="margin-top:10px;">
+    <div id="tab1" class="content"> <!-- Conteúdo da aba resumo -->
+        <div class="summary"> <!-- Container do resumo -->
+            <h1>Capítulo 3: Criptografia e PKI</h1> <!-- Título principal -->
+            <div class="highlight"> <!-- Bloco de destaque -->
+                <strong>🎯 CONCEITOS CRÍTICOS PARA A PROVA:</strong> <!-- Título do destaque -->
+                <ul style="margin-top:10px;"> <!-- Lista de conceitos -->
                     <li>AES = padrão atual de criptografia simétrica (128/192/256 bits)</li>
                     <li>RSA = algoritmo assimétrico mais usado (mínimo 2048 bits)</li>
                     <li>SHA-256 (família SHA-2) = padrão atual de hash</li>
@@ -132,9 +179,9 @@
                 </ul>
             </div>
 
-            <h2>3.1 — Fundamentos de Criptografia</h2>
-            <h3>Terminologia Essencial</h3>
-            <ul>
+            <h2>3.1 — Fundamentos de Criptografia</h2> <!-- Subtítulo -->
+            <h3>Terminologia Essencial</h3> <!-- Sub-subtítulo -->
+            <ul> <!-- Lista -->
                 <li><strong>Plaintext (Cleartext):</strong> Mensagem não criptografada</li>
                 <li><strong>Ciphertext:</strong> Mensagem criptografada</li>
                 <li><strong>Algorithm:</strong> Processo usado para criptografar e descriptografar</li>
@@ -143,7 +190,7 @@
                 <li><strong>Substituição:</strong> Substitui caracteres (ROT13: A→N). <strong>Transposição:</strong> Muda a ordem</li>
             </ul>
 
-            <h3>Criptografia Simétrica</h3>
+            <h3>Criptografia Simétrica</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li>Mesma chave para criptografar e descriptografar — rápida, ideal para grandes volumes</li>
                 <li>Problema: como distribuir a chave com segurança?</li>
@@ -152,7 +199,7 @@
                 <li>Outros: DES (obsoleto, 56 bits), 3DES, RC4 (obsoleto), Blowfish, Twofish, IDEA, CAST</li>
             </ul>
 
-            <h3>Criptografia Assimétrica</h3>
+            <h3>Criptografia Assimétrica</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li>Par de chaves: chave pública cifra → apenas chave privada decifra</li>
                 <li>Mais lenta — usada para troca de chaves e assinaturas, não bulk encryption</li>
@@ -163,22 +210,22 @@
                 <li><strong>ECDSA:</strong> Elliptic Curve DSA — mais amplamente usado hoje</li>
             </ul>
 
-            <h3>Sistemas Híbridos e PFS</h3>
+            <h3>Sistemas Híbridos e PFS</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li>Híbrido: assimétrica cifra a chave simétrica → simétrica cifra os dados em massa</li>
                 <li>Usado em TLS, PGP/GPG, EFS</li>
                 <li><strong>PFS:</strong> Chaves efêmeras por sessão — comprometer uma não expõe as demais</li>
             </ul>
 
-            <h2>3.1.6 — Algoritmos de Criptografia</h2>
-            <h3>Stream Cipher</h3>
+            <h2>3.1.6 — Algoritmos de Criptografia</h2> <!-- Subtítulo -->
+            <h3>Stream Cipher</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li>Criptografa um bit por vez — baseado no OTP (One-Time Pad)</li>
                 <li>Usa chave semente + PRNG = keystream → XOR com dados</li>
                 <li>RC4: mais usado historicamente — hoje obsoleto e inseguro</li>
             </ul>
 
-            <h3>Block Cipher — Modos de Operação</h3>
+            <h3>Block Cipher — Modos de Operação</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li><strong>ECB:</strong> Blocos idênticos → mesmo ciphertext — inseguro, revela padrões</li>
                 <li><strong>CBC:</strong> Usa IV — cada bloco encadeado com ciphertext do anterior</li>
@@ -187,13 +234,13 @@
                 <li><strong>GCM:</strong> CTR + autenticação (MAC) — extremamente eficiente — TLS, SSH, 802.11</li>
             </ul>
 
-            <h3>Lightweight e Homomorphic</h3>
+            <h3>Lightweight e Homomorphic</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li><strong>Lightweight:</strong> Para IoT (pouca RAM, CPU baixo, baterias) — NIST padronizou desde 2018</li>
                 <li><strong>PHE:</strong> Uma operação ilimitada | <strong>SHE:</strong> Operações limitadas | <strong>FHE:</strong> Completo (em desenvolvimento)</li>
             </ul>
 
-            <h2>3.1.9 — Blockchain</h2>
+            <h2>3.1.9 — Blockchain</h2> <!-- Subtítulo -->
             <ul>
                 <li>Lista crescente de blocos protegidos criptograficamente — criado em 2008</li>
                 <li>Cada bloco contém hash do anterior → adulteração detectável</li>
@@ -202,7 +249,7 @@
                 <li>Aplicações: Bitcoin, contratos inteligentes, rastreamento de produtos, identidade digital</li>
             </ul>
 
-            <h2>3.1.13 — Ataques Criptográficos</h2>
+            <h2>3.1.13 — Ataques Criptográficos</h2> <!-- Subtítulo -->
             <ul>
                 <li><strong>Dictionary:</strong> Lista de palavras — defesa: passphrases longas</li>
                 <li><strong>Collision:</strong> Duas entradas com mesmo hash — defesa: hashes mais longos</li>
@@ -211,15 +258,15 @@
                 <li><strong>Post-Quantum Cryptography:</strong> Resposta futura à computação quântica — em desenvolvimento</li>
             </ul>
 
-            <h2>3.2.4 — Implementação Criptográfica</h2>
-            <h3>Obfuscação</h3>
+            <h2>3.2.4 — Implementação Criptográfica</h2> <!-- Subtítulo -->
+            <h3>Obfuscação</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li><strong>Steganography:</strong> Esconde mensagem dentro de mídia — covertext</li>
                 <li><strong>Data Masking:</strong> Substitui campos por "x" — preserva formato</li>
                 <li><strong>Tokenization:</strong> Substitui valor por token aleatório — reversível via token vault</li>
             </ul>
 
-            <h3>Cryptoprocessors</h3>
+            <h3>Cryptoprocessors</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li><strong>TPM:</strong> Chip dentro da CPU — versões 1.2 e 2.0 (incompatíveis) — Windows 10 v1607+ exige TPM 2.0</li>
                 <li>TPM: gera hashes de startup (BitLocker), armazena chaves, gera números aleatórios, criptografia assimétrica completa</li>
@@ -227,8 +274,8 @@
                 <li><strong>Secure Enclave (TEE):</strong> Protege dados em memória — mesmo root não acessa sem autorização</li>
             </ul>
 
-            <h2>3.3.3 — Hashing</h2>
-            <h3>Algoritmos</h3>
+            <h2>3.3.3 — Hashing</h2> <!-- Subtítulo -->
+            <h3>Algoritmos</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li><strong>SHA-2 (SHA-256, SHA-512):</strong> Padrão atual — TLS, SSL, PGP, SSH, IPSec</li>
                 <li><strong>SHA-3:</strong> Alternativa ao SHA-2 (2015) — não substituto</li>
@@ -237,26 +284,26 @@
                 <li><strong>RIPEMD:</strong> Família da UE — usado com Bitcoin e criptomoedas</li>
             </ul>
 
-            <h3>Salting e Key Stretching</h3>
+            <h3>Salting e Key Stretching</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li>Salt: (salt + password) × SHA = hash — único por usuário — impede rainbow tables</li>
                 <li><strong>PBKDF2:</strong> Padrão de key stretching — usado no WPA</li>
                 <li>Key stretching desacelera ataques — atacante precisa de processamento extra por tentativa</li>
             </ul>
 
-            <h2>3.4.9 — Criptografia de Arquivos</h2>
-            <h3>Estados dos Dados</h3>
+            <h2>3.4.9 — Criptografia de Arquivos</h2> <!-- Subtítulo -->
+            <h3>Estados dos Dados</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li><strong>At Rest:</strong> Mídia persistente | <strong>In Transit:</strong> Rede | <strong>In Use:</strong> RAM, cache, CPU</li>
             </ul>
 
-            <h3>Esquema DEK / KEK</h3>
+            <h3>Esquema DEK / KEK</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li><strong>DEK</strong> (Data Encryption Key): chave AES que cifra os dados</li>
                 <li><strong>KEK</strong> (Key Encryption Key): chave privada assimétrica que cifra a DEK</li>
             </ul>
 
-            <h3>EFS (Encrypting File System)</h3>
+            <h3>EFS (Encrypting File System)</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li>NTFS v3 — Windows 2000+ (exceto Home editions)</li>
                 <li>FEK (File Encryption Key) → cifra arquivo com AES → FEK cifrada com chave pública → armazenada no DDF</li>
@@ -265,20 +312,20 @@
                 <li>Arquivo auto-descriptografado ao mover para dispositivo não-NTFS ou via SMB</li>
             </ul>
 
-            <h3>BitLocker / PGP / GPG</h3>
+            <h3>BitLocker / PGP / GPG</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li><strong>BitLocker:</strong> FDE — chave no TPM — chave de recuperação obrigatória no setup</li>
                 <li><strong>GPG:</strong> Implementação open source do PGP — segue OpenPGP (RFC 4880)</li>
                 <li>GPG: AES por padrão | PGP: RSA/DH assimétrica + IDEA simétrica</li>
             </ul>
 
-            <h2>3.5 — Public Key Infrastructure (PKI)</h2>
-            <h3>Certificado Digital (X.509)</h3>
+            <h2>3.5 — Public Key Infrastructure (PKI)</h2> <!-- Subtítulo -->
+            <h3>Certificado Digital (X.509)</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li>Wrapper para chave pública — assinado pela CA — campos: Version, Serial Number, Signature Algorithm, Issuer, Valid From/To, Subject, Public Key, Extensions</li>
             </ul>
 
-            <h3>Tipos de Certificados</h3>
+            <h3>Tipos de Certificados</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li><strong>Root:</strong> Auto-assinado — topo da hierarquia — RSA 2048/4096 bits</li>
                 <li><strong>SAN:</strong> Múltiplos domínios/IPs em um certificado — método atual (CN depreciado)</li>
@@ -288,7 +335,7 @@
                 <li><strong>Email:</strong> S/MIME | <strong>User/Computer:</strong> Autenticação em rede</li>
             </ul>
 
-            <h3>Revogação — CRL e OCSP</h3>
+            <h3>Revogação — CRL e OCSP</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li><strong>CRL:</strong> Lista de revogados — baixada periodicamente — pode estar desatualizada</li>
                 <li><strong>OCSP:</strong> Substitui CRL — verifica status individual em tempo real</li>
@@ -296,7 +343,7 @@
                 <li>Razões: Key Compromise, CA Compromise, Superseded, Cessation of Operation, Certificate Hold</li>
             </ul>
 
-            <h3>Root of Trust e Key Backup</h3>
+            <h3>Root of Trust e Key Backup</h3> <!-- Sub-subtítulo -->
             <ul>
                 <li>Hierárquico: Root CA → CAs intermediárias → leaf/end-entity certs (chain of trust)</li>
                 <li><strong>Key Archival:</strong> CA armazena backup — risco: CA comprometida expõe tudo</li>
@@ -307,39 +354,40 @@
     </div>
 
     <!-- ABA 2: QUIZ -->
-    <div id="tab2" class="content">
-        <div class="quiz-area">
-            <div class="quiz-header">
+    <div id="tab2" class="content"> <!-- Conteúdo da aba quiz -->
+        <div class="quiz-area"> <!-- Área do quiz -->
+            <div class="quiz-header"> <!-- Cabeçalho do quiz -->
                 <h2>Quiz — Sessão de 15 Questões</h2>
                 <p>Pool de 70 questões • Nova sessão sorteia 15 aleatórias</p>
             </div>
-            <div class="quiz-controls">
-                <button class="btn btn-primary" onclick="newSession()">🔄 Nova Sessão (15)</button>
+            <div class="quiz-controls"> <!-- Controles do quiz -->
+                <button class="btn btn-primary" onclick="newSession()">🔄 Nova Sessão (15)</button> <!-- Botão nova sessão -->
             </div>
-            <div id="questions"></div>
+            <div id="questions"></div> <!-- Container para as questões -->
             <div style="text-align:center; margin-top:30px; margin-bottom:20px;">
-                <button class="btn btn-check" id="btn-check" onclick="checkAnswers()" style="display:none;">✅ Ver Resultados</button>
+                <button class="btn btn-check" id="btn-check" onclick="checkAnswers()" style="display:none;">✅ Ver Resultados</button> <!-- Botão verificar -->
             </div>
         </div>
     </div>
 </div>
 
 <!-- Modal de Resultados -->
-<div class="results-modal" id="results-modal">
-    <div class="results-content">
+<div class="results-modal" id="results-modal"> <!-- Modal -->
+    <div class="results-content"> <!-- Conteúdo do modal -->
         <h2>Resultado da Sessão</h2>
-        <div class="score-circle" id="score-circle">0%</div>
-        <p id="score-text" style="font-size:1.2rem;margin-bottom:20px;"></p>
+        <div class="score-circle" id="score-circle">0%</div> <!-- Pontuação -->
+        <p id="score-text" style="font-size:1.2rem;margin-bottom:20px;"></p> <!-- Texto da pontuação -->
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-            <button class="btn btn-primary" onclick="newSession()">🔄 Nova Sessão</button>
-            <button class="btn btn-secondary" onclick="closeModal()">Fechar</button>
+            <button class="btn btn-primary" onclick="newSession()">🔄 Nova Sessão</button> <!-- Botão nova sessão -->
+            <button class="btn btn-secondary" onclick="closeModal()">Fechar</button> <!-- Botão fechar -->
         </div>
-        <button class="btn btn-explain" onclick="verExplicacoes()" style="margin-top:12px;width:100%;">💡 Ver Explicações</button>
+        <button class="btn btn-explain" onclick="verExplicacoes()" style="margin-top:12px;width:100%;">💡 Ver Explicações</button> <!-- Botão explicações -->
     </div>
 </div>
 
 <script>
 // ========== FLASHCARDS ==========
+// Array contendo todos os flashcards (frente e verso)
 const cards = [
     // Conceitos Básicos (1-10)
     {f:"O que é criptografia?", b:"Processo de escrever ou resolver mensagens usando código secreto. Diferente de segurança por obscuridade: mesmo conhecendo o método, sem a chave não se decifra."},
@@ -428,6 +476,7 @@ const cards = [
 ];
 
 // ========== QUIZ — POOL DE 70 QUESTÕES ==========
+// Array com todas as questões do quiz (pergunta, opções, resposta correta, explicação)
 const allQuiz = [
     // QUESTÕES EXISTENTES REVISADAS (1-30)
     {q:"Qual tipo de criptografia usa a mesma chave para criptografar e descriptografar?",
@@ -644,23 +693,25 @@ const allQuiz = [
 ];
 
 // ========== ESTADO — FLASHCARDS ==========
-let currentCard = 0;
-let flipped = false;
-let mastered = new Set();
-let filteredCards = [...Array(cards.length).keys()];
-let currentFilter = 'all';
+let currentCard = 0; // Índice do card atual
+let flipped = false; // Estado do card (frente ou verso)
+let mastered = new Set(); // Conjunto de cards dominados
+let filteredCards = [...Array(cards.length).keys()]; // Lista de cards filtrados (índices)
+let currentFilter = 'all'; // Filtro atual
 
 // ========== ESTADO — QUIZ ==========
-let sessionQuiz = [];
-let answers = {};
-let checked = false;
-let explanationsVisible = false;
+let sessionQuiz = []; // Questões da sessão atual
+let answers = {}; // Respostas do usuário
+let checked = false; // Se as respostas já foram verificadas
+let explanationsVisible = false; // Se as explicações estão visíveis
 
 // ========== ARMAZENAMENTO ==========
+// Função para carregar progresso do localStorage
 function loadProgress() {
     const saved = localStorage.getItem('security_plus_cap3_mastered');
     if (saved) mastered = new Set(JSON.parse(saved));
 }
+// Função para salvar progresso no localStorage
 function saveProgress() {
     localStorage.setItem('security_plus_cap3_mastered', JSON.stringify([...mastered]));
 }
@@ -670,26 +721,28 @@ function getSession(pool, n) {
     return [...pool].sort(() => Math.random() - 0.5).slice(0, n);
 }
 
-loadProgress();
+loadProgress(); // Carrega progresso salvo
 
 // ========== ABAS ==========
+// Função para trocar entre as abas
 function showTab(n) {
     document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
     document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
-    if (n === 2 && sessionQuiz.length === 0) newSession();
+    if (n === 2 && sessionQuiz.length === 0) newSession(); // Se for aba de quiz e não houver sessão, cria nova
 }
 
 // ========== FLASHCARDS ==========
+// Função para atualizar a exibição do flashcard
 function updateCard() {
-    if (filteredCards.length === 0) {
+    if (filteredCards.length === 0) { // Se não houver cards no filtro atual
         document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
         document.getElementById('card-counter').textContent = 'Card 0 de 0';
         document.getElementById('side-indicator').textContent = 'FRENTE';
         return;
     }
-    const cardIndex = filteredCards[currentCard];
-    const card = cards[cardIndex];
-    document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+    const cardIndex = filteredCards[currentCard]; // Índice do card atual
+    const card = cards[cardIndex]; // Card atual
+    document.getElementById('card-text').textContent = flipped ? card.b : card.f; // Mostra frente ou verso
     document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
     document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
     const btn = document.getElementById('master-btn');
@@ -698,28 +751,34 @@ function updateCard() {
     btn.classList.toggle('mastered', isMastered);
     document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
 }
+// Função para virar o card
 function flipCard() { flipped = !flipped; updateCard(); }
+// Função para próximo card
 function nextCard() {
     if (!filteredCards.length) return;
     currentCard = (currentCard + 1) % filteredCards.length;
     flipped = false; updateCard();
 }
+// Função para card anterior
 function prevCard() {
     if (!filteredCards.length) return;
     currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
     flipped = false; updateCard();
 }
+// Função para marcar/desmarcar como dominado
 function toggleMaster() {
     if (!filteredCards.length) return;
     const idx = filteredCards[currentCard];
     mastered.has(idx) ? mastered.delete(idx) : mastered.add(idx);
     saveProgress(); updateCard();
 }
+// Função para nova sessão de flashcards (15 aleatórios)
 function newFlashSession() {
     filteredCards = getSession([...Array(cards.length).keys()], 15);
     currentCard = 0; flipped = false; updateCard();
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
 }
+// Função para embaralhar cards
 function shuffleCards() {
     for (let i = filteredCards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -730,6 +789,7 @@ function shuffleCards() {
     btn.style.transform = 'rotate(180deg)';
     setTimeout(() => btn.style.transform = 'rotate(0deg)', 300);
 }
+// Função para filtrar cards
 function filterCards(type, event) {
     currentFilter = type;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -741,13 +801,15 @@ function filterCards(type, event) {
 }
 
 // ========== QUIZ ==========
+// Função para iniciar nova sessão de quiz
 function newSession() {
-    sessionQuiz = getSession(allQuiz, 15);
+    sessionQuiz = getSession(allQuiz, 15); // Pega 15 questões aleatórias
     answers = {}; checked = false; explanationsVisible = false;
-    document.getElementById('results-modal').classList.remove('show');
-    document.getElementById('btn-check').style.display = 'inline-flex';
-    loadQuiz();
+    document.getElementById('results-modal').classList.remove('show'); // Esconde modal
+    document.getElementById('btn-check').style.display = 'inline-flex'; // Mostra botão verificar
+    loadQuiz(); // Carrega as questões
 }
+// Função para carregar as questões na tela
 function loadQuiz() {
     const container = document.getElementById('questions');
     container.innerHTML = '';
@@ -771,53 +833,57 @@ function loadQuiz() {
         container.appendChild(div);
     });
 }
+// Função para selecionar uma opção
 function selectOpt(qi, oi) {
-    if (checked) return;
+    if (checked) return; // Se já verificou, não permite mais alterações
     sessionQuiz[qi].o.forEach((_, i) => {
         const el = document.getElementById(`q${qi}o${i}`);
         if (el) el.classList.remove('selected');
     });
     const el = document.getElementById(`q${qi}o${oi}`);
     if (el) el.classList.add('selected');
-    answers[qi] = oi;
+    answers[qi] = oi; // Armazena resposta
 }
+// Função para verificar as respostas
 function checkAnswers() {
     checked = true;
     let correct = 0;
     sessionQuiz.forEach((q, qi) => {
-        const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+        const correctAnswer = Array.isArray(q.c) ? q.c : [q.c]; // Suporte para múltiplas respostas corretas
         q.o.forEach((_, oi) => {
             const el = document.getElementById(`q${qi}o${oi}`);
             if (!el) return;
-            if (correctAnswer.includes(oi)) el.classList.add('correct');
-            else if (answers[qi] === oi) el.classList.add('incorrect');
+            if (correctAnswer.includes(oi)) el.classList.add('correct'); // Marca correta
+            else if (answers[qi] === oi) el.classList.add('incorrect'); // Marca incorreta se foi a escolhida
         });
         const expEl = document.getElementById(`exp${qi}`);
-        if (expEl) expEl.style.display = 'block';
-        if (correctAnswer.includes(answers[qi])) correct++;
+        if (expEl) expEl.style.display = 'block'; // Mostra explicação
+        if (correctAnswer.includes(answers[qi])) correct++; // Conta acertos
     });
     explanationsVisible = true;
-    document.getElementById('btn-check').style.display = 'none';
+    document.getElementById('btn-check').style.display = 'none'; // Esconde botão verificar
     const pct = Math.round((correct / sessionQuiz.length) * 100);
     document.getElementById('score-circle').textContent = `${pct}%`;
     document.getElementById('score-text').textContent =
         `${correct}/${sessionQuiz.length} corretas — ${pct >= 70 ? '✅ APROVADO!' : '📚 Precisa estudar mais'}`;
-    document.getElementById('results-modal').classList.add('show');
+    document.getElementById('results-modal').classList.add('show'); // Mostra modal
 }
+// Função para ver explicações
 function verExplicacoes() {
-    document.getElementById('results-modal').classList.remove('show');
+    document.getElementById('results-modal').classList.remove('show'); // Fecha modal
     sessionQuiz.forEach((_, qi) => {
         const el = document.getElementById(`exp${qi}`);
-        if (el) el.style.display = 'block';
+        if (el) el.style.display = 'block'; // Mostra explicações
     });
-    document.getElementById('questions').scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('questions').scrollIntoView({ behavior: 'smooth' }); // Scroll suave para as questões
 }
+// Função para fechar modal
 function closeModal() {
     document.getElementById('results-modal').classList.remove('show');
 }
 
 // ========== INIT ==========
-updateCard();
+updateCard(); // Inicializa o primeiro card
 </script>
 </body>
 </html>
