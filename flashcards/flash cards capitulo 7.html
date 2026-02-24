@@ -3,1378 +3,831 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security+ Cap 7 - Vulnerability Management</title>
+    <title>Security+ Cap 7 - Gerenciamento de Vulnerabilidades</title>
     <style>
-        /* ===== RESET CSS ===== */
-        /* Remove todas as margens e paddings padrão do navegador */
-        /* box-sizing: border-box faz com que padding e bordas sejam incluídos na largura total */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Gradiente verde - tema do capítulo 7 (Vulnerability Management) */
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            min-height: 100vh; /* Garante que o fundo cubra toda a altura da tela */
+            min-height: 100vh;
             padding: 20px;
         }
-        
-        .container { 
-            max-width: 1200px; /* Largura máxima para telas grandes */
-            margin: 0 auto; /* Centraliza horizontalmente */
-        }
-        
-        /* ===== CABEÇALHO ===== */
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-            animation: fadeIn 0.5s; /* Animação de entrada suave */
-        }
-        
-        .header h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2); /* Sombra para destacar o texto */
-        }
-        
-        /* Barra de estatísticas com design de cards */
-        .stats-bar {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap; /* Em telas pequenas, os cards quebram para a linha de baixo */
-        }
-        
-        .stat-card {
-            background: rgba(255,255,255,0.2); /* Fundo semi-transparente */
-            padding: 15px 25px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px); /* Efeito vidro fosco (glassmorphism) */
-            color: white;
-            font-weight: bold;
-        }
-        
-        /* ===== ABAS (TABS) ===== */
-        .tabs {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .tab-btn {
-            padding: 15px 30px;
-            background: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease; /* Transição suave para efeitos hover */
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .tab-btn:hover {
-            transform: translateY(-2px); /* Efeito de elevação ao passar o mouse */
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-        
-        .tab-btn.active {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-        }
-        
-        /* Controle de visibilidade das abas */
-        .content { 
-            display: none; /* Por padrão, todas as abas ficam ocultas */
-            animation: fadeIn 0.4s;
-        }
-        .content.active { display: block; } /* Apenas a aba ativa aparece */
-        
-        /* Animação de fade in */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* ===== FLASHCARDS ===== */
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; color: white; margin-bottom: 40px; animation: fadeIn 0.5s; }
+        .header h1 { font-size: 2.8rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .stats-bar { display: flex; gap: 20px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        .stat-card { background: rgba(255,255,255,0.2); padding: 15px 25px; border-radius: 12px; backdrop-filter: blur(10px); color: white; font-weight: bold; }
+        .tabs { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        .tab-btn { padding: 15px 30px; background: white; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .tab-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .tab-btn.active { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
+        .content { display: none; animation: fadeIn 0.4s; }
+        .content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* FLASHCARDS */
         .flashcard-area { max-width: 900px; margin: 0 auto; }
-        
-        /* Área de informações do card (contador, filtros, progresso) */
-        .card-info {
-            background: rgba(255,255,255,0.25);
-            padding: 20px;
-            border-radius: 15px;
-            color: white;
-            margin-bottom: 25px;
-            backdrop-filter: blur(10px);
-        }
-        
-        /* Barra de progresso de cards dominados */
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 10px;
-            overflow: hidden; /* Esconde as bordas do fill para que fique arredondado */
-            margin-top: 10px;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #10b981, #34d399); /* Gradiente verde */
-            transition: width 0.3s ease; /* Animação suave ao atualizar a largura */
-        }
-        
-        /* O flashcard em si */
-        .flashcard {
-            background: white;
-            border-radius: 20px;
-            padding: 60px 40px;
-            min-height: 350px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer; /* Mãozinha indicando que é clicável */
-            transition: transform 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            position: relative; /* Para posicionar o indicador de frente/verso */
-            margin-bottom: 30px;
-        }
-        
-        .flashcard:hover { transform: scale(1.02); } /* Leve zoom ao passar o mouse */
-        
-        /* Indicador de FRENTE/VERSO */
-        .side-indicator {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 8px 16px;
-            background: #11998e; /* Verde do tema */
-            color: white;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        
-        .flashcard-text {
-            font-size: 1.4rem;
-            line-height: 1.8;
-            text-align: center;
-            color: #1f2937; /* Cinza escuro */
-        }
-        
-        .flip-hint {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #6b7280; /* Cinza médio */
-            font-style: italic;
-        }
-        
-        /* ===== CONTROLES (BOTÕES) ===== */
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-        
-        .btn-nav {
-            background: white;
-            font-size: 1.5rem;
-            width: 55px;
-            height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Botão "Marcar Dominado" - muda de cor quando o card está dominado */
-        .btn-master {
-            background: #e5e7eb;
-            color: #1f2937;
-        }
-        
-        .btn-master.mastered {
-            background: #10b981; /* Verde quando dominado */
-            color: white;
-        }
-        
-        .btn-shuffle {
-            background: #f59e0b; /* Laranja - botão de embaralhar */
-            color: white;
-        }
-        
-        /* ===== QUIZ ===== */
+        .card-info { background: rgba(255,255,255,0.25); padding: 20px; border-radius: 15px; color: white; margin-bottom: 25px; backdrop-filter: blur(10px); }
+        .progress-bar { width: 100%; height: 8px; background: rgba(255,255,255,0.3); border-radius: 10px; overflow: hidden; margin-top: 10px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #10b981, #34d399); transition: width 0.3s ease; }
+        .flashcard { background: white; border-radius: 20px; padding: 60px 40px; min-height: 350px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; margin-bottom: 30px; }
+        .flashcard:hover { transform: scale(1.02); }
+        .side-indicator { position: absolute; top: 20px; left: 20px; padding: 8px 16px; background: #11998e; color: white; border-radius: 8px; font-size: 0.9rem; font-weight: 600; }
+        .category-badge { position: absolute; top: 20px; right: 20px; padding: 8px 16px; background: #e5e7eb; color: #374151; border-radius: 8px; font-size: 0.85rem; font-weight: 600; }
+        .flashcard-text { font-size: 1.4rem; line-height: 1.8; text-align: center; color: #1f2937; }
+        .flip-hint { margin-top: 20px; font-size: 0.9rem; color: #6b7280; font-style: italic; }
+        .controls { display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap; }
+        .btn { padding: 15px 30px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .btn-nav { background: white; font-size: 1.5rem; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; }
+        .btn-master { background: #e5e7eb; color: #1f2937; }
+        .btn-master.mastered { background: #10b981; color: white; }
+        .btn-new-session { background: #f59e0b; color: white; }
+        .filter-bar { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-btn { padding: 10px 20px; border: 2px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.2); color: white; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .filter-btn.active { background: white; color: #11998e; }
+
+        /* QUIZ */
         .quiz-area { max-width: 1000px; margin: 0 auto; }
-        
-        .quiz-header {
-            text-align: center;
-            color: white;
-            margin-bottom: 35px;
-        }
-        
-        /* Cada questão do quiz */
-        .question {
-            background: white;
-            border-radius: 18px;
-            padding: 35px;
-            margin-bottom: 25px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-        
-        .question h3 {
-            color: #1f2937;
-            margin-bottom: 20px;
-            font-size: 1.25rem;
-            line-height: 1.6;
-        }
-        
-        /* Opções de resposta */
-        .option {
-            padding: 18px 20px;
-            border: 3px solid #e5e7eb;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: white;
-            font-size: 1.05rem;
-        }
-        
-        .option:hover {
-            background: #d1fae5; /* Verde clarinho */
-            border-color: #11998e; /* Verde do tema */
-            transform: translateX(5px); /* Desloca para a direita */
-        }
-        
-        /* Estados das opções */
-        .option.selected {  /* Opção selecionada pelo usuário */
-            border-color: #11998e;
-            background: #d1fae5;
-            font-weight: 600;
-        }
-        
-        .option.correct {  /* Opção correta (após verificar) */
-            border-color: #10b981;
-            background: #d1fae5;
-            font-weight: 600;
-        }
-        
-        .option.incorrect {  /* Opção errada (após verificar) */
-            border-color: #ef4444; /* Vermelho */
-            background: #fee2e2;
-            font-weight: 600;
-        }
-        
-        /* Explicação da resposta correta */
-        .explanation {
-            margin-top: 20px;
-            padding: 20px;
-            background: #d1fae5;
-            border-left: 5px solid #11998e;
-            border-radius: 8px;
-            display: none; /* Inicialmente oculta, só aparece após verificar */
-            line-height: 1.6;
-        }
-        
-        /* ===== MODAL DE RESULTADOS ===== */
-        .results-modal {
-            position: fixed; /* Fixo na tela, cobre todo o conteúdo */
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7); /* Fundo escuro semi-transparente */
-            display: none; /* Inicialmente oculto */
-            align-items: center;
-            justify-content: center;
-            z-index: 1000; /* Fica acima de todo o conteúdo da página */
-        }
-        
-        .results-modal.show { display: flex; } /* Quando ativo, mostra com flex */
-        
-        .results-content {
-            background: white;
-            padding: 50px;
-            border-radius: 25px;
-            max-width: 500px;
-            text-align: center;
-            animation: scaleIn 0.3s ease; /* Animação de entrada */
-        }
-        
-        @keyframes scaleIn {
-            from { transform: scale(0.9); }
-            to { transform: scale(1); }
-        }
-        
-        .score-circle {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            font-weight: bold;
-            margin: 30px auto;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-            padding: 18px 45px;
-            font-size: 1.1rem;
-        }
-        
-        /* ===== BOTÕES DE FILTRO ===== */
-        .filter-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .filter-btn {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.3);
-            border: 2px solid white;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-        
-        .filter-btn.active {
-            background: white;
-            color: #11998e; /* Verde do tema quando ativo */
-        }
+        .quiz-header { text-align: center; color: white; margin-bottom: 35px; }
+        .question { background: white; border-radius: 18px; padding: 35px; margin-bottom: 25px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+        .question h3 { color: #1f2937; margin-bottom: 20px; font-size: 1.25rem; line-height: 1.6; }
+        .option { padding: 18px 20px; border: 3px solid #e5e7eb; border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s ease; background: white; font-size: 1.05rem; }
+        .option:hover { background: #d1fae5; border-color: #11998e; transform: translateX(5px); }
+        .option.selected { border-color: #11998e; background: #d1fae5; font-weight: 600; }
+        .option.correct { border-color: #10b981; background: #d1fae5; font-weight: 600; }
+        .option.incorrect { border-color: #ef4444; background: #fee2e2; font-weight: 600; }
+        .explanation { margin-top: 20px; padding: 20px; background: #d1fae5; border-left: 5px solid #11998e; border-radius: 8px; display: none; line-height: 1.6; }
+        .quiz-controls { text-align: center; margin-top: 30px; margin-bottom: 20px; }
+
+        /* MODAL */
+        .results-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .results-modal.show { display: flex; }
+        .results-content { background: white; padding: 50px; border-radius: 25px; max-width: 500px; width: 90%; text-align: center; animation: scaleIn 0.3s ease; }
+        @keyframes scaleIn { from { transform: scale(0.9); } to { transform: scale(1); } }
+        .result-emoji { font-size: 3.5rem; margin-bottom: 10px; }
+        .score-circle { width: 180px; height: 180px; border-radius: 50%; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: bold; margin: 20px auto; }
+        .modal-buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; }
+        .btn-primary { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
+        .btn-secondary { background: #6b7280; color: white; }
+        .btn-explain-modal { background: #7c3aed; color: white; margin-top: 12px; width: 100%; }
+
+        /* RESUMO */
+        .summary-area { max-width: 900px; margin: 0 auto; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .summary-area h1 { color: #11998e; margin-bottom: 20px; font-size: 2rem; }
+        .summary-area h2 { color: #38ef7d; background: #064e3b; padding: 12px 20px; border-radius: 8px; margin: 30px 0 15px 0; font-size: 1.4rem; }
+        .summary-area h3 { color: #11998e; margin: 20px 0 10px 0; font-size: 1.1rem; }
+        .summary-area ul { margin-left: 25px; margin-bottom: 15px; line-height: 1.8; }
+        .summary-area table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .summary-area th { background: #11998e; color: white; padding: 10px; }
+        .summary-area td { padding: 10px; border: 1px solid #e5e7eb; }
+        .summary-area tr:nth-child(even) td { background: #f9fafb; }
+        .tip-box { background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .tip-box h3 { color: #ec4899; margin-bottom: 10px; }
+        .warning-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .info-box { background: #d1fae5; border-left: 5px solid #10b981; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .grid-2 { display: flex; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
+        .grid-2 > div { flex: 1; min-width: 250px; padding: 20px; border-radius: 10px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- ===== CABEÇALHO ===== -->
-        <div class="header">
-            <h1>🛡️ Security+ Capítulo 7</h1>
-            <p>Vulnerability Management - 70 Cards | 35 Questões</p>
-            <div class="stats-bar">
-                <div class="stat-card">📚 70 Flashcards</div>
-                <div class="stat-card">❓ 35 Questões</div>
-                <!-- ID para atualização dinâmica via JavaScript -->
-                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+<div class="container">
+    <div class="header">
+        <h1>🔍 Capítulo 7</h1>
+        <p style="font-size:1.3rem; opacity:0.9;">Gerenciamento de Vulnerabilidades</p>
+        <div class="stats-bar">
+            <div class="stat-card">🧠 <span id="total-cards-stat">0</span> Flashcards</div>
+            <div class="stat-card">❓ 75 Questões no pool</div>
+            <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+        <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
+        <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+    </div>
+
+    <!-- ABA 0: FLASHCARDS -->
+    <div id="tab0" class="content active">
+        <div class="flashcard-area">
+            <div class="card-info">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <span id="card-counter">Card 1 de 130</span>
+                    <span id="mastered-count">0 dominados</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
             </div>
-        </div>
-
-        <!-- ===== ABAS ===== -->
-        <div class="tabs">
-            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
-            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
-            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
-        </div>
-
-        <!-- ===== ABA 0: FLASHCARDS ===== -->
-        <div id="tab0" class="content active">
-            <div class="flashcard-area">
-                <!-- Informações do card e filtros -->
-                <div class="card-info">
-                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
-                        <div>
-                            <!-- IDs para atualização dinâmica via JavaScript -->
-                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 70</div>
-                            <div id="mastered-count">0 dominados</div>
-                        </div>
-                        <!-- Botões de filtro -->
-                        <div class="filter-buttons">
-                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
-                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
-                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
-                        </div>
-                    </div>
-                    <!-- Barra de progresso -->
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
-                    </div>
-                </div>
-                
-                <!-- O flashcard em si -->
-                <div class="flashcard" onclick="flipCard()">
-                    <div class="side-indicator" id="side-indicator">FRENTE</div>
-                    <div class="flashcard-text" id="card-text"></div>
-                    <div class="flip-hint">👆 Clique para virar</div>
-                </div>
-
-                <!-- Botões de controle -->
-                <div class="controls">
-                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
-                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
-                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
-                    <button class="btn btn-nav" onclick="nextCard()">›</button>
-                </div>
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
+                <button class="filter-btn" onclick="filterCards('unmastered', event)">Não Dominados</button>
+                <button class="filter-btn" onclick="filterCards('mastered', event)">Dominados</button>
             </div>
-        </div>
-
-        <!-- ===== ABA 1: RESUMO ===== -->
-        <div id="tab1" class="content">
-            <div class="summary" style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-                <h1 style="color: #11998e; margin-bottom: 30px; font-size: 2.5rem; border-bottom: 4px solid #11998e; padding-bottom: 15px;">📖 Resumo - Capítulo 7</h1>
-                
-                <!-- Destaque com conceitos críticos para a prova -->
-                <div style="background: #d1fae5; border-left: 5px solid #10b981; padding: 20px; margin: 20px 0; border-radius: 8px;">
-                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
-                    <ul style="margin-top: 10px; margin-left: 20px;">
-                        <li><strong>Ciclo de Vulnerability Management:</strong> Discovery → Assessment → Prioritization → Remediation → Verification → Monitoring</li>
-                        <li><strong>CVSS Score:</strong> Critical (9-10), High (7-8.9), Medium (4-6.9), Low (0.1-3.9)</li>
-                        <li><strong>False Negative</strong> (vuln real não detectada) é MAIS GRAVE que False Positive</li>
-                        <li><strong>Credentialed Scan:</strong> Mais profundo (com login) | <strong>Non-credentialed:</strong> Visão de atacante externo</li>
-                        <li><strong>SIEM</strong> coleta e correlaciona logs | <strong>SOAR</strong> automatiza resposta a incidentes</li>
-                    </ul>
-                </div>
-
-                <h2 style="color: #38ef7d; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">1️⃣ Ciclo de Gestão de Vulnerabilidades</h2>
-                
-                <!-- Cards visuais das 6 fases do ciclo de Vulnerability Management -->
-                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0;">
-                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #11998e;">
-                        <strong>1. Discovery</strong><br>Identificar ativos e vulnerabilidades
-                    </div>
-                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #11998e;">
-                        <strong>2. Assessment</strong><br>Avaliar severidade e impacto
-                    </div>
-                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #11998e;">
-                        <strong>3. Prioritization</strong><br>Priorizar por risco (CVSS + contexto)
-                    </div>
-                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #11998e;">
-                        <strong>4. Remediation</strong><br>Aplicar patches, workarounds, mitigações
-                    </div>
-                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #11998e;">
-                        <strong>5. Verification</strong><br>Verificar se a correção foi efetiva
-                    </div>
-                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #11998e;">
-                        <strong>6. Monitoring</strong><br>Monitorar continuamente novas ameaças
-                    </div>
-                </div>
-
-                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Tipos de Vulnerabilidades</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Software:</strong> Bugs, falhas de código, bibliotecas vulneráveis</li>
-                    <li><strong>Configuration:</strong> Configurações incorretas, defaults inseguros (ex: senhas padrão)</li>
-                    <li><strong>Platform:</strong> SO desatualizado, serviços desnecessários rodando</li>
-                    <li><strong>Hardware:</strong> Firmware desatualizado, falhas físicas (ex: Meltdown/Spectre)</li>
-                    <li><strong>Zero-Day:</strong> Vulnerabilidade desconhecida do fabricante, sem patch disponível</li>
-                    <li><strong>Legacy Systems:</strong> Sistemas antigos sem suporte (EOL/EOSL)</li>
-                    <li><strong>Weak Encryption:</strong> Algoritmos fracos (MD5, SHA-1, RC4) ou mal implementados</li>
-                </ul>
-
-                <h2 style="color: #38ef7d; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ CVSS, CVE e NVD</h2>
-
-                <!-- Tabela de scores CVSS -->
-                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-                    <tr><th style="background:#11998e; color:white;">Score</th><th style="background:#11998e; color:white;">Severidade</th></tr>
-                    <tr><td>0.0</td><td>None</td></tr>
-                    <tr><td>0.1 - 3.9</td><td>Low (baixo)</td></tr>
-                    <tr><td>4.0 - 6.9</td><td>Medium (médio)</td></tr>
-                    <tr><td>7.0 - 8.9</td><td>High (alto)</td></tr>
-                    <tr><td>9.0 - 10.0</td><td>Critical (crítico)</td></tr>
-                </table>
-
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>CVE (Common Vulnerabilities and Exposures):</strong> ID único para vulnerabilidades (ex: CVE-2024-12345). Mantido pela MITRE.</li>
-                    <li><strong>CWE (Common Weakness Enumeration):</strong> Catálogo de categorias de fraquezas (ex: CWE-79 = XSS, CWE-89 = SQL Injection)</li>
-                    <li><strong>NVD (National Vulnerability Database):</strong> Banco de dados do governo dos EUA que contém todas as CVEs publicadas, com scores CVSS, informações de impacto e referências.</li>
-                </ul>
-
-                <h2 style="color: #38ef7d; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Vulnerability Scanning</h2>
-
-                <!-- Comparativo credentialed vs non-credentialed -->
-                <div style="display: flex; gap: 20px; margin: 30px 0; flex-wrap: wrap;">
-                    <div style="flex: 1; min-width: 250px; background: #dbeafe; padding: 20px; border-radius: 10px;">
-                        <h3 style="color:#3b82f6; margin-top:0;">🔑 Credentialed Scan</h3>
-                        <ul>
-                            <li>Usa credenciais de acesso (login)</li>
-                            <li>Consegue inspecionar configurações internas</li>
-                            <li>Mais profundo e preciso</li>
-                            <li>Menos falsos negativos</li>
-                        </ul>
-                    </div>
-                    <div style="flex: 1; min-width: 250px; background: #fee2e2; padding: 20px; border-radius: 10px;">
-                        <h3 style="color:#ef4444; margin-top:0;">👁️ Non-credentialed Scan</h3>
-                        <ul>
-                            <li>Sem credenciais</li>
-                            <li>Visão de atacante externo</li>
-                            <li>Mais limitado, apenas o que está exposto</li>
-                            <li>Mais falsos negativos</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Ferramentas de Scan</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Nessus:</strong> Scanner comercial da Tenable. É o mais utilizado no mercado. Interface gráfica amigável, vasta base de plugins.</li>
-                    <li><strong>OpenVAS:</strong> Scanner de vulnerabilidades open source (atualmente Greenbone). Alternativa gratuita ao Nessus.</li>
-                    <li><strong>Qualys:</strong> Plataforma cloud-based de gerenciamento de vulnerabilidades. Monitoramento contínuo.</li>
-                    <li><strong>Rapid7 Nexpose:</strong> Scanner comercial que integra nativamente com o Metasploit, permitindo validação por exploração.</li>
-                    <li><strong>Tenable.io:</strong> Versão cloud do Nessus.</li>
-                </ul>
-
-                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Interpretação de Resultados</h3>
-                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-                    <tr><th style="background:#11998e; color:white;">Tipo</th><th style="background:#11998e; color:white;">Descrição</th></tr>
-                    <tr><td><strong>True Positive</strong></td><td>Vulnerabilidade real detectada corretamente ✅</td></tr>
-                    <tr><td><strong>False Positive</strong></td><td>Alerta incorreto (não é vulnerabilidade) ⚠️</td></tr>
-                    <tr><td><strong>False Negative</strong></td><td>Vulnerabilidade real NÃO detectada ❌ <strong>(MAIS GRAVE!)</strong></td></tr>
-                    <tr><td><strong>True Negative</strong></td><td>Corretamente não alerta (sistema seguro) ✅</td></tr>
-                </table>
-
-                <!-- Destaque para a importância do False Negative -->
-                <div style="background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px;">
-                    <strong>⚠️ REGRA DE OURO:</strong> False Negative é MUITO pior que False Positive! Deixar uma vulnerabilidade real sem detecção pode levar a um ataque real.
-                </div>
-
-                <h2 style="color: #38ef7d; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">4️⃣ SIEM, SOAR e DLP</h2>
-
-                <!-- Cards comparativos SIEM, SOAR, DLP -->
-                <div style="display: flex; gap: 20px; margin: 30px 0; flex-wrap: wrap;">
-                    <div style="flex: 1; min-width: 250px; background: #d1fae5; padding: 20px; border-radius: 10px;">
-                        <h3 style="color:#10b981; margin-top:0;">📊 SIEM</h3>
-                        <p><strong>Security Information and Event Management</strong></p>
-                        <ul>
-                            <li>Coleta e agrega logs de múltiplas fontes</li>
-                            <li>Correlaciona eventos em tempo real</li>
-                            <li>Gera alertas e dashboards</li>
-                            <li>Ex: Splunk, IBM QRadar, ArcSight</li>
-                        </ul>
-                    </div>
-                    <div style="flex: 1; min-width: 250px; background: #fef3c7; padding: 20px; border-radius: 10px;">
-                        <h3 style="color:#f59e0b; margin-top:0;">🤖 SOAR</h3>
-                        <p><strong>Security Orchestration, Automation and Response</strong></p>
-                        <ul>
-                            <li>Automatiza resposta a incidentes</li>
-                            <li>Playbooks automáticos (workflows)</li>
-                            <li>Integra ferramentas de segurança</li>
-                            <li>Ex: Palo Alto Cortex XSOAR, Splunk Phantom</li>
-                        </ul>
-                    </div>
-                    <div style="flex: 1; min-width: 250px; background: #fee2e2; padding: 20px; border-radius: 10px;">
-                        <h3 style="color:#ef4444; margin-top:0;">🔒 DLP</h3>
-                        <p><strong>Data Loss Prevention</strong></p>
-                        <ul>
-                            <li>Network DLP: monitora tráfego de rede</li>
-                            <li>Endpoint DLP: monitora USB, impressão, clipboard</li>
-                            <li>Storage DLP: dados em repouso</li>
-                            <li>Cloud DLP: SaaS (O365, Google Workspace)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">NetFlow</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li>Protocolo da Cisco para coleta de metadados de tráfego</li>
-                    <li><strong>Informações coletadas:</strong> IPs origem/destino, portas, protocolo, bytes, pacotes, timestamps</li>
-                    <li><strong>NÃO captura:</strong> Payload dos pacotes (apenas metadados)</li>
-                    <li><strong>Uso:</strong> Análise de tráfego, detecção de anomalias, capacity planning, investigação de incidentes</li>
-                </ul>
-
-                <h2 style="color: #38ef7d; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">5️⃣ Penetration Testing</h2>
-
-                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Tipos de Conhecimento (Knowledge Types)</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Black Box:</strong> Sem conhecimento prévio do alvo. Simula um atacante externo. Mais realista, porém menos profundo.</li>
-                    <li><strong>White Box:</strong> Conhecimento completo (código fonte, diagramas de arquitetura, credenciais). Mais profundo e eficiente.</li>
-                    <li><strong>Gray Box:</strong> Conhecimento parcial. Simula um atacante com algum nível de acesso (ex: funcionário, fornecedor).</li>
-                </ul>
-
-                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Fases do Pentest</h3>
-                <ol style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Planning:</strong> Definição de escopo, regras de engajamento (ROE), objetivos</li>
-                    <li><strong>Reconnaissance:</strong> Coleta de informações (OSINT, redes sociais, DNS)</li>
-                    <li><strong>Scanning:</strong> Port scan, vulnerability scan, enumeração de serviços</li>
-                    <li><strong>Exploitation:</strong> Explorar vulnerabilidades encontradas, tentar ganhar acesso</li>
-                    <li><strong>Post-Exploitation:</strong> Manter acesso, privilege escalation, lateral movement, exfiltração</li>
-                    <li><strong>Reporting:</strong> Documentar achados, evidências, impacto e recomendações de remediação</li>
-                </ol>
-
-                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Ferramentas de Pentest</h3>
-                <!-- Grid de ferramentas -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; margin: 20px 0;">
-                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>Metasploit:</strong> Framework de exploração, módulos de exploit e payload</div>
-                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>Burp Suite:</strong> Proxy interceptador para testes em aplicações web</div>
-                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>OWASP ZAP:</strong> Web scanner open source, alternativa ao Burp</div>
-                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>Nmap:</strong> Port scanning e descoberta de rede</div>
-                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>sqlmap:</strong> Automação de SQL injection</div>
-                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>Mimikatz:</strong> Extração de credenciais do Windows</div>
-                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>SET (Social Engineer Toolkit):</strong> Automação de engenharia social e phishing</div>
-                    <div style="background:#f3f4f6; padding:10px; border-radius:5px;"><strong>Aircrack-ng:</strong> Teste de segurança Wi-Fi</div>
-                </div>
-
-                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">Regras de Engajamento (ROE)</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li>Documento formal assinado antes do pentest (proteção legal)</li>
-                    <li><strong>Define:</strong> Escopo (IPs, domínios, aplicações), fora de escopo, horários permitidos, métodos autorizados, contatos de emergência</li>
-                    <li>Inclui plano de comunicação e procedimentos em caso de descoberta de dados críticos</li>
-                </ul>
-
-                <!-- Destaque com diferenças importantes -->
-                <div style="background: #d1fae5; border-left: 5px solid #10b981; padding: 20px; margin: 20px 0; border-radius: 8px;">
-                    <strong>💡 DIFERENÇAS IMPORTANTES:</strong>
-                    <ul style="margin-top: 10px;">
-                        <li><strong>Vulnerability Scan vs Pentest:</strong> Scan é automatizado, identifica vulnerabilidades conhecidas mas não explora. Pentest é manual, explora vulnerabilidades para validar se são realmente exploráveis.</li>
-                        <li><strong>Pentest vs Red Team:</strong> Pentest tem escopo definido, objetivo é encontrar o máximo de vulnerabilidades. Red Team tem objetivo específico (ex: acessar um ativo crítico), opera de forma stealth, testa a capacidade de detecção da defesa (Blue Team).</li>
-                    </ul>
-                </div>
-
-                <h2 style="color: #38ef7d; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">6️⃣ Remediação e Opções</h2>
-
-                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-                    <tr><th style="background:#11998e; color:white;">Opção</th><th style="background:#11998e; color:white;">Descrição</th></tr>
-                    <tr><td><strong>Patch</strong></td><td>Aplicar correção oficial do fabricante (a melhor opção quando disponível)</td></tr>
-                    <tr><td><strong>Workaround</strong></td><td>Solução temporária até que o patch oficial seja aplicado (ex: desabilitar funcionalidade vulnerável)</td></tr>
-                    <tr><td><strong>Mitigation</strong></td><td>Reduzir o risco sem eliminar a vulnerabilidade (ex: regra de firewall, WAF, segmentação)</td></tr>
-                    <tr><td><strong>Accept</strong></td><td>Aceitar o risco formalmente (baixo impacto, alto custo de correção, necessidade de aprovação da gestão)</td></tr>
-                    <tr><td><strong>Exception</strong></td><td>Aceitar temporariamente com justificativa, renovável periodicamente</td></tr>
-                </table>
-
-                <h3 style="color: #11998e; margin-top: 20px; margin-bottom: 10px;">EOL / EOSL (End of Life / End of Service Life)</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li>Indica que um produto (software/hardware) não recebe mais suporte do fabricante</li>
-                    <li><strong>Riscos:</strong> Sem patches de segurança, vulnerabilidades não corrigidas, não conformidade com regulamentações</li>
-                    <li><strong>Opções:</strong> Upgrade para versão suportada, substituir, isolar na rede (segmentação), ou aceitar o risco (com seguro cibernético)</li>
-                </ul>
-
-                <!-- Dicas finais para a prova -->
-                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 30px 0; border-radius: 8px;">
-                    <h3 style="color: #ec4899; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
-                    <ul style="margin-left: 20px; line-height: 1.8;">
-                        <li><strong>Ciclo VM:</strong> Discovery → Assessment → Prioritization → Remediation → Verification → Monitoring</li>
-                        <li><strong>CVSS:</strong> 9-10 = Critical, 7-8.9 = High, 4-6.9 = Medium, 0.1-3.9 = Low</li>
-                        <li><strong>False Negative</strong> (não detectar) é MAIS GRAVE que False Positive</li>
-                        <li><strong>Credentialed scan:</strong> mais profundo, <strong>Non-credentialed:</strong> visão externa</li>
-                        <li><strong>SIEM</strong> = correlação de logs, <strong>SOAR</strong> = automação de resposta</li>
-                        <li><strong>DLP:</strong> Network, Endpoint, Storage, Cloud</li>
-                        <li><strong>Black Box</strong> (sem info) vs <strong>White Box</strong> (completo) vs <strong>Gray Box</strong> (parcial)</li>
-                        <li><strong>ROE</strong> = Rules of Engagement (documento assinado antes do pentest)</li>
-                    </ul>
-                </div>
+            <div style="text-align:center; margin-bottom:20px;">
+                <button class="btn btn-new-session" onclick="newSession()">🎲 Nova Sessão (15)</button>
             </div>
-        </div>
-
-        <!-- ===== ABA 2: QUIZ ===== -->
-        <div id="tab2" class="content">
-            <div class="quiz-area">
-                <div class="quiz-header">
-                    <h2>Quiz - 35 Questões</h2>
-                </div>
-                <!-- Container onde as questões serão inseridas dinamicamente via JavaScript -->
-                <div id="questions"></div>
-                <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
-                </div>
+            <div class="flashcard" onclick="flipCard()">
+                <div class="side-indicator" id="side-indicator">FRENTE</div>
+                <div class="category-badge" id="category-badge"></div>
+                <div class="flashcard-text" id="card-text"></div>
+                <div class="flip-hint">Clique para virar</div>
+            </div>
+            <div class="controls">
+                <button class="btn btn-nav" onclick="prevCard()">←</button>
+                <button class="btn btn-master" id="btn-master" onclick="toggleMaster()">⭐ Marcar Dominado</button>
+                <button class="btn btn-nav" onclick="nextCard()">→</button>
             </div>
         </div>
     </div>
 
-    <!-- ===== MODAL DE RESULTADOS ===== -->
-    <div class="results-modal" id="results-modal">
-        <div class="results-content">
-            <h2>Resultado</h2>
-            <div class="score-circle" id="score-circle">0%</div>
-            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+    <!-- ABA 1: RESUMO -->
+    <div id="tab1" class="content">
+        <div class="summary-area">
+            <h1>📋 Resumo — Capítulo 7</h1>
+            <p style="color:#6b7280; margin-bottom:10px;">Gerenciamento de Vulnerabilidades • CompTIA Security+</p>
+
+            <h2>1️⃣ Gerenciamento de Vulnerabilidades</h2>
+            <p style="line-height:1.8; margin-bottom:15px;">Processo crítico que abrange identificação, avaliação, tratamento e relato de vulnerabilidades em SOs, aplicações e componentes de TI.</p>
+            <h3>Atividades Principais</h3>
+            <ul>
+                <li>Aplicação de <strong>patches</strong> em sistemas desatualizados</li>
+                <li><strong>Hardening</strong> de configurações</li>
+                <li>Atualização para versões mais seguras de SOs</li>
+                <li>Revisões de código e testes de segurança</li>
+                <li>Atualização de bibliotecas de terceiros</li>
+            </ul>
+            <h3>Vulnerabilidades Notáveis por SO</h3>
+            <table>
+                <tr><th>Vulnerabilidade</th><th>Ano</th><th>SO/Componente</th><th>Impacto</th></tr>
+                <tr><td><strong>MS08-067 / Conficker</strong></td><td>2008</td><td>Windows Server Service</td><td>Milhões de computadores infectados</td></tr>
+                <tr><td><strong>MS17-010 / WannaCry</strong></td><td>2017</td><td>Windows SMB (EternalBlue)</td><td>Execução remota de código em escala global</td></tr>
+                <tr><td><strong>Shellshock</strong></td><td>2014</td><td>Shell Bash (Unix/Linux/macOS)</td><td>Controle total do sistema via variáveis de ambiente</td></tr>
+                <tr><td><strong>Heartbleed</strong></td><td>2014</td><td>OpenSSL (Linux/servidores)</td><td>Leitura de memória, exposição de chaves secretas</td></tr>
+                <tr><td><strong>Stagefright</strong></td><td>2015</td><td>Android (MMS)</td><td>Execução de código via mensagem MMS</td></tr>
+                <tr><td><strong>Meltdown/Spectre</strong></td><td>2018</td><td>Processadores (CPUs)</td><td>Roubo de dados em processamento</td></tr>
+                <tr><td><strong>LoJax</strong></td><td>2018</td><td>Firmware UEFI</td><td>Persistência mesmo após troca de HD ou reinstalação do SO</td></tr>
+            </table>
+
+            <h2>2️⃣ Sistemas Legados e EOL</h2>
+            <div class="grid-2">
+                <div style="background:#fee2e2;">
+                    <h3 style="color:#ef4444; margin-top:0;">⚠️ End-of-Life (EOL)</h3>
+                    <ul>
+                        <li>Sem suporte do fabricante</li>
+                        <li>Sem patches de segurança</li>
+                        <li>Vulnerável a ameaças novas</li>
+                        <li>Ex: Windows 7 e Server 2008 (EOL jan/2020)</li>
+                    </ul>
+                </div>
+                <div style="background:#fef3c7;">
+                    <h3 style="color:#d97706; margin-top:0;">🏛️ Sistemas Legados</h3>
+                    <ul>
+                        <li>Desatualizado, pode ter suporte</li>
+                        <li>Continua em uso por necessidade</li>
+                        <li>Incompatível com arquiteturas novas</li>
+                        <li>Riscos: patches, suporte, compatibilidade</li>
+                    </ul>
+                </div>
+            </div>
+            <h3>Critérios para Substituição EOL</h3>
+            <ul>
+                <li>Disponibilidade de suporte do vendor + garantia</li>
+                <li>Compatibilidade com infraestrutura existente</li>
+                <li>Suporte a migração de dados confiável</li>
+                <li>Custos: licenciamento, hardware, implementação</li>
+            </ul>
+
+            <h2>3️⃣ Métodos de Identificação de Vulnerabilidades</h2>
+            <h3>Threat Feeds</h3>
+            <table>
+                <tr><th>Tipo</th><th>Exemplos</th><th>Característica</th></tr>
+                <tr><td><strong>Open-Source</strong></td><td>Cyber Threat Alliance, MISP</td><td>Gratuito, pode faltar profundidade</td></tr>
+                <tr><td><strong>Proprietário</strong></td><td>IBM X-Force, Mandiant, Recorded Future</td><td>Abrangente, análise avançada, custo</td></tr>
+                <tr><td><strong>ISACs</strong></td><td>Setorial (saúde, finanças, energia)</td><td>Compartilhamento colaborativo</td></tr>
+            </table>
+            <h3>Ferramentas OSINT</h3>
+            <ul>
+                <li><strong>Shodan:</strong> Investiga dispositivos conectados à internet (IoT, servidores)</li>
+                <li><strong>Maltego:</strong> Visualiza redes complexas de informação</li>
+                <li><strong>Recon-ng:</strong> Reconhecimento baseado em web</li>
+                <li><strong>theHarvester:</strong> Coleta e-mails, subdomínios, hosts, nomes de funcionários</li>
+            </ul>
+            <div class="info-box">
+                <strong>Deep Web vs Dark Web:</strong> Deep Web = não indexada por buscadores. Dark Web = acessível apenas via Dark Net (TOR, I2P) — requer software especial. Usos legítimos: anonimato para whistleblowers, acesso a informação censurada, pesquisa de ameaças.
+            </div>
+            <h3>Pen Testing vs Bug Bounty</h3>
+            <table>
+                <tr><th>Característica</th><th>Pen Testing</th><th>Bug Bounty</th></tr>
+                <tr><td>Quem faz</td><td>Equipe contratada</td><td>Comunidade global</td></tr>
+                <tr><td>Prazo</td><td>Confinado</td><td>Aberto / contínuo</td></tr>
+                <tr><td>Escopo</td><td>Estruturado e focado</td><td>Mais amplo</td></tr>
+                <tr><td>Custo</td><td>Previsível</td><td>Por severidade</td></tr>
+                <tr><td>Melhor para</td><td>Conformidade, componentes específicos</td><td>Perspectivas diversas</td></tr>
+            </table>
+            <h3>Tipos de Auditoria de Cibersegurança</h3>
+            <ul>
+                <li><strong>Conformidade:</strong> Aderência a GDPR, HIPAA, PCI DSS</li>
+                <li><strong>Baseada em Risco:</strong> Identifica ameaças e vulnerabilidades em sistemas e processos</li>
+                <li><strong>Técnica:</strong> Examina infraestrutura de TI — rede, controles de acesso, proteção de dados</li>
+            </ul>
+
+            <h2>4️⃣ Análise e Correção de Vulnerabilidades</h2>
+            <h3>6 Fatores da Análise de Vulnerabilidades</h3>
+            <ul>
+                <li><strong>Priorização:</strong> Severidade + facilidade de exploração + impacto</li>
+                <li><strong>Classificação:</strong> Por tipo de sistema, natureza da exposição, impacto</li>
+                <li><strong>Exposure Factor (EF):</strong> Suscetibilidade ao comprometimento — autenticação fraca, segmentação inadequada</li>
+                <li><strong>Impacto Organizacional:</strong> Financeiro, reputacional, operacional, regulatório</li>
+                <li><strong>Fatores Ambientais:</strong> Infraestrutura, cenário de ameaças, regulatório, operacional</li>
+                <li><strong>Tolerância a Risco:</strong> Nível de risco aceito — varia por tamanho, setor, objetivos</li>
+            </ul>
+            <h3>CVSS — Common Vulnerability Scoring System</h3>
+            <table>
+                <tr><th>Score</th><th>Severidade</th></tr>
+                <tr><td>9.0 – 10.0</td><td>🔴 Critical</td></tr>
+                <tr><td>7.0 – 8.9</td><td>🟠 High</td></tr>
+                <tr><td>4.0 – 6.9</td><td>🟡 Medium</td></tr>
+                <tr><td>0.1 – 3.9</td><td>🟢 Low</td></tr>
+                <tr><td>0.0</td><td>⚪ None</td></tr>
+            </table>
+            <h3>Métodos de Validação de Remediação</h3>
+            <ul>
+                <li><strong>Re-scanning:</strong> Escanear novamente — se vulnerabilidade não aparece = sucesso</li>
+                <li><strong>Auditoria:</strong> Exame do processo, alinhamento com políticas, documentação</li>
+                <li><strong>Verificação:</strong> Checks manuais, testes automatizados, revisão de logs</li>
+            </ul>
+            <h3>Tipos de Scan de Vulnerabilidades</h3>
+            <table>
+                <tr><th>Tipo</th><th>Característica</th><th>Uso</th></tr>
+                <tr><td><strong>Intrusivo</strong></td><td>Tenta explorar ativamente — mais preciso</td><td>Não pode ser em sistema vivo</td></tr>
+                <tr><td><strong>Não-Intrusivo</strong></td><td>Lista vulnerabilidades sem explorar</td><td>Pode ser em sistemas vivos</td></tr>
+                <tr><td><strong>Credenciado</strong></td><td>Com login — análise mais profunda</td><td>Detecta configurações incorretas</td></tr>
+                <tr><td><strong>Não-Credenciado</strong></td><td>Visão de atacante externo</td><td>Avaliação de perímetro</td></tr>
+            </table>
+
+            <h2>5️⃣ Alerta, Monitoramento e SIEM</h2>
+            <h3>Ferramentas de Monitoramento</h3>
+            <ul>
+                <li><strong>Monitores de Rede (SNMP):</strong> CPU, memória, temperatura, erros de link — SNMP traps para eventos notáveis</li>
+                <li><strong>NetFlow/IPFIX:</strong> Metadados de tráfego (sem payload) — detecta C2, tunelamento, comportamento rogue</li>
+                <li><strong>Logs:</strong> Sistema (disponibilidade) + Segurança (usos autorizados/não autorizados) — trilha de auditoria</li>
+                <li><strong>EPP/Antivírus:</strong> Detecção por assinatura + UEBA + análise por IA</li>
+            </ul>
+            <h3>SIEM — Coleta de Dados</h3>
+            <table>
+                <tr><th>Método</th><th>Como funciona</th></tr>
+                <tr><td><strong>Agente</strong></td><td>Instalado no host — processa e envia dados ao SIEM</td></tr>
+                <tr><td><strong>Listener/Collector</strong></td><td>Host empurra logs via Syslog — para switches, roteadores, firewalls</td></tr>
+                <tr><td><strong>Sensor</strong></td><td>Captura de pacotes via porta espelho — dados de flow de sniffers</td></tr>
+            </table>
+            <h3>Níveis de Alerta no SIEM</h3>
+            <ul>
+                <li><strong>Log only:</strong> Registra automaticamente, sem notificação ativa</li>
+                <li><strong>Alert:</strong> Listado no dashboard para analista avaliar</li>
+                <li><strong>Alarm:</strong> Classificado como crítico — email/SMS ao responsável</li>
+            </ul>
+            <div class="warning-box">
+                <strong>⚠️ Alert Fatigue:</strong> Volume excessivo de falsos positivos faz analistas perderem alertas reais. Técnicas de alert tuning: refinar regras, redirecionar floods, usar ML para ajuste automático.
+            </div>
+            <h3>DLP — Data Loss Prevention</h3>
+            <table>
+                <tr><th>Componente</th><th>Função</th></tr>
+                <tr><td><strong>Servidor de Política</strong></td><td>Configura regras, registra incidentes, compila relatórios</td></tr>
+                <tr><td><strong>Agente de Endpoint</strong></td><td>Aplica política no cliente, mesmo offline</td></tr>
+                <tr><td><strong>Agente de Rede</strong></td><td>Escaneia comunicações nas fronteiras de rede</td></tr>
+            </table>
+            <h3>Mecanismos de Remediação DLP</h3>
+            <ul>
+                <li><strong>Alert Only:</strong> Permite cópia, registra incidente</li>
+                <li><strong>Block:</strong> Impede cópia, usuário mantém acesso ao original</li>
+                <li><strong>Quarantine:</strong> Nega acesso ao arquivo original</li>
+                <li><strong>Tombstone:</strong> Quarentena + substitui por arquivo descrevendo a violação</li>
+            </ul>
+
+            <h2>6️⃣ Pen Testing</h2>
+            <h3>Tipos de Conhecimento</h3>
+            <div class="grid-2">
+                <div style="background:#dbeafe;">
+                    <strong style="color:#3b82f6;">⬜ White Box (Known)</strong><br>Conhecimento completo — análise profunda, menos realista
+                </div>
+                <div style="background:#fee2e2;">
+                    <strong style="color:#ef4444;">⬛ Black Box (Unknown)</strong><br>Sem informação — simula ataque externo real
+                </div>
+                <div style="background:#fef3c7;">
+                    <strong style="color:#d97706;">🔲 Gray Box (Partial)</strong><br>Informação parcial — simula ameaça interna
+                </div>
+            </div>
+            <h3>Equipes de Segurança</h3>
+            <ul>
+                <li><strong>Red Team:</strong> Hackers éticos — realiza o pen test (ofensivo)</li>
+                <li><strong>Blue Team:</strong> Defesa — detecta e para a Red Team</li>
+                <li><strong>Purple Team:</strong> Combina Red + Blue — trabalha em ofensa e defesa</li>
+                <li><strong>White Team:</strong> Árbitros — gerencia o engajamento entre Red e Blue</li>
+            </ul>
+            <h3>Ciclo de Vida do Pen Test</h3>
+            <div style="display:flex; flex-wrap:wrap; gap:10px; margin:20px 0;">
+                <div style="flex:1; min-width:120px; background:#f3f4f6; padding:12px; border-radius:8px; text-align:center; border-left:4px solid #11998e;"><strong>1. Reconhecimento</strong><br>Footprinting</div>
+                <div style="flex:1; min-width:120px; background:#f3f4f6; padding:12px; border-radius:8px; text-align:center; border-left:4px solid #11998e;"><strong>2. Scanning</strong><br>Enumeração</div>
+                <div style="flex:1; min-width:120px; background:#f3f4f6; padding:12px; border-radius:8px; text-align:center; border-left:4px solid #11998e;"><strong>3. Ganhar Acesso</strong><br>Exploração</div>
+                <div style="flex:1; min-width:120px; background:#f3f4f6; padding:12px; border-radius:8px; text-align:center; border-left:4px solid #11998e;"><strong>4. Manter Acesso</strong><br>Backdoors</div>
+                <div style="flex:1; min-width:120px; background:#f3f4f6; padding:12px; border-radius:8px; text-align:center; border-left:4px solid #11998e;"><strong>5. Reportar</strong><br>Documentação</div>
+            </div>
+            <h3>Documentação</h3>
+            <ul>
+                <li><strong>Scope of Work / Statement of Work:</strong> Who, What, When, Where, Why — define exatamente o que será testado</li>
+                <li><strong>Rules of Engagement (ROE):</strong> Como o teste será realizado — tipo, manipulação de dados, notificações</li>
+            </ul>
+
+            <div class="tip-box">
+                <h3>🎯 Pontos-chave para a prova</h3>
+                <ul>
+                    <li><strong>Conficker:</strong> MS08-067 | <strong>WannaCry:</strong> MS17-010 via EternalBlue</li>
+                    <li><strong>Heartbleed:</strong> OpenSSL | <strong>Shellshock:</strong> Bash | <strong>Stagefright:</strong> Android MMS</li>
+                    <li><strong>LoJax:</strong> Firmware UEFI — persiste após troca de HD</li>
+                    <li><strong>Credenciado:</strong> mais profundo | <strong>Não-credenciado:</strong> visão externa de atacante</li>
+                    <li><strong>CVSS 9-10:</strong> Critical | <strong>7-8.9:</strong> High | <strong>4-6.9:</strong> Medium | <strong>0.1-3.9:</strong> Low</li>
+                    <li><strong>SIEM</strong> = correlação de logs | <strong>SOAR</strong> = automação de resposta</li>
+                    <li><strong>Alert fatigue</strong> = falsos positivos excessivos → perde alertas reais</li>
+                    <li><strong>Tombstone DLP</strong> = quarentena + substitui arquivo por aviso</li>
+                    <li><strong>White Team</strong> = árbitros do pen test | <strong>Purple Team</strong> = Red + Blue</li>
+                    <li><strong>ROE</strong> = como o teste é feito | <strong>Scope of Work</strong> = o que será testado</li>
+                </ul>
+            </div>
         </div>
     </div>
 
-    <script>
-        // ========== CARDS DO CAPÍTULO 7 ==========
-        /**
-         * ARRAY cards: armazena TODOS os flashcards do capítulo
-         * Cada card tem:
-         * - f: frente (a pergunta/conceito)
-         * - b: verso (a resposta/definição)
-         * 
-         * Este array NUNCA é modificado durante a execução.
-         * É a fonte original dos dados.
-         */
-        const cards = [
-            // Ciclo de Gestão de Vulnerabilidades (1-6)
-            {f: "Quais são as 6 fases do ciclo de gestão de vulnerabilidades (Vulnerability Management Cycle)?", 
-             b: "1) Discovery (descoberta) 2) Assessment (avaliação) 3) Prioritization (priorização) 4) Remediation (remediação) 5) Verification (verificação) 6) Monitoring (monitoramento). É um processo contínuo."},
-             
-            {f: "O que é uma vulnerabilidade Zero-Day?", 
-             b: "Vulnerabilidade desconhecida do fabricante (vendor). Não há patch disponível no momento da descoberta. É altamente valiosa para atacantes e frequentemente usada em ataques direcionados."},
-             
-            {f: "O que é Buffer Overflow?", 
-             b: "Falha onde o programa escreve dados além do limite do buffer alocado na memória. Pode sobrescrever áreas adjacentes e permitir a execução de código arbitrário."},
-             
-            {f: "O que é Race Condition?", 
-             b: "Problema de temporização em código concorrente. O resultado depende da ordem de execução dos processos/threads. Exemplo clássico: TOC/TOU (Time of Check / Time of Use)."},
-             
-            {f: "O que é Memory Leak?", 
-             b: "Quando um programa aloca memória mas não a libera após o uso. O consumo de memória cresce continuamente, podendo levar à exaustão de recursos e negação de serviço (DoS)."},
-             
-            {f: "Quais são os tipos de vulnerabilidades mais comuns?", 
-             b: "Software (bugs), Configuration (configurações incorretas), Platform (SO desatualizado), Hardware (firmware), Zero-Day, Legacy Systems (sistemas sem suporte), Weak Encryption (criptografia fraca)."},
+    <!-- ABA 2: QUIZ -->
+    <div id="tab2" class="content">
+        <div class="quiz-area">
+            <div class="quiz-header">
+                <h2>Quiz — Capítulo 7</h2>
+                <p>Sessão com 15 questões aleatórias | Passing Score: 80% (12/15)</p>
+            </div>
+            <div id="questions"></div>
+            <div class="quiz-controls">
+                <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-            // CVE, CVSS, CWE (7-12)
-            {f: "O que é CVE (Common Vulnerabilities and Exposures)?", 
-             b: "Identificador único para vulnerabilidades de segurança. Formato: CVE-ANO-NÚMERO (ex: CVE-2024-12345). Mantido pela MITRE. Facilita a referência a vulnerabilidades específicas."},
-             
-            {f: "O que é CVSS (Common Vulnerability Scoring System)?", 
-             b: "Sistema de pontuação para vulnerabilidades, com score de 0 a 10. Quanto maior, mais grave. Avalia vetores como ataque, impacto, complexidade."},
-             
-            {f: "Quais são as faixas de severidade do CVSS?", 
-             b: "0.0 = None. 0.1-3.9 = Low (baixo). 4.0-6.9 = Medium (médio). 7.0-8.9 = High (alto). 9.0-10.0 = Critical (crítico)."},
-             
-            {f: "O que é CWE (Common Weakness Enumeration)?", 
-             b: "Catálogo de categorias de fraquezas de software e hardware. Exemplos: CWE-79 (Cross-Site Scripting - XSS), CWE-89 (SQL Injection), CWE-22 (Path Traversal)."},
-             
-            {f: "O que é NVD (National Vulnerability Database)?", 
-             b: "Banco de dados do governo dos EUA que contém todas as CVEs publicadas, com scores CVSS, informações de impacto e referências."},
-             
-            {f: "O que significa EOL / EOSL?", 
-             b: "End of Life / End of Service Life. Indica que um produto (software/hardware) não recebe mais suporte do fabricante, incluindo patches de segurança. Representa alto risco."},
+<!-- MODAL DE RESULTADOS -->
+<div class="results-modal" id="results-modal">
+    <div class="results-content">
+        <div class="result-emoji" id="result-emoji">🎉</div>
+        <h2 id="result-title" style="font-size:1.8rem; margin-bottom:5px;">Resultado</h2>
+        <div class="score-circle" id="score-circle">0%</div>
+        <p id="score-text" style="font-size:1.1rem; color:#374151; margin-bottom:10px;"></p>
+        <div class="modal-buttons">
+            <button class="btn btn-primary" onclick="newQuizSession()">🎲 Nova Sessão</button>
+            <button class="btn btn-secondary" onclick="closeModal()">✕ Fechar</button>
+        </div>
+        <button class="btn btn-explain-modal" onclick="closeModal(); scrollToExplanations();">📖 Ver Explicações</button>
+    </div>
+</div>
 
-            // Vulnerability Scanning (13-22)
-            {f: "Qual a diferença entre credentialed scan e non-credentialed scan?", 
-             b: "Credentialed scan: usa credenciais de acesso (login), consegue inspecionar configurações internas, mais profundo, menos falsos negativos. Non-credentialed: sem credenciais, visão de atacante externo, mais limitado."},
-             
-            {f: "Qual a diferença entre agent-based scan e agentless scan?", 
-             b: "Agent-based: agente instalado no host, scan contínuo, mais preciso, requer manutenção. Agentless: scan remoto sem agente, menos intrusivo, mais fácil de implantar, menos profundo."},
-             
-            {f: "O que é Nessus?", 
-             b: "Scanner de vulnerabilidades comercial da Tenable. É o mais utilizado no mercado. Possui interface gráfica amigável, vasta base de plugins e relatórios detalhados."},
-             
-            {f: "O que é OpenVAS?", 
-             b: "Scanner de vulnerabilidades open source (atualmente Greenbone). É uma alternativa gratuita ao Nessus. Oferece funcionalidades similares de descoberta e análise."},
-             
-            {f: "O que é Qualys?", 
-             b: "Plataforma cloud-based de gerenciamento de vulnerabilidades e conformidade. Oferece monitoramento contínuo e integrações com diversos sistemas."},
-             
-            {f: "O que é Rapid7 Nexpose?", 
-             b: "Scanner de vulnerabilidades comercial que integra nativamente com o Metasploit, permitindo validar vulnerabilidades encontradas através de exploração."},
-             
-            {f: "O que é um True Positive em scanning?", 
-             b: "Resultado correto onde o scanner detectou uma vulnerabilidade que realmente existe no sistema alvo."},
-             
-            {f: "O que é um False Positive em scanning?", 
-             b: "Falso positivo: o scanner alerta para uma vulnerabilidade que na verdade não existe. Gera trabalho desnecessário e requer tuning para reduzir."},
-             
-            {f: "O que é um False Negative em scanning?", 
-             b: "Falso negativo: o scanner deixa de detectar uma vulnerabilidade que realmente existe no sistema. É a situação MAIS GRAVE, pois o sistema fica vulnerável sem conhecimento."},
-             
-            {f: "O que é um True Negative em scanning?", 
-             b: "Resultado correto onde o scanner não alerta e o sistema realmente não possui a vulnerabilidade."},
+<script>
+// ========== FLASHCARDS ==========
+const allCards = [
+    // BLOCO 1: GERENCIAMENTO E VULNERABILIDADES DE SO (1-20)
+    {f:"O que é gerenciamento de vulnerabilidades?", b:"Processo crítico de identificação, avaliação, tratamento e relato de vulnerabilidades em SOs, aplicações e componentes de TI. Atividades incluem patches, hardening, revisões de código e testes de segurança.", cat:"Gerenciamento"},
+    {f:"Quais são as principais atividades do gerenciamento de vulnerabilidades?", b:"Aplicação de patches, endurecimento de configurações, atualização de SOs, revisões de código, testes de segurança e atualização de bibliotecas de terceiros.", cat:"Gerenciamento"},
+    {f:"O que um scanner de vulnerabilidades procura?", b:"Portas abertas, configurações inseguras, versões de software desatualizadas, patches faltantes, contas padrão não desabilitadas, senhas padrão/em branco e controles de segurança faltantes.", cat:"Gerenciamento"},
+    {f:"O que ocorre na análise pós-scan de vulnerabilidades?", b:"Validação, classificação e priorização das vulnerabilidades encontradas, com base em impacto potencial, facilidade de exploração e importância do ativo afetado.", cat:"Gerenciamento"},
+    {f:"Qual vulnerabilidade do Windows permitiu o worm Conficker em 2008?", b:"MS08-067 — vulnerabilidade no Windows Server Service explorada pelo Conficker, que infectou milhões de computadores mundialmente via execução remota de código.", cat:"Vulnerabilidades SO"},
+    {f:"O que foi o ataque WannaCry e qual vulnerabilidade explorou?", b:"Ransomware de maio 2017 que explorou MS17-010 via EternalBlue — afetou o protocolo SMB do Windows, permitindo execução remota de código em escala global sem interação do usuário.", cat:"Vulnerabilidades SO"},
+    {f:"O que é Shellshock e quais sistemas afetou?", b:"Falha de 2014 no shell Bash que permitia controle do sistema via variáveis de ambiente manipuladas. Afetou todos os sistemas Unix/Linux, incluindo macOS — qualquer sistema com Bash exposto.", cat:"Vulnerabilidades SO"},
+    {f:"O que é Heartbleed e qual componente afetou?", b:"Vulnerabilidade grave de 2014 no OpenSSL que permitia ler memória do sistema e comprometer chaves secretas de proteção de dados. Afetou servidores Linux em larga escala.", cat:"Vulnerabilidades SO"},
+    {f:"O que foi a vulnerabilidade Stagefright no Android?", b:"Falha de 2015 que permitia executar código malicioso apenas com o recebimento de uma mensagem MMS, sem interação do usuário. Grave pela ubiquidade do componente afetado em todos os dispositivos Android.", cat:"Vulnerabilidades SO"},
+    {f:"Por que o Android tem suporte de patches mais inconsistente que o iOS?", b:"Android é open-source e fragmentado entre fabricantes e versões de SO, resultando em suporte inconsistente. iOS é controlado centralmente pela Apple, garantindo atualizações uniformes.", cat:"Vulnerabilidades SO"},
+    {f:"Quais são as preocupações de segurança específicas de dispositivos móveis?", b:"Diversidade de dispositivos e versões de SO, bypass de proteções do SO, uso de apps de fora de lojas oficiais (sideloading) e dificuldade de gerenciamento centralizado de patches.", cat:"Vulnerabilidades SO"},
+    {f:"O que são sistemas IoT e por que representam risco para redes corporativas?", b:"Dispositivos embarcados com SOs especializados — introduzem vulnerabilidades por terem menos controles de segurança, patches irregulares e representam caminhos de acesso a infraestruturas corporativas.", cat:"Vulnerabilidades SO"},
+    {f:"Quais são as boas práticas de gerenciamento de vulnerabilidades de SO?", b:"Manter SOs atualizados com patches recentes, endurecer configurações, gerenciar cuidadosamente privilégios de usuários e controlar instalação e execução de aplicações.", cat:"Gerenciamento"},
+    {f:"O que foram Meltdown e Spectre?", b:"Vulnerabilidades de 2018 associadas aos processadores (CPUs) que impactaram quase todos os computadores e dispositivos móveis, permitindo que programas maliciosos roubassem dados em processamento.", cat:"Vulnerabilidades SO"},
+    {f:"O que foi o LoJax e por que é especialmente perigoso?", b:"Malware de 2018 descoberto no firmware UEFI que permite aos atacantes persistir no sistema mesmo após substituição completa do disco rígido ou reinstalação do SO — impossível de remover por métodos convencionais.", cat:"Vulnerabilidades SO"},
+    {f:"Qual é a principal ameaça das vulnerabilidades de firmware?", b:"O firmware é carregado antes do SO, portanto vulnerabilidades nele (como LoJax) permitem persistência e controle abaixo do nível do sistema operacional, escapando de antivírus e reinstalações.", cat:"Vulnerabilidades SO"},
+    {f:"Quando surgem vulnerabilidades de hardware EOL?", b:"Quando fabricantes cessam fornecimento de atualizações de produtos, peças e patches para firmware — deixando o hardware permanentemente exposto a falhas sem possibilidade de correção.", cat:"Vulnerabilidades SO"},
+    {f:"Como o Android se compara ao Linux em termos de gestão de vulnerabilidades?", b:"Ambos são open-source com comunidades grandes — identificação e correção rápidas. Porém o Android sofre com fragmentação entre fabricantes, enquanto Linux para servidores tem atualizações mais centralizadas.", cat:"Vulnerabilidades SO"},
+    {f:"Quais são os vetores de ataque específicos em vulnerabilidades do macOS?", b:"Controles de acesso, processos de boot seguro e software de terceiros — a percepção de ser 'mais seguro' pode levar à complacência. Exemplo: Shellshock afetou todos os sistemas Unix, incluindo macOS.", cat:"Vulnerabilidades SO"},
+    {f:"O que é o ciclo contínuo de avaliação no gerenciamento de vulnerabilidades?", b:"Ciclo de identificação → avaliação → priorização → remediação → verificação → monitoramento — mantém imagem precisa da postura de segurança e identifica novas vulnerabilidades continuamente.", cat:"Gerenciamento"},
 
-            // SIEM, SOAR, DLP (23-30)
-            {f: "O que é SIEM (Security Information and Event Management)?", 
-             b: "Sistema que coleta, agrega, normaliza e correlaciona logs de múltiplas fontes (firewalls, servidores, aplicações). Gera alertas, dashboards e relatórios de compliance. Exemplos: Splunk, IBM QRadar, ArcSight."},
-             
-            {f: "O que é SOAR (Security Orchestration, Automation and Response)?", 
-             b: "Plataforma que automatiza a resposta a incidentes de segurança. Orquestra ferramentas, executa playbooks automáticos, gerencia casos e integra inteligência de ameaças. Exemplos: Palo Alto Cortex XSOAR, Splunk Phantom, IBM Resilient."},
-             
-            {f: "O que é DLP (Data Loss Prevention)?", 
-             b: "Soluções que previnem a exfiltração de dados sensíveis (perda, vazamento). Monitoram dados em uso, em movimento e em repouso."},
-             
-            {f: "Quais são os tipos de DLP?", 
-             b: "Network DLP (monitora tráfego de rede: email, web, FTP). Endpoint DLP (monitora dispositivos: USB, impressão, clipboard, captura de tela). Storage/Data-at-rest DLP (escaneia arquivos armazenados). Cloud DLP (protege dados em SaaS como O365, Google Workspace)."},
-             
-            {f: "O que é NetFlow?", 
-             b: "Protocolo da Cisco para coleta de metadados de tráfego de rede. Coleta informações como IPs origem/destino, portas, protocolo, bytes e pacotes. NÃO captura o payload. Usado para análise de tráfego, detecção de anomalias e capacity planning."},
-             
-            {f: "O que é Log Management?", 
-             b: "Processo de coletar, agregar, armazenar e analisar logs de diversas fontes. Inclui definição de períodos de retenção (compliance) e garantia de integridade dos logs."},
-             
-            {f: "O que é Threat Intelligence?", 
-             b: "Informações sobre ameaças cibernéticas: indicadores de comprometimento (IOCs), táticas, técnicas e procedimentos (TTPs), e perfis de atores de ameaça. Alimenta SIEM, SOAR e equipes de segurança."},
-             
-            {f: "O que é MITRE ATT&CK?", 
-             b: "Framework de conhecimento baseado em observações do mundo real, que cataloga táticas e técnicas usadas por atacantes. Usado para threat hunting, desenvolvimento de detecções e avaliação de capacidades defensivas."},
+    // BLOCO 2: SISTEMAS LEGADOS E EOL (21-35)
+    {f:"O que define um sistema End-of-Life (EOL)?", b:"Sistema não mais suportado pelo fabricante — não recebe atualizações nem patches de segurança críticos, tornando-se permanentemente vulnerável a ameaças recém-descobertas.", cat:"Legado/EOL"},
+    {f:"Quais são exemplos de sistemas EOL que ainda são encontrados em produção?", b:"Windows 7 e Windows Server 2008 (EOL em janeiro de 2020) ainda encontrados em muitos ambientes corporativos, especialmente em sistemas industriais e governamentais.", cat:"Legado/EOL"},
+    {f:"O que é um sistema legado?", b:"Software, tecnologia ou sistema desatualizado que continua em uso apesar das deficiências — por custo de substituição, risco operacional, confiabilidade ou por estar incorporado em funções críticas.", cat:"Legado/EOL"},
+    {f:"Por que organizações mantêm sistemas legados em produção?", b:"Substituição seria cara, representa riscos operacionais pela complexidade, opera com confiabilidade suficiente, está incorporado em funções críticas de negócio e é familiar para a equipe de longo prazo.", cat:"Legado/EOL"},
+    {f:"'Sistema legado' necessariamente significa sem suporte do vendor?", b:"Não. Legado significa hardware/software não mais popular ou incompatível com arquiteturas novas — mas pode ainda receber suporte do vendor. EOL é que definitivamente não recebe mais suporte.", cat:"Legado/EOL"},
+    {f:"Quais são os três principais riscos de sistemas legados/EOL?", b:"Falta de atualizações de segurança (sem patches), falta de suporte técnico e problemas de compatibilidade com sistemas, protocolos e ferramentas mais novos.", cat:"Legado/EOL"},
+    {f:"O que são dispositivos EOL vendidos no mercado de segunda mão?", b:"Dispositivos (especialmente periféricos e IoT) vendidos com vulnerabilidades conhecidas sem possibilidade de suporte do vendor — comuns em mercados de segunda mão, recertificados ou recondicionados.", cat:"Legado/EOL"},
+    {f:"Quais critérios são essenciais ao substituir um produto EOL ou legado?", b:"Disponibilidade de suporte do vendor, detalhes de garantia, performance/reputação no mercado, compatibilidade com infraestrutura existente e suporte a migração de dados confiável.", cat:"Legado/EOL"},
+    {f:"Quais são os custos de transição ao substituir sistemas legados?", b:"Licenciamento de novo software, upgrades de hardware, taxas de implementação de serviços profissionais — além de minimizar interrupções operacionais e garantir sustentabilidade a longo prazo.", cat:"Legado/EOL"},
+    {f:"Como gerenciar o risco de sistemas que não podem ser substituídos imediatamente?", b:"Isolar em segmentos de rede separados, adicionar controles compensatórios (firewalls, monitoramento intensivo), documentar formalmente o risco aceito e planejar substituição com prazo definido.", cat:"Legado/EOL"},
+    {f:"Qual a diferença prática entre risco de sistema EOL e sistema legado com suporte?", b:"EOL: sem patches de segurança — risco claro e imediato para qualquer vulnerabilidade nova descoberta. Legado com suporte: risco depende do nível de suporte ainda disponível e patches fornecidos.", cat:"Legado/EOL"},
+    {f:"O que é vulnerabilidade de firmware e por que é crítica?", b:"Firmware é o software fundamental que controla hardware — pode conter vulnerabilidades como Meltdown/Spectre e LoJax que afetam o sistema antes mesmo do SO carregar, tornando remediação muito difícil.", cat:"Legado/EOL"},
+    {f:"Por que projetos open-source podem se tornar EOL?", b:"Projetos open-source podem ser abandonados pelos mantenedores — sem atualizações, incluindo patches de segurança críticos. Dispositivos que dependem dessas bibliotecas ficam permanentemente expostos.", cat:"Legado/EOL"},
+    {f:"O que deve ser considerado na avaliação de risco de sistemas legados?", b:"Falta de atualizações de segurança, falta de suporte técnico, problemas de compatibilidade com sistemas mais novos, exposição na rede e criticidade das funções de negócio que o sistema suporta.", cat:"Legado/EOL"},
+    {f:"Como 'legado' difere de 'desatualizado' no contexto de segurança?", b:"Desatualizado: precisa de update mas tem suporte. Legado: obsoleto e incompatível com arquiteturas novas — pode ou não ter suporte. Ambos representam riscos, mas legado por arquitetura incompatível é mais difícil de remediar.", cat:"Legado/EOL"},
 
-            // Penetration Testing (31-45)
-            {f: "O que é Penetration Testing (Pentest)?", 
-             b: "Simulação de ataque autorizado contra sistemas, redes ou aplicações, com o objetivo de identificar vulnerabilidades exploráveis e avaliar a postura de segurança."},
-             
-            {f: "O que é Black Box pentest?", 
-             b: "Teste onde o pentester não recebe nenhuma informação prévia sobre o alvo. Simula um atacante externo sem conhecimento interno. É mais realista, porém pode ser menos profundo."},
-             
-            {f: "O que é White Box pentest?", 
-             b: "Teste onde o pentester recebe informações completas sobre o alvo: código-fonte, diagramas de arquitetura, credenciais. Permite uma análise mais profunda e eficiente."},
-             
-            {f: "O que é Gray Box pentest?", 
-             b: "Teste onde o pentester recebe informações parciais sobre o alvo. Simula um atacante que já possui algum nível de acesso ou conhecimento (ex: funcionário, fornecedor)."},
-             
-            {f: "Quais são as fases de um pentest?", 
-             b: "1) Planning (planejamento, escopo, ROE). 2) Reconnaissance (reconhecimento, coleta de informações). 3) Scanning (varredura de portas, serviços, vulnerabilidades). 4) Exploitation (exploração de vulnerabilidades). 5) Post-Exploitation (movimentação lateral, escalação de privilégio). 6) Reporting (relatório final com achados e recomendações)."},
-             
-            {f: "O que é Metasploit?", 
-             b: "Framework de exploração mais utilizado em pentests. Contém uma vasta biblioteca de exploits, payloads, encoders e módulos auxiliares. Permite desenvolver e executar ataques de forma estruturada."},
-             
-            {f: "O que é Burp Suite?", 
-             b: "Proxy interceptador para testes de segurança em aplicações web. Permite inspecionar, modificar e repetir requisições HTTP. Possui scanner, intruder (para brute force) e diversas extensões."},
-             
-            {f: "O que é OWASP ZAP?", 
-             b: "Ferramenta open source de teste de segurança em aplicações web. Similar ao Burp Suite, oferece proxy, scanner automático, spider e funcionalidades de fuzzing."},
-             
-            {f: "O que é sqlmap?", 
-             b: "Ferramenta open source que automatiza a detecção e exploração de vulnerabilidades de SQL Injection. Consegue extrair dados, enumerar usuários e até obter acesso ao sistema operacional."},
-             
-            {f: "O que é Mimikatz?", 
-             b: "Ferramenta para extrair credenciais da memória de sistemas Windows. Permite obter hashes de senha (pass-the-hash), tickets Kerberos e senhas em texto plano. Muito usada em pós-exploração."},
-             
-            {f: "O que é Social Engineer Toolkit (SET)?", 
-             b: "Framework para automação de ataques de engenharia social. Inclui vetores de phishing, coleta de credenciais, criação de payloads e ataques de websites falsos."},
-             
-            {f: "O que é Aircrack-ng?", 
-             b: "Suíte de ferramentas para teste de segurança de redes Wi-Fi. Permite capturar handshakes, quebrar chaves WEP/WPA/WPA2 (dicionário), monitorar tráfego e injetar pacotes."},
-             
-            {f: "O que são ROE (Rules of Engagement)?", 
-             b: "Documento formal assinado antes do início de um pentest. Define o escopo (IPs, domínios, aplicações), itens fora de escopo, horários permitidos, metodologias, contatos de emergência e proteção legal."},
-             
-            {f: "Qual a diferença entre Vulnerability Scan e Penetration Test?", 
-             b: "Vulnerability Scan: automatizado, identifica vulnerabilidades conhecidas, mas não as explora. Penetration Test: manual, explora vulnerabilidades para validar se são realmente exploráveis, simulando um atacante real."},
-             
-            {f: "Qual a diferença entre Pentest e Red Team?", 
-             b: "Pentest: escopo definido e limitado, objetivo é encontrar o maior número possível de vulnerabilidades. Red Team: objetivo específico (ex: acessar um ativo crítico), opera de forma mais stealth, testa a capacidade de detecção e resposta da equipe de defesa (Blue Team)."},
+    // BLOCO 3: THREAT FEEDS E OSINT (36-55)
+    {f:"O que são threat feeds?", b:"Fontes de informação em tempo real, continuamente atualizadas sobre ameaças e vulnerabilidades potenciais — coletadas de múltiplas fontes e integradas às práticas de gerenciamento de vulnerabilidades e SIEM.", cat:"Threat Intelligence"},
+    {f:"Quais são três plataformas comuns de threat feeds?", b:"AlienVault's Open Threat Exchange (OTX), IBM X-Force Exchange e Recorded Future — coletam, analisam e distribuem inteligência de ameaças acionável.", cat:"Threat Intelligence"},
+    {f:"Qual é a diferença entre threat feeds open-source e proprietários?", b:"Open-source (ex: Cyber Threat Alliance, MISP): gratuitos, acessíveis, mas podem faltar profundidade e análise. Proprietários (ex: IBM X-Force, Mandiant): mais abrangentes, insights avançados, com custo associado.", cat:"Threat Intelligence"},
+    {f:"Quais são os três tipos de outputs de threat feeds?", b:"Behavioral Threat Research (comentário narrativo sobre TTPs de ataque), Reputational Threat Intelligence (IPs/domínios maliciosos, assinaturas de malware) e Threat Data (correlação de eventos com TTPs conhecidos).", cat:"Threat Intelligence"},
+    {f:"O que é Cyber Threat Intelligence (CTI)?", b:"Dados empacotados como feeds integrados com plataformas SIEM — devem ser correlacionados com dados observados nas redes para ser úteis. Análise frequentemente alimentada por recursos de IA do SIEM.", cat:"Threat Intelligence"},
+    {f:"O que é OSINT em cibersegurança?", b:"Open-Source Intelligence — coleta e análise de informações publicamente disponíveis (blogs, fóruns, redes sociais, dark web) para identificar vulnerabilidades, malwares e estratégias de ataque.", cat:"Threat Intelligence"},
+    {f:"Quais são as 4 ferramentas OSINT principais do CompTIA Security+?", b:"Shodan (dispositivos IoT/internet), Maltego (visualiza redes de informação), Recon-ng (reconhecimento web) e theHarvester (coleta e-mails, subdomínios, hosts, nomes de funcionários).", cat:"Threat Intelligence"},
+    {f:"Para que é usada a ferramenta Shodan?", b:"Investiga dispositivos conectados à internet — servidores, câmeras, roteadores, dispositivos IoT — permitindo identificar sistemas expostos com vulnerabilidades conhecidas.", cat:"Threat Intelligence"},
+    {f:"O que são ISACs e qual seu papel?", b:"Information Sharing and Analysis Centers — grupos colaborativos setoriais (saúde, finanças, energia) que coletam, analisam e disseminam inteligência de ameaças entre membros — cruciais para resiliência coletiva.", cat:"Threat Intelligence"},
+    {f:"O que é a Deep Web?", b:"Qualquer parte da World Wide Web não indexada por mecanismos de busca — inclui páginas que requerem registro, que bloqueiam indexação, não linkadas, que usam DNS não padrão ou codificação não padrão.", cat:"Threat Intelligence"},
+    {f:"O que é a Dark Net?", b:"Rede overlay sobre a infraestrutura de internet que anonimiza o uso via software como TOR (The Onion Router), Freenet e I2P — usa onion routing com múltiplas camadas de criptografia e relays.", cat:"Threat Intelligence"},
+    {f:"O que é a Dark Web?", b:"Websites, conteúdo e serviços acessíveis apenas via dark net. Muitos sites ocultos; acesso frequentemente apenas via 'word of mouth' em bulletin boards. Requer software especial como TOR.", cat:"Threat Intelligence"},
+    {f:"Quais são os usos LEGÍTIMOS da dark web?", b:"Privacidade/anonimato para whistleblowers e jornalistas, acesso a informação censurada em países repressivos e pesquisa de ameaças por profissionais de cibersegurança investigando TTPs de adversários.", cat:"Threat Intelligence"},
+    {f:"Qual é o valor da dark web para contrainteligência de cibersegurança?", b:"Permite investigar fóruns e web stores onde adversários trocam dados roubados e ferramentas de hacking — identificando TTPs, dados vazados e ameaças emergentes antes de se materializarem.", cat:"Threat Intelligence"},
+    {f:"Como o onion routing garante anonimato na dark net?", b:"Usa múltiplas camadas de criptografia e relays entre nós — cada nó só conhece o anterior e o próximo, impossibilitando rastreamento da origem e destino real da comunicação.", cat:"Threat Intelligence"},
+    {f:"Qual é a principal diferença entre Deep Web e Dark Web?", b:"Deep Web: não indexada por buscadores, mas acessível normalmente (requer cadastro ou login). Dark Web: requer software especial (TOR/I2P) via dark net — camada extra de anonimato e inacessibilidade.", cat:"Threat Intelligence"},
+    {f:"O que é Behavioral Threat Research como output de threat feed?", b:"Comentário narrativo sobre exemplos de ataques e TTPs (Tactics, Techniques, and Procedures) — descreve como os atacantes operam, quais ferramentas usam e como detectar seus comportamentos.", cat:"Threat Intelligence"},
+    {f:"O que é Reputational Threat Intelligence?", b:"Listas de endereços IP e domínios associados a comportamento malicioso, assinaturas de malware conhecidos — usadas para blocklists em firewalls e SIEMs para bloqueio automático de fontes maliciosas.", cat:"Threat Intelligence"},
+    {f:"Por que organizações combinam threat feeds open-source e proprietários?", b:"Open-source fornece cobertura ampla e gratuita; proprietários fornecem análise mais profunda e contexto avançado. A combinação maximiza cobertura e qualidade da inteligência sem depender de uma única fonte.", cat:"Threat Intelligence"},
+    {f:"Como threat feeds se integram com scanners de vulnerabilidades?", b:"Fornecem dados em tempo real sobre vulnerabilidades emergentes, exploits novos e atores de ameaças — permitindo priorizar vulnerabilidades mais relevantes e identificar aquelas sendo exploradas ativamente.", cat:"Threat Intelligence"},
 
-            // Remediação (46-55)
-            {f: "Quais são as opções de remediação para vulnerabilidades?", 
-             b: "Patch (aplicar correção do fabricante). Workaround (solução temporária). Mitigation (reduzir risco sem eliminar, ex: regra de firewall). Accept (aceitar formalmente o risco). Exception (aceitar temporariamente com justificativa)."},
-             
-            {f: "O que é Patch Management?", 
-             b: "Processo de gerenciar a aplicação de patches: testar em ambiente controlado, agendar janelas de manutenção, aplicar em produção e verificar a correta instalação. Inclui plano de rollback."},
-             
-            {f: "O que é Virtual Patching?", 
-             b: "Proteção temporária contra uma vulnerabilidade sem aplicar o patch oficial no sistema. Implementado via regras de WAF (Web Application Firewall) ou assinaturas de IPS. Usado até que o patch real possa ser aplicado."},
-             
-            {f: "O que é Configuration Management?", 
-             b: "Processo de manter configurações de sistemas consistentes e seguras. Utiliza baselines de segurança, controle de mudanças e ferramentas de automação (ex: Ansible, Puppet)."},
-             
-            {f: "O que é Baseline Configuration?", 
-             b: "Configuração padrão e segura definida para um tipo de sistema (ex: servidor web, workstation). Serve como referência para detectar desvios (drift) e garantir conformidade."},
-             
-            {f: "O que é Change Management?", 
-             b: "Processo formal para autorizar e implementar mudanças em sistemas de TI. Etapas: solicitação, aprovação, teste, implementação e verificação. Previne mudanças não autorizadas que possam introduzir riscos."},
-             
-            {f: "O que é Vulnerability Prioritization?", 
-             b: "Processo de classificar vulnerabilidades por prioridade de correção baseado em: CVSS score, existência de exploit público, criticidade do ativo afetado, exposição e impacto no negócio. Risco = Impacto x Probabilidade."},
-             
-            {f: "O que é Risk Acceptance?", 
-             b: "Decisão formal de aceitar um risco identificado, sem aplicar correção. Geralmente quando o custo de remediar é maior que o impacto potencial. Requer aprovação da gestão."},
-             
-            {f: "O que é Compensating Control?", 
-             b: "Controle alternativo implementado quando o controle primário não é viável ou não pode ser aplicado. Ex: usar um IDS para alertar sobre tráfego malicioso quando não é possível ter um IPS."},
-             
-            {f: "O que é Legacy System?", 
-             b: "Sistema antigo que atingiu o fim de vida (EOL) e não recebe mais patches de segurança. Representa alto risco. Opções: upgrade, substituir, isolar na rede, ou aceitar o risco (com seguro cibernético)."},
+    // BLOCO 4: PEN TESTING E AUDITORIA (56-80)
+    {f:"O que é pen testing (penetration testing)?", b:"Simulação autorizada de ataque onde hackers éticos tentam violar a segurança da organização, explorando vulnerabilidades para demonstrar impacto potencial real — vai além do scan passivo.", cat:"Pen Testing"},
+    {f:"O que é Known Environment (White Box) testing?", b:"Testador recebe conhecimento completo do alvo (código, arquitetura, credenciais) — permite análise mais profunda e abrangente, mas é irrealista pois um atacante real raramente tem esse acesso.", cat:"Pen Testing"},
+    {f:"O que é Unknown Environment (Black Box) testing?", b:"Testador não tem nenhuma informação sobre o alvo — melhor simula ataque externo real. Ignora ameaças internas e pode ser menos profundo por não ter contexto interno.", cat:"Pen Testing"},
+    {f:"O que é Partially Known Environment (Gray Box) testing?", b:"Testador recebe informação parcial (IPs, listas de e-mail, estrutura organizacional) — simula ameaça interna ou atacante que já obteve algum acesso ou conhecimento prévio.", cat:"Pen Testing"},
+    {f:"O que são programas de Bug Bounty?", b:"Estratégia proativa onde organizações recompensam pesquisadores de segurança externos (white hat hackers) por encontrar e reportar vulnerabilidades — aproveita habilidades da comunidade global.", cat:"Pen Testing"},
+    {f:"Qual é a diferença principal entre pen testing e bug bounty?", b:"Pen testing: equipe contratada, prazo confinado, escopo estruturado e focado, custo previsível. Bug bounty: comunidade global, sem prazo fixo, gama mais ampla, recompensa por severidade da vulnerabilidade.", cat:"Pen Testing"},
+    {f:"Quando usar pen testing vs bug bounty?", b:"Pen testing: avaliação controlada, componentes específicos, requisitos de conformidade. Bug bounty: gama mais extensa de testes, perspectivas diversas. Muitas organizações combinam ambos.", cat:"Pen Testing"},
+    {f:"O que é a Red Team em pen testing?", b:"Equipe de hackers éticos responsável por realizar os testes de penetração — o lado ofensivo. Simula atacantes reais para testar as defesas da organização.", cat:"Pen Testing"},
+    {f:"O que é a Blue Team em pen testing?", b:"Equipe de defesa responsável por detectar e parar os avanços da Red Team — monitora, analisa alertas e responde a incidentes. Representa as defesas reais da organização.", cat:"Pen Testing"},
+    {f:"O que é a Purple Team?", b:"Equipe que combina Red e Blue — membros trabalham tanto em ofensa quanto defesa. Facilita colaboração e transferência de conhecimento entre atacantes e defensores para melhorar ambos.", cat:"Pen Testing"},
+    {f:"O que é a White Team em pen testing?", b:"Árbitros da cibersegurança — gerenciam o engajamento entre Red e Blue Teams, definem as regras, monitoram o processo e garantem que o teste seja conduzido dentro dos limites estabelecidos.", cat:"Pen Testing"},
+    {f:"O que é o Scope of Work (Statement of Work) em pen testing?", b:"Documento detalhado que define: Who (alvos específicos), What (o que está fora dos limites), When (prazo e entregáveis), Where (localização do testador) e Why (propósito e objetivos).", cat:"Pen Testing"},
+    {f:"O que são Rules of Engagement (ROE) em pen testing?", b:"Define como o teste será realizado: tipo de teste (white/black/gray box), manipulação de dados sensíveis encontrados durante o teste e processo de notificação da equipe de TI em caso de descobertas críticas.", cat:"Pen Testing"},
+    {f:"O que é scope creep em pen testing e como é prevenido?", b:"Expansão não autorizada do escopo do teste — prevenida pelo Scope of Work que define explicitamente o que está incluído e como lidar com requisições de trabalho adicional fora do escopo original.", cat:"Pen Testing"},
+    {f:"Quais são as 5 fases do ciclo de vida do pen test?", b:"1) Reconhecimento/Footprinting, 2) Scanning/Enumeração, 3) Ganhar Acesso, 4) Manter Acesso, 5) Reportar — cada fase constrói sobre a anterior para simular um ataque completo.", cat:"Pen Testing"},
+    {f:"O que é footprinting em pen testing?", b:"Primeira fase — coleta de informações sobre o alvo via fontes públicas (OSINT), engenharia social e até dumpster diving, antes de qualquer interação direta com os sistemas.", cat:"Pen Testing"},
+    {f:"O que é enumeração na fase de scanning do pen test?", b:"Usa técnicas de scanning para extrair informações específicas: usernames, computer names, recursos de rede, nomes de compartilhamentos e serviços em execução — construindo mapa detalhado do ambiente.", cat:"Pen Testing"},
+    {f:"O que acontece na fase de 'ganhar acesso' do pen test?", b:"Usa informações coletadas nas fases anteriores para explorar vulnerabilidades, realiza movimentos laterais (pivoting) para outras máquinas e tenta escalar privilégios para ganhar acesso de administrador.", cat:"Pen Testing"},
+    {f:"Como um pen tester mantém acesso após o comprometimento inicial?", b:"Instalando backdoors, rootkits e trojans — garantindo persistência mesmo se a vulnerabilidade original for detectada e corrigida, permitindo retorno ao sistema comprometido.", cat:"Pen Testing"},
+    {f:"Por que o relatório final é essencial no pen testing?", b:"Fornece proteção legal ao testador e à organização, documenta vulnerabilidades encontradas com impacto demonstrado e recomendações de correção — base para as ações de remediação prioritárias.", cat:"Pen Testing"},
+    {f:"O que é reconhecimento ativo em pen testing?", b:"Sonda e interage diretamente com sistemas-alvo gerando tráfego de rede. Inclui port scanning, enumeração de serviços, OS fingerprinting, enumeração DNS e web application crawling.", cat:"Pen Testing"},
+    {f:"O que é reconhecimento passivo em pen testing?", b:"Coleta informações sem interagir diretamente com os sistemas — menos intrusivo e menor risco de detecção. Inclui OSINT de mecanismos de busca, redes sociais, bancos de dados públicos e análise de tráfego.", cat:"Pen Testing"},
+    {f:"O que é OS fingerprinting em pen testing?", b:"Técnica de reconhecimento ativo que tenta identificar o sistema operacional de máquinas-alvo analisando respostas de rede e comportamento — informação valiosa para selecionar exploits específicos.", cat:"Pen Testing"},
+    {f:"O que é physical penetration testing?", b:"Avalia controles de segurança física — tenta ganhar acesso físico não autorizado a áreas restritas usando engenharia social, tailgating, lock picking, bypass de alarmes e exploração de vulnerabilidades físicas.", cat:"Pen Testing"},
+    {f:"O que é integrated penetration testing?", b:"Abordagem holística que combina metodologias técnicas, físicas, ofensivas e defensivas para representação precisa da postura de segurança geral — identifica riscos negligenciados em testes isolados.", cat:"Pen Testing"},
 
-            // Indicadores e Frameworks (56-65)
-            {f: "O que é Asset Inventory?", 
-             b: "Inventário completo e atualizado de todos os ativos de TI da organização: hardware, software, dispositivos de rede, dados. É a base para um programa eficaz de gerenciamento de vulnerabilidades."},
-             
-            {f: "O que é Attack Surface?", 
-             b: "Conjunto de todos os pontos de entrada possíveis que um atacante pode explorar (portas abertas, serviços, aplicações, interfaces). Reduzir a superfície de ataque é uma prática fundamental de hardening."},
-             
-            {f: "O que é IOC (Indicator of Compromise)?", 
-             b: "Evidência forense de que um sistema pode ter sido comprometido. Exemplos: endereço IP malicioso, hash de um arquivo de malware, domínio de comando e controle (C2), assinatura de rede."},
-             
-            {f: "O que é TTP (Tactics, Techniques, and Procedures)?", 
-             b: "Descrição de como um atacante opera: Táticas (objetivos), Técnicas (como alcançar o objetivo) e Procedimentos (implementações específicas). Usado no MITRE ATT&CK."},
-             
-            {f: "O que é Threat Hunting?", 
-             b: "Busca proativa por ameaças que possam ter escapado das detecções automatizadas. Baseia-se em hipóteses, análise de dados e inteligência de ameaças."},
-             
-            {f: "O que são CIS Benchmarks?", 
-             b: "Guias de configuração segura desenvolvidos pelo Center for Internet Security. São baselines consensuais para hardening de diversos sistemas operacionais, aplicações e dispositivos."},
-             
-            {f: "O que são DISA STIGs?", 
-             b: "Security Technical Implementation Guides do Departamento de Defesa dos EUA. São padrões de hardening extremamente rigorosos para sistemas utilizados em ambientes militares."},
-             
-            {f: "O que é Continuous Monitoring?", 
-             b: "Monitoramento contínuo da postura de segurança através de ferramentas como agentes, SIEM e scanners. Permite detectar mudanças, novas vulnerabilidades e ameaças em tempo real."},
-             
-            {f: "O que é Vulnerability Window?", 
-             b: "Janela de tempo entre a descoberta pública de uma vulnerabilidade e a aplicação do patch no sistema. O objetivo é minimizar essa janela para reduzir o risco de exploração."},
-             
-            {f: "O que é Exploit Availability?", 
-             b: "Disponibilidade de um exploit público para uma vulnerabilidade. Aumenta drasticamente a prioridade de correção, pois qualquer atacante pode usar a ferramenta."},
+    // BLOCO 5: ANÁLISE, CVSS E CORREÇÃO (81-100)
+    {f:"Quais são os 6 fatores considerados na análise de vulnerabilidades?", b:"Priorização, classificação, fatores de exposição (EF), impacto organizacional, fatores ambientais e tolerância a risco — guiam decisões sobre quais vulnerabilidades corrigir primeiro e como.", cat:"Análise"},
+    {f:"O que é priorização em análise de vulnerabilidades?", b:"Identificar as vulnerabilidades mais críticas com base em severidade, facilidade de exploração e impacto potencial — para focar recursos limitados nas ameaças mais significativas primeiro.", cat:"Análise"},
+    {f:"O que é classificação em análise de vulnerabilidades?", b:"Categorizar vulnerabilidades por tipo de sistema afetado, natureza da exposição e impacto potencial — ajuda a clarificar escopo e natureza das ameaças para planejamento de resposta.", cat:"Análise"},
+    {f:"O que é o Exposure Factor (EF)?", b:"Representa a extensão na qual um ativo é suscetível a comprometimento — considera mecanismos de autenticação fracos, segmentação de rede inadequada e métodos de controle de acesso insuficientes.", cat:"Análise"},
+    {f:"Quais impactos organizacionais uma vulnerabilidade explorada pode causar?", b:"Perda financeira direta, dano reputacional com clientes/parceiros, interrupção operacional de sistemas críticos e penalidades regulatórias por não conformidade.", cat:"Análise"},
+    {f:"Como o ambiente regulatório afeta a priorização de vulnerabilidades?", b:"Organizações em setores regulados (saúde/HIPAA, finanças/PCI DSS) devem priorizar vulnerabilidades que levam a violações de dados sensíveis e resultam em penalidades regulatórias significativas.", cat:"Análise"},
+    {f:"O que é tolerância a risco e como afeta o gerenciamento de vulnerabilidades?", b:"Nível de risco que a organização está disposta a aceitar — varia por tamanho, setor, ambiente regulatório e objetivos estratégicos. Garante que esforços de remediação estejam alinhados com estratégia de gestão de risco.", cat:"Análise"},
+    {f:"O que é o CVSS e o que ele fornece?", b:"Common Vulnerability Scoring System — método padronizado para classificar severidade de vulnerabilidades incluindo métricas de explorabilidade, impacto e nível de remediação. Permite comparação consistente entre organizações.", cat:"Análise"},
+    {f:"Quais são os scores do CVSS e suas severidades?", b:"0.0 = None; 0.1-3.9 = Low; 4.0-6.9 = Medium; 7.0-8.9 = High; 9.0-10.0 = Critical — quanto maior o score, maior a severidade e urgência de remediação.", cat:"Análise"},
+    {f:"Por que a validação de remediação é crítica?", b:"Garante que a remediação foi implementada corretamente, confirma ausência de novos problemas introduzidos pelo patch/mudança e fornece accountability de que as partes responsáveis agiram adequadamente.", cat:"Análise"},
+    {f:"Quais são os três métodos de validação de remediação?", b:"Re-scanning (escanear novamente — se vulnerabilidade não aparece, indica sucesso), Auditoria (exame profundo do processo e documentação) e Verificação (checks manuais, testes automatizados, revisão de logs).", cat:"Análise"},
+    {f:"Quais são os 4 elementos essenciais de um relatório de vulnerabilidades?", b:"Impacto potencial (possíveis resultados de exploração), Recomendações (patches, mudanças de configuração), Relato oportuno (para remediação rápida) e Formato claro para stakeholders técnicos e não-técnicos.", cat:"Análise"},
+    {f:"O que é scan intrusivo vs não-intrusivo?", b:"Intrusivo: tenta explorar ativamente a vulnerabilidade — resultados mais precisos, mas não pode ser feito em sistema vivo. Não-intrusivo: lista vulnerabilidades sem explorar — pode ser feito em sistemas em produção.", cat:"Análise"},
+    {f:"O que é scan credenciado vs não-credenciado?", b:"Credenciado: usa conta com direitos de login — análise profunda, detecta configurações incorretas, simula atacante interno. Não-credenciado: visão de usuário não privilegiado — simula atacante externo.", cat:"Análise"},
+    {f:"Quando o scan não-credenciado é mais apropriado?", b:"Avaliação externa do perímetro de rede e scan de aplicação web — quando o objetivo é simular a perspectiva de um atacante externo sem permissões específicas para avaliar o que está exposto publicamente.", cat:"Análise"},
+    {f:"O que é escaneamento de vulnerabilidades de aplicação?", b:"Método especializado que analisa fraquezas específicas de aplicações: análise estática (revisa código sem executar) e análise dinâmica (testa em execução). Procura XSS, SQL injection, controles de acesso quebrados.", cat:"Análise"},
+    {f:"Por que o scan de aplicação é separado do scan geral de vulnerabilidades?", b:"Aplicações têm vulnerabilidades únicas (XSS, SQL injection, referências inseguras) que requerem ferramentas especializadas — diferentes das usadas para fraquezas de rede/sistema — e têm ciclos de release próprios.", cat:"Análise"},
+    {f:"O que é monitoramento de pacotes (package monitoring) de software?", b:"Rastreia e avalia segurança de pacotes de software de terceiros, bibliotecas e dependências para garantir que estão atualizados e livres de vulnerabilidades conhecidas — associado ao SBOM e SCA.", cat:"Análise"},
+    {f:"O que são ferramentas SCA (Software Composition Analysis)?", b:"Rastreiam automaticamente pacotes, bibliotecas e dependências no codebase — identificam versões desatualizadas ou vulneráveis e sugerem atualizações comparando com NVD e avisos de vendors.", cat:"Análise"},
+    {f:"O que é análise estática vs dinâmica de aplicações?", b:"Estática: revisa código-fonte sem executar — encontra vulnerabilidades no código. Dinâmica: testa a aplicação em execução — encontra vulnerabilidades comportamentais como inputs não validados e controles quebrados.", cat:"Análise"},
 
-            // Report e Disclosure (66-70)
-            {f: "O que deve conter um relatório de pentest?", 
-             b: "Sumário executivo (para gestão), escopo detalhado, metodologia utilizada, achados com severidade (CVSS), prova de conceito (POC), recomendações de remediação e apêndices técnicos."},
-             
-            {f: "O que é Responsible Disclosure?", 
-             b: "Prática de reportar uma vulnerabilidade descoberta ao fabricante (vendor) antes de divulgá-la publicamente. Geralmente concede-se um período (ex: 90 dias) para que o fabricante corrija o problema."},
-             
-            {f: "O que é Bug Bounty Program?", 
-             b: "Programa onde uma organização oferece recompensas financeiras para pesquisadores de segurança que reportarem vulnerabilidades em seus sistemas. Incentiva a descoberta responsável."},
-             
-            {f: "O que é Regression Testing após patch?", 
-             b: "Testes realizados para garantir que a aplicação de um patch não introduziu novos problemas ou quebrou funcionalidades existentes. Essencial antes de colocar em produção."},
-             
-            {f: "O que é Emergency Patching?", 
-             b: "Processo acelerado de aplicação de patches críticos, fora da janela de manutenção normal. Acionado quando há uma vulnerabilidade grave sendo explorada ativamente."}
-        ];
+    // BLOCO 6: SIEM, DLP E MONITORAMENTO (101-130)
+    {f:"O que é SIEM?", b:"Security Information and Event Management — software que coleta e correlaciona dados de múltiplas fontes (logs, sensores, sniffers) para gerenciamento centralizado de segurança com alerta, relato e arquivamento.", cat:"SIEM/DLP"},
+    {f:"Quais são os três métodos de coleta de dados no SIEM?", b:"Agente (instalado no host, processa e envia), Listener/Collector (hosts empurram logs via Syslog — para switches e roteadores) e Sensor (captura de pacotes e dados de flow via porta espelho).", cat:"SIEM/DLP"},
+    {f:"O que é agregação de log no SIEM?", b:"Normalizar dados de diferentes fontes para formato consistente e pesquisável — cada fonte requer parser próprio para mapear atributos a campos padrão, incluindo normalização de data/hora para timeline única.", cat:"SIEM/DLP"},
+    {f:"O que é correlação de eventos no SIEM?", b:"Interpretar relacionamento entre pontos de dados individuais para diagnosticar incidentes. Regras usam expressões lógicas (AND, OR) e operadores (==, <, >) para identificar padrões suspeitos.", cat:"SIEM/DLP"},
+    {f:"Dê um exemplo prático de regra de correlação no SIEM.", b:"Múltiplas falhas de login para a mesma conta em menos de 1 hora: 'Error.LoginFailure > 3 AND LoginFailure.User AND Duration < 1 hour' — detecta possível ataque de força bruta ou credential stuffing.", cat:"SIEM/DLP"},
+    {f:"O que é 'single pane of glass' no contexto de SIEM?", b:"Visibilidade aprimorada em ambiente complexo através de interface de gerenciamento única — consolida atividades de alerta, relato e arquivamento, eliminando a necessidade de múltiplos dashboards separados.", cat:"SIEM/DLP"},
+    {f:"Quais são os três tipos de relatórios SIEM?", b:"Executivos (resumo de alto nível para tomadores de decisão), Gerenciais (detalhes para decisão operacional diária) e Conformidade (informações requeridas por reguladores como HIPAA, PCI DSS, GDPR).", cat:"SIEM/DLP"},
+    {f:"O que é alert tuning no SIEM?", b:"Ajuste das regras de correlação para reduzir falsos positivos — inclui refinar parâmetros de regras, silenciar alertas de baixa prioridade, redirecionar floods para grupos dedicados e usar ML para ajuste automático.", cat:"SIEM/DLP"},
+    {f:"O que é alert fatigue e por que é perigoso?", b:"Fenômeno onde analistas ficam insensíveis a alertas pelo volume excessivo de falsos positivos — aumenta risco de perder alertas reais de alto impacto, podendo resultar em violações de dados não detectadas.", cat:"SIEM/DLP"},
+    {f:"Quais são os três níveis de criticidade de alertas no SIEM?", b:"Log only (registra automaticamente sem notificação ativa), Alert (listado no dashboard para analista avaliar e validar) e Alarm (classificado como crítico — gera email/SMS automático ao responsável).", cat:"SIEM/DLP"},
+    {f:"O que é SOAR e como complementa o SIEM?", b:"Security Orchestration, Automation and Response — automatiza validação e remediação de alertas. Enquanto SIEM detecta e correlaciona, SOAR executa ações automaticamente via playbooks e integrações.", cat:"SIEM/DLP"},
+    {f:"O que são playbooks no contexto de SOAR/resposta a incidentes?", b:"Guias passo a passo que auxiliam analistas (ou automações) a aplicar todos os processos de resposta a incidentes para um cenário específico — garantindo consistência, completude e velocidade de resposta.", cat:"SIEM/DLP"},
+    {f:"O que é quarentena no contexto de resposta a alertas SIEM?", b:"Isolar a fonte de indicadores (endereço de rede, host, arquivo) para conter uma ameaça antes de causar mais danos — pode ser executada com um clique via integração SOAR com firewall ou endpoint protection.", cat:"SIEM/DLP"},
+    {f:"O que é SNMP e como contribui para monitoramento de segurança?", b:"Simple Network Management Protocol — coleta dados de dispositivos de rede. SNMP traps notificam eventos notáveis (falha de porta, superaquecimento, CPU excessiva) e podem revelar condições indicativas de ataque.", cat:"SIEM/DLP"},
+    {f:"O que é NetFlow e para que serve em segurança?", b:"Registra metadados e estatísticas sobre tráfego de rede sem capturar payload — identifica padrões de comportamento rogue, malware em trânsito, tunelamento, canais C2 e aplicações excedendo largura de banda.", cat:"SIEM/DLP"},
+    {f:"O que é IPFIX e sua relação com NetFlow?", b:"IP Flow Information Export — padrão IETF que redesenvolveu o NetFlow da Cisco para exportação padronizada de informações de fluxo de rede, permitindo interoperabilidade entre equipamentos de diferentes vendors.", cat:"SIEM/DLP"},
+    {f:"O que define um flow label no NetFlow?", b:"Pacotes que compartilham as mesmas características-chave: IPs de origem/destino e tipo de protocolo. 5-tuple: cinco bits de informação. 7-tuple: adiciona interface de entrada e tipo de serviço IP.", cat:"SIEM/DLP"},
+    {f:"O que são Endpoint Protection Platforms (EPPs) modernos?", b:"Conceito moderno de antivírus — detectam malware por assinatura de qualquer tipo, integram com UEBA (User and Entity Behavior Analytics) e usam análise por IA para detectar comportamento ameaçador além de correspondência de assinatura.", cat:"SIEM/DLP"},
+    {f:"O que é DLP (Data Loss Prevention)?", b:"Ferramentas que automatizam descoberta e classificação de dados sensíveis, aplicando regras para que não sejam visualizados ou transferidos sem autorização — medeia cópia para USB, email, cloud e redes sociais.", cat:"SIEM/DLP"},
+    {f:"Quais são os três componentes de uma solução DLP?", b:"Servidor de Política (configura regras, registra incidentes, compila relatórios), Agentes de Endpoint (aplicam política nos clientes, mesmo offline) e Agentes de Rede (escaneiam comunicações nas fronteiras).", cat:"SIEM/DLP"},
+    {f:"Quais são os 4 mecanismos de remediação do DLP?", b:"Alert Only (registra e alerta, permite cópia), Block (impede cópia, mantém acesso ao original), Quarantine (nega acesso ao arquivo original) e Tombstone (quarentena + substitui por arquivo descrevendo a violação).", cat:"SIEM/DLP"},
+    {f:"Qual mecanismo de remediação DLP é o mais restritivo?", b:"Quarantine — nega acesso ao arquivo original ao usuário (possivelmente a qualquer usuário), podendo ser realizado criptografando o arquivo ou movendo-o para área de quarentena no sistema de arquivos.", cat:"SIEM/DLP"},
+    {f:"O que é o mecanismo Tombstone do DLP?", b:"O arquivo original é colocado em quarentena e substituído por um arquivo que descreve: a violação de política que ocorreu e como o usuário pode solicitar re-liberação com justificativa adequada.", cat:"SIEM/DLP"},
+    {f:"Por que usuários não devem compartilhar credenciais de login?", b:"Se uma conta comprometida é compartilhada, não há como vincular eventos nos logs ao atacante real — impossibilitando investigação forense, atribuição de responsabilidade e resposta eficaz ao incidente.", cat:"SIEM/DLP"},
+    {f:"Como o ML auxilia no alert tuning do SIEM?", b:"Analisa rapidamente grandes conjuntos de dados do SIEM, monitora como analistas respondem a alertas e tenta ajustar automaticamente o ruleset — reduzindo falsos negativos sem impactar a detecção de verdadeiros positivos.", cat:"SIEM/DLP"},
+    {f:"Quais são as técnicas de alert tuning no SIEM?", b:"Refinar regras/silenciar alertas de baixa prioridade, redirecionar floods para grupo dedicado, redirecionar alertas de infraestrutura para equipe de infra, monitoramento contínuo com feedback de analistas e ML.", cat:"SIEM/DLP"},
+    {f:"O que é arquivamento no SIEM e por que é importante?", b:"Política de retenção de dados históricos de log por período definido — permite caça retroativa de ameaças, fornece evidência forense para investigações e atende requisitos de conformidade para retenção de dados.", cat:"SIEM/DLP"},
+    {f:"O que é validação de alerta no contexto de resposta SIEM?", b:"Analista decide se o alerta é verdadeiro positivo (inicia caso de incidente) ou falso positivo (descarta para log) — facilitada pela correlação com threat intelligence e inspeção dos pacotes que dispararam o alerta.", cat:"SIEM/DLP"},
+    {f:"O que são auditórias de conformidade em cibersegurança?", b:"Avaliam aderência a regulamentações como GDPR (privacidade), HIPAA (saúde), PCI DSS (cartões de pagamento) e ISO 27001 — verificam se controles, políticas e procedimentos de segurança estão implementados corretamente.", cat:"SIEM/DLP"},
+    {f:"Qual regulamentação exige pen testing anual para dados de cartão de pagamento?", b:"PCI DSS (Payment Card Industry Data Security Standard) — exige testes de penetração anuais e proativos para todas as organizações que manipulam, processam ou armazenam dados de portadores de cartão.", cat:"SIEM/DLP"},
+    {f:"O que é o programa de divulgação responsável?", b:"Programa que encoraja indivíduos a reportar vulnerabilidades antes de exploração maliciosa — fornece diretrizes e procedimentos para relato, frequentemente com recompensas ou reconhecimento público ao pesquisador.", cat:"SIEM/DLP"},
+];
 
-        // ========== QUIZ DO CAPÍTULO 7 (35 QUESTÕES) ==========
-        const quiz = [
-            {q: "Primeira fase do ciclo de gestão de vulnerabilidades:", 
-             o: ["Remediation", "Discovery", "Prioritization", "Verification"], 
-             c: 1},
-             
-            {q: "Vulnerabilidade desconhecida do fabricante, sem patch disponível:", 
-             o: ["CVE", "Zero-day", "EOL", "Legacy"], 
-             c: 1},
-             
-            {q: "Sistema de pontuação para vulnerabilidades (0-10):", 
-             o: ["CVE", "CWE", "CVSS", "NVD"], 
-             c: 2},
-             
-            {q: "Identificador único para vulnerabilidades (ex: CVE-2024-12345):", 
-             o: ["CVE", "CWE", "CVSS", "NVD"], 
-             c: 0},
-             
-            {q: "Catálogo de categorias de fraquezas (ex: CWE-79 = XSS):", 
-             o: ["CVE", "CWE", "CVSS", "NVD"], 
-             c: 1},
-             
-            {q: "Banco de dados do governo dos EUA com CVEs e scores:", 
-             o: ["NVD", "MITRE", "OWASP", "CIS"], 
-             c: 0},
-             
-            {q: "Software sem suporte do fabricante (sem patches):", 
-             o: ["Zero-day", "Legacy", "EOL/EOSL", "Patch"], 
-             c: 2},
-             
-            {q: "Scan de vulnerabilidades COM credenciais de acesso:", 
-             o: ["Black box", "Credentialed", "Non-credentialed", "Agent-based"], 
-             c: 1},
-             
-            {q: "Scan SEM credenciais, visão de atacante externo:", 
-             o: ["Credentialed", "White box", "Non-credentialed", "Agent-based"], 
-             c: 2},
-             
-            {q: "Scanner de vulnerabilidades comercial mais utilizado:", 
-             o: ["OpenVAS", "Qualys", "Nessus", "Nexpose"], 
-             c: 2},
-             
-            {q: "Scanner de vulnerabilidades open source:", 
-             o: ["Nessus", "Qualys", "OpenVAS", "Rapid7"], 
-             c: 2},
-             
-            {q: "Resultado onde scanner alerta mas não há vulnerabilidade real:", 
-             o: ["True positive", "False positive", "False negative", "True negative"], 
-             c: 1},
-             
-            {q: "Vulnerabilidade real NÃO detectada pelo scanner (MAIS GRAVE):", 
-             o: ["True positive", "False positive", "False negative", "True negative"], 
-             c: 2},
-             
-            {q: "Sistema que coleta, agrega e correlaciona logs de múltiplas fontes:", 
-             o: ["SOAR", "SIEM", "DLP", "IDS"], 
-             c: 1},
-             
-            {q: "Plataforma que automatiza resposta a incidentes com playbooks:", 
-             o: ["SIEM", "SOAR", "DLP", "IPS"], 
-             c: 1},
-             
-            {q: "Solução que previne exfiltração de dados sensíveis:", 
-             o: ["IDS", "IPS", "Firewall", "DLP"], 
-             c: 3},
-             
-            {q: "Tipo de DLP que monitora tráfego de rede:", 
-             o: ["Endpoint", "Network", "Storage", "Cloud"], 
-             c: 1},
-             
-            {q: "Tipo de DLP que monitora dispositivos (USB, impressão):", 
-             o: ["Network", "Endpoint", "Storage", "Cloud"], 
-             c: 1},
-             
-            {q: "Protocolo da Cisco que coleta metadados de tráfego (não payload):", 
-             o: ["NetFlow", "SNMP", "Syslog", "IPFIX"], 
-             c: 0},
-             
-            {q: "Teste de intrusão SEM conhecimento prévio do alvo:", 
-             o: ["White box", "Gray box", "Black box", "Red team"], 
-             c: 2},
-             
-            {q: "Teste de intrusão COM conhecimento completo (código, arquitetura):", 
-             o: ["Black box", "Gray box", "White box", "Blue team"], 
-             c: 2},
-             
-            {q: "Framework de exploração mais utilizado em pentests:", 
-             o: ["Nmap", "Burp", "Metasploit", "Wireshark"], 
-             c: 2},
-             
-            {q: "Proxy interceptador para testes em aplicações web:", 
-             o: ["Metasploit", "Burp Suite", "Nmap", "sqlmap"], 
-             c: 1},
-             
-            {q: "Ferramenta open source de SQL injection automation:", 
-             o: ["Burp", "ZAP", "sqlmap", "Hydra"], 
-             c: 2},
-             
-            {q: "Ferramenta para extrair credenciais da memória do Windows:", 
-             o: ["Metasploit", "Mimikatz", "John", "Hashcat"], 
-             c: 1},
-             
-            {q: "Framework para automação de ataques de engenharia social:", 
-             o: ["Metasploit", "Burp", "SET", "BeEF"], 
-             c: 2},
-             
-            {q: "Documento formal que define escopo e regras de um pentest:", 
-             o: ["NDA", "SLA", "ROE", "MOU"], 
-             c: 2},
-             
-            {q: "Diferença entre Vulnerability Scan e Pentest:", 
-             o: ["Scan é manual, Pentest automatizado", "Scan identifica, Pentest explora", "Scan é mais caro", "São a mesma coisa"], 
-             c: 1},
-             
-            {q: "Aplicar correção oficial do fabricante:", 
-             o: ["Workaround", "Mitigation", "Patch", "Accept"], 
-             c: 2},
-             
-            {q: "Solução temporária até que o patch oficial seja aplicado:", 
-             o: ["Patch", "Workaround", "Accept", "Exception"], 
-             c: 1},
-             
-            {q: "Proteção temporária sem aplicar patch real (ex: regra WAF):", 
-             o: ["Virtual patching", "Workaround", "Accept", "Exception"], 
-             c: 0},
-             
-            {q: "Decisão formal de aceitar um risco (não corrigir):", 
-             o: ["Patch", "Mitigation", "Accept", "Exception"], 
-             c: 2},
-             
-            {q: "Evidência forense de comprometimento (IP malicioso, hash de malware):", 
-             o: ["TTP", "IOC", "CVE", "CVSS"], 
-             c: 1},
-             
-            {q: "Framework de táticas e técnicas de atacantes:", 
-             o: ["NIST", "MITRE ATT&CK", "CIS", "OWASP"], 
-             c: 1},
-             
-            {q: "Conjunto de requisitos consistentes para servidores/workstations:", 
-             o: ["Security template", "Baseline", "Standard", "Policy"], 
-             c: 1}
-        ];
+// ========== QUIZ POOL ==========
+const allQuiz = [
+    // BLOCO 1: Gerenciamento e Vulnerabilidades de SO (1-15)
+    {q:"O worm Conficker de 2008 explorou qual vulnerabilidade do Windows?", o:["MS17-010","MS08-067","Heartbleed","Shellshock"], c:1, e:"MS08-067 era uma vulnerabilidade no Windows Server Service explorada pelo Conficker, que infectou milhões de computadores mundialmente em 2008."},
+    {q:"O ataque WannaCry de 2017 usou qual exploit para se propagar via SMB?", o:["Conficker (MS08-067)","EternalBlue (MS17-010)","Stagefright","LoJax"], c:1, e:"WannaCry explorou MS17-010 via EternalBlue — afetou o protocolo SMB do Windows, permitindo execução remota de código sem interação do usuário."},
+    {q:"Shellshock afetou qual componente de sistemas Unix/Linux/macOS?", o:["Kernel do SO","Protocolo OpenSSL","Shell Bash","Firmware UEFI"], c:2, e:"Shellshock era uma falha no shell Bash que permitia executar comandos arbitrários via variáveis de ambiente manipuladas."},
+    {q:"Heartbleed era uma vulnerabilidade crítica em qual componente?", o:["Kernel Linux","Shell Bash","Protocolo SMB","OpenSSL"], c:3, e:"Heartbleed afetou o OpenSSL — permitia ler memória do sistema e comprometer chaves secretas de proteção de dados em servidores."},
+    {q:"A vulnerabilidade Stagefright no Android era acionada como?", o:["Via Bluetooth","Via atualização de sistema","Via mensagem MMS","Via app malicioso instalado"], c:2, e:"Stagefright permitia executar código malicioso apenas com o recebimento de uma mensagem MMS, sem nenhuma interação do usuário."},
+    {q:"Por que o Android tem suporte de patches mais inconsistente que o iOS?", o:["iOS é mais antigo e maduro","Android é open-source e fragmentado entre fabricantes/versões","Android é proprietário da Google","iOS tem mais usuários para testar patches"], c:1, e:"A fragmentação do Android entre múltiplos fabricantes e versões resulta em suporte inconsistente de patches — ao contrário do iOS controlado centralmente pela Apple."},
+    {q:"Meltdown e Spectre eram vulnerabilidades associadas a qual componente?", o:["Firmware UEFI","Protocolo de rede","Sistema de arquivos do kernel","Processadores (CPUs)"], c:3, e:"Meltdown e Spectre exploravam falhas arquiteturais nos processadores (CPUs), afetando quase todos os computadores e dispositivos móveis existentes."},
+    {q:"O que torna o LoJax especialmente perigoso comparado a outros malwares?", o:["Criptografa todos os arquivos do sistema","Persiste mesmo após reinstalação do SO ou troca do HD","Infecta apenas servidores Windows","Só rouba credenciais de rede"], c:1, e:"LoJax foi descoberto no firmware UEFI — persiste abaixo do nível do SO, sobrevivendo a reinstalações completas e trocas de disco rígido."},
+    {q:"Qual boa prática de SO reduz diretamente a exposição a vulnerabilidades conhecidas?", o:["Usar senhas de 8 caracteres","Instalar mais softwares de monitoramento","Manter SOs atualizados com patches recentes","Aumentar a RAM dos servidores"], c:2, e:"Manter SOs com patches atualizados fecha vulnerabilidades conhecidas antes que possam ser exploradas — é a prática mais direta de redução de risco."},
+    {q:"Um sistema está exposto a uma vulnerabilidade recém-descoberta sem patch disponível. Qual é a categoria?", o:["Legacy vulnerability","EOL vulnerability","Zero-day","Known vulnerability"], c:2, e:"Zero-day é uma vulnerabilidade desconhecida do fabricante ou sem patch disponível — impossível de corrigir pelo método convencional de aplicar patch."},
+    // BLOCO 2: Sistemas Legados e EOL (11-20)
+    {q:"O que define um sistema End-of-Life (EOL)?", o:["Sistema muito antigo mas ainda com suporte","Sistema não mais suportado pelo fabricante, sem patches","Sistema usado há mais de 10 anos","Sistema que consome muitos recursos"], c:1, e:"EOL significa que o fabricante cessou o suporte — sem patches de segurança, o sistema fica permanentemente vulnerável a novas ameaças."},
+    {q:"Windows 7 e Windows Server 2008 atingiram EOL em que data?", o:["Janeiro de 2015","Janeiro de 2018","Janeiro de 2020","Janeiro de 2022"], c:2, e:"Ambos atingiram EOL em janeiro de 2020 — organizações que os mantêm em produção operam com sistemas sem patches de segurança desde então."},
+    {q:"'Sistema legado' necessariamente significa sem suporte do vendor?", o:["Sim, sempre — é sinônimo de EOL","Não — pode ter suporte mas ser desatualizado/incompatível","Sim, se tiver mais de 5 anos","Depende apenas do tamanho da organização"], c:1, e:"Legado significa desatualizado e incompatível com arquiteturas novas — mas pode ainda receber suporte do vendor. EOL é que definitivamente não recebe mais suporte."},
+    {q:"Por que organizações mantêm sistemas legados apesar dos riscos?", o:["São mais seguros que sistemas novos","Regulamentações exigem manter sistemas antigos","Custo, risco operacional, confiabilidade e funções críticas incorporadas","Não há razão técnica válida"], c:2, e:"Organizações mantêm legados por custo de substituição alto, riscos operacionais da migração, confiabilidade suficiente e por estarem incorporados em funções críticas de negócio."},
+    {q:"Dispositivos IoT recondicionados de segunda mão representam qual risco?", o:["Alto consumo de largura de banda","Podem ter vulnerabilidades conhecidas sem suporte do vendor","Incompatibilidade com Wi-Fi moderno","Baixa velocidade de processamento"], c:1, e:"Dispositivos vendidos no mercado de segunda mão, recertificados ou recondicionados frequentemente têm vulnerabilidades conhecidas sem possibilidade de suporte do vendor."},
+    {q:"Qual critério é MAIS importante ao selecionar substituto para um sistema EOL?", o:["Preço mais baixo disponível","Mesmo fabricante do sistema atual","Disponibilidade de suporte, compatibilidade e migração de dados","Interface mais moderna e atraente"], c:2, e:"Disponibilidade de suporte do vendor, compatibilidade com infraestrutura existente e suporte a migração de dados são os critérios centrais para garantir continuidade e segurança."},
+    {q:"Quando surgem vulnerabilidades de hardware EOL?", o:["Quando o hardware fica muito lento","Quando fabricantes cessam atualizações, peças e patches de firmware","Quando o hardware é conectado à internet","Quando o SO é atualizado para versão nova"], c:1, e:"Vulnerabilidades de hardware EOL surgem quando fabricantes cessam o fornecimento de atualizações de produtos, peças e patches para firmware — sem possibilidade de correção."},
+    {q:"O que é um workaround em gerenciamento de vulnerabilidades?", o:["Aplicar o patch oficial do fabricante","Aceitar formalmente o risco","Solução temporária até que o patch oficial possa ser aplicado","Isolar completamente o sistema da rede"], c:2, e:"Workaround é uma solução temporária implementada até que o patch real esteja disponível — reduz a exposição sem eliminar definitivamente a vulnerabilidade."},
+    {q:"O que é Virtual Patching?", o:["Patch oficial aplicado via cloud","Proteção temporária via regras WAF ou IPS sem modificar o sistema vulnerável","Atualização automática de firmware","Patch testado em ambiente virtual antes da produção"], c:1, e:"Virtual patching protege contra uma vulnerabilidade implementando regras em WAF ou IPS sem modificar o sistema vulnerável — usado até que o patch real possa ser aplicado."},
+    {q:"Qual opção de remediação representa aceitar formalmente o risco de uma vulnerabilidade?", o:["Patch","Workaround","Mitigation","Risk Acceptance"], c:3, e:"Risk Acceptance é a decisão formal de aceitar um risco identificado sem aplicar correção — geralmente quando o custo de remediar é maior que o impacto potencial. Requer aprovação da gestão."},
+    // BLOCO 3: Threat Feeds e OSINT (21-32)
+    {q:"O que são threat feeds?", o:["Alertas de firewall em tempo real","Relatórios mensais de auditoria de segurança","Fontes de informação continuamente atualizadas sobre ameaças e vulnerabilidades","Logs de sistema exportados para análise"], c:2, e:"Threat feeds são fontes de inteligência em tempo real sobre ameaças emergentes — integradas a SIEMs e scanners para melhorar capacidades de detecção e resposta."},
+    {q:"Qual NÃO é uma plataforma comum de threat feeds citada no Security+?", o:["AlienVault OTX","IBM X-Force Exchange","Nessus","Recorded Future"], c:2, e:"Nessus é um scanner de vulnerabilidades, não uma plataforma de threat feeds. AlienVault OTX, IBM X-Force Exchange e Recorded Future são plataformas de inteligência de ameaças."},
+    {q:"Qual é a principal vantagem dos threat feeds proprietários sobre os open-source?", o:["São gratuitos para qualquer organização","São mais fáceis de integrar com SIEM","Mais abrangentes, com análise avançada e contexto mais profundo","Produzem menos falsos positivos automaticamente"], c:2, e:"Feeds proprietários (IBM X-Force, Mandiant, Recorded Future) oferecem informações mais abrangentes, insights analíticos avançados e contexto mais profundo — com custo associado."},
+    {q:"Para que é usada a ferramenta Shodan em OSINT?", o:["Coletar e-mails corporativos de domínios","Visualizar redes complexas de informação","Reconhecimento baseado em web para subdomínios","Investigar dispositivos e serviços conectados à internet"], c:3, e:"Shodan indexa dispositivos conectados à internet (servidores, câmeras, IoT, roteadores) e seus serviços, permitindo identificar sistemas expostos com vulnerabilidades conhecidas."},
+    {q:"Para que é usada a ferramenta theHarvester em OSINT?", o:["Escanear portas de rede","Visualizar redes complexas de informação","Coletar e-mails, subdomínios, hosts e nomes de funcionários","Analisar firmware de dispositivos"], c:2, e:"theHarvester coleta informações de reconhecimento de fontes públicas: e-mails, subdomínios, hosts, IPs e nomes de funcionários — útil na fase de footprinting do pen test."},
+    {q:"O que distingue a Dark Web da Deep Web?", o:["Dark Web é apenas mais uma parte da Deep Web sem diferença relevante","Dark Web requer software especial (TOR/I2P) via dark net; Deep Web é apenas não indexada","Deep Web requer TOR para acesso; Dark Web não","São termos completamente sinônimos na literatura de segurança"], c:1, e:"Deep Web = não indexada por buscadores mas acessível normalmente. Dark Web = requer software especial via dark net (TOR, I2P) com camada extra de anonimato."},
+    {q:"Qual é um uso LEGÍTIMO e legal da dark web?", o:["Comprar credenciais roubadas para pen test","Acessar fóruns de venda de exploits","Whistleblowers e jornalistas que precisam comunicar com anonimato","Distribuir ferramentas de ataque para pesquisa"], c:2, e:"Whistleblowers, jornalistas e ativistas em países repressivos usam legitimamente a dark web para comunicação anônima e proteção contra vigilância governamental."},
+    {q:"O que são ISACs no contexto de cibersegurança?", o:["Ferramentas de scan de vulnerabilidades setoriais","Certificações de segurança para profissionais","Grupos colaborativos setoriais que compartilham inteligência de ameaças","Tipo especializado de SIEM para setores regulados"], c:2, e:"Information Sharing and Analysis Centers são grupos colaborativos por setor (saúde, finanças, energia) que trocam inteligência de ameaças — cruciais para resiliência coletiva."},
+    {q:"O que é Behavioral Threat Research como output de threat feed?", o:["Lista de IPs e domínios maliciosos conhecidos","Comentário narrativo sobre exemplos de ataques e TTPs de adversários","Hash de malware para blocklist","Regras de correlação para SIEM"], c:1, e:"Behavioral Threat Research descreve como atacantes operam — TTPs, ferramentas usadas, sequências de ataque — fornecendo contexto para entender e detectar comportamentos maliciosos."},
+    {q:"Como threat feeds se integram com scanners de vulnerabilidades?", o:["Substituem o scanner por feeds em tempo real","Fornecem dados sobre ameaças emergentes para priorizar vulnerabilidades sendo exploradas ativamente","Automaticamente aplicam patches baseados nos feeds","Apenas geram relatórios de conformidade"], c:1, e:"Threat feeds integrados a scanners permitem priorizar vulnerabilidades com base em exploração ativa no momento, identificando quais corrigir com mais urgência."},
+    {q:"O que é Reputational Threat Intelligence?", o:["Análise do comportamento de ameaças ao longo do tempo","Listas de IPs/domínios maliciosos e assinaturas de malware para blocklists","Correlação de eventos com TTPs conhecidos","Pesquisa narrativa sobre grupos de ataque"], c:1, e:"Reputational Threat Intelligence consiste em listas de IPs e domínios associados a comportamento malicioso e assinaturas de malware — usadas diretamente em firewalls e SIEMs."},
+    {q:"Qual regulamentação exige pen testing anual para dados de pagamento?", o:["HIPAA","GDPR","SOX","PCI DSS"], c:3, e:"PCI DSS (Payment Card Industry Data Security Standard) exige testes de penetração anuais e proativos para organizações que manipulam dados de portadores de cartão."},
+    // BLOCO 4: Análise e Scans (33-50)
+    {q:"Qual é o propósito do CVSS?", o:["Automatizar aplicação de patches","Gerenciar identidades de usuários no sistema","Método padronizado para classificar severidade de vulnerabilidades","Monitorar tráfego de rede em tempo real"], c:2, e:"CVSS fornece scores padronizados (0-10) para vulnerabilidades, com métricas de explorabilidade e impacto — permite comparação e priorização consistente entre organizações."},
+    {q:"Qual é o range de score CVSS para vulnerabilidades Critical?", o:["7.0 – 8.9","8.0 – 9.9","9.0 – 10.0","6.0 – 10.0"], c:2, e:"CVSS Critical = 9.0 a 10.0. High = 7.0-8.9, Medium = 4.0-6.9, Low = 0.1-3.9. Vulnerabilidades Critical requerem remediação imediata."},
+    {q:"Qual método de validação de remediação confirma sucesso executando o scan novamente?", o:["Auditoria","Verificação manual","Re-scanning","Pen test de confirmação"], c:2, e:"Re-scanning realiza scans de vulnerabilidade adicionais após remediação — se as mesmas vulnerabilidades não aparecem, é forte indicação de que a correção foi bem-sucedida."},
+    {q:"O que um scan não-intrusivo pode fazer que um scan intrusivo NÃO pode?", o:["Validar se o sistema é realmente vulnerável","Ser executado em sistemas em produção (sistemas vivos)","Encontrar mais vulnerabilidades com maior precisão","Testar configurações de firewall ativamente"], c:1, e:"Scan não-intrusivo pode ser realizado em sistemas vivos sem risco de impacto, pois apenas lista vulnerabilidades potenciais sem tentar explorá-las."},
+    {q:"Qual tipo de scan fornece visão similar a um ataque com conta de usuário comprometida?", o:["Scan não-credenciado externo","Scan não-intrusivo básico","Scan credenciado com login de usuário","Scan passivo de rede"], c:2, e:"Scan credenciado usa conta com direitos de login — mostra o que um atacante com conta comprometida poderia descobrir e acessar, permitindo análise mais profunda do sistema interno."},
+    {q:"Quando o scan não-credenciado é MAIS apropriado?", o:["Auditoria interna completa de conformidade","Análise profunda de configurações de segurança","Avaliação externa do perímetro de rede e scan de aplicação web","Detecção de malware em sistemas internos"], c:2, e:"Scan não-credenciado simula a perspectiva de um atacante externo — ideal para avaliar o que está exposto publicamente no perímetro e identificar vulnerabilidades visíveis externamente."},
+    {q:"O que é análise estática de código de aplicação?", o:["Testa a aplicação em execução com inputs variados","Revisa o código-fonte sem executar a aplicação","Monitora tráfego de rede gerado pela aplicação","Verifica patches de dependências instaladas"], c:1, e:"Análise estática (SAST) revisa o código-fonte sem executá-lo — encontra vulnerabilidades no código como SQL injection, XSS e controles de acesso quebrados antes do deploy."},
+    {q:"O que é análise dinâmica de aplicações?", o:["Revisão manual do código-fonte por especialistas","Verificação de patches de terceiros instalados","Testa a aplicação em execução identificando problemas comportamentais","Análise de logs gerados pela aplicação"], c:2, e:"Análise dinâmica (DAST) testa a aplicação em execução — identifica vulnerabilidades comportamentais como inputs não validados, controles de acesso quebrados e SQL injection em runtime."},
+    {q:"O que o Software Composition Analysis (SCA) rastreia?", o:["Usuários e seus privilégios de acesso ao sistema","Pacotes, bibliotecas e dependências de terceiros no codebase","Logs de acesso a sistemas críticos","Tráfego entre componentes da aplicação"], c:1, e:"SCA rastreia pacotes, bibliotecas e dependências de terceiros — compara automaticamente com NVD e avisos de vendors para identificar versões vulneráveis."},
+    {q:"O que é o Exposure Factor (EF) na análise de vulnerabilidades?", o:["Custo de remediação da vulnerabilidade","Número de sistemas afetados pela vulnerabilidade","Extensão em que um ativo é suscetível a comprometimento","Tempo médio para exploração após descoberta"], c:2, e:"EF representa o quanto um ativo é suscetível — considera mecanismos de autenticação fracos, segmentação inadequada e controles de acesso insuficientes que aumentam a probabilidade de impacto."},
+    {q:"Qual impacto organizacional NÃO resulta de uma vulnerabilidade explorada?", o:["Perda financeira direta","Dano reputacional","Melhora de performance operacional","Penalidades regulatórias"], c:2, e:"Vulnerabilidades exploradas causam perda financeira, dano reputacional, interrupção operacional e penalidades regulatórias — nunca melhoria de performance."},
+    {q:"O que é priorização em análise de vulnerabilidades?", o:["Ordenar vulnerabilidades por data de descoberta","Identificar vulnerabilidades críticas com base em severidade, exploração e impacto para focar recursos limitados","Listar vulnerabilidades por custo de correção","Classificar por sistema afetado apenas"], c:1, e:"Priorização usa severidade CVSS, facilidade de exploração e impacto potencial para direcionar recursos limitados às vulnerabilidades que representam maior risco real para a organização."},
+    {q:"Por que o relato oportuno de vulnerabilidades é crítico?", o:["Para cumprir apenas requisitos legais","Atrasos levam a atrasos na remediação, aumentando a janela para atacantes explorarem","Para informar a mídia sobre os riscos","Para justificar orçamento de segurança"], c:1, e:"Atrasos no relato aumentam a janela de oportunidade para que atacantes explorem as vulnerabilidades antes de serem corrigidas — remediação rápida depende de relato oportuno."},
+    {q:"Qual ferramenta de scan de vulnerabilidades é open-source?", o:["Nessus","Qualys","OpenVAS","Rapid7 Nexpose"], c:2, e:"OpenVAS (Greenbone) é o principal scanner de vulnerabilidades open-source — alternativa gratuita ao Nessus, com ampla cobertura de vulnerabilidades."},
+    {q:"O que é package monitoring no gerenciamento de vulnerabilidades?", o:["Monitorar pacotes de rede em tempo real","Rastrear segurança de pacotes de software de terceiros, bibliotecas e dependências","Controlar pacotes de atualização de SO","Monitorar tráfego de aplicações web"], c:1, e:"Package monitoring garante que pacotes, bibliotecas e dependências estão atualizados e livres de vulnerabilidades — associado ao SBOM e práticas de gerenciamento da cadeia de suprimentos de software."},
+    {q:"Qual dos seguintes é um scan de vulnerabilidade especializado, não geral?", o:["Scan de portas com Nmap","Scan de credenciais com Nessus","Scan de aplicação web focado em XSS e SQL injection","Scan de rede com OpenVAS"], c:2, e:"Scan de aplicação web é especializado — usa ferramentas específicas para analisar o comportamento de aplicações e procurar vulnerabilidades únicas como XSS, SQL injection e controles quebrados."},
+    // BLOCO 5: Alerta, SIEM e DLP (51-65)
+    {q:"Qual protocolo coleta dados de dispositivos de rede e envia notificações de eventos notáveis?", o:["NetFlow","Syslog","IPFIX","SNMP"], c:3, e:"SNMP coleta dados de dispositivos de rede e usa SNMP traps para notificar eventos notáveis como falha de porta, superaquecimento e utilização excessiva de CPU."},
+    {q:"O que o NetFlow registra sobre o tráfego de rede?", o:["Conteúdo completo dos pacotes incluindo payload","Apenas endereços IP de origem e destino","Metadados e estatísticas de fluxo (sem payload)","Apenas portas utilizadas nas conexões"], c:2, e:"NetFlow registra metadados como IPs, portas, protocolo, bytes, pacotes e timestamps — mas NÃO captura o payload (conteúdo) dos pacotes."},
+    {q:"Qual é o padrão IETF derivado do NetFlow da Cisco?", o:["SNMP v3","Syslog","NetFlow v10","IPFIX"], c:3, e:"IPFIX (IP Flow Information Export) é o padrão IETF redesenvolvido a partir do NetFlow da Cisco para exportação padronizada e interoperável de informações de fluxo de rede."},
+    {q:"O que é alert fatigue no contexto de operações de segurança?", o:["Cansaço físico de analistas após longas jornadas de trabalho","Insensibilidade a alertas pelo volume excessivo de falsos positivos","Falha técnica que faz alertas chegarem com atraso","Alertas repetitivos do mesmo tipo de evento"], c:1, e:"Alert fatigue ocorre quando analistas são sobrecarregados com falsos positivos — ficam insensíveis e podem perder alertas reais de alto impacto, resultando em violações não detectadas."},
+    {q:"O que é 'single pane of glass' no SIEM?", o:["Dashboard exclusivo para relatórios do CISO","Monitor dedicado apenas para alarmes críticos","Visibilidade consolidada de toda a segurança em interface única","Relatório executivo semanal automático"], c:2, e:"'Single pane of glass' refere-se à visibilidade aprimorada em ambiente complexo através de interface única — consolida alertas, relatórios e arquivamento eliminando silos de ferramentas."},
+    {q:"Qual nível de criticidade no SIEM gera email ou SMS automaticamente ao responsável?", o:["Log only","Alert","Warning","Alarm"], c:3, e:"Alarm é o nível mais crítico — o evento é automaticamente classificado como crítico e gera notificação prioritária (email/SMS) ao manipulador de incidentes para ação imediata."},
+    {q:"Analista nota múltiplas falhas de login para a mesma conta em 30 minutos. Que tipo de regra SIEM detectaria isso?", o:["Regra de anomalia de volume de tráfego","Regra de assinatura de malware","Regra de correlação de eventos","Política de bloqueio de DLP"], c:2, e:"Regra de correlação correlaciona múltiplos eventos relacionados: LoginFailure > 3, mesma conta, em menos de 1 hora — detecta ataques de força bruta ou credential stuffing."},
+    {q:"O que é SOAR e como complementa o SIEM?", o:["Sistema de backup de logs de segurança","Tipo de firewall de próxima geração com IA","Orquestração, automação e resposta — automatiza validação e remediação de alertas do SIEM","Scanner de vulnerabilidades integrado ao SIEM"], c:2, e:"SOAR automatiza a resposta — enquanto SIEM detecta e correlaciona eventos, SOAR executa ações automáticas via playbooks: quarentena, bloqueio, notificação, investigação."},
+    {q:"O que são playbooks no contexto de SOAR?", o:["Manuais de configuração do SIEM","Regras de correlação para detecção de anomalias","Guias passo a passo para resposta a incidentes em cenários específicos","Relatórios de conformidade automatizados"], c:2, e:"Playbooks guiam analistas (ou automações) através de todos os passos de resposta para um cenário específico — garantindo consistência, completude e velocidade na resposta a incidentes."},
+    {q:"Qual componente DLP aplica políticas em computadores clientes mesmo quando offline?", o:["Servidor de Política","Agente de Rede","Console de Gerenciamento Central","Agente de Endpoint"], c:3, e:"Agentes de Endpoint instalam-se nos clientes e aplicam políticas DLP localmente — funcionam mesmo quando o dispositivo está fora da rede corporativa, em home office ou em viagem."},
+    {q:"O mecanismo de remediação DLP 'Tombstone' faz o quê?", o:["Alerta o admin sem bloquear nenhuma ação","Bloqueia a cópia mas mantém acesso total ao original","Nega acesso ao arquivo apenas ao usuário atual","Coloca em quarentena e substitui por arquivo descrevendo a violação e como re-lançar"], c:3, e:"Tombstone é o mecanismo mais informativo — coloca o arquivo em quarentena e o substitui por um arquivo que descreve a violação de política e como o usuário pode solicitar re-liberação."},
+    {q:"Qual mecanismo de remediação DLP é mais restritivo, negando acesso ao arquivo original?", o:["Alert Only","Block","Tombstone","Quarantine"], c:3, e:"Quarantine é o mais restritivo — nega acesso ao arquivo original ao usuário (possivelmente a qualquer usuário), podendo ser implementado por criptografia ou movimentação para área isolada."},
+    {q:"O que a agregação de log no SIEM faz com dados de múltiplas fontes?", o:["Armazena cada fonte separadamente para consulta individual","Normaliza para formato consistente e pesquisável com timeline única","Deleta logs após processamento para economizar espaço","Envia os logs para um servidor de backup externo"], c:1, e:"Agregação normaliza dados de diferentes fontes (Windows, Linux, firewalls, switches) para formato padronizado e pesquisável, incluindo normalização de data/hora para uma timeline unificada."},
+    {q:"O que é correlação de eventos no SIEM?", o:["Coletar logs de múltiplas fontes ao mesmo tempo","Interpretar relacionamentos entre pontos de dados para identificar incidentes com lógica AND/OR","Armazenar logs históricos para conformidade","Gerar relatórios automáticos de performance"], c:1, e:"Correlação interpreta relacionamentos entre eventos individuais usando lógica condicional (AND, OR) e operadores — identifica padrões que individualmente não seriam suspeitos mas juntos indicam ataque."},
+    {q:"Qual técnica de alert tuning redireciona floods de alertas súbitos causados por mudanças na rede?", o:["Silenciar a regra permanentemente no SIEM","Deletar a regra de correlação responsável","Atribuir o flood a agente ou equipe dedicada para remediar","Reiniciar o servidor SIEM para limpar o backlog"], c:2, e:"Mudanças na rede podem causar regras a produzirem muito mais alertas que o normal — redirecionar para equipe dedicada evita 'spamming' do dashboard de todos os analistas enquanto o problema é resolvido."},
+    // BLOCO 6: Pen Testing (66-75)
+    {q:"Qual método de pen test fornece conhecimento COMPLETO do alvo ao testador?", o:["Black Box (Unknown Environment)","Gray Box (Partially Known Environment)","Bug Bounty","White Box (Known Environment)"], c:3, e:"White Box (Known Environment) fornece conhecimento completo: código-fonte, arquitetura, credenciais — permite análise mais profunda mas menos realista que um ataque real."},
+    {q:"Qual método de pen test MELHOR simula um ataque externo real?", o:["White Box","Gray Box","Known Environment","Black Box (Unknown Environment)"], c:3, e:"Black Box (Unknown Environment) não fornece informação alguma ao testador — simula um atacante externo que não tem conhecimento prévio sobre o ambiente alvo."},
+    {q:"Gray Box testing simula qual tipo de ameaça?", o:["Ataque externo sem nenhuma informação","Ataque interno ou de alguém com acesso parcial ao ambiente","Ataque de estado-nação com recursos avançados","Ataque automatizado por malware"], c:1, e:"Gray Box simula ameaça interna ou atacante que já obteve acesso parcial — recebe informações como IPs, listas de e-mail ou estrutura organizacional para simular esse nível de acesso."},
+    {q:"O que é a Red Team em pen testing?", o:["Equipe de defesa do sistema responsável por responder","Árbitros que gerenciam o engajamento e garantem as regras","Equipe de hackers éticos que realiza o pen test (ofensivo)","Combinação de atacantes e defensores trabalhando juntos"], c:2, e:"Red Team são os hackers éticos — realizam os testes de penetração, simulando atacantes reais para testar as defesas. O nome vem de exercícios militares onde 'vermelho' é o adversário."},
+    {q:"O que é a White Team em pen testing?", o:["Hackers éticos que atacam os sistemas","Equipe de defesa que monitora e responde","Equipe de reconhecimento e OSINT","Árbitros que gerenciam o engajamento entre Red e Blue Teams"], c:3, e:"White Team são os árbitros — gerenciam o engajamento, definem regras, monitoram o processo e garantem que o teste seja conduzido dentro dos limites. Geralmente compostos por gestores."},
+    {q:"Qual documento define WHO, WHAT, WHEN, WHERE e WHY de um pen test?", o:["Rules of Engagement","Non-Disclosure Agreement","Scope of Work (Statement of Work)","Penetration Test Report"], c:2, e:"Scope of Work (Statement of Work) é o documento detalhado que responde às 5 perguntas essenciais: quem são os alvos, o que está fora dos limites, prazo, localização e objetivos do teste."},
+    {q:"O que são Rules of Engagement (ROE) em pen testing?", o:["Define o pagamento e cronograma do pen tester","Define como o teste será realizado: tipo, manipulação de dados e notificações","Lista todas as vulnerabilidades encontradas","Documento de conformidade para reguladores externos"], c:1, e:"ROE define como o teste será conduzido: tipo (white/black/gray box), como dados sensíveis encontrados serão manipulados e o processo de notificação da equipe de TI durante o teste."},
+    {q:"Qual é a PRIMEIRA fase do ciclo de vida do pen test?", o:["Scanning e Enumeração","Ganhar Acesso via exploração","Manter Acesso com backdoors","Reconhecimento (Footprinting)"], c:3, e:"Reconhecimento (Footprinting) é a primeira fase — coleta informações sobre o alvo antes de qualquer interação direta, usando OSINT, engenharia social e dumpster diving."},
+    {q:"Na fase de ganhar acesso, o que é 'pivoting'?", o:["Instalar backdoor para persistência","Escalar privilégios para nível de administrador","Mover lateralmente para outras máquinas na rede após comprometimento inicial","Realizar footprinting de novos alvos identificados"], c:2, e:"Pivoting é mover-se lateralmente pela rede após comprometimento inicial — usar o sistema comprometido como 'pivô' para acessar outros sistemas que de outro modo seriam inacessíveis."},
+    {q:"Qual é o propósito principal do relatório final de pen test?", o:["Cobrar pelo serviço prestado","Documentar vulnerabilidades, impacto e recomendações — fornece proteção legal e base para remediação","Apresentar os resultados oralmente à gestão","Fechar as ferramentas e sessões de ataque usadas"], c:1, e:"O relatório documenta todo o processo, vulnerabilidades encontradas com evidências, impacto demonstrado e recomendações de correção — é proteção legal para ambas as partes e guia para remediação."},
+];
 
-        // ========== VARIÁVEIS DE ESTADO ==========
-        
-        /**
-         * currentCard: POSIÇÃO no array filteredCards (NÃO é o índice original!)
-         */
-        let currentCard = 0;
-        
-        /**
-         * flipped: controla se estamos mostrando a frente (false) ou o verso (true)
-         */
-        let flipped = false;
-        
-        /**
-         * mastered: Set (conjunto) que armazena os ÍNDICES ORIGINAIS dos cards dominados
-         */
-        let mastered = new Set();
-        
-        /**
-         * answers: objeto que armazena as respostas do usuário no quiz
-         * Formato: { número_da_questão: índice_da_opção_selecionada }
-         */
-        let answers = {};
-        
-        /**
-         * checked: flag que indica se o quiz já foi verificado
-         */
-        let checked = false;
-        
-        /**
-         * filteredCards: array que contém os ÍNDICES ORIGINAIS dos cards
-         * na ORDEM ATUAL de exibição.
-         */
-        let filteredCards = [...Array(cards.length).keys()]; // Gera [0,1,2,3,...,69]
-        
-        /**
-         * currentFilter: string que indica qual filtro está ativo
-         * Valores: 'all', 'mastered', 'unmastered'
-         */
-        let currentFilter = 'all';
+// ========== ESTADO ==========
+let currentCard = 0;
+let flipped = false;
+let mastered = new Set();
+let sessionCards = [];
+let currentFilter = 'all';
+let filteredPool = [];
+let quizSession = [];
+let answers = {};
+let checked = false;
 
-        // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
-        
-        /**
-         * loadProgress(): Carrega os cards dominados do localStorage
-         */
-        function loadProgress() {
-            const saved = localStorage.getItem('security_plus_cap7_mastered');
-            if (saved) {
-                mastered = new Set(JSON.parse(saved));
-            }
-        }
+// ========== INIT ==========
+function init() {
+    loadProgress();
+    document.getElementById('total-cards-stat').textContent = allCards.length;
+    buildFilteredPool();
+    newSession();
+}
 
-        /**
-         * saveProgress(): Salva os cards dominados no localStorage
-         */
-        function saveProgress() {
-            localStorage.setItem('security_plus_cap7_mastered', JSON.stringify([...mastered]));
-        }
+function loadProgress() {
+    try {
+        const saved = localStorage.getItem('cap7_mastered');
+        if (saved) mastered = new Set(JSON.parse(saved));
+    } catch(e) {}
+}
 
-        // Carrega o progresso assim que o script é executado
-        loadProgress();
+function saveProgress() {
+    try {
+        localStorage.setItem('cap7_mastered', JSON.stringify([...mastered]));
+    } catch(e) {}
+}
 
-        // ========== FUNÇÕES DAS ABAS ==========
-        
-        /**
-         * showTab(n): Alterna entre as abas (Flashcards, Resumo, Quiz)
-         * @param {number} n - Índice da aba (0, 1 ou 2)
-         */
-        function showTab(n) {
-            document.querySelectorAll('.content').forEach((c, i) => {
-                c.classList.toggle('active', i === n);
-            });
-            
-            document.querySelectorAll('.tab-btn').forEach((b, i) => {
-                b.classList.toggle('active', i === n);
-            });
-            
-            // Se for a aba do quiz (2) e o quiz ainda não foi carregado, carrega
-            if (n === 2 && !document.getElementById('questions').innerHTML) {
-                loadQuiz();
-            }
-        }
+// ========== FLASHCARDS ==========
+function buildFilteredPool() {
+    if (currentFilter === 'all') {
+        filteredPool = [...Array(allCards.length).keys()];
+    } else if (currentFilter === 'mastered') {
+        filteredPool = Array.from(mastered);
+    } else {
+        filteredPool = [...Array(allCards.length).keys()].filter(i => !mastered.has(i));
+    }
+}
 
-        // ========== FUNÇÕES DOS FLASHCARDS ==========
-        
-        /**
-         * updateCard(): Atualiza a interface com base no estado atual
-         */
-        function updateCard() {
-            if (filteredCards.length === 0) {
-                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
-                document.getElementById('card-counter').textContent = 'Card 0 de 0';
-                document.getElementById('side-indicator').textContent = 'FRENTE';
-                return;
-            }
-            
-            // PASSO 1: Pegar o índice ORIGINAL do card atual
-            const cardIndex = filteredCards[currentCard];
-            
-            // PASSO 2: Pegar o card correspondente no array original
-            const card = cards[cardIndex];
-            
-            // PASSO 3: Mostrar frente ou verso baseado em 'flipped'
-            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
-            
-            // PASSO 4: Atualizar contador (currentCard+1 porque mostramos 1-based)
-            document.getElementById('card-counter').textContent = 
-                `Card ${currentCard + 1} de ${filteredCards.length}`;
-            
-            // PASSO 5: Mostrar total de cards dominados
-            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
-            
-            // PASSO 6: Atualizar botão "Marcar Dominado"
-            const btn = document.getElementById('master-btn');
-            const isMastered = mastered.has(cardIndex);
-            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
-            btn.classList.toggle('mastered', isMastered);
-            
-            // PASSO 7: Atualizar indicador de frente/verso
-            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
-            
-            // PASSO 8: Atualizar barra de progresso e estatística
-            const progress = (mastered.size / cards.length) * 100;
-            document.getElementById('progress-fill').style.width = progress + '%';
-            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
-        }
+function newSession() {
+    buildFilteredPool();
+    if (filteredPool.length === 0) { sessionCards = []; updateCardDisplay(); return; }
+    const shuffled = [...filteredPool].sort(() => Math.random() - 0.5);
+    sessionCards = shuffled.slice(0, Math.min(15, shuffled.length));
+    currentCard = 0;
+    flipped = false;
+    updateCardDisplay();
+}
 
-        /**
-         * flipCard(): Vira o card (alterna entre frente e verso)
-         */
-        function flipCard() {
-            flipped = !flipped;
-            updateCard();
-        }
+function updateCardDisplay() {
+    if (sessionCards.length === 0) {
+        document.getElementById('card-text').textContent = 'Nenhum card neste filtro.';
+        document.getElementById('card-counter').textContent = 'Sem cards';
+        document.getElementById('side-indicator').textContent = 'FRENTE';
+        document.getElementById('category-badge').textContent = '';
+        return;
+    }
+    const card = allCards[sessionCards[currentCard]];
+    document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+    document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${sessionCards.length}`;
+    document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+    document.getElementById('category-badge').textContent = card.cat || '';
+    const btn = document.getElementById('btn-master');
+    const isMastered = mastered.has(sessionCards[currentCard]);
+    btn.textContent = isMastered ? '✅ Dominado' : '⭐ Marcar Dominado';
+    btn.className = 'btn btn-master' + (isMastered ? ' mastered' : '');
+    const progress = allCards.length > 0 ? (mastered.size / allCards.length) * 100 : 0;
+    document.getElementById('progress-fill').style.width = progress + '%';
+    document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
+    document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+}
 
-        /**
-         * nextCard(): Avança para o próximo card
-         */
-        function nextCard() {
-            if (filteredCards.length === 0) return;
-            currentCard = (currentCard + 1) % filteredCards.length;
-            flipped = false;
-            updateCard();
-        }
+function flipCard() { flipped = !flipped; updateCardDisplay(); }
 
-        /**
-         * prevCard(): Volta para o card anterior
-         */
-        function prevCard() {
-            if (filteredCards.length === 0) return;
-            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
-            flipped = false;
-            updateCard();
-        }
+function nextCard() {
+    if (sessionCards.length === 0) return;
+    currentCard = (currentCard + 1) % sessionCards.length;
+    flipped = false;
+    updateCardDisplay();
+}
 
-        /**
-         * toggleMaster(): Marca/desmarca o card atual como dominado
-         */
-        function toggleMaster() {
-            if (filteredCards.length === 0) return;
-            
-            const cardIndex = filteredCards[currentCard];
-            
-            if (mastered.has(cardIndex)) {
-                mastered.delete(cardIndex);
-            } else {
-                mastered.add(cardIndex);
-            }
-            
-            saveProgress();
-            updateCard();
-        }
+function prevCard() {
+    if (sessionCards.length === 0) return;
+    currentCard = (currentCard - 1 + sessionCards.length) % sessionCards.length;
+    flipped = false;
+    updateCardDisplay();
+}
 
-        // ========== FUNÇÃO DE EMBARALHAR ==========
-        
-        /**
-         * shuffleCards(): Embaralha os cards APENAS do filtro atual
-         */
-        function shuffleCards() {
-            for (let i = filteredCards.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
-            }
-            currentCard = 0;
-            flipped = false;
-            updateCard();
-        }
+function toggleMaster() {
+    if (sessionCards.length === 0) return;
+    const idx = sessionCards[currentCard];
+    if (mastered.has(idx)) { mastered.delete(idx); } else { mastered.add(idx); }
+    saveProgress();
+    updateCardDisplay();
+}
 
-        // ========== FUNÇÕES DE FILTRO ==========
-        
-        /**
-         * filterCards(): Filtra os cards por status (todos, dominados, não dominados)
-         * @param {string} type - Tipo de filtro: 'all', 'mastered', 'unmastered'
-         */
-        function filterCards(type) {
-            currentFilter = type;
-            
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            if (type === 'all') {
-                filteredCards = [...Array(cards.length).keys()];
-            } else if (type === 'mastered') {
-                filteredCards = Array.from(mastered);
-            } else {
-                filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
-            }
-            
-            currentCard = 0;
-            flipped = false;
-            updateCard();
-        }
+function filterCards(type, evt) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (evt && evt.target) evt.target.classList.add('active');
+    newSession();
+}
 
-        // ========== FUNÇÕES DO QUIZ ==========
-        
-        /**
-         * loadQuiz(): Cria dinamicamente os elementos HTML do quiz
-         */
-        function loadQuiz() {
-            const container = document.getElementById('questions');
-            quiz.forEach((q, qi) => {
-                const div = document.createElement('div');
-                div.className = 'question';
-                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
-                q.o.forEach((opt, oi) => {
-                    const odiv = document.createElement('div');
-                    odiv.className = 'option';
-                    odiv.textContent = opt;
-                    odiv.onclick = () => selectOpt(qi, oi);
-                    odiv.id = `q${qi}o${oi}`;
-                    div.appendChild(odiv);
-                });
-                const exp = document.createElement('div');
-                exp.className = 'explanation';
-                exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
-                div.appendChild(exp);
-                container.appendChild(div);
-            });
-        }
+// ========== TABS ==========
+function showTab(n) {
+    document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
+    document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+    if (n === 2 && quizSession.length === 0) startQuizSession();
+}
 
-        /**
-         * selectOpt(): Seleciona uma opção no quiz
-         * @param {number} qi - Índice da questão
-         * @param {number} oi - Índice da opção
-         */
-        function selectOpt(qi, oi) {
-            if (checked) return;
-            quiz[qi].o.forEach((_, i) => {
-                const el = document.getElementById(`q${qi}o${i}`);
-                el.classList.remove('selected');
-            });
-            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
-            answers[qi] = oi;
-        }
+// ========== QUIZ ==========
+function startQuizSession() {
+    answers = {};
+    checked = false;
+    const shuffled = [...Array(allQuiz.length).keys()].sort(() => Math.random() - 0.5);
+    quizSession = shuffled.slice(0, 15);
+    loadQuiz();
+}
 
-        /**
-         * checkAnswers(): Verifica as respostas do quiz
-         */
-        function checkAnswers() {
-            checked = true;
-            let correct = 0;
-            quiz.forEach((q, qi) => {
-                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
-                q.o.forEach((_, oi) => {
-                    const el = document.getElementById(`q${qi}o${oi}`);
-                    if (correctAnswer.includes(oi)) {
-                        el.classList.add('correct');
-                    } else if (answers[qi] === oi) {
-                        el.classList.add('incorrect');
-                    }
-                });
-                document.getElementById(`exp${qi}`).style.display = 'block';
-                if (correctAnswer.includes(answers[qi])) correct++;
-            });
-            
-            const pct = Math.round((correct / quiz.length) * 100);
-            document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = 
-                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
-            document.getElementById('results-modal').classList.add('show');
-        }
+function loadQuiz() {
+    const container = document.getElementById('questions');
+    container.innerHTML = '';
+    quizSession.forEach((qi, pos) => {
+        const q = allQuiz[qi];
+        const div = document.createElement('div');
+        div.className = 'question';
+        div.innerHTML = `<h3>${pos + 1}. ${q.q}</h3>`;
+        q.o.forEach((opt, oi) => {
+            const odiv = document.createElement('div');
+            odiv.className = 'option';
+            odiv.textContent = opt;
+            odiv.onclick = () => selectOpt(pos, oi);
+            odiv.id = `q${pos}o${oi}`;
+            div.appendChild(odiv);
+        });
+        const exp = document.createElement('div');
+        exp.className = 'explanation';
+        exp.id = `exp${pos}`;
+        exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
+        div.appendChild(exp);
+        container.appendChild(div);
+    });
+}
 
-        /**
-         * resetQuiz(): Reinicia o quiz
-         */
-        function resetQuiz() {
-            checked = false;
-            answers = {};
-            document.getElementById('questions').innerHTML = '';
-            document.getElementById('results-modal').classList.remove('show');
-            loadQuiz();
-        }
+function selectOpt(pos, oi) {
+    if (checked) return;
+    const q = allQuiz[quizSession[pos]];
+    q.o.forEach((_, i) => {
+        const el = document.getElementById(`q${pos}o${i}`);
+        if (el) el.classList.remove('selected');
+    });
+    const el = document.getElementById(`q${pos}o${oi}`);
+    if (el) el.classList.add('selected');
+    answers[pos] = oi;
+}
 
-        // ========== INICIALIZAÇÃO ==========
-        updateCard();
-    </script>
+function checkAnswers() {
+    checked = true;
+    let correct = 0;
+    quizSession.forEach((qi, pos) => {
+        const q = allQuiz[qi];
+        const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+        q.o.forEach((_, oi) => {
+            const el = document.getElementById(`q${pos}o${oi}`);
+            if (!el) return;
+            if (correctAnswer.includes(oi)) el.classList.add('correct');
+            else if (answers[pos] === oi) el.classList.add('incorrect');
+        });
+        const expEl = document.getElementById(`exp${pos}`);
+        if (expEl) expEl.style.display = 'block';
+        if (correctAnswer.includes(answers[pos])) correct++;
+    });
+    const pct = Math.round((correct / quizSession.length) * 100);
+    document.getElementById('score-circle').textContent = `${pct}%`;
+    let emoji, title, msg;
+    if (pct >= 80) {
+        emoji = '🎉'; title = 'APROVADO!';
+        msg = `${correct}/${quizSession.length} corretas — Excelente! Você atingiu o threshold de 80%.`;
+    } else if (pct >= 60) {
+        emoji = '⚠️'; title = 'Quase lá!';
+        msg = `${correct}/${quizSession.length} corretas — Você precisa de 80% para passar. Continue praticando!`;
+    } else {
+        emoji = '📚'; title = 'Precisa estudar mais';
+        msg = `${correct}/${quizSession.length} corretas — Revise o material e tente novamente!`;
+    }
+    document.getElementById('result-emoji').textContent = emoji;
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('score-text').textContent = msg;
+    document.getElementById('results-modal').classList.add('show');
+}
+
+function newQuizSession() {
+    document.getElementById('results-modal').classList.remove('show');
+    startQuizSession();
+    window.scrollTo(0, document.getElementById('tab2').offsetTop - 100);
+}
+
+function closeModal() {
+    document.getElementById('results-modal').classList.remove('show');
+}
+
+function scrollToExplanations() {
+    const firstExp = document.getElementById('exp0');
+    if (firstExp) firstExp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ========== START ==========
+init();
+</script>
 </body>
 </html>
