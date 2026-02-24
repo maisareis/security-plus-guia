@@ -815,7 +815,7 @@
                 <button class="btn btn-primary" onclick="newSession()">🔄 Nova Sessão</button>
                 <button class="btn" style="background:#6b7280;color:white;" onclick="closeModal()">Fechar</button>
             </div>
-            <button class="btn btn-explain" onclick="verExplicacoes()" style="margin-top:12px;width:100%;">💡 Ver Explicações</button>
+            <button class="btn btn-explain" id="btn-explain" onclick="closeModal(); scrollToExplanations();" style="margin-top:12px;width:100%;">💡 Ver Explicações</button>
         </div>
     </div>
 
@@ -1750,7 +1750,6 @@
             sessionQuiz = getSession(quiz, 15);
             answers = {}; checked = false; explanationsVisible = false;
             document.getElementById('results-modal').classList.remove('show');
-            document.getElementById('btn-explain').style.display = 'none';
             document.getElementById('btn-explain').textContent = '💡 Ver Explicações';
             document.getElementById('btn-check').style.display = 'inline-flex';
             loadQuiz();
@@ -1827,8 +1826,12 @@
 
         function closeModal() {
             document.getElementById('results-modal').classList.remove('show');
-            document.getElementById('btn-explain').style.display = 'inline-flex';
             document.getElementById('btn-check').style.display = 'none';
+        }
+
+        function scrollToExplanations() {
+            const firstExp = document.getElementById('exp0');
+            if (firstExp) firstExp.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         // ========== INIT ==========

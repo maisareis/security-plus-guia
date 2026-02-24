@@ -874,7 +874,7 @@ function saveProgress() {
 function showTab(n) {
     document.querySelectorAll('.content').forEach((c,i) => c.classList.toggle('active', i===n));
     document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===n));
-    if (n === 2 && !checked && quizSession.length === 0) startQuizSession();
+    if (n === 2 && quizSession.length === 0) startQuizSession();
 }
 
 // ========== FLASHCARDS ==========
