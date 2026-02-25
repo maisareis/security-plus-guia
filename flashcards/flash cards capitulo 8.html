@@ -3,1274 +3,864 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security+ Cap 8 - Network & Endpoint Security</title>
+    <title>Security+ Cap 8 - Segurança de SO e Aplicações</title>
     <style>
-        /* ===== RESET CSS ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
         .container { max-width: 1200px; margin: 0 auto; }
-        
-        /* ===== CABEÇALHO ===== */
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-            animation: fadeIn 0.5s;
-        }
-        
-        .header h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .stats-bar {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .stat-card {
-            background: rgba(255,255,255,0.2);
-            padding: 15px 25px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            color: white;
-            font-weight: bold;
-        }
-        
-        /* ===== ABAS (TABS) ===== */
-        .tabs {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .tab-btn {
-            padding: 15px 30px;
-            background: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .tab-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-        
-        .tab-btn.active {
-            background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
-            color: white;
-        }
-        
-        .content { 
-            display: none;
-            animation: fadeIn 0.4s;
-        }
+        .header { text-align: center; color: white; margin-bottom: 40px; animation: fadeIn 0.5s; }
+        .header h1 { font-size: 2.8rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .stats-bar { display: flex; gap: 20px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        .stat-card { background: rgba(255,255,255,0.2); padding: 15px 25px; border-radius: 12px; backdrop-filter: blur(10px); color: white; font-weight: bold; }
+        .tabs { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        .tab-btn { padding: 15px 30px; background: white; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .tab-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .tab-btn.active { background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%); color: white; }
+        .content { display: none; animation: fadeIn 0.4s; }
         .content.active { display: block; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* ===== FLASHCARDS ===== */
-        .flashcard-area { max-width: 900px; margin: 0 auto; }
-        
-        .card-info {
-            background: rgba(255,255,255,0.25);
-            padding: 20px;
-            border-radius: 15px;
-            color: white;
-            margin-bottom: 25px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #10b981, #34d399);
-            transition: width 0.3s ease;
-        }
-        
-        .flashcard {
-            background: white;
-            border-radius: 20px;
-            padding: 60px 40px;
-            min-height: 350px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            position: relative;
-            margin-bottom: 30px;
-        }
-        
-        .flashcard:hover { transform: scale(1.02); }
-        
-        .side-indicator {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 8px 16px;
-            background: #ee9ca7;
-            color: white;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        
-        .flashcard-text {
-            font-size: 1.4rem;
-            line-height: 1.8;
-            text-align: center;
-            color: #1f2937;
-        }
-        
-        .flip-hint {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #6b7280;
-            font-style: italic;
-        }
-        
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-        
-        .btn-nav {
-            background: white;
-            font-size: 1.5rem;
-            width: 55px;
-            height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .btn-master {
-            background: #e5e7eb;
-            color: #1f2937;
-        }
-        
-        .btn-master.mastered {
-            background: #10b981;
-            color: white;
-        }
-        
-        .btn-shuffle {
-            background: #f59e0b;
-            color: white;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
-            color: white;
-            padding: 18px 45px;
-            font-size: 1.1rem;
-        }
-        
-        .filter-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .filter-btn {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.3);
-            border: 2px solid white;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-        
-        .filter-btn.active {
-            background: white;
-            color: #ee9ca7;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* FLASHCARDS */
+        .flashcard-area { max-width: 900px; margin: 0 auto; }
+        .card-info { background: rgba(255,255,255,0.25); padding: 20px; border-radius: 15px; color: white; margin-bottom: 25px; backdrop-filter: blur(10px); }
+        .progress-bar { width: 100%; height: 8px; background: rgba(255,255,255,0.3); border-radius: 10px; overflow: hidden; margin-top: 10px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #ee9ca7, #ffdde1); transition: width 0.3s ease; }
+        .flashcard { background: white; border-radius: 20px; padding: 60px 40px; min-height: 350px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; margin-bottom: 30px; }
+        .flashcard:hover { transform: scale(1.02); }
+        .side-indicator { position: absolute; top: 20px; left: 20px; padding: 8px 16px; background: #ee9ca7; color: white; border-radius: 8px; font-size: 0.9rem; font-weight: 600; }
+        .category-badge { position: absolute; top: 20px; right: 20px; padding: 8px 16px; background: #fce7f3; color: #be185d; border-radius: 8px; font-size: 0.85rem; font-weight: 600; }
+        .flashcard-text { font-size: 1.4rem; line-height: 1.8; text-align: center; color: #1f2937; }
+        .flip-hint { margin-top: 20px; font-size: 0.9rem; color: #6b7280; font-style: italic; }
+        .controls { display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap; }
+        .btn { padding: 15px 30px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .btn-nav { background: white; font-size: 1.5rem; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; padding: 0; }
+        .btn-master { background: #e5e7eb; color: #1f2937; }
+        .btn-master.mastered { background: #10b981; color: white; }
+        .btn-new-session { background: #f59e0b; color: white; }
+        .filter-bar { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-btn { padding: 10px 20px; border: 2px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.2); color: white; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .filter-btn.active { background: white; color: #ee9ca7; }
+
+        /* QUIZ */
         .quiz-area { max-width: 1000px; margin: 0 auto; }
-        
-        .quiz-header {
-            text-align: center;
-            color: white;
-            margin-bottom: 35px;
-        }
-        
-        .question {
-            background: white;
-            border-radius: 18px;
-            padding: 35px;
-            margin-bottom: 25px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-        
-        .question h3 {
-            color: #1f2937;
-            margin-bottom: 20px;
-            font-size: 1.25rem;
-            line-height: 1.6;
-        }
-        
-        .option {
-            padding: 18px 20px;
-            border: 3px solid #e5e7eb;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: white;
-            font-size: 1.05rem;
-        }
-        
-        .option:hover {
-            background: #ffeef0;
-            border-color: #ee9ca7;
-            transform: translateX(5px);
-        }
-        
-        .option.selected {
-            border-color: #ee9ca7;
-            background: #ffeef0;
-            font-weight: 600;
-        }
-        
-        .option.correct {
-            border-color: #10b981;
-            background: #d1fae5;
-            font-weight: 600;
-        }
-        
-        .option.incorrect {
-            border-color: #ef4444;
-            background: #fee2e2;
-            font-weight: 600;
-        }
-        
-        .explanation {
-            margin-top: 20px;
-            padding: 20px;
-            background: #ffeef0;
-            border-left: 5px solid #ee9ca7;
-            border-radius: 8px;
-            display: none;
-            line-height: 1.6;
-        }
-        
-        .results-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        
+        .quiz-header { text-align: center; color: white; margin-bottom: 35px; }
+        .question { background: white; border-radius: 18px; padding: 35px; margin-bottom: 25px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+        .question h3 { color: #1f2937; margin-bottom: 20px; font-size: 1.25rem; line-height: 1.6; }
+        .option { padding: 18px 20px; border: 3px solid #e5e7eb; border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s ease; background: white; font-size: 1.05rem; }
+        .option:hover { background: #ffeef0; border-color: #ee9ca7; transform: translateX(5px); }
+        .option.selected { border-color: #ee9ca7; background: #ffeef0; font-weight: 600; }
+        .option.correct { border-color: #10b981; background: #d1fae5; font-weight: 600; }
+        .option.incorrect { border-color: #ef4444; background: #fee2e2; font-weight: 600; }
+        .explanation { margin-top: 20px; padding: 20px; background: #ffeef0; border-left: 5px solid #ee9ca7; border-radius: 8px; display: none; line-height: 1.6; }
+        .quiz-controls { text-align: center; margin-top: 30px; margin-bottom: 20px; }
+        .btn-check { background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%); color: white; font-size: 1.1rem; padding: 18px 45px; }
+
+        /* MODAL */
+        .results-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
         .results-modal.show { display: flex; }
-        
-        .results-content {
-            background: white;
-            padding: 50px;
-            border-radius: 25px;
-            max-width: 500px;
-            text-align: center;
-            animation: scaleIn 0.3s ease;
-        }
-        
-        @keyframes scaleIn {
-            from { transform: scale(0.9); }
-            to { transform: scale(1); }
-        }
-        
-        .score-circle {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            font-weight: bold;
-            margin: 30px auto;
-        }
-        
-        .summary {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            padding: 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .summary h1 {
-            color: #ee9ca7;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
-            border-bottom: 4px solid #ee9ca7;
-            padding-bottom: 15px;
-        }
-        .summary h2 {
-            color: #ffdde1;
-            margin-top: 35px;
-            margin-bottom: 15px;
-            font-size: 1.8rem;
-        }
-        .summary h3 {
-            color: #ee9ca7;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-        .summary ul, .summary ol {
-            margin-left: 25px;
-            margin-bottom: 15px;
-            line-height: 1.8;
-        }
-        .info-box {
-            background: #fce7f3;
-            border-left: 5px solid #ec4899;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
-        }
-        .golden-rule {
-            background: #fef3c7;
-            border-left: 5px solid #f59e0b;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
-        }
-        .tip-box {
-            background: #eff6ff;
-            border-left: 5px solid #3b82f6;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
+        .results-content { background: white; padding: 50px; border-radius: 25px; max-width: 500px; width: 90%; text-align: center; animation: scaleIn 0.3s ease; }
+        @keyframes scaleIn { from { transform: scale(0.9); } to { transform: scale(1); } }
+        .result-emoji { font-size: 3.5rem; margin-bottom: 10px; }
+        .score-circle { width: 180px; height: 180px; border-radius: 50%; background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: bold; margin: 20px auto; }
+        .modal-buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; }
+        .btn-primary { background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%); color: white; }
+        .btn-secondary { background: #6b7280; color: white; }
+        .btn-explain-modal { background: #7c3aed; color: white; width: 100%; }
+
+        /* RESUMO */
+        .summary-area { max-width: 900px; margin: 0 auto; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow-x: hidden; }
+        .summary-area h1 { color: #ee9ca7; margin-bottom: 20px; font-size: 2rem; }
+        .summary-area h2 { color: white; background: #ee9ca7; padding: 12px 20px; border-radius: 8px; margin: 30px 0 15px 0; font-size: 1.4rem; }
+        .summary-area h3 { color: #ee9ca7; margin: 20px 0 10px 0; font-size: 1.1rem; }
+        .summary-area ul { margin-left: 25px; margin-bottom: 15px; line-height: 1.8; }
+        .summary-area p { line-height: 1.8; margin-bottom: 12px; }
+        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 15px 0; border-radius: 8px; }
+        .summary-area table { width: 100%; border-collapse: collapse; min-width: 400px; margin: 0; }
+        .summary-area th { background: #ee9ca7; color: white; padding: 10px; white-space: nowrap; }
+        .summary-area td { padding: 10px; border: 1px solid #e5e7eb; font-size: 0.95rem; }
+        .summary-area tr:nth-child(even) td { background: #fdf2f4; }
+        .tip-box { background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .tip-box h3 { color: #ec4899; margin-bottom: 10px; margin-top: 0; }
+        .warning-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .warning-box h3 { color: #d97706; margin-bottom: 10px; margin-top: 0; }
+        .info-box { background: #d1fae5; border-left: 5px solid #10b981; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .info-box h3 { color: #065f46; margin-bottom: 10px; margin-top: 0; }
+        .grid-2 { display: flex; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
+        .grid-2 > div { flex: 1; min-width: 250px; padding: 20px; border-radius: 10px; }
+        code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9rem; }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .header h1 { font-size: 2rem; }
+            .flashcard { padding: 40px 20px; min-height: 250px; }
+            .flashcard-text { font-size: 1.1rem; }
+            .summary-area { padding: 20px 15px; border-radius: 12px; }
+            .summary-area h1 { font-size: 1.5rem; }
+            .summary-area h2 { font-size: 1.15rem; padding: 10px 14px; }
+            .grid-2 > div { min-width: 100% !important; }
+            .results-content { padding: 30px 20px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🔒 Security+ Capítulo 8</h1>
-            <p>Network & Endpoint Security - 80 Cards | 40 Questões</p>
-            <div class="stats-bar">
-                <div class="stat-card">📚 80 Flashcards</div>
-                <div class="stat-card">❓ 40 Questões</div>
-                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+<div class="container">
+    <div class="header">
+        <h1>🔒 Capítulo 8</h1>
+        <p style="font-size:1.3rem; opacity:0.9;">Segurança de Sistemas Operacionais e Aplicações</p>
+        <div class="stats-bar">
+            <div class="stat-card">🧠 <span id="total-cards-stat">0</span> Flashcards</div>
+            <div class="stat-card">❓ 75 Questões no pool</div>
+            <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+        <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
+        <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+    </div>
+
+    <!-- ABA 0: FLASHCARDS -->
+    <div id="tab0" class="content active">
+        <div class="flashcard-area">
+            <div class="card-info">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <span id="card-counter">Card 1 de 15</span>
+                    <span id="mastered-count">0 dominados</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
             </div>
-        </div>
-
-        <div class="tabs">
-            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
-            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
-            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
-        </div>
-
-        <div id="tab0" class="content active">
-            <div class="flashcard-area">
-                <div class="card-info">
-                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
-                        <div>
-                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 80</div>
-                            <div id="mastered-count">0 dominados</div>
-                        </div>
-                        <div class="filter-buttons">
-                            <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
-                            <button class="filter-btn" onclick="filterCards('unmastered', event)">Não Dominados</button>
-                            <button class="filter-btn" onclick="filterCards('mastered', event)">Dominados</button>
-                        </div>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
-                    </div>
-                </div>
-                
-                <div class="flashcard" onclick="flipCard()">
-                    <div class="side-indicator" id="side-indicator">FRENTE</div>
-                    <div class="flashcard-text" id="card-text"></div>
-                    <div class="flip-hint">👆 Clique para virar</div>
-                </div>
-
-                <div class="controls">
-                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
-                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
-                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
-                    <button class="btn btn-nav" onclick="nextCard()">›</button>
-                </div>
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
+                <button class="filter-btn" onclick="filterCards('unmastered', event)">Não Dominados</button>
+                <button class="filter-btn" onclick="filterCards('mastered', event)">Dominados</button>
             </div>
-        </div>
-
-        <div id="tab1" class="content">
-            <div class="summary">
-                <h1>📖 Resumo - Capítulo 8</h1>
-                
-                <div class="info-box">
-                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
-                    <ul style="margin-top: 10px; margin-left: 20px;">
-                        <li><strong>NTFS:</strong> Deny > Allow | Explicit > Inherited</li>
-                        <li><strong>Wi-Fi:</strong> WPA3 (SAE) > WPA2 (AES-CCMP) > WPA > WEP</li>
-                        <li><strong>WIPS</strong> detecta rogue APs e evil twins</li>
-                        <li><strong>SFTP</strong> (SSH) vs <strong>FTPS</strong> (TLS)</li>
-                        <li><strong>WAF</strong> protege web apps (SQLi, XSS)</li>
-                        <li><strong>SAST</strong> (código) vs <strong>DAST</strong> (aplicação rodando)</li>
-                        <li><strong>AppLocker</strong> = whitelisting no Windows</li>
-                        <li><strong>DEP</strong> + <strong>ASLR</strong> = proteção contra buffer overflow</li>
-                    </ul>
-                </div>
-
-                <h2>1️⃣ Hardening de SO</h2>
-                
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Remover software desnecessário</strong> - reduz superfície de ataque</li>
-                    <li><strong>Desabilitar serviços não usados</strong> - menos portas abertas</li>
-                    <li><strong>Patches e updates automáticos</strong> - correção de vulnerabilidades</li>
-                    <li><strong>Firewall habilitado</strong> - controle de tráfego</li>
-                    <li><strong>Antivírus atualizado</strong> - proteção contra malware</li>
-                    <li><strong>Políticas de senha fortes</strong> - complexidade, comprimento</li>
-                    <li><strong>UAC habilitado (Windows)</strong> - User Account Control</li>
-                    <li><strong>Least privilege</strong> - mínimas permissões necessárias</li>
-                    <li><strong>Secure Boot</strong> - protege contra rootkits de boot</li>
-                    <li><strong>Measured Boot</strong> - registra hashes do boot para verificação</li>
-                </ul>
-
-                <h2>2️⃣ NTFS Permissions (Windows)</h2>
-
-                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-                    <tr><th style="background:#ee9ca7; color:white;">Permissão</th><th style="background:#ee9ca7; color:white;">Descrição</th></tr>
-                    <tr><td><strong>Read</strong></td><td>Ler arquivos/pastas</td></tr>
-                    <tr><td><strong>Write</strong></td><td>Escrever/modificar</td></tr>
-                    <tr><td><strong>Execute</strong></td><td>Executar programas</td></tr>
-                    <tr><td><strong>Modify</strong></td><td>Read + Write + Execute + Delete</td></tr>
-                    <tr><td><strong>Full Control</strong></td><td>Modify + alterar permissões + tomar posse</td></tr>
-                </table>
-
-                <div class="golden-rule">
-                    <strong>⚠️ REGRAS DE OURO NTFS:</strong>
-                    <ul style="margin-top: 10px;">
-                        <li><strong>Deny sempre prevalece sobre Allow</strong></li>
-                        <li><strong>Explicit > Inherited</strong></li>
-                    </ul>
-                </div>
-
-                <h3>Linux Host Security</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>iptables:</strong> firewall do Linux. Chains: INPUT, OUTPUT, FORWARD</li>
-                    <li><strong>Desabilitar serviços:</strong> <code>systemctl disable nome-do-serviço</code></li>
-                    <li><strong>SSH hardening:</strong> desabilitar login root, usar autenticação por chaves</li>
-                </ul>
-
-                <h2>3️⃣ Wireless Security</h2>
-
-                <h3>Ataques Wi-Fi</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Evil Twin:</strong> AP falso com mesmo SSID do legítimo. MITM.</li>
-                    <li><strong>Rogue AP:</strong> AP não autorizado conectado à rede.</li>
-                    <li><strong>Deauth Attack:</strong> Força desconexão de clientes.</li>
-                    <li><strong>WPS Attack:</strong> PIN de 8 dígitos vulnerável a brute force.</li>
-                    <li><strong>War Driving:</strong> Mapear redes Wi-Fi.</li>
-                    <li><strong>KRACK Attack:</strong> Vulnerabilidade no WPA2 que permite reutilização de nonces.</li>
-                </ul>
-
-                <h3>Proteções Wi-Fi</h3>
-                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-                    <tr><th style="background:#ee9ca7; color:white;">Padrão</th><th style="background:#ee9ca7; color:white;">Segurança</th></tr>
-                    <tr><td><strong>WPA3</strong></td><td>SAE, protege contra ataques offline de dicionário</td></tr>
-                    <tr><td><strong>WPA2</strong></td><td>AES-CCMP, vulnerável a KRACK</td></tr>
-                    <tr><td><strong>WPA</strong></td><td>TKIP (inseguro)</td></tr>
-                    <tr><td><strong>WEP</strong></td><td>Totalmente inseguro</td></tr>
-                </table>
-
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>802.1X (Enterprise):</strong> RADIUS + EAP para autenticação corporativa</li>
-                    <li><strong>WIPS:</strong> Detecta rogue APs e evil twins</li>
-                    <li><strong>EAP-TLS:</strong> Certificados no cliente e servidor (mais seguro)</li>
-                    <li><strong>PEAP:</strong> Túnel TLS com certificado apenas no servidor</li>
-                </ul>
-
-                <h2>4️⃣ Protocolos Seguros</h2>
-
-                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-                    <tr><th style="background:#ee9ca7; color:white;">Protocolo</th><th style="background:#ee9ca7; color:white;">Porta</th><th style="background:#ee9ca7; color:white;">Descrição</th></tr>
-                    <tr><td><strong>HTTPS</strong></td><td>443</td><td>HTTP + TLS</td></tr>
-                    <tr><td><strong>FTPS</strong></td><td>990</td><td>FTP + TLS</td></tr>
-                    <tr><td><strong>SFTP</strong></td><td>22</td><td>FTP sobre SSH</td></tr>
-                    <tr><td><strong>SSH</strong></td><td>22</td><td>Secure Shell</td></tr>
-                    <tr><td><strong>IPSec</strong></td><td>-</td><td>AH + ESP, Transport/Tunnel modes</td></tr>
-                    <tr><td><strong>TLS 1.3</strong></td><td>-</td><td>1-RTT, forward secrecy obrigatório</td></tr>
-                </table>
-
-                <h2>5️⃣ Web Application Attacks</h2>
-
-                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-                    <tr><th style="background:#ee9ca7; color:white;">Ataque</th><th style="background:#ee9ca7; color:white;">Descrição</th><th style="background:#ee9ca7; color:white;">Contramedida</th></tr>
-                    <tr><td><strong>SQL Injection</strong></td><td>Injetar SQL malicioso</td><td>Prepared statements</td></tr>
-                    <tr><td><strong>XSS</strong></td><td>Injetar JavaScript</td><td>HttpOnly cookies, output encoding</td></tr>
-                    <tr><td><strong>CSRF</strong></td><td>Forçar ações em site autenticado</td><td>CSRF tokens, SameSite cookies</td></tr>
-                    <tr><td><strong>Command Injection</strong></td><td>Executar comandos no SO</td><td>Input validation, whitelist</td></tr>
-                    <tr><td><strong>Directory Traversal</strong></td><td>Acessar arquivos fora do web root</td><td>Validar caminhos</td></tr>
-                </table>
-
-                <h2>6️⃣ Desenvolvimento Seguro</h2>
-
-                <h3>SDLC</h3>
-                <ol style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li>Requirements - requisitos de segurança</li>
-                    <li>Design - threat modeling</li>
-                    <li>Development - codificação segura</li>
-                    <li>Testing - SAST, DAST</li>
-                    <li>Deployment - hardening</li>
-                    <li>Maintenance - patches</li>
-                </ol>
-
-                <h3>Conceitos</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>DevSecOps:</strong> Shift left (segurança no desenvolvimento)</li>
-                    <li><strong>SAST:</strong> Análise estática (código fonte)</li>
-                    <li><strong>DAST:</strong> Análise dinâmica (aplicação rodando)</li>
-                    <li><strong>AppLocker:</strong> Application whitelisting no Windows</li>
-                    <li><strong>DEP:</strong> Data Execution Prevention - anti-buffer overflow</li>
-                    <li><strong>ASLR:</strong> Address Space Layout Randomization</li>
-                    <li><strong>Code Signing:</strong> Assinar código com certificado</li>
-                </ul>
-
-                <h2>7️⃣ Arquiteturas Modernas</h2>
-
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Microservices:</strong> Serviços pequenos e independentes</li>
-                    <li><strong>Containerização:</strong> Docker, Kubernetes</li>
-                    <li><strong>Serverless (FaaS):</strong> AWS Lambda, Azure Functions</li>
-                    <li><strong>IaC:</strong> Infrastructure as Code (Terraform)</li>
-                    <li><strong>API Gateway:</strong> Proxy para APIs</li>
-                </ul>
-
-                <h2>8️⃣ Network Security</h2>
-
-                <h3>Switch Security</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Port Security:</strong> Limita MACs por porta (MAC flooding)</li>
-                    <li><strong>DHCP Snooping:</strong> Previne DHCP spoofing</li>
-                    <li><strong>DAI:</strong> Dynamic ARP Inspection (ARP poisoning)</li>
-                    <li><strong>BPDU Guard:</strong> Desabilita porta se receber BPDU</li>
-                    <li><strong>Root Guard:</strong> Protege spanning tree topology</li>
-                    <li><strong>Storm Control:</strong> Limita broadcasts</li>
-                </ul>
-
-                <h3>Segmentação</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Network Segmentation:</strong> VLANs, subnets</li>
-                    <li><strong>Microsegmentation:</strong> Firewall entre workloads (Zero Trust)</li>
-                    <li><strong>Private VLANs:</strong> Isola portas na mesma VLAN</li>
-                    <li><strong>DMZ:</strong> Screened subnet entre dois firewalls</li>
-                    <li><strong>Jump Server:</strong> Bastion host para acesso interno</li>
-                </ul>
-
-                <h2>9️⃣ Autenticação e Controle de Acesso</h2>
-
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Geofencing:</strong> Restrição por localização</li>
-                    <li><strong>Time-based Access:</strong> Restrição por horário</li>
-                    <li><strong>Remote Wipe:</strong> Apagar dados remotamente</li>
-                    <li><strong>Biometria:</strong> Impressão digital, face ID</li>
-                    <li><strong>Passwordless:</strong> FIDO2, Windows Hello</li>
-                    <li><strong>Context-aware Auth:</strong> Baseada em contexto</li>
-                    <li><strong>Step-up Auth:</strong> Autenticação adicional para ações sensíveis</li>
-                    <li><strong>Continuous Auth:</strong> Verificar usuário continuamente</li>
-                    <li><strong>Zero Trust:</strong> "Never trust, always verify"</li>
-                </ul>
-
-                <h2>🔟 Proteções Avançadas do Windows</h2>
-
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>UAC:</strong> User Account Control</li>
-                    <li><strong>Device Guard:</strong> Isolamento por virtualização</li>
-                    <li><strong>Credential Guard:</strong> Protege contra pass-the-hash</li>
-                    <li><strong>Secure Boot:</strong> Verifica integridade do boot</li>
-                    <li><strong>Measured Boot:</strong> Registra hashes do boot</li>
-                </ul>
-
-                <div class="golden-rule">
-                    <h3 style="color: #ee9ca7; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
-                    <ul style="margin-left: 20px; line-height: 1.8;">
-                        <li><strong>Deny > Allow</strong> (NTFS)</li>
-                        <li><strong>WPA3</strong> é o padrão mais seguro (SAE)</li>
-                        <li><strong>WIPS</strong> detecta rogue APs e evil twins</li>
-                        <li><strong>SFTP</strong> (SSH) vs <strong>FTPS</strong> (TLS)</li>
-                        <li><strong>WAF</strong> protege web apps na camada 7</li>
-                        <li><strong>SAST</strong> analisa código, <strong>DAST</strong> testa app rodando</li>
-                        <li><strong>DEP + ASLR</strong> protegem contra buffer overflow</li>
-                        <li><strong>AppLocker</strong> = whitelisting de aplicações</li>
-                        <li><strong>HttpOnly</strong> cookies = protege XSS</li>
-                        <li><strong>SameSite</strong> cookies = protege CSRF</li>
-                        <li><strong>Port Security</strong> = MAC flooding</li>
-                        <li><strong>DAI</strong> = ARP poisoning</li>
-                        <li><strong>DHCP Snooping</strong> = DHCP spoofing</li>
-                    </ul>
-                </div>
+            <div style="text-align:center; margin-bottom:20px;">
+                <button class="btn btn-new-session" onclick="newSession()">🎲 Nova Sessão (15)</button>
             </div>
-        </div>
-
-        <div id="tab2" class="content">
-            <div class="quiz-area">
-                <div class="quiz-header">
-                    <h2>Quiz - 40 Questões</h2>
-                    <p>Passing Score: 70% (28/40 corretas)</p>
-                </div>
-                <div id="questions"></div>
-                <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
-                </div>
+            <div class="flashcard" onclick="flipCard()">
+                <div class="side-indicator" id="side-indicator">FRENTE</div>
+                <div class="category-badge" id="category-badge"></div>
+                <div class="flashcard-text" id="card-text"></div>
+                <div class="flip-hint">👆 Clique para virar</div>
+            </div>
+            <div class="controls">
+                <button class="btn btn-nav" onclick="prevCard()">←</button>
+                <button class="btn btn-master" id="btn-master" onclick="toggleMaster()">⭐ Marcar Dominado</button>
+                <button class="btn btn-nav" onclick="nextCard()">→</button>
             </div>
         </div>
     </div>
 
-    <div class="results-modal" id="results-modal">
-        <div class="results-content">
-            <h2>Resultado</h2>
-            <div class="score-circle" id="score-circle">0%</div>
-            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+    <!-- ABA 1: RESUMO -->
+    <div id="tab1" class="content">
+        <div class="summary-area">
+            <h1>📋 Resumo — Capítulo 8</h1>
+            <p style="color:#6b7280; margin-bottom:10px;">Segurança de SO e Aplicações • CompTIA Security+</p>
+
+            <div class="tip-box">
+                <h3>🎯 Pontos-Chave para a Prova</h3>
+                <ul>
+                    <li><strong>Least Functionality:</strong> Desabilitar tudo que não é necessário</li>
+                    <li><strong>WPA3 (SAE)</strong> &gt; WPA2 (AES-CCMP) &gt; WPA1 (TKIP) &gt; WEP (quebrado)</li>
+                    <li><strong>EAP-TLS:</strong> certificados em cliente E servidor (mais seguro)</li>
+                    <li><strong>SAST</strong> (código estático) vs <strong>DAST</strong> (app em execução) vs <strong>IAST</strong> (runtime)</li>
+                    <li><strong>Server-side validation</strong> é OBRIGATÓRIA — client-side pode ser contornada</li>
+                    <li><strong>Code Signing</strong> garante origem/integridade, NÃO segurança do código</li>
+                    <li><strong>HttpOnly</strong> = protege XSS | <strong>SameSite</strong> = protege CSRF | <strong>Secure</strong> = só HTTPS</li>
+                    <li><strong>IPsec AH</strong> = integridade (sem criptografia) | <strong>ESP</strong> = criptografia + integridade</li>
+                    <li><strong>WPS</strong> é vulnerável a brute force no PIN — sempre desabilitar</li>
+                    <li><strong>Pass-the-Hash:</strong> roubo de hash da memória para autenticação lateral</li>
+                </ul>
+            </div>
+
+            <h2>1️⃣ Hardening de Sistemas Operacionais</h2>
+            <p>Hardening é o processo de modificar sistemas para operarem de forma segura, baseado no princípio da <strong>menor funcionalidade</strong> (least functionality). Utiliza baselines de melhores práticas.</p>
+            <h3>Áreas Principais de Hardening</h3>
+            <ul>
+                <li><strong>Interfaces:</strong> Desabilitar interfaces de rede não utilizadas</li>
+                <li><strong>Serviços:</strong> Desabilitar serviços desnecessários</li>
+                <li><strong>Portas:</strong> Bloquear portas não utilizadas</li>
+                <li><strong>Armazenamento:</strong> Implementar FDE (Full Disk Encryption)</li>
+            </ul>
+            <h3>Técnicas de Hardening</h3>
+            <ul>
+                <li><strong>Allow Lists:</strong> Apenas aplicações aprovadas podem executar (mais seguro)</li>
+                <li><strong>Block Lists:</strong> Aplicações específicas são bloqueadas</li>
+                <li><strong>Patch Management:</strong> Testar em homologação antes da produção</li>
+                <li><strong>Controles Compensatórios:</strong> Para sistemas legados que não recebem patches</li>
+                <li><strong>Enforcement de Configuração:</strong> Ferramentas automatizadas para manter baselines</li>
+                <li><strong>Descomissionamento Seguro:</strong> Wipe seguro de dados ao aposentar sistemas</li>
+            </ul>
+            <div class="table-wrap"><table>
+                <tr><th>Ferramenta FDE</th><th>Sistema</th><th>Observação</th></tr>
+                <tr><td><strong>BitLocker</strong></td><td>Windows</td><td>Integrado ao Windows Pro/Enterprise</td></tr>
+                <tr><td><strong>FileVault</strong></td><td>macOS</td><td>Integrado ao macOS</td></tr>
+                <tr><td><strong>dm-crypt/LUKS</strong></td><td>Linux</td><td>Solução nativa Linux</td></tr>
+            </table></div>
+
+            <h2>2️⃣ Segurança de Sistema de Arquivos</h2>
+            <h3>Permissões Linux (chmod)</h3>
+            <div class="table-wrap"><table>
+                <tr><th>Octal</th><th>Binário</th><th>Permissão</th></tr>
+                <tr><td>7</td><td>111</td><td>rwx (read + write + execute)</td></tr>
+                <tr><td>6</td><td>110</td><td>rw- (read + write)</td></tr>
+                <tr><td>5</td><td>101</td><td>r-x (read + execute)</td></tr>
+                <tr><td>4</td><td>100</td><td>r-- (somente read)</td></tr>
+                <tr><td>0</td><td>000</td><td>--- (sem permissão)</td></tr>
+            </table></div>
+            <p>Exemplo: <code>chmod 755</code> = Owner: rwx (7) | Group: r-x (5) | Others: r-x (5)</p>
+            <h3>Permissões Windows (NTFS vs Share)</h3>
+            <div class="warning-box">
+                <h3>⚠️ Regra de Ouro</h3>
+                <p>Permissão efetiva = <strong>a MAIS RESTRITIVA</strong> entre Share e NTFS. Estratégia comum: Share = "Full Control para Everyone" + controle real via NTFS.</p>
+            </div>
+            <h3>Protocolos de Transferência Segura</h3>
+            <div class="table-wrap"><table>
+                <tr><th>Protocolo</th><th>Segurança</th><th>Porta</th><th>Observação</th></tr>
+                <tr><td><strong>FTP</strong></td><td>❌ Cleartext</td><td>21</td><td>Usar com IPSec ou VPN</td></tr>
+                <tr><td><strong>TFTP</strong></td><td>❌ Sem auth</td><td>69</td><td>Sem autenticação nem criptografia</td></tr>
+                <tr><td><strong>SCP</strong></td><td>✅ SSH1</td><td>22</td><td>Cópia segura de arquivos</td></tr>
+                <tr><td><strong>SFTP</strong></td><td>✅ SSH2</td><td>22</td><td>NÃO é FTP sobre SSH — usa SSH2</td></tr>
+                <tr><td><strong>FTPS</strong></td><td>✅ TLS</td><td>990</td><td>FTP com SSL/TLS</td></tr>
+            </table></div>
+
+            <h2>3️⃣ Segurança de Host Linux</h2>
+            <h3>Ameaças a Portas Físicas</h3>
+            <ul>
+                <li><strong>BadUSB:</strong> Dispositivo reprogramado para agir como HID (teclado)</li>
+                <li><strong>O.MG Cable:</strong> Cabo com keylogger embutido</li>
+                <li><strong>Sheep Dip System:</strong> Sistema sandboxed para testar dispositivos suspeitos</li>
+            </ul>
+            <h3>Comandos de Hardening Linux</h3>
+            <div class="table-wrap"><table>
+                <tr><th>Objetivo</th><th>Comando</th></tr>
+                <tr><td>Listar serviços ativos</td><td><code>systemctl --type=service --state=active</code></td></tr>
+                <tr><td>Desabilitar serviço</td><td><code>systemctl disable nome</code></td></tr>
+                <tr><td>Escanear portas TCP</td><td><code>nmap -sT</code></td></tr>
+                <tr><td>Escanear portas UDP</td><td><code>nmap -sU</code></td></tr>
+                <tr><td>Ver conexões ativas</td><td><code>ss -a</code> ou <code>netstat -a</code></td></tr>
+                <tr><td>Listar regras iptables</td><td><code>sudo iptables -L</code></td></tr>
+                <tr><td>Bloquear IP</td><td><code>sudo iptables -A INPUT -s IP -j DROP</code></td></tr>
+            </table></div>
+            <h3>Chains do iptables</h3>
+            <ul>
+                <li><strong>INPUT:</strong> Conexões entrantes para o host</li>
+                <li><strong>FORWARD:</strong> Pacotes atravessando o sistema (roteamento)</li>
+                <li><strong>OUTPUT:</strong> Conexões saindo do host</li>
+                <li><strong>DROP:</strong> Descarta silenciosamente | <strong>REJECT:</strong> Descarta com resposta | <strong>ACCEPT:</strong> Permite</li>
+            </ul>
+
+            <h2>4️⃣ Segurança de Redes Wireless</h2>
+            <h3>Evolução dos Padrões Wi-Fi</h3>
+            <div class="table-wrap"><table>
+                <tr><th>Padrão</th><th>Criptografia</th><th>Auth</th><th>Status</th></tr>
+                <tr><td><strong>WEP</strong></td><td>RC4 (IV 24-bit)</td><td>PSK</td><td>❌ Quebrado em minutos</td></tr>
+                <tr><td><strong>WPA1</strong></td><td>RC4 + TKIP</td><td>PSK</td><td>⚠️ Vulnerável</td></tr>
+                <tr><td><strong>WPA2</strong></td><td>AES-CCMP 128-bit</td><td>PSK/RADIUS</td><td>⚠️ Vulnerável ao KRACK</td></tr>
+                <tr><td><strong>WPA3</strong></td><td>AES-GCMP</td><td>SAE/RADIUS</td><td>✅ Recomendado</td></tr>
+            </table></div>
+            <h3>Protocolos EAP (Enterprise)</h3>
+            <div class="table-wrap"><table>
+                <tr><th>Protocolo</th><th>Certificado Cliente</th><th>Certificado Servidor</th><th>Observação</th></tr>
+                <tr><td><strong>PEAP</strong></td><td>❌</td><td>✅</td><td>Túnel TLS; Cisco/Microsoft/RSA</td></tr>
+                <tr><td><strong>EAP-FAST</strong></td><td>❌ (usa PAC)</td><td>Opcional</td><td>Criado pela Cisco; vulnerável se PAC interceptado</td></tr>
+                <tr><td><strong>EAP-TLS</strong></td><td>✅</td><td>✅</td><td>Mais seguro; requer PKI completa</td></tr>
+                <tr><td><strong>EAP-TTLS</strong></td><td>❌</td><td>✅</td><td>Simplifica EAP-TLS</td></tr>
+            </table></div>
+            <div class="info-box">
+                <h3>🏗️ Arquitetura 802.1X (3 componentes)</h3>
+                <p><strong>Supplicant</strong> (dispositivo) → <strong>Authenticator</strong> (switch/AP) → <strong>Authentication Server</strong> (RADIUS — portas UDP 1812 e 1813)</p>
+            </div>
+
+            <h2>5️⃣ Ataques Wireless</h2>
+            <div class="table-wrap"><table>
+                <tr><th>Ataque</th><th>Descrição</th><th>Mitigação</th></tr>
+                <tr><td><strong>Evil Twin</strong></td><td>Rogue AP imitando rede legítima (MitM)</td><td>WIPS, monitorar SSIDs</td></tr>
+                <tr><td><strong>KRACK</strong></td><td>Reinstalação de chaves no 4-way handshake WPA2</td><td>Patches em clientes e APs</td></tr>
+                <tr><td><strong>Deauth</strong></td><td>Frames de mgmt não criptografados para desconectar</td><td>WPA3 (protected frames)</td></tr>
+                <tr><td><strong>IV Attack</strong></td><td>IVs WEP 24-bit reutilizados — quebra em 1-2 min</td><td>Não usar WEP</td></tr>
+                <tr><td><strong>WPS Brute Force</strong></td><td>PIN 8 dígitos vulnerável</td><td>Desabilitar WPS</td></tr>
+                <tr><td><strong>Bluejacking</strong></td><td>Envia mensagens Bluetooth indesejadas</td><td>Desabilitar discovery</td></tr>
+                <tr><td><strong>Bluesnarfing</strong></td><td>Acessa dados (OBEX) sem autorização</td><td>Desabilitar BT quando não usado</td></tr>
+            </table></div>
+
+            <h2>6️⃣ Protocolos Seguros e VPNs</h2>
+            <h3>IPsec: AH vs ESP</h3>
+            <div class="grid-2">
+                <div style="background:#fce7f3;">
+                    <h3 style="color:#be185d; margin-top:0;">AH — Authentication Header</h3>
+                    <ul>
+                        <li>Hash criptográfico em todo o pacote</li>
+                        <li>Garante <strong>integridade</strong></li>
+                        <li>❌ NÃO criptografa o payload</li>
+                        <li>Transport Mode: útil | Tunnel Mode: sem caso de uso</li>
+                    </ul>
+                </div>
+                <div style="background:#d1fae5;">
+                    <h3 style="color:#065f46; margin-top:0;">ESP — Encapsulating Security Payload</h3>
+                    <ul>
+                        <li>Criptografa o payload do pacote</li>
+                        <li>Garante <strong>confidencialidade + integridade</strong></li>
+                        <li>✅ Mais usado em VPNs</li>
+                        <li>Transport Mode + Tunnel Mode: ambos válidos</li>
+                    </ul>
+                </div>
+            </div>
+            <h3>IKE (Internet Key Exchange)</h3>
+            <ul>
+                <li><strong>Fase I:</strong> Identidade dos peers + Diffie-Hellman + canal seguro (auth: certificados ou PSK)</li>
+                <li><strong>Fase II:</strong> Cifras e chaves para a sessão IPsec</li>
+                <li><strong>IKEv2:</strong> Suporta EAP/RADIUS, NAT traversal, MOBIKE multihoming</li>
+            </ul>
+
+            <h2>7️⃣ Ataques a Aplicações Web</h2>
+            <div class="table-wrap"><table>
+                <tr><th>Ataque</th><th>Mecanismo</th><th>Mitigação Principal</th></tr>
+                <tr><td><strong>Buffer Overflow</strong></td><td>Dados excedem buffer, sobrescrevem memória</td><td>DEP, ASLR, validação de input</td></tr>
+                <tr><td><strong>TOCTTOU</strong></td><td>Race condition entre check e use</td><td>Lock de arquivo, file handles</td></tr>
+                <tr><td><strong>Pass-the-Hash</strong></td><td>Hash roubado da memória para auth lateral</td><td>GPO para desabilitar RDP, contas separadas</td></tr>
+                <tr><td><strong>SSL Stripping</strong></td><td>Remove HTTPS, estabelece HTTP com usuário</td><td>HSTS preload list</td></tr>
+                <tr><td><strong>Replay Attack</strong></td><td>Retransmite tráfego capturado</td><td>Timestamps, números de sequência</td></tr>
+                <tr><td><strong>Driver Refactoring</strong></td><td>Código malicioso oculto no driver</td><td>Verificar assinaturas de driver</td></tr>
+                <tr><td><strong>Shimming</strong></td><td>Injeta código malicioso em shim de API</td><td>Monitoramento de integridade</td></tr>
+            </table></div>
+
+            <h2>8️⃣ SDLC e Testes de Segurança</h2>
+            <div class="table-wrap"><table>
+                <tr><th>Método</th><th>Tipo</th><th>Quando</th><th>Vantagem</th><th>Limitação</th></tr>
+                <tr><td><strong>SAST</strong></td><td>White box</td><td>Antes do deploy</td><td>Aponta linha exata do código</td><td>Alto % falsos positivos; específico de linguagem</td></tr>
+                <tr><td><strong>DAST</strong></td><td>Black box</td><td>Após deploy</td><td>Menos falsos positivos; agnóstico de linguagem</td><td>Não aponta causa; pode levar dias</td></tr>
+                <tr><td><strong>IAST</strong></td><td>Híbrido</td><td>Runtime</td><td>Identifica linha exata em runtime</td><td>Mais complexo de configurar</td></tr>
+            </table></div>
+            <h3>Técnicas de Codificação Segura</h3>
+            <ul>
+                <li><strong>Normalização:</strong> Elimina redundância no BD, reduz risco de exploração</li>
+                <li><strong>Stored Procedures:</strong> Centraliza SQL, limita injection</li>
+                <li><strong>Code Obfuscation:</strong> Dificulta engenharia reversa</li>
+                <li><strong>Fuzz Testing:</strong> Dados inválidos/aleatórios para descobrir falhas</li>
+                <li><strong>Dead Code Removal:</strong> Código inexistente não pode ser explorado</li>
+                <li><strong>Sandboxing:</strong> Isola processos (Chrome, iOS, Docker)</li>
+            </ul>
+
+            <h2>9️⃣ Hardening de Aplicações</h2>
+            <ul>
+                <li><strong>DEP (Data Execution Prevention):</strong> Impede execução de código em áreas de dados</li>
+                <li><strong>Block Process Spawning:</strong> Remove capacidade de criar processos filhos</li>
+                <li><strong>Input Validation:</strong> Server-side é OBRIGATÓRIA — client-side pode ser contornada</li>
+                <li><strong>AppArmor:</strong> Ferramenta Linux que aplica regras por aplicação</li>
+                <li><strong>Exception Rules:</strong> Contornar regras de hardening quando há necessidade legítima documentada</li>
+                <li><strong>Secure Cookies:</strong> Atributos Secure, HttpOnly, SameSite, expiration</li>
+            </ul>
+
+            <div class="warning-box">
+                <h3>🎯 Dicas Finais para a Prova</h3>
+                <ul>
+                    <li><strong>WPA3 SAE</strong> protege contra ataques offline de força bruta</li>
+                    <li><strong>EAP-TLS</strong> = mais seguro (certs em cliente E servidor)</li>
+                    <li><strong>SFTP ≠ FTPS:</strong> SFTP usa SSH2 | FTPS usa TLS</li>
+                    <li><strong>IPsec Transport Mode:</strong> entre hosts | <strong>Tunnel Mode:</strong> VPN site-to-site</li>
+                    <li><strong>AH</strong> = só integridade | <strong>ESP</strong> = criptografia + integridade</li>
+                    <li><strong>IKEv2 MOBIKE:</strong> manter VPN ao trocar Wi-Fi/dados móveis</li>
+                    <li><strong>Code Signing NÃO garante</strong> que o código é seguro — só autenticidade</li>
+                    <li><strong>SAST</strong> = antes do deploy | <strong>DAST</strong> = após deploy</li>
+                </ul>
+            </div>
         </div>
     </div>
 
-    <script>
-        // ========== CARDS DO CAPÍTULO 8 - 80 CARDS COMPLETOS ==========
-        const cards = [
-            // Hardening (1-5)
-            {f: "O que é OS Hardening?", 
-             b: "Processo de tornar um sistema operacional mais seguro: remover software desnecessário, desabilitar serviços não usados, aplicar patches, habilitar firewall, antivírus, políticas de senha fortes, UAC (Windows) e princípio do menor privilégio."},
-             
-            {f: "Quais são as permissões NTFS no Windows?", 
-             b: "Read (ler), Write (escrever), Execute (executar), Modify (Read + Write + Execute + Delete), Full Control (Modify + alterar permissões + tomar posse). Regras: Deny > Allow, Explicit > Inherited."},
-             
-            {f: "O que é iptables?", 
-             b: "Firewall do Linux. Trabalha com chains (cadeias): INPUT (pacotes para o host), OUTPUT (pacotes do host), FORWARD (roteamento). Ações: ACCEPT (permitir), DROP (descartar silenciosamente), REJECT (descartar e notificar)."},
-             
-            {f: "O que é WPA3?", 
-             b: "Wi-Fi Protected Access 3. Usa SAE (Simultaneous Authentication of Equals), mais seguro que WPA2. Protege contra ataques offline de dicionário. É o padrão mais seguro atualmente."},
-             
-            {f: "O que é WPA2?", 
-             b: "Padrão Wi-Fi com AES-CCMP. Vulnerável a ataques KRACK, mas ainda seguro se configurado corretamente. Tem duas modalidades: Personal (PSK - senha compartilhada) e Enterprise (802.1X + RADIUS)."},
+    <!-- ABA 2: QUIZ -->
+    <div id="tab2" class="content">
+        <div class="quiz-area">
+            <div class="quiz-header">
+                <h2 style="font-size:1.8rem; margin-bottom:10px;">❓ Quiz — Capítulo 8</h2>
+                <p style="font-size:1.1rem; opacity:0.9;">15 questões sorteadas do pool de 75 • Aprovação: 80%</p>
+            </div>
+            <div id="questions"></div>
+            <div class="quiz-controls">
+                <button class="btn btn-check" onclick="checkAnswers()">✅ Ver Resultados</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-            // Wi-Fi Attacks (6-10)
-            {f: "O que é Evil Twin?", 
-             b: "Access Point falso configurado com o mesmo SSID de um AP legítimo. O atacante faz um ataque Man-in-the-Middle, capturando tráfego e credenciais dos usuários que se conectam."},
-             
-            {f: "O que é Rogue AP?", 
-             b: "Access Point não autorizado conectado à rede. Pode ser instalado por um funcionário bem-intencionado mas inseguro, ou por um atacante para bypassar controles de segurança. WIPS detecta."},
-             
-            {f: "O que é Deauth Attack (ataque de desautenticação)?", 
-             b: "Ataque que envia frames de desautenticação falsos, forçando clientes Wi-Fi a se desconectarem do AP. Usado como DoS ou como preparação para um evil twin."},
-             
-            {f: "O que é WPS Attack?", 
-             b: "Ataque contra o Wi-Fi Protected Setup (WPS). O PIN de 8 dígitos é vulnerável a brute force (na verdade são dois blocos de 4 dígitos). Pode ser quebrado em horas. A recomendação é desabilitar WPS."},
-             
-            {f: "O que é War Driving?", 
-             b: "Ato de circular por uma área mapeando redes Wi-Fi, coletando informações como SSID, BSSID (MAC), tipo de criptografia e localização GPS. Não é um ataque em si, mas precede um."},
+<!-- MODAL DE RESULTADO -->
+<div class="results-modal" id="results-modal">
+    <div class="results-content">
+        <div class="result-emoji" id="result-emoji">🎉</div>
+        <h2 id="result-title" style="font-size:1.8rem; margin-bottom:10px;">APROVADO!</h2>
+        <div class="score-circle" id="score-circle">0%</div>
+        <p id="score-text" style="font-size:1.1rem; line-height:1.6; margin-bottom:10px;"></p>
+        <div class="modal-buttons">
+            <button class="btn btn-primary" onclick="newQuizSession()">🎲 Nova Sessão</button>
+            <button class="btn btn-secondary" onclick="closeModal()">✕ Fechar</button>
+        </div>
+        <button class="btn btn-explain-modal" onclick="scrollToExplanations()">📖 Ver Explicações</button>
+    </div>
+</div>
 
-            // Wi-Fi Protection (11-15)
-            {f: "O que é 802.1X?", 
-             b: "Padrão para autenticação baseada em porta. Usado em Wi-Fi Enterprise. Componentes: Supplicant (cliente), Authenticator (switch/AP), Authentication Server (RADIUS). Usa protocolos EAP."},
-             
-            {f: "O que é WIPS (Wireless Intrusion Prevention System)?", 
-             b: "Sistema que monitora o espectro Wi-Fi, detecta e mitiga ameaças como rogue APs, evil twins, ataques de deauthentication. Pode desautorizar atacantes automaticamente."},
-             
-            {f: "Qual a diferença entre WPA2 Personal e Enterprise?", 
-             b: "Personal (PSK): usa uma senha compartilhada para todos os usuários. Enterprise (802.1X): cada usuário tem credenciais próprias (RADIUS), mais seguro para ambientes corporativos."},
-             
-            {f: "O que é MAC filtering em Wi-Fi?", 
-             b: "Lista de permissão (whitelist) de endereços MAC autorizados a se conectar. É uma medida fraca de segurança, pois MAC spoofing é fácil de realizar."},
-             
-            {f: "Ocultar o SSID (hide SSID) é uma medida eficaz de segurança?", 
-             b: "Não. É security by obscurity. O SSID pode ser facilmente descoberto com ferramentas de sniffing, mesmo quando oculto."},
+<script>
+// ========== FLASHCARDS ==========
+const allCards = [
+    // BLOCO 1: Hardening de SO (15 cards)
+    {f:"O que é Hardening de SO?", b:"Processo de modificar sistemas operacionais para operarem de forma segura, baseado no princípio da menor funcionalidade (least functionality), usando baselines de melhores práticas.", cat:"Hardening SO"},
+    {f:"O que é o princípio de 'Least Functionality'?", b:"Configurar sistemas para executar apenas funções essenciais — desabilitar serviços, fechar portas e remover software desnecessário, reduzindo a superfície de ataque ao mínimo.", cat:"Hardening SO"},
+    {f:"Quais são as 4 áreas principais de Hardening?", b:"1) Interfaces (desabilitar interfaces de rede não usadas), 2) Serviços (desabilitar serviços desnecessários), 3) Portas (bloquear portas não utilizadas), 4) Armazenamento (FDE).", cat:"Hardening SO"},
+    {f:"O que é Full Disk Encryption (FDE)?", b:"Criptografia completa do disco rígido. Exemplos: BitLocker (Windows) e FileVault (macOS). Protege dados mesmo se o hardware for roubado ou o disco removido.", cat:"Hardening SO"},
+    {f:"O que é Patch Management?", b:"Processo contínuo de aplicar atualizações de segurança. Inclui scanners automatizados, TESTE EM HOMOLOGAÇÃO antes de produção, e controles compensatórios para sistemas legados.", cat:"Hardening SO"},
+    {f:"O que são Allow Lists e Block Lists em hardening?", b:"Allow Lists (whitelist): APENAS aplicações aprovadas podem executar — mais seguro. Block Lists (blacklist): aplicações específicas são bloqueadas. Allow Lists são mais eficazes.", cat:"Hardening SO"},
+    {f:"O que é 'Enforcement de Configuração'?", b:"Uso de ferramentas automatizadas para garantir que o sistema permaneça na configuração hardened, detectando e corrigindo desvios das baselines de segurança.", cat:"Hardening SO"},
+    {f:"O que é Descomissionamento seguro?", b:"Processo de apagar dados com segurança ao aposentar um sistema, incluindo wipe seguro de mídias para evitar recuperação de dados sensíveis por terceiros.", cat:"Hardening SO"},
+    {f:"Cite 3 técnicas de criptografia usadas em hardening.", b:"1) Full Disk Encryption (BitLocker, FileVault), 2) Criptografia de mídia removível, 3) VPNs para transmissão de dados, 4) Criptografia de email (PGP, S/MIME).", cat:"Hardening SO"},
+    {f:"O que são 'controles compensatórios' em patch management?", b:"Medidas de segurança alternativas aplicadas quando sistemas legados não podem receber patches, como isolamento de rede, firewalls adicionais ou monitoramento intensificado.", cat:"Hardening SO"},
+    {f:"O que é o princípio do Menor Privilégio (Least Privilege)?", b:"Conceder a usuários e processos apenas as permissões mínimas necessárias para realizar suas funções, prevenindo escalação de privilégios e authorization creep.", cat:"Hardening SO"},
+    {f:"O que é 'Authorization Creep'?", b:"Acúmulo gradual de privilégios excessivos ao longo do tempo, quando usuários recebem novas permissões mas as antigas nunca são removidas. Mitigado com auditorias regulares.", cat:"Hardening SO"},
+    {f:"Quais são as etapas do Provisionamento de Contas?", b:"1) Identity Proofing (verificar identidade), 2) Emissão de credenciais, 3) Fornecimento de hardware/software, 4) Treinamento em políticas, 5) Criação de atribuições de permissões.", cat:"Hardening SO"},
+    {f:"O que é Desprovisionamento de Contas?", b:"Remoção de direitos de acesso quando um funcionário sai, incluindo desabilitar ou deletar contas imediatamente para evitar acesso não autorizado.", cat:"Hardening SO"},
+    {f:"O que são 'baselines' de segurança?", b:"Configurações padronizadas de segurança usadas como referência para hardening, garantindo consistência entre sistemas e facilitando a detecção de desvios.", cat:"Hardening SO"},
 
-            // Protocolos Seguros (16-20)
-            {f: "Qual a diferença entre FTPS e SFTP?", 
-             b: "FTPS (FTP over TLS) usa TLS para criptografar o FTP tradicional, portas 990 (controle) e dados dinâmicos. SFTP (SSH File Transfer Protocol) opera sobre SSH (porta 22), é mais seguro e recomendado."},
-             
-            {f: "O que é HTTPS e qual porta utiliza?", 
-             b: "HTTP + TLS. Porta padrão 443. Criptografa toda a comunicação entre cliente e servidor web, prevenindo interceptação e adulteração."},
-             
-            {f: "O que é IPSec?", 
-             b: "Protocolo para VPN em camada 3 (rede). Tem dois componentes principais: AH (Authentication Header) para autenticação e integridade, e ESP (Encapsulating Security Payload) para criptografia. Modos: Transport (host-to-host) e Tunnel (site-to-site)."},
-             
-            {f: "O que é TLS 1.3 e quais suas vantagens?", 
-             b: "Versão mais recente do TLS. Mais rápido (1-RTT handshake), remove ciphers fracos (como SHA-1, RC4), exige forward secrecy (chaves efêmeras) e simplifica o protocolo."},
-             
-            {f: "O que é SSH e qual porta utiliza?", 
-             b: "Secure Shell. Protocolo para acesso remoto seguro, com criptografia. Porta padrão 22. Substitui o inseguro Telnet."},
+    // BLOCO 2: Segurança de Sistema de Arquivos (12 cards)
+    {f:"Quais são as permissões de arquivo no Linux?", b:"Read (r), Write (w), Execute (x) para três contextos: owner (u), group (g), others (o). Modificadas com chmod em modo simbólico ou octal.", cat:"Arquivos"},
+    {f:"O que significa chmod 755?", b:"Owner: rwx (7), Group: r-x (5), Others: r-x (5). Notação octal: r=4, w=2, x=1. Resultado: rwxr-xr-x.", cat:"Arquivos"},
+    {f:"Diferença entre permissões Share e NTFS no Windows?", b:"Share: controla acesso via rede (Read, Contributor, Owner). NTFS: controla acesso local e de rede, muito granular. Permissão efetiva = a MAIS RESTRITIVA entre as duas.", cat:"Arquivos"},
+    {f:"Qual é a estratégia comum de permissões no Windows?", b:"Configurar Share com 'Full Control para Everyone' e controlar o acesso real pelas permissões NTFS, que são mais granulares e permitem configuração precisa.", cat:"Arquivos"},
+    {f:"O que é 'Implicit Deny' em ACLs?", b:"Regra implícita ao final de toda ACL que nega qualquer acesso não explicitamente permitido. Garante que somente tráfego/acesso autorizado passa.", cat:"Arquivos"},
+    {f:"O que são Compartilhamentos Administrativos no Windows?", b:"Compartilhamentos ocultos que terminam com '$' (ex: C$, ADMIN$). Não devem ser acessíveis a usuários regulares. São criados automaticamente pelo Windows.", cat:"Arquivos"},
+    {f:"O que é o FSRM (File Server Resource Manager)?", b:"Ferramenta do Windows para controlar tipos de arquivos, quotas de disco e relatórios em servidores de arquivos, ajudando a prevenir armazenamento de arquivos não autorizados.", cat:"Arquivos"},
+    {f:"Diferença entre FTP, SFTP e FTPS?", b:"FTP: cleartext, sem segurança (porta 21). SFTP: usa SSH2 para transferências seguras, NÃO é FTP sobre SSH (porta 22). FTPS: FTP com SSL/TLS (porta 990).", cat:"Arquivos"},
+    {f:"Por que o TFTP é inseguro?", b:"TFTP (Trivial FTP) não possui autenticação nem criptografia, transfere em texto claro. Usado apenas em redes controladas para boot de dispositivos (porta 69).", cat:"Arquivos"},
+    {f:"O que é SCP e como difere do SFTP?", b:"SCP usa SSH1 para cópia segura de arquivos. SFTP usa SSH2 e oferece mais funcionalidades (navegação, listagem de diretórios). Ambos usam porta 22.", cat:"Arquivos"},
+    {f:"Como implementar segurança em servidores de arquivos?", b:"Prevenir acesso físico, princípio do menor privilégio, FDE em backups, autenticação forte, ACLs com implicit deny, auditoria do sistema de arquivos.", cat:"Arquivos"},
+    {f:"Qual a notação octal para rwxr--r--?", b:"rwx = 7 (4+2+1), r-- = 4 (4+0+0), r-- = 4 (4+0+0). Resultado: chmod 744.", cat:"Arquivos"},
 
-            // Web App Attacks (21-25)
-            {f: "O que é SQL Injection (SQLi)?", 
-             b: "Ataque onde o atacante insere código SQL malicioso em campos de input (forms, URL). Pode extrair, modificar ou deletar dados do banco. Contramedida: prepared statements, parameterized queries."},
-             
-            {f: "O que é XSS (Cross-Site Scripting)?", 
-             b: "Injeção de código JavaScript malicioso em páginas web. Tipos: Stored (armazenado no servidor), Reflected (refletido na resposta), DOM-based (manipulação do DOM). Contramedida: output encoding, input validation, HttpOnly cookies."},
-             
-            {f: "O que é CSRF (Cross-Site Request Forgery)?", 
-             b: "Ataque que força um usuário autenticado a executar ações indesejadas em um site onde está logado. Contramedida: tokens CSRF (anti-forgery tokens), SameSite cookies."},
-             
-            {f: "O que é Command Injection?", 
-             b: "Injeção de comandos do sistema operacional através de inputs vulneráveis. Exemplo: ; ls, && whoami. Contramedida: input validation, whitelist, evitar chamadas de sistema."},
-             
-            {f: "O que é Directory Traversal (Path Traversal)?", 
-             b: "Ataque que usa sequências como ../ para acessar arquivos fora do diretório web root. Contramedida: validar caminhos, usar chroot/jail."},
+    // BLOCO 3: Segurança de Host Linux (14 cards)
+    {f:"Quais ameaças físicas afetam portas USB?", b:"BadUSB: dispositivo reprogramado para agir como HID (teclado). O.MG Cable: cabo com keylogger embutido. Autorun malicioso em dispositivos USB.", cat:"Linux"},
+    {f:"O que é um sistema 'Sheep Dip'?", b:"Sistema sandboxed isolado usado para testar dispositivos USB ou mídia suspeita antes de conectá-los à rede principal.", cat:"Linux"},
+    {f:"Como verificar serviços ativos no Linux?", b:"systemctl --type=service --state=active. Para desabilitar: systemctl disable servicename. Para parar: systemctl stop servicename.", cat:"Linux"},
+    {f:"Como verificar portas abertas no Linux com nmap?", b:"nmap -sT (TCP scan) e nmap -sU (UDP scan). Verificar conexões ativas: netstat -a ou ss -a (ss é o substituto moderno do netstat).", cat:"Linux"},
+    {f:"Quais são as cadeias (chains) do iptables?", b:"INPUT: conexões entrantes. FORWARD: pacotes atravessando o sistema. OUTPUT: conexões saindo. Ações: Accept (permite), Drop (silencioso), Reject (com resposta).", cat:"Linux"},
+    {f:"Como bloquear um IP com iptables?", b:"sudo iptables -A INPUT -s 192.168.0.254 -j DROP. Para listar: sudo iptables -L. Para limpar: sudo iptables -F. Para salvar: sudo /sbin/iptables-save.", cat:"Linux"},
+    {f:"Como permitir HTTP com iptables?", b:"sudo iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT", cat:"Linux"},
+    {f:"Como remover software no Linux por distribuição?", b:"Debian/Ubuntu: apt remove. Red Hat/CentOS: yum erase ou dnf remove. RPM direto: rpm -e. dpkg: dpkg -r. Listar instalados: apt list --installed.", cat:"Linux"},
+    {f:"Diferença entre DROP e REJECT no iptables?", b:"DROP: descarta o pacote silenciosamente sem resposta. REJECT: descarta e envia mensagem de erro ao remetente. DROP é mais seguro pois não revela que o host existe.", cat:"Linux"},
+    {f:"O que são firewalls host-based?", b:"Firewalls instalados diretamente no host (não no perímetro), implementando políticas default-deny, filtrando por porta/IP/protocolo. Integram-se com SIEM para correlação.", cat:"Linux"},
+    {f:"O que é 'hardening de SSH'?", b:"Desabilitar login root (PermitRootLogin no), usar autenticação por chaves (não senha), mudar porta padrão, limitar usuários permitidos, usar fail2ban contra brute force.", cat:"Linux"},
+    {f:"O que é o comando ss no Linux?", b:"Substituto moderno do netstat. Exibe informações sobre sockets e conexões. Opções: -a (todos), -l (listening), -s (estatísticas), -i (interfaces).", cat:"Linux"},
+    {f:"Quais são as proteções contra ameaças USB no firmware?", b:"Desabilitar portas USB/HDMI/serial não utilizadas nas configurações UEFI/BIOS, usar software de controle baseado em identificadores de dispositivo, prevenir autorun.", cat:"Linux"},
+    {f:"O que é proteção de porta lógica no Linux?", b:"Usar firewalls para controlar acesso a portas TCP/UDP, hardening de serviços expostos, manter software atualizado e implementar IPS host-based.", cat:"Linux"},
 
-            // Desenvolvimento Seguro (26-30)
-            {f: "O que é SDLC (Software Development Life Cycle)?", 
-             b: "Ciclo de vida de desenvolvimento de software: Requirements → Design → Development → Testing → Deployment → Maintenance. Segurança deve ser integrada em cada fase."},
-             
-            {f: "O que é DevSecOps?", 
-             b: "Prática de integrar segurança no processo DevOps. Shift left (segurança mais cedo no desenvolvimento). Automação de testes de segurança, pipelines CI/CD seguros."},
-             
-            {f: "O que é CI/CD?", 
-             b: "Continuous Integration/Continuous Delivery. Commits frequentes, testes automatizados, build e deploy automatizados. Permite entregas mais rápidas e seguras."},
-             
-            {f: "O que é SAST (Static Application Security Testing)?", 
-             b: "Análise estática de segurança. Testa o código fonte sem executá-lo (white box). Encontra vulnerabilidades no código (ex: SQLi, XSS) durante o desenvolvimento."},
-             
-            {f: "O que é DAST (Dynamic Application Security Testing)?", 
-             b: "Análise dinâmica de segurança. Testa a aplicação em execução (black box). Simula ataques para encontrar vulnerabilidades em tempo real."},
+    // BLOCO 4: Segurança Wireless (18 cards)
+    {f:"Diferença entre Fat AP e Thin AP?", b:"Fat AP (Standalone): gerencia clientes autonomamente, não precisa de controlador. Thin AP (LWAP): requer WLC (Wireless LAN Controller) para gerenciamento centralizado.", cat:"Wireless"},
+    {f:"O que é BSSID?", b:"Basic Service Set Identifier — endereço MAC único de cada ponto de acesso wireless, usado para identificar APs individuais em uma rede com múltiplos APs.", cat:"Wireless"},
+    {f:"O que é um Site Survey e Heat Map?", b:"Site Survey: análise física do sinal Wi-Fi em uma área. Heat Map: mapa visual da força do sinal (verde/azul = forte, vermelho = fraco). Otimiza posicionamento de APs.", cat:"Wireless"},
+    {f:"Comparativo WPA1 vs WPA2 vs WPA3.", b:"WPA1: RC4+TKIP (vulnerável). WPA2: AES-CCMP 128-bit (vulnerável ao KRACK). WPA3: SAE+AES-GCMP, protected management frames, resistente a ataques offline.", cat:"Wireless"},
+    {f:"O que é SAE no WPA3?", b:"Simultaneous Authentication of Equals — substitui o PSK do WPA2. Usa Dragonfly Handshake para autenticação mútua, protegendo contra ataques offline de força bruta.", cat:"Wireless"},
+    {f:"O que é WPA3 Enhanced Open?", b:"Criptografia em redes abertas (sem senha), usando OWE (Opportunistic Wireless Encryption). Protege contra eavesdropping em redes públicas sem exigir senha.", cat:"Wireless"},
+    {f:"O que é o WPS e por que é perigoso?", b:"Wi-Fi Protected Setup: simplifica configuração via botão ou PIN de 8 dígitos. VULNERÁVEL: PIN pode ser quebrado por brute force em poucas horas. Sempre desabilitar.", cat:"Wireless"},
+    {f:"Diferença entre WPA2-Personal e WPA2-Enterprise?", b:"Personal (PSK): passphrase pré-compartilhada, simples. Enterprise (802.1X): usa servidor RADIUS + EAP, autenticação individual por usuário, mais seguro.", cat:"Wireless"},
+    {f:"O que é RADIUS na autenticação wireless?", b:"Remote Authentication Dial-In User Service: servidor de autenticação centralizado. Portas UDP 1812 (autenticação) e 1813 (accounting). Usado em WPA2/3-Enterprise.", cat:"Wireless"},
+    {f:"Arquitetura do 802.1X: quais são os 3 componentes?", b:"1) Supplicant (dispositivo cliente), 2) Authenticator (switch/AP — cliente RADIUS), 3) Authentication Server (servidor RADIUS/AAA).", cat:"Wireless"},
+    {f:"O que é EAP-TLS e por que é o mais seguro?", b:"Usa certificados PKI no cliente E no servidor. O mais seguro mas trabalhoso — requer PKI completa com certificados assinados por CA para todos os clientes.", cat:"Wireless"},
+    {f:"Diferença entre PEAP, EAP-FAST, EAP-TLS e EAP-TTLS?", b:"PEAP: túnel TLS, cert só no servidor. EAP-FAST: usa PAC (Cisco). EAP-TLS: certs em ambos os lados (mais seguro). EAP-TTLS: cert só no servidor, mais simples que EAP-TLS.", cat:"Wireless"},
+    {f:"O que é um Captive Portal?", b:"Página web que força o usuário a autenticar ou aceitar termos antes de acessar a rede. Comum em hotéis e redes públicas. Pode usar RADIUS para autenticação.", cat:"Wireless"},
+    {f:"O que é Wi-Fi Easy Connect (DPP)?", b:"Device Provisioning Protocol (WPA3): configura dispositivos IoT via QR code, simplificando onboarding sem comprometer segurança.", cat:"Wireless"},
+    {f:"O que é Perfect Forward Secrecy (PFS) no WPA3?", b:"Gera uma nova chave de criptografia para cada sessão. Mesmo que uma chave seja comprometida, sessões passadas permanecem seguras.", cat:"Wireless"},
+    {f:"O que é SSID Suppression/Cloaking?", b:"Desabilitar o broadcast do SSID para ocultar a rede. ATENÇÃO: não impede descoberta por ferramentas (probe requests revelam a rede) e pode causar problemas de conexão.", cat:"Wireless"},
+    {f:"O que é filtro de endereço MAC em Wi-Fi?", b:"Autorizar apenas MACs específicos a se conectar. Proteção fraca: atacantes fazem MAC spoofing facilmente. Difícil de manter em grande escala.", cat:"Wireless"},
+    {f:"O que é uma rede Air-Gapped?", b:"Rede ou host fisicamente isolado, sem conexão cabeada ou wireless. Exemplos: CA raiz PKI, sistemas de controle industrial. Mídia USB é vetor de ataque potencial.", cat:"Wireless"},
 
-            // Proteções do Sistema (31-35)
-            {f: "O que é AppLocker?", 
-             b: "Recurso do Windows para application whitelisting (lista de permissões). Permite apenas aplicativos aprovados baseado em publisher, caminho ou hash. Bloqueia software não autorizado."},
-             
-            {f: "O que é DEP (Data Execution Prevention)?", 
-             b: "Prevenção de Execução de Dados. Marca regiões da memória como não executáveis. Impede que código malicioso seja executado em áreas de dados (buffer overflow)."},
-             
-            {f: "O que é ASLR (Address Space Layout Randomization)?", 
-             b: "Randomização do layout do espaço de endereços. Dificulta exploits que dependem de endereços de memória conhecidos."},
-             
-            {f: "O que é Code Signing?", 
-             b: "Assinatura digital de código com um certificado. Garante a autenticidade (quem publicou) e integridade (não foi modificado) do software."},
-             
-            {f: "O que são HttpOnly e SameSite cookies?", 
-             b: "HttpOnly: previne acesso ao cookie via JavaScript (protege contra XSS). SameSite: previne envio do cookie em requisições cross-site (protege contra CSRF)."},
+    // BLOCO 5: Ataques Wireless (12 cards)
+    {f:"O que é um ataque Evil Twin?", b:"Rogue AP configurado para imitar rede legítima (mesmo SSID). Usa jamming/disassociação para forçar reconexão. Atacante monitora todo tráfego (MitM).", cat:"Ataques Wi-Fi"},
+    {f:"O que é um Rogue Access Point?", b:"AP instalado na rede sem autorização, criando um backdoor. Pode ser Evil Twin (imita rede legítima) ou simplesmente não autorizado. Detectado por WIPS.", cat:"Ataques Wi-Fi"},
+    {f:"O que é o ataque KRACK?", b:"Key Reinstallation Attack: explora o 4-way handshake do WPA2 para reinstalar chaves já usadas, permitindo decriptografia de tráfego. Mitigado com patches.", cat:"Ataques Wi-Fi"},
+    {f:"O que é um ataque de Disassociação/Deauth?", b:"Explora frames de gerenciamento não criptografados. Atacante finge ser o roteador e envia frames de desconexão. Pode forçar reconexão a Evil Twin.", cat:"Ataques Wi-Fi"},
+    {f:"O que é um ataque IV (Initialization Vector) no WEP?", b:"WEP usa IVs de 24-bit reutilizados a cada 4096 pacotes. Atacantes inundam a rede para coletar IVs repetidos e quebrar a chave. WEP quebrado em 1-2 minutos. NUNCA usar WEP.", cat:"Ataques Wi-Fi"},
+    {f:"O que é Jamming wireless?", b:"Interferência intencional no sinal Wi-Fi. Tipos: Spark jamming (rajadas RF intensas), Random noise (amplitudes aleatórias), Random pulse (pulsos aleatórios). É um ataque DoS.", cat:"Ataques Wi-Fi"},
+    {f:"O que é Bluejacking vs Bluesnarfing?", b:"Bluejacking: envio de mensagens indesejadas via Bluetooth (incômodo mas não roubo de dados). Bluesnarfing: explora OBEX para acessar calendário, emails e contatos sem autorização.", cat:"Ataques Wi-Fi"},
+    {f:"Como mitigar ataques Bluetooth?", b:"Habilitar Bluetooth apenas quando necessário, desabilitar modo discovery (invisible mode), manter firmware atualizado, não aceitar conexões de desconhecidos.", cat:"Ataques Wi-Fi"},
+    {f:"Quais são os ataques a RFID/NFC?", b:"Eavesdropping (escuta), Man-in-the-Middle (intercepta/manipula), DoS (jamming), Cloning/Spoofing (cópia de tag), Relay attacks (retransmite NFC à distância).", cat:"Ataques Wi-Fi"},
+    {f:"Como detectar Rogue APs?", b:"Inspeções físicas, analisadores Wi-Fi, WIPS (Wireless Intrusion Prevention System), monitorar SSIDs typosquatting e MACs desconhecidos ou duplicados.", cat:"Ataques Wi-Fi"},
+    {f:"Diferença entre RFID Ativo e Passivo?", b:"RFID Ativo: possui bateria, maior alcance (centenas de metros). RFID Passivo: sem bateria, depende da energia do scanner, alcance limitado (poucos metros).", cat:"Ataques Wi-Fi"},
+    {f:"O que é um ataque de Replay em redes wireless?", b:"Interceptação e retransmissão de pacotes de autenticação para obter acesso ilegítimo. Mitigado com timestamps, números de sequência e chaves com TTL.", cat:"Ataques Wi-Fi"},
 
-            // Arquiteturas Modernas (36-40)
-            {f: "O que são microserviços (microservices)?", 
-             b: "Arquitetura onde uma aplicação é composta por serviços pequenos, independentes e fracamente acoplados. Cada serviço tem sua própria base de código, podendo ser desenvolvido e implantado separadamente."},
-             
-            {f: "O que é containerização?", 
-             b: "Tecnologia que empacota uma aplicação e suas dependências em um container isolado (Docker). Mais leve que VMs, portável. Orquestração com Kubernetes."},
-             
-            {f: "O que é serverless (FaaS)?", 
-             b: "Function as a Service. O provedor gerencia a infraestrutura, você só escreve funções que executam em resposta a eventos. Ex: AWS Lambda, Azure Functions. Pay per execution."},
-             
-            {f: "O que é Infrastructure as Code (IaC)?", 
-             b: "Gerenciar e provisionar infraestrutura através de código (Terraform, CloudFormation). Version control, reprodutível, automatizado."},
-             
-            {f: "O que é API Gateway?", 
-             b: "Proxy que atua como ponto único de entrada para APIs. Gerencia autenticação, rate limiting, caching, monitoramento e roteamento."},
+    // BLOCO 6: Protocolos Seguros e VPNs (16 cards)
+    {f:"O que é SSH e quais são seus principais usos?", b:"Secure Shell: administração remota via linha de comando, transferência segura de arquivos (SFTP). Implementação mais usada: OpenSSH. Porta 22.", cat:"Protocolos"},
+    {f:"Quais são os métodos de autenticação SSH?", b:"1) Username/Password (local ou RADIUS), 2) Public Key Authentication (chave pública no servidor), 3) Kerberos (TGT via GSSAPI).", cat:"Protocolos"},
+    {f:"O que é a Host Key do SSH?", b:"Par de chaves pública/privada que identifica o servidor SSH. Usada para estabelecer canal seguro. Deve ser mudada se houver suspeita de comprometimento.", cat:"Protocolos"},
+    {f:"Comandos SSH fundamentais?", b:"ssh user@host (conectar), ssh-keygen -t rsa (gerar chaves), ssh-copy-id user@host (copiar chave pública), scp user@host:/path/file . (copiar arquivo).", cat:"Protocolos"},
+    {f:"Diferença entre HTTP e HTTPS?", b:"HTTP: cleartext, porta 80, stateless. HTTPS: HTTP + SSL/TLS, porta 443, criptografa dados, stateful, ícone de cadeado no navegador.", cat:"Protocolos"},
+    {f:"O que é S-HTTP (Secure HTTP)?", b:"Alternativa ao HTTPS, menos usada. Connectionless, apenas segurança de mensagem (não canal completo), não usa porta 443. Considerado menos seguro que HTTPS.", cat:"Protocolos"},
+    {f:"O que é RDP e suas características?", b:"Remote Desktop Protocol (Microsoft): acesso gráfico remoto, criptografado por padrão, porta 3389. Pode acessar máquinas físicas ou virtuais via gateway.", cat:"Protocolos"},
+    {f:"O que é HTML5 VPN (Clientless Remote Desktop)?", b:"Acesso remoto via navegador web usando canvas HTML5 e WebSocket. Não requer cliente instalado. Exemplo: Apache Guacamole.", cat:"Protocolos"},
+    {f:"Topologias de VPN: quais são as 3 principais?", b:"1) Client-to-Site (Remote Access): usuário remoto → gateway corporativo. 2) Site-to-Site: conecta duas redes automaticamente. 3) Host-to-Host: entre dois computadores.", cat:"Protocolos"},
+    {f:"O que é TLS VPN?", b:"VPN que usa TLS para criar túnel criptografado. Cliente usa certificados digitais. Pode usar TCP ou UDP (DTLS). Versões seguras: TLS 1.2 e 1.3.", cat:"Protocolos"},
+    {f:"IPsec AH vs ESP: qual a diferença?", b:"AH (Authentication Header): hash criptográfico, garante integridade, NÃO criptografa payload. ESP (Encapsulating Security Payload): criptografa o pacote, garante confidencialidade + integridade.", cat:"Protocolos"},
+    {f:"IPsec Transport Mode vs Tunnel Mode?", b:"Transport Mode: entre hosts em rede privada, ESP não criptografa IP header. Tunnel Mode: VPNs site-to-site, ESP criptografa todo o pacote original com novo IP header.", cat:"Protocolos"},
+    {f:"O que é IKE (Internet Key Exchange) no IPsec?", b:"Protocolo que estabelece autenticação, seleciona cifras, realiza troca Diffie-Hellman e cria Security Associations (SAs). Fase I: canal seguro. Fase II: parâmetros IPsec.", cat:"Protocolos"},
+    {f:"IKEv1 vs IKEv2: principais diferenças?", b:"IKEv1: site-to-site e host-to-host, precisa protocolo adicional para remote access. IKEv2: suporta EAP/RADIUS, NAT traversal, MOBIKE multihoming.", cat:"Protocolos"},
+    {f:"O que é MOBIKE no IKEv2?", b:"Multihoming: mantém conexão VPN ativa ao trocar de interface de rede (ex: Wi-Fi para dados móveis) sem reconectar. Essencial para usuários móveis.", cat:"Protocolos"},
+    {f:"O que é uma Security Association (SA) no IPsec?", b:"Conjunto de parâmetros negociados para uma sessão IPsec: algoritmo de criptografia, chaves, IDs. Estabelecida pelo IKE. Cada direção tem sua própria SA.", cat:"Protocolos"},
 
-            // Network Security (41-50)
-            {f: "O que é Port Security em switches?", 
-             b: "Recurso que limita o número de endereços MAC permitidos em uma porta. Previne ataques de MAC flooding e dispositivos não autorizados."},
-             
-            {f: "O que é DHCP Snooping?", 
-             b: "Recurso de switch que valida mensagens DHCP. Portas confiáveis (trunk, uplink) podem enviar ofertas DHCP; portas não confiáveis (acesso) são bloqueadas para respostas DHCP. Previne DHCP spoofing."},
-             
-            {f: "O que é DAI (Dynamic ARP Inspection)?", 
-             b: "Valida pacotes ARP contra a tabela do DHCP snooping. Pacotes ARP inválidos são descartados. Previne ARP poisoning/spoofing."},
-             
-            {f: "O que é BPDU Guard?", 
-             b: "Recurso que desabilita uma porta se ela receber BPDU (Bridge Protocol Data Unit). Previne ataques de spanning tree e loops."},
-             
-            {f: "O que é Root Guard?", 
-             b: "Protege a topologia spanning tree prevenindo que uma porta se torne root port. Garante que switches não autorizados não assumam o papel de root."},
-             
-            {f: "O que é Flood Guard / Storm Control?", 
-             b: "Limita a taxa de tráfego broadcast, multicast e unknown unicast. Previne tempestades de rede (broadcast storms)."},
-             
-            {f: "O que é Microsegmentação (Microsegmentation)?", 
-             b: "Segmentação extrema onde firewalls são aplicados entre cargas de trabalho individuais (workloads), não apenas entre subnets. Fundamental em Zero Trust."},
-             
-            {f: "O que é Jump Server (Bastion Host)?", 
-             b: "Servidor fortificado usado como ponto de entrada para acessar recursos internos de uma rede. Toda administração passa por ele, com logging e MFA obrigatórios."},
-             
-            {f: "O que é Screened Subnet (DMZ)?", 
-             b: "Zona desmilitarizada entre dois firewalls. Hospeda servidores públicos (web, email, DNS). Se o firewall externo falhar, apenas a DMZ é comprometida, a LAN permanece protegida."},
-             
-            {f: "O que são Private VLANs?", 
-             b: "VLANs que isolam portas dentro da mesma VLAN. Hosts não podem se comunicar diretamente, apenas com o gateway. Útil em ambientes de hosting."},
+    // BLOCO 7: Segurança de Navegadores e Ataques Web (18 cards)
+    {f:"Quais indicadores mostram conexão não segura no navegador?", b:"URL com domínio diferente do pretendido, barra de menu com comandos novos ou faltando, ausência do ícone de cadeado quando SSL deveria estar ativo.", cat:"Ataques Web"},
+    {f:"O que são cookies First-party vs Third-party?", b:"First-party: colocados pelo site que você visita, gerenciam sua sessão. Third-party: colocados por sites vinculados (anúncios), rastreiam entre sites, podem violar privacidade.", cat:"Ataques Web"},
+    {f:"O que é Escalação de Privilégios Horizontal vs Vertical?", b:"Horizontal: acessa dados de outro usuário com mesmo nível de privilégio. Vertical: usa vulnerabilidades para ganhar privilégios maiores (ex: admin).", cat:"Ataques Web"},
+    {f:"O que é um Buffer Overflow?", b:"Vulnerabilidade onde mais dados são inseridos do que o buffer suporta, sobrescrevendo memória adjacente. Pode causar execução de código arbitrário (Arbitrary Code Execution) ou DoS.", cat:"Ataques Web"},
+    {f:"O que é Null Pointer Dereference?", b:"App tenta acessar valor de um ponteiro NULL. Avaliado como 0 em C. Pode causar DoS se um driver DMA não tiver proteções suficientes.", cat:"Ataques Web"},
+    {f:"O que são Slow Header e Slow POST attacks?", b:"Slow Header: envia headers HTTP muito lentamente, mantendo conexão aberta. Slow POST: envia body lentamente. Ambos esgotam recursos do servidor (DoS). Mitigado com timeouts.", cat:"Ataques Web"},
+    {f:"O que é Memory Leak?", b:"Memória dinâmica alocada que nunca é liberada porque ponteiros são perdidos ou desalocação nunca é chamada. Leva à exaustão de recursos e DoS progressivo.", cat:"Ataques Web"},
+    {f:"O que é um Race Condition (TOCTTOU Bug)?", b:"Time-Of-Check to Time-Of-Use: atacante modifica estado de um recurso entre o momento verificado e o usado. Mitigado com locks de arquivo e uso de file handles.", cat:"Ataques Web"},
+    {f:"Como o Error Handling inadequado pode ser explorado?", b:"Mensagens de erro detalhadas revelam ao atacante: queries SQL malformadas, caminhos completos de arquivos, versões de software. Solução: usar mensagens de erro genéricas.", cat:"Ataques Web"},
+    {f:"O que é um ataque Replay (Session Replay)?", b:"Tráfego interceptado que é reenviado ao receptor original, fazendo o atacante parecer o remetente legítimo. Mitigado com timestamps, números de sequência e chaves com TTL.", cat:"Ataques Web"},
+    {f:"O que é Pass-the-Hash e como funciona?", b:"Ataque onde hash de senha é roubado da memória de uma workstation e usado para autenticar em outras máquinas sem conhecer a senha em texto claro.", cat:"Ataques Web"},
+    {f:"Como mitigar Pass-the-Hash?", b:"Usar rede direta para prevenir acesso entre workstations, desabilitar Remote Desktop Connections via GPO no Active Directory, limitar domain admins a workstations de mesmo privilégio.", cat:"Ataques Web"},
+    {f:"O que é SSL Stripping?", b:"Atacante intercepta requisição HTTPS, estabelece HTTPS com o servidor e HTTP com o usuário. Remove a segurança SSL. Mitigado com HSTS preload list.", cat:"Ataques Web"},
+    {f:"O que é um ataque de API?", b:"Exploração de APIs públicas via chamadas não autorizadas, enumeração, SQLi em endpoints. Mitigado com rate limiting, logs de segurança e monitoramento de erros.", cat:"Ataques Web"},
+    {f:"O que é Driver Refactoring como técnica de ataque?", b:"Modificação maliciosa de driver onde o comportamento externo parece normal (hardware funciona) mas internamente há código oculto. Difícil de detectar.", cat:"Ataques Web"},
+    {f:"O que é Shimming como técnica de ataque?", b:"Modificação de um shim (camada de compatibilidade entre APIs) para injetar código malicioso que executa antes de passar as chamadas legítimas.", cat:"Ataques Web"},
+    {f:"O que é Improper Input Handling?", b:"Falta de validação, sanitização, filtragem ou codificação de dados de entrada. Pode levar a SQL injection, XSS, buffer overflows, directory traversal e command injection.", cat:"Ataques Web"},
+    {f:"Quais dados privados do navegador devem ser limpos?", b:"Histórico de navegação, downloads, cookies e dados de sites, cache (imagens/arquivos), senhas salvas, dados de autopreenchimento, permissões de sites.", cat:"Ataques Web"},
 
-            // Autenticação (51-60)
-            {f: "O que é Geofencing?", 
-             b: "Restrição de acesso baseada na localização geográfica do usuário (GPS, endereço IP). Pode bloquear acessos de países não autorizados."},
-             
-            {f: "O que é Time-based Access?", 
-             b: "Restrição de acesso baseada em horário (logon hours). Usuários só podem acessar sistemas em determinados períodos (ex: 8h-18h)."},
-             
-            {f: "O que é Remote Wipe?", 
-             b: "Funcionalidade de MDM (Mobile Device Management) que apaga remotamente todos os dados de um dispositivo perdido ou roubado."},
-             
-            {f: "O que é autenticação biométrica?", 
-             b: "Autenticação baseada em características físicas únicas: impressão digital, reconhecimento facial (Face ID), íris, voz."},
-             
-            {f: "O que é autenticação sem senha (passwordless)?", 
-             b: "Métodos de autenticação que não usam senha tradicional. Ex: FIDO2, Windows Hello (biometria + hardware token). São mais resistentes a phishing."},
-             
-            {f: "O que é autenticação context-aware (adaptativa)?", 
-             b: "Decisão de autenticação baseada em contexto: localização, dispositivo, horário, comportamento. Se o contexto for de risco, exige step-up authentication."},
-             
-            {f: "O que é step-up authentication?", 
-             b: "Exigir autenticação adicional (ex: MFA) para ações sensíveis, como transferências de alto valor ou mudanças de configuração."},
-             
-            {f: "O que é autenticação contínua (continuous authentication)?", 
-             b: "Verificar a identidade do usuário continuamente durante a sessão, não apenas no login. Baseado em biometria comportamental (movimentos do mouse, padrões de digitação)."},
-             
-            {f: "O que são push notifications para MFA?", 
-             b: "Método de autenticação onde um prompt é enviado para o celular do usuário, que aprova ou nega a tentativa de login. Mais seguro que SMS."},
-             
-            {f: "O que é Zero Trust Architecture?", 
-             b: "Modelo de segurança 'nunca confie, sempre verifique'. Microsegmentação, least privilege, MFA em tudo, assume que a rede já está comprometida."},
+    // BLOCO 8: SDLC e Desenvolvimento Seguro (16 cards)
+    {f:"Diferença entre Waterfall e Agile no SDLC?", b:"Waterfall: etapas sequenciais (Req→Design→Impl→Testes→Deploy→Manutenção), lento e inflexível. Agile: sprints iterativos (~2-3 semanas), contínuo e adaptável.", cat:"Dev Seguro"},
+    {f:"O que é SAST (Static Application Security Testing)?", b:"White box testing: analisa source code, binaries, byte code ANTES do deployment. Bom para SQLi e buffer overflows. Alto % de falsos positivos. Específico de linguagem.", cat:"Dev Seguro"},
+    {f:"O que é DAST (Dynamic Application Security Testing)?", b:"Black box testing: testa aplicação APÓS deployment de fora. Não específico de linguagem, menos falsos positivos, não aponta causa exata, pode levar até uma semana.", cat:"Dev Seguro"},
+    {f:"O que é IAST (Interactive Application Security Testing)?", b:"Combina SAST e DAST: ferramentas acessam interpreters/compilers em runtime para identificar a linha exata do problema. Cobertura em dev, QA e produção.", cat:"Dev Seguro"},
+    {f:"O que é Sandboxing de Software?", b:"Mecanismo que isola processos em execução, impedindo acesso ao sistema. Exemplos: abas do Chrome (processo separado), iOS/Android (cada app isolado), Docker containers.", cat:"Dev Seguro"},
+    {f:"O que é Code Signing (Assinatura de Código)?", b:"Usar chave privada para assinar hash do código, criando assinatura digital. Garante INTEGRIDADE e AUTENTICIDADE (origem), mas NÃO garante que o código é seguro.", cat:"Dev Seguro"},
+    {f:"O que é análise estática de código?", b:"Examinar código fonte em estado estático para identificar vulnerabilidades antes de finalizar. Ferramentas: SonarQube, Coverity, Fortify. Abordagem proativa.", cat:"Dev Seguro"},
+    {f:"O que é Fuzz Testing (Fuzzing)?", b:"Fornece dados inválidos, inesperados ou aleatórios aos inputs de uma aplicação para descobrir vulnerabilidades. Mutation-based (muta dados existentes) e Generation-based (define novos modelos).", cat:"Dev Seguro"},
+    {f:"O que é Normalização de banco de dados em segurança?", b:"Reorganizar dados em banco relacional eliminando redundância. Benefícios: reduz espaço, melhora performance e REDUZ RISCO de exploração.", cat:"Dev Seguro"},
+    {f:"O que são Stored Procedures e seu benefício de segurança?", b:"Instruções SQL armazenadas no banco como grupo. Centralizam código, protegem a lógica de usuários e LIMITAM ATAQUES DE INJECTION ao restringir acesso direto ao banco.", cat:"Dev Seguro"},
+    {f:"O que é Code Obfuscation?", b:"Tornar código difícil de entender para humanos usando expressões indiretas. Previne engenharia reversa e adulteração. Pode ser feito automaticamente ou manualmente.", cat:"Dev Seguro"},
+    {f:"Quais são os riscos de Third-party Libraries e SDKs?", b:"Código externo pode conter falhas não corrigidas rapidamente (especialmente open-source). Código em bundles pode dar mais funcionalidades do que necessário, ampliando superfície de ataque.", cat:"Dev Seguro"},
+    {f:"O que é Sensitive Data Exposure?", b:"Exposição não intencional de dados pessoais/confidenciais por criptografia fraca, falhas de codificação ou uploads mal aplicados. Mitigado com criptografia em trânsito e repouso.", cat:"Dev Seguro"},
+    {f:"O que é Dead Code e por que é perigoso?", b:"Código não executado em runtime ou obsoleto. Deve ser removido: código inexistente não pode ser explorado. Aumenta a superfície de ataque desnecessariamente.", cat:"Dev Seguro"},
+    {f:"O que é Secure Cookie e seus atributos de segurança?", b:"Atributo 'Secure' (apenas HTTPS), 'HttpOnly' (previne acesso via JS — protege XSS), 'SameSite' (mitiga CSRF), e limite de tempo de expiração.", cat:"Dev Seguro"},
+    {f:"Diferença entre Compile Error e Runtime Error?", b:"Compile Error: ocorre durante compilação, impede o app de rodar. Runtime Error (Bug): ocorre durante execução, pode ser tratado por exception handlers. Exception pode ser recuperada; Error não.", cat:"Dev Seguro"},
 
-            // Hardening Avançado (61-70)
-            {f: "O que é UAC (User Account Control) no Windows?", 
-             b: "Recurso que separa usuário padrão de administrador, solicitando elevação para ações administrativas. Reduz risco de malware executar com privilégios elevados."},
-             
-            {f: "O que é um baseline de segurança?", 
-             b: "Configuração padrão e segura definida para um tipo de sistema. Serve como referência para detectar desvios."},
-             
-            {f: "O que é Group Policy no Windows?", 
-             b: "Ferramenta para gerenciar configurações centralizadas de usuários e computadores em ambientes Active Directory."},
-             
-            {f: "O que é um security template?", 
-             b: "Arquivo que contém configurações de segurança que podem ser aplicadas a múltiplos computadores."},
-             
-            {f: "O que é attack surface reduction (ASR)?", 
-             b: "Técnica de remover software, serviços e funcionalidades desnecessárias para reduzir pontos de entrada de ataques."},
-             
-            {f: "O que é Application Control?", 
-             b: "Política que restringe quais aplicações podem ser executadas no sistema. Ex: AppLocker, Software Restriction Policies."},
-             
-            {f: "O que é Device Guard no Windows?", 
-             b: "Combinação de hardware e software que usa virtualização para isolar processos e garantir integridade do sistema."},
-             
-            {f: "O que é Credential Guard?", 
-             b: "Recurso do Windows que protege credenciais usando virtualização, prevenindo ataques pass-the-hash."},
-             
-            {f: "O que é Secure Boot?", 
-             b: "Recurso UEFI que verifica a integridade do bootloader durante a inicialização, prevenindo rootkits de boot."},
-             
-            {f: "O que é measured boot?", 
-             b: "Extensão do Secure Boot que registra hashes de cada estágio do boot para verificação remota de integridade."},
+    // BLOCO 9: Hardening de Aplicações (9 cards)
+    {f:"Quais são as diretrizes básicas de Hardening de Aplicações?", b:"Remover apps não utilizadas, limitar privilégios administrativos, instalar antivírus/anti-spyware, usar firewalls e filtros de conteúdo, restringir acesso, atualizar com patches, identificar baselines.", cat:"Hardening App"},
+    {f:"O que é Block Process Spawning?", b:"Remover a capacidade de processos criarem processos filhos (child processes). Previne ataques que dependem de process spawning para executar código malicioso.", cat:"Hardening App"},
+    {f:"O que é DEP (Data Execution Prevention)?", b:"Recurso de segurança que impede execução de código em regiões de memória marcadas apenas como dados. Fecha o app e notifica o admin se instruções tentam executar de área de dados.", cat:"Hardening App"},
+    {f:"O que é Validação de Entrada (Input Validation)?", b:"Verifica, sanitiza e filtra dados fornecidos pelo usuário antes de processá-los. Previne SQLi, XSS, command injection, buffer overflows e directory traversal.", cat:"Hardening App"},
+    {f:"Client-side vs Server-side Validation: qual é mais segura?", b:"Server-side é ESSENCIAL: atacantes experientes contornam validação client-side enviando dados diretamente ao servidor. Ambas devem ser usadas, mas server-side é obrigatória.", cat:"Hardening App"},
+    {f:"O que são Exception Rules em hardening?", b:"Permitem ao administrador contornar uma regra específica de hardening quando uma aplicação tem necessidade legítima. Devem ser usadas com cautela e bem documentadas.", cat:"Hardening App"},
+    {f:"O que é Logging Comprehensivo em segurança de aplicações?", b:"Garantir que aplicações geram logs capturando eventos importantes para auditorias, resposta a incidentes e troubleshooting. Parte das práticas de codificação segura.", cat:"Hardening App"},
+    {f:"O que é Real-Time Alerting em aplicações?", b:"Alertas disparados quando eventos específicos ocorrem (logins falhados repetidos, transferências incomuns), indicando potencial breach. Crucial para equipes de resposta a incidentes.", cat:"Hardening App"},
+    {f:"O que é AppArmor?", b:"Ferramenta de hardening para sistemas Linux que aplica perfis de segurança por aplicação, incluindo suas libraries e SDKs, limitando o que cada app pode acessar no sistema.", cat:"Hardening App"},
+];
 
-            // Wireless Avançado (71-80)
-            {f: "O que é WPA2-Enterprise?", 
-             b: "Usa 802.1X com RADIUS para autenticação individual de usuários. Mais seguro que WPA2-Personal."},
-             
-            {f: "O que é EAP (Extensible Authentication Protocol)?", 
-             b: "Framework de autenticação usado em 802.1X. Vários métodos: EAP-TLS, PEAP, EAP-TTLS."},
-             
-            {f: "O que é EAP-TLS?", 
-             b: "Método EAP que usa certificados tanto no servidor quanto no cliente. É o mais seguro, mas requer PKI."},
-             
-            {f: "O que é PEAP (Protected EAP)?", 
-             b: "Método EAP que cria um túnel TLS protegido, onde a autenticação do cliente ocorre dentro do túnel. Usa certificado apenas no servidor."},
-             
-            {f: "O que é um captive portal?", 
-             b: "Página web que exige autenticação ou aceitação de termos antes de liberar acesso à rede Wi-Fi. Comum em hotspots públicos."},
-             
-            {f: "O que é um radius server?", 
-             b: "Servidor de autenticação centralizado usado em 802.1X. Gerencia credenciais e políticas de acesso."},
-             
-            {f: "O que é WPA3-Enterprise?", 
-             b: "Versão enterprise do WPA3, que adiciona criptografia de 192 bits e proteção adicional."},
-             
-            {f: "O que é Wi-Fi 6 (802.11ax)?", 
-             b: "Padrão mais recente de Wi-Fi, com melhor eficiência, capacidade e segurança. Compatível com WPA3."},
-             
-            {f: "O que é um PMK (Pairwise Master Key)?", 
-             b: "Chave mestra derivada durante a autenticação WPA, usada para gerar chaves de sessão."},
-             
-            {f: "O que é um ataque de KRACK?", 
-             b: "Key Reinstallation Attack. Vulnerabilidade no WPA2 que permite reutilização de nonces e quebra de criptografia."}
-        ];
+// ========== QUIZ ==========
+const allQuiz = [
+    // BLOCO A: Hardening (10)
+    {q:"Qual é o principal objetivo do princípio de 'Least Functionality' em hardening?", o:["Maximizar o desempenho do sistema","Reduzir a superfície de ataque desabilitando tudo que não é necessário","Simplificar a administração do sistema","Reduzir custos de licenciamento"], c:1, e:"Least Functionality significa configurar sistemas para executar apenas funções essenciais, desabilitando serviços, fechando portas e removendo software desnecessário para minimizar a superfície de ataque."},
+    {q:"Uma empresa precisa implementar FDE em laptops Windows corporativos. Qual solução nativa deve usar?", o:["FileVault","VeraCrypt","BitLocker","dm-crypt"], c:2, e:"BitLocker é a solução nativa de FDE (Full Disk Encryption) do Windows, disponível nas edições Pro e Enterprise. FileVault é do macOS, dm-crypt é do Linux."},
+    {q:"O que acontece quando um funcionário recebe novas permissões ao longo do tempo sem que as antigas sejam revisadas?", o:["Privilege Escalation","Authorization Creep","Role Conflict","Access Flooding"], c:1, e:"Authorization Creep é o acúmulo gradual de privilégios excessivos. Mitigado com auditorias regulares de permissões e revisão ao mudar de função."},
+    {q:"Em Patch Management, qual é a melhor prática ANTES de aplicar um patch em produção?", o:["Aguardar 30 dias para confirmar estabilidade","Testar em ambiente de homologação","Notificar todos os usuários e aplicar imediatamente","Aplicar apenas em sistemas críticos primeiro"], c:1, e:"Testar em ambiente de homologação (staging) antes de produção é prática essencial. Patches podem introduzir incompatibilidades ou quebrar funcionalidades."},
+    {q:"Qual é a diferença fundamental entre Allow Lists e Block Lists em hardening?", o:["Allow Lists bloqueiam conteúdo adulto; Block Lists bloqueiam malware","Allow Lists permitem apenas o aprovado; Block Lists bloqueiam o proibido","Allow Lists funcionam em nível de rede; Block Lists em nível de aplicação","Não há diferença prática entre elas"], c:1, e:"Allow Lists são mais seguras: apenas o que está explicitamente aprovado pode executar. Block Lists tentam catalogar o ruim, mas novas ameaças não catalogadas passam."},
+    {q:"Uma organização está aposentando servidores antigos. Qual é a preocupação de segurança mais crítica durante o descomissionamento?", o:["Transferir as licenças de software","Fazer backup dos dados antes","Realizar wipe seguro dos dados nas mídias","Documentar as configurações antigas"], c:2, e:"O descomissionamento seguro exige wipe seguro (secure wipe) de todas as mídias para evitar recuperação de dados sensíveis. Dados residuais são uma exposição crítica."},
+    {q:"O processo de adicionar um novo funcionário incluindo verificação de identidade, emissão de credenciais e treinamento é chamado de:", o:["Onboarding","Account Provisioning","Role Assignment","Identity Enrollment"], c:1, e:"Account Provisioning (Provisionamento de Contas) abrange as 5 etapas: Identity Proofing, emissão de credenciais, fornecimento de hardware/software, treinamento e criação de permissões."},
+    {q:"Qual ferramenta Microsoft é usada para gerenciar patches em escala empresarial?", o:["Windows Defender","Task Manager","SCCM/Endpoint Manager","Group Policy Editor"], c:2, e:"SCCM (System Center Configuration Manager) / Microsoft Endpoint Manager é a ferramenta enterprise para gerenciamento centralizado de patches, software e configurações."},
+    {q:"O que são 'baselines de segurança' em hardening?", o:["Logs de auditoria do sistema","Configurações mínimas de segurança usadas como referência padrão","Relatórios de conformidade regulatória","Testes de penetração periódicos"], c:1, e:"Baselines são configurações padronizadas que servem como referência, garantindo consistência entre sistemas e permitindo detectar desvios de configuração."},
+    {q:"Qual medida é mais apropriada para sistemas legados que não podem receber patches de segurança?", o:["Desligar o sistema imediatamente","Aplicar controles compensatórios como isolamento de rede e monitoramento adicional","Atualizar o hardware para viabilizar patches","Ignorar, pois são sistemas antigos"], c:1, e:"Controles compensatórios (isolamento de rede, firewalls adicionais, monitoramento intensificado) são a resposta correta quando o patching direto não é possível em sistemas legados."},
 
-        // ========== QUIZ DO CAPÍTULO 8 (40 QUESTÕES) ==========
-        const quiz = [
-            {q: "Permissão NTFS que sempre prevalece sobre Allow:", 
-             o: ["Read", "Write", "Deny", "Full Control"], 
-             c: 2},
-             
-            {q: "Firewall do Linux:", 
-             o: ["UFW", "iptables", "firewalld", "Todas as opções"], 
-             c: 3},
-             
-            {q: "Padrão Wi-Fi mais seguro atualmente:", 
-             o: ["WEP", "WPA", "WPA2", "WPA3"], 
-             c: 3},
-             
-            {q: "Access Point falso com mesmo SSID do legítimo:", 
-             o: ["Rogue AP", "Evil Twin", "Deauth AP", "WPS AP"], 
-             c: 1},
-             
-            {q: "Sistema que detecta rogue APs e evil twins:", 
-             o: ["IDS", "IPS", "WIDS/WIPS", "Firewall"], 
-             c: 2},
-             
-            {q: "Autenticação corporativa Wi-Fi usa:", 
-             o: ["WPA-PSK", "WPA2-Personal", "802.1X", "WPS"], 
-             c: 2},
-             
-            {q: "FTP sobre SSH (porta 22):", 
-             o: ["FTPS", "SFTP", "HTTPS", "SCP"], 
-             c: 1},
-             
-            {q: "Porta padrão do HTTPS:", 
-             o: ["80", "443", "22", "990"], 
-             c: 1},
-             
-            {q: "Ataque que injeta SQL malicioso:", 
-             o: ["XSS", "CSRF", "SQL Injection", "Command Injection"], 
-             c: 2},
-             
-            {q: "Ataque que injeta JavaScript malicioso:", 
-             o: ["SQLi", "XSS", "CSRF", "LFI"], 
-             c: 1},
-             
-            {q: "Ataque que força ações em site autenticado:", 
-             o: ["XSS", "SQLi", "CSRF", "Session Hijack"], 
-             c: 2},
-             
-            {q: "Principal contramedida para SQL Injection:", 
-             o: ["Input validation", "Prepared statements", "Stored procedures", "Todas ajudam"], 
-             c: 3},
-             
-            {q: "Análise de segurança do código fonte (estática):", 
-             o: ["DAST", "SAST", "Pentest", "Fuzzing"], 
-             c: 1},
-             
-            {q: "Teste de segurança em aplicação em execução:", 
-             o: ["SAST", "DAST", "Code Review", "Static Analysis"], 
-             c: 1},
-             
-            {q: "Application whitelisting no Windows:", 
-             o: ["UAC", "AppLocker", "DEP", "ASLR"], 
-             c: 1},
-             
-            {q: "Previne execução de código em áreas de dados:", 
-             o: ["ASLR", "AppLocker", "DEP", "Code Signing"], 
-             c: 2},
-             
-            {q: "Randomiza endereços de memória:", 
-             o: ["DEP", "ASLR", "AppLocker", "Obfuscation"], 
-             c: 1},
-             
-            {q: "Cookie com flag HttpOnly previne:", 
-             o: ["CSRF", "SQLi", "XSS", "MITM"], 
-             c: 2},
-             
-            {q: "Cookie com flag SameSite previne:", 
-             o: ["XSS", "CSRF", "SQLi", "Injection"], 
-             c: 1},
-             
-            {q: "Firewall de aplicação web (camada 7):", 
-             o: ["Firewall de rede", "IPS", "WAF", "Proxy"], 
-             c: 2},
-             
-            {q: "Docker e Kubernetes são tecnologias de:", 
-             o: ["VMs", "Containers", "Serverless", "PaaS"], 
-             c: 1},
-             
-            {q: "AWS Lambda é um exemplo de:", 
-             o: ["IaaS", "PaaS", "Serverless/FaaS", "SaaS"], 
-             c: 2},
-             
-            {q: "Modelo 'nunca confie, sempre verifique':", 
-             o: ["Defense in depth", "Zero Trust", "Least privilege", "Need to know"], 
-             c: 1},
-             
-            {q: "Recurso que limita MACs por porta no switch:", 
-             o: ["DHCP Snooping", "Port Security", "DAI", "802.1X"], 
-             c: 1},
-             
-            {q: "Recurso que valida pacotes ARP contra DHCP snooping:", 
-             o: ["Port Security", "DHCP Snooping", "DAI", "BPDU Guard"], 
-             c: 2},
-             
-            {q: "Recurso que desabilita porta se receber BPDU:", 
-             o: ["Root Guard", "BPDU Guard", "Port Security", "DAI"], 
-             c: 1},
-             
-            {q: "Funcionalidade que apaga dados remotamente:", 
-             o: ["GPS Tracking", "Remote Wipe", "Screen Lock", "Geofencing"], 
-             c: 1},
-             
-            {q: "Localizar dispositivo perdido:", 
-             o: ["Remote Wipe", "GPS Tracking", "MDM", "Geofencing"], 
-             c: 1},
-             
-            {q: "MFA via notificação no celular:", 
-             o: ["SMS", "Push Notification", "TOTP", "Email"], 
-             c: 1},
-             
-            {q: "Autenticação sem senha tradicional:", 
-             o: ["MFA", "2FA", "Passwordless", "Biometric"], 
-             c: 2},
-             
-            {q: "Restrição de acesso por horário:", 
-             o: ["Geofencing", "Time-based Access", "Screen Lock", "MFA"], 
-             c: 1},
-             
-            {q: "Servidor intermediário para acesso interno:", 
-             o: ["Proxy", "DMZ", "Jump Server", "Gateway"], 
-             c: 2},
-             
-            {q: "Segmentação extrema entre workloads:", 
-             o: ["VLAN", "Microsegmentation", "Subnet", "DMZ"], 
-             c: 1},
-             
-            {q: "Terraform e CloudFormation são:", 
-             o: ["IaC", "DevOps", "CI/CD", "Automation"], 
-             c: 0},
-             
-            {q: "Gerenciamento de segredos (API keys, senhas):", 
-             o: ["Password manager", "Secrets Management", "Key management", "Certificate authority"], 
-             c: 1},
-             
-            {q: "Processo formal de mudanças: Request → Approve → Test → Implement → Verify:", 
-             o: ["Patch Management", "Change Management", "Config Management", "Asset Management"], 
-             c: 1},
-             
-            {q: "Arquitetura com serviços pequenos e independentes:", 
-             o: ["Monolito", "Microservices", "Serverless", "Containers"], 
-             c: 1},
-             
-            {q: "Limita taxa de broadcasts no switch:", 
-             o: ["Port Security", "Flood Guard", "Storm Control", "B e C"], 
-             c: 3},
-             
-            {q: "VLAN que isola portas na mesma VLAN:", 
-             o: ["Private VLAN", "Isolated VLAN", "Community VLAN", "Promiscuous"], 
-             c: 0},
-             
-            {q: "Autenticação baseada em contexto (local, horário, dispositivo):", 
-             o: ["MFA", "Adaptive Auth", "Step-up Auth", "Continuous Auth"], 
-             c: 1}
-        ];
+    // BLOCO B: Sistema de Arquivos (8)
+    {q:"No Linux, o que significa a permissão chmod 755?", o:["Owner: rwx, Group: rw-, Others: r--","Owner: rwx, Group: r-x, Others: r-x","Owner: rw-, Group: r-x, Others: r-x","Owner: rwx, Group: rwx, Others: r-x"], c:1, e:"chmod 755: Owner=7(rwx), Group=5(r-x), Others=5(r-x). Octal: r=4, w=2, x=1."},
+    {q:"No Windows, um usuário tem permissão Share de 'Read' e permissão NTFS de 'Full Control'. Qual é a permissão efetiva de acesso pela rede?", o:["Full Control","Read","Modify","Write"], c:1, e:"A permissão efetiva é a MAIS RESTRITIVA entre Share e NTFS. Share=Read é mais restritiva que NTFS=Full Control, logo a efetiva é Read."},
+    {q:"Um compartilhamento administrativo do Windows é identificado por qual característica?", o:["Começa com #","Termina com $","Tem prefixo ADMIN_","Está na pasta C:\\Windows\\Admin"], c:1, e:"Compartilhamentos administrativos terminam com '$' (ex: C$, ADMIN$, IPC$), tornando-os ocultos na navegação padrão da rede."},
+    {q:"Qual protocolo de transferência de arquivos usa SSH2 e NÃO é 'FTP sobre SSH'?", o:["FTPS","SCP","SFTP","FTP+IPSec"], c:2, e:"SFTP (SSH File Transfer Protocol) usa SSH2 como base e é um protocolo independente — não é FTP rodando sobre SSH. SCP usa SSH1. FTPS é FTP com TLS."},
+    {q:"O que implementa 'Implicit Deny' em um sistema de controle de acesso?", o:["Permite todo tráfego não especificado","Nega qualquer acesso não explicitamente permitido","Registra mas permite tráfego desconhecido","Solicita confirmação do administrador"], c:1, e:"Implicit Deny é a regra implícita ao final de toda ACL que nega qualquer acesso não explicitamente autorizado. Implementa o princípio de 'negar tudo por padrão'."},
+    {q:"Qual ferramenta do Windows Server controla tipos de arquivos e quotas em servidores de arquivos?", o:["Active Directory","Group Policy","FSRM (File Server Resource Manager)","Windows Defender"], c:2, e:"FSRM (File Server Resource Manager) permite controlar tipos de arquivos permitidos, quotas de disco, gerar relatórios e implementar políticas de armazenamento."},
+    {q:"Por que o protocolo TFTP é considerado inseguro?", o:["Usa criptografia fraca RC4","Não possui autenticação nem criptografia","Só funciona em redes locais","É vulnerável a replay attacks"], c:1, e:"TFTP (porta 69) transfere arquivos em cleartext sem autenticação. Usado apenas em redes controladas para boot de dispositivos via PXE."},
+    {q:"Qual é a notação octal para a permissão rwxr--r-- no Linux?", o:["755","744","664","711"], c:1, e:"rwx=7(4+2+1), r--=4(4+0+0), r--=4(4+0+0). Resultado: 744."},
 
-        // ========== VARIÁVEIS DE ESTADO ==========
-        
-        let currentCard = 0;
-        let flipped = false;
-        let mastered = new Set();
-        let answers = {};
-        let checked = false;
-        let filteredCards = [...Array(cards.length).keys()];
-        let currentFilter = 'all';
+    // BLOCO C: Linux Host Security (8)
+    {q:"O que é um dispositivo BadUSB?", o:["Pen drive com vírus comum","Dispositivo USB reprogramado para agir como teclado (HID) ou outro periférico malicioso","Hub USB não autorizado","Carregador USB com malware de carregamento lento"], c:1, e:"BadUSB explora o firmware de dispositivos USB para reprogramá-los como HID (Human Interface Device), geralmente teclado, executando comandos maliciosos automaticamente."},
+    {q:"Qual comando do Linux verifica serviços ativos em execução?", o:["ps -aux","netstat -a","systemctl --type=service --state=active","service --list-all"], c:2, e:"systemctl --type=service --state=active lista todos os serviços ativos. Para desabilitar: systemctl disable nome. Para parar: systemctl stop nome."},
+    {q:"No iptables, qual é a diferença entre DROP e REJECT?", o:["DROP é mais lento; REJECT é mais rápido","DROP descarta silenciosamente; REJECT envia mensagem de erro ao remetente","DROP funciona apenas em IPv4; REJECT em IPv6","São equivalentes, apenas sintaxe diferente"], c:1, e:"DROP descarta silenciosamente (o remetente não sabe se o host existe). REJECT envia ICMP de erro. DROP é mais seguro pois não revela informações sobre a rede."},
+    {q:"Para escanear portas UDP abertas com nmap, qual flag deve ser usada?", o:["nmap -sT","nmap -sS","nmap -sU","nmap -sV"], c:2, e:"nmap -sU realiza UDP scan. nmap -sT é TCP connect scan. nmap -sS é TCP SYN (stealth) scan. nmap -sV detecta versões de serviços."},
+    {q:"Qual é o propósito de um sistema 'Sheep Dip'?", o:["Testar software antes de comprar licença","Analisar dispositivos USB suspeitos em ambiente sandboxed isolado","Criar backups seguros de dados críticos","Auditar logs de sistema automaticamente"], c:1, e:"Sheep Dip é um sistema sandboxed e isolado, sem conexão com a rede principal, usado para testar dispositivos ou mídia suspeita antes de conectá-los à infraestrutura."},
+    {q:"Qual cadeia (chain) do iptables processa conexões ENTRANTES destinadas ao próprio host?", o:["FORWARD","OUTPUT","INPUT","PREROUTING"], c:2, e:"INPUT processa pacotes destinados ao próprio host. FORWARD processa pacotes que atravessam o host (roteamento). OUTPUT processa pacotes originados no host."},
+    {q:"Como desabilitar permanentemente um serviço no Linux com systemd?", o:["service nome stop","systemctl disable nome","killall nome","rm /etc/init.d/nome"], c:1, e:"systemctl disable nome desabilita o serviço para não iniciar no boot. Para parar imediatamente: systemctl stop nome. Ambos combinados: systemctl disable --now nome."},
+    {q:"Qual é o substituto moderno do comando netstat no Linux?", o:["ifconfig","ip route","ss","lsof"], c:2, e:"ss (socket statistics) é o substituto moderno do netstat, mais rápido e com mais funcionalidades. Opções: -a (todos), -l (listening), -s (estatísticas)."},
 
-        // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
-        
-        function loadProgress() {
-            const saved = localStorage.getItem('security_plus_cap8_mastered');
-            if (saved) {
-                mastered = new Set(JSON.parse(saved));
-            }
-        }
+    // BLOCO D: Wireless Security (12)
+    {q:"O que torna o WPA3 superior ao WPA2 contra ataques de dicionário offline?", o:["Chaves de 256 bits por padrão","SAE (Simultaneous Authentication of Equals) com Dragonfly Handshake","Criptografia AES-256 mais forte","Autenticação de dois fatores obrigatória"], c:1, e:"SAE substitui o PSK do WPA2 e usa o Dragonfly Handshake. Cada autenticação gera uma prova de posse sem transmitir a senha, tornando ataques offline de dicionário ineficazes."},
+    {q:"Em uma rede WPA2-Enterprise, quais são os três componentes da arquitetura 802.1X?", o:["Router, Switch, Firewall","Supplicant, Authenticator, Authentication Server","AP, Controller, DHCP Server","Client, Gateway, DNS Server"], c:1, e:"802.1X: Supplicant (dispositivo cliente), Authenticator (switch/AP que atua como cliente RADIUS) e Authentication Server (servidor RADIUS, portas UDP 1812/1813)."},
+    {q:"Qual protocolo EAP requer certificados PKI no cliente E no servidor, sendo considerado o mais seguro?", o:["PEAP","EAP-FAST","EAP-TLS","EAP-TTLS"], c:2, e:"EAP-TLS requer certificados assinados por CA em ambos os lados (cliente e servidor). É o mais seguro mas mais trabalhoso de implementar, pois exige PKI completa."},
+    {q:"Por que o WPS deve ser desabilitado em redes corporativas?", o:["Reduz a velocidade da rede","Incompatível com WPA3","PIN de 8 dígitos é vulnerável a ataques de brute force em poucas horas","Consome muita largura de banda"], c:2, e:"O PIN de 8 dígitos do WPS pode ser quebrado por brute force em poucas horas. Mesmo quando aparentemente desabilitado, alguns equipamentos mantêm o WPS ativo."},
+    {q:"Qual característica do WPA3 fornece criptografia mesmo em redes abertas sem senha?", o:["SAE","Enhanced Open (OWE)","Wi-Fi Easy Connect","GCMP-256"], c:1, e:"Enhanced Open usa OWE (Opportunistic Wireless Encryption) para criptografar o tráfego em redes abertas sem exigir senha, protegendo contra eavesdropping passivo."},
+    {q:"Quais portas UDP o protocolo RADIUS usa para autenticação e accounting, respectivamente?", o:["1812 e 1813","1645 e 1646","443 e 8443","389 e 636"], c:0, e:"RADIUS usa UDP 1812 para autenticação/autorização e UDP 1813 para accounting. As portas 1645/1646 são portas legadas antigas também usadas por RADIUS."},
+    {q:"O que diferencia um Fat AP de um Thin AP (LWAP)?", o:["Fat AP é mais rápido; Thin AP é mais seguro","Fat AP é standalone e autônomo; Thin AP requer WLC para funcionar","Fat AP usa 5GHz; Thin AP usa 2.4GHz","Fat AP é para exterior; Thin AP para interior"], c:1, e:"Fat AP gerencia clientes autonomamente. Thin AP (LWAP - Lightweight AP) depende de um WLC (Wireless LAN Controller) para todas as decisões de gerenciamento."},
+    {q:"Em um heat map de Wi-Fi, o que indica uma área com cor vermelha?", o:["Área com sinal Wi-Fi forte e boa cobertura","Área com interferência de canal","Área com sinal Wi-Fi fraco ou ausente","Área com muitos dispositivos conectados causando congestionamento"], c:2, e:"Heat maps usam cores para indicar intensidade do sinal: verde/azul = sinal forte, amarelo = médio, vermelho = sinal fraco. Áreas vermelhas precisam de ajuste de potência ou reposicionamento de APs."},
+    {q:"O que é Perfect Forward Secrecy (PFS) no WPA3?", o:["Impede que usuários compartilhem senhas","Gera nova chave para cada sessão, protegendo sessões passadas mesmo se a chave atual for comprometida","Exige autenticação multifator em cada conexão","Criptografa os frames de gerenciamento Wi-Fi"], c:1, e:"PFS gera chaves de sessão únicas usando Diffie-Hellman. Se uma chave for comprometida, apenas a sessão atual é afetada — sessões anteriores permanecem seguras."},
+    {q:"PEAP usa qual método para proteger credenciais durante autenticação wireless?", o:["Criptografia de chave pública direta das credenciais","Túnel SSL/TLS com certificado apenas no servidor","Hash SHA-256 das credenciais antes da transmissão","Certificados em cliente e servidor (PKI completa)"], c:1, e:"PEAP cria um túnel SSL/TLS usando apenas o certificado do servidor, dentro do qual as credenciais do usuário são transmitidas com segurança. Colaboração Cisco, Microsoft e RSA."},
+    {q:"O que o SSID Cloaking (supressão de broadcast) realmente oferece como proteção?", o:["Impede completamente a descoberta da rede por qualquer ferramenta","Criptografa automaticamente o tráfego da rede","Oculta o SSID apenas de usuários casuais — ferramentas detectam via probe requests","Autentica automaticamente apenas dispositivos confiáveis"], c:2, e:"SSID Cloaking não é segurança real: dispositivos clientes enviam probe requests com o SSID, tornando a rede facilmente descobrível por analisadores Wi-Fi. Pode ainda causar problemas de conexão."},
+    {q:"O que é o Wi-Fi Easy Connect (DPP) no WPA3?", o:["Simplifica a senha da rede para usuários finais","Configura dispositivos IoT usando QR code sem comprometer a segurança","Conecta automaticamente a redes Wi-Fi conhecidas","Acelera o processo de handshake de autenticação"], c:1, e:"DPP (Device Provisioning Protocol) permite configurar dispositivos IoT na rede Wi-Fi via QR code, eliminando a necessidade de digitar senhas em dispositivos sem interface."},
 
-        function saveProgress() {
-            localStorage.setItem('security_plus_cap8_mastered', JSON.stringify([...mastered]));
-        }
+    // BLOCO E: Ataques Wireless (8)
+    {q:"Um atacante configura um AP com mesmo SSID da empresa, usa jamming para desconectar usuários e monitora todo o tráfego reconectado. Que ataque é esse?", o:["Rogue AP simples","Evil Twin","KRACK Attack","War Driving"], c:1, e:"Evil Twin: Rogue AP que imita rede legítima. Usa jamming ou deauth para forçar reconexão ao AP malicioso, onde o atacante captura todo o tráfego (MitM)."},
+    {q:"O ataque KRACK explora qual vulnerabilidade específica do WPA2?", o:["Senha fraca configurada pelo usuário","4-way handshake, permitindo reinstalação de chaves já usadas","Protocolo TKIP do WPA1","IV de 24-bit repetido do WEP"], c:1, e:"KRACK (Key Reinstallation Attack) força a reinstalação de chaves criptográficas durante o 4-way handshake do WPA2, permitindo decriptografar tráfego. Mitigado com patches."},
+    {q:"Por que o WEP NUNCA deve ser utilizado?", o:["É muito lento para redes modernas","IVs de 24-bit são reutilizados, permitindo quebra da chave em 1-2 minutos","Incompatível com hardware de rede atual","Não suporta autenticação empresarial 802.1X"], c:1, e:"WEP usa IVs de apenas 24 bits, reutilizados a cada 4096 pacotes. Atacantes inundam a rede para coletar IVs repetidos e quebrar a chave RC4 em minutos."},
+    {q:"Qual a diferença entre Bluejacking e Bluesnarfing?", o:["Bluejacking rouba dados do dispositivo; Bluesnarfing envia spam Bluetooth","Bluejacking envia mensagens indesejadas; Bluesnarfing acessa dados sem autorização via OBEX","São o mesmo ataque com nomes diferentes","Bluejacking é mais perigoso que Bluesnarfing"], c:1, e:"Bluejacking envia mensagens não solicitadas (incômodo). Bluesnarfing explora o protocolo OBEX para acessar dados como contatos, calendário e emails sem autorização."},
+    {q:"Como detectar um Rogue Access Point na rede corporativa?", o:["Apenas inspeção física dos armários de rede","WIPS, analisadores Wi-Fi, monitoramento de SSIDs suspeitos e MACs desconhecidos","Escanear a rede com nmap periodicamente","Verificar o servidor DHCP para IPs não reconhecidos"], c:1, e:"WIPS (Wireless Intrusion Prevention System) é a solução dedicada. Complementado por analisadores Wi-Fi, monitoramento de SSIDs typosquatting e alertas de MACs desconhecidos."},
+    {q:"Um ataque de Deauth/Disassociação explora qual característica das redes Wi-Fi?", o:["Senhas fracas configuradas pelo usuário","Frames de gerenciamento (management frames) não criptografados","Configuração incorreta do ponto de acesso","Protocolo TKIP vulnerável do WPA1"], c:1, e:"Frames de gerenciamento (como deauthentication) não eram autenticados/criptografados em versões anteriores ao WPA3. Atacante finge ser o AP e envia frames de desconexão."},
+    {q:"Qual tipo de jamming wireless usa rajadas de RF de alta intensidade em intervalos?", o:["Random noise jamming","Random pulse jamming","Spark jamming","Frequency hopping jamming"], c:2, e:"Spark jamming usa rajadas (sparks) de RF de alta intensidade. Random noise usa amplitudes e frequências aleatórias. Random pulse usa pulsos de amplitude e frequência aleatórias."},
+    {q:"O que caracteriza especificamente um ataque de Relay em NFC?", o:["Clonar fisicamente um cartão NFC","Retransmitir comunicação NFC à distância, fazendo parecer que o dispositivo está próximo ao leitor","Bloquear o sinal NFC com interferência","Ler dados NFC de forma passiva sem ser detectado"], c:1, e:"Relay attack: dois dispositivos cooperam — um próximo ao leitor legítimo e outro próximo à vítima — retransmitindo a comunicação e enganando o leitor sobre a proximidade real."},
 
-        loadProgress();
+    // BLOCO F: Protocolos e VPNs (8)
+    {q:"Em qual modo do IPsec APENAS o payload é criptografado (o IP header original é preservado)?", o:["Tunnel Mode com AH","Transport Mode com ESP","Tunnel Mode com ESP","Transport Mode com AH"], c:1, e:"Transport Mode com ESP: criptografa apenas o payload, o IP header original não é criptografado. Usado entre hosts em rede privada. Tunnel Mode encapsula o pacote completo."},
+    {q:"O IKEv2 possui qual vantagem específica para usuários que alternam entre Wi-Fi e dados móveis?", o:["Criptografia AES-256 mais forte","MOBIKE: mantém VPN ativa ao trocar de interface de rede sem reconectar","Handshake mais rápido (menos RTTs)","Suporte nativo a IPv6"], c:1, e:"MOBIKE (IKEv2 Mobility and Multihoming) permite que a VPN permaneça ativa ao trocar de interface de rede (Wi-Fi ↔ LTE), sem necessidade de reconectar."},
+    {q:"Qual protocolo IPsec garante CONFIDENCIALIDADE do payload da comunicação?", o:["AH (Authentication Header)","IKE (Internet Key Exchange)","ESP (Encapsulating Security Payload)","SA (Security Association)"], c:2, e:"ESP criptografa o payload garantindo confidencialidade. AH garante apenas integridade (sem criptografia). ESP também pode garantir integridade via ICV."},
+    {q:"Um administrador precisa acessar remotamente um servidor Linux via linha de comando de forma segura. Qual protocolo usar?", o:["RDP (porta 3389)","Telnet com TLS","SSH (porta 22)","VNC sem criptografia adicional"], c:2, e:"SSH (Secure Shell) é o protocolo padrão para administração remota segura de servidores Linux via CLI. Usa criptografia e autenticação por chaves ou senha."},
+    {q:"O que é DTLS em contexto de VPN?", o:["Versão depreciada do TLS para sistemas legados","TLS rodando sobre UDP, reduzindo latência em VPNs","TLS com certificados de curta duração (ephemeral)","TLS com criptografia dupla para máxima segurança"], c:1, e:"DTLS (Datagram TLS) é o TLS sobre UDP, usado em VPNs TLS quando a latência é crítica (ex: VoIP, vídeo). Mantém os benefícios de segurança do TLS com menor overhead."},
+    {q:"Na Fase I do IKE, quais são os dois métodos de autenticação suportados?", o:["Username/senha e biometria","Certificados digitais (CA mútua) e Pre-shared key (PSK)","RADIUS e LDAP","Kerberos e SAML"], c:1, e:"IKE Fase I autentica peers via: 1) Certificados digitais de uma CA mutuamente confiável, ou 2) Pre-shared key (passphrase compartilhada previamente)."},
+    {q:"Qual é a principal diferença entre S-HTTP e HTTPS em termos de segurança?", o:["S-HTTP é mais seguro e usa porta 443","HTTPS criptografa o canal completo; S-HTTP criptografa apenas mensagens individuais","S-HTTP usa TLS 1.3; HTTPS usa versões mais antigas","São equivalentes modernamente"], c:1, e:"HTTPS cria um canal TLS seguro pelo qual todo o tráfego HTTP flui. S-HTTP criptografa apenas mensagens individuais, é connectionless e não protege o canal inteiro."},
+    {q:"O Apache Guacamole é um exemplo de qual tecnologia de acesso remoto?", o:["VPN IPsec client-to-site","Clientless Remote Desktop via HTML5/WebSocket","Servidor RADIUS para autenticação wireless","Analisador de tráfego de rede"], c:1, e:"Apache Guacamole é uma implementação de Clientless Remote Desktop usando HTML5 (canvas) e WebSocket. Permite acesso remoto via navegador sem instalar cliente."},
 
-        // ========== FUNÇÕES DAS ABAS ==========
-        
-        function showTab(n) {
-            document.querySelectorAll('.content').forEach((c, i) => {
-                c.classList.toggle('active', i === n);
-            });
-            document.querySelectorAll('.tab-btn').forEach((b, i) => {
-                b.classList.toggle('active', i === n);
-            });
-            if (n === 2 && !document.getElementById('questions').innerHTML) {
-                loadQuiz();
-            }
-        }
+    // BLOCO G: Ataques Web e Navegadores (9)
+    {q:"Um ataque onde o hash da senha é roubado da memória de uma workstation e usado para autenticar em outras máquinas é chamado de:", o:["Credential Stuffing","Pass the Hash","Rainbow Table Attack","Golden Ticket Attack"], c:1, e:"Pass-the-Hash: o atacante extrai hashes NTLM da memória (ex: com Mimikatz) e os usa diretamente para autenticar sem precisar da senha em texto claro."},
+    {q:"Como o ataque SSL Stripping funciona?", o:["Remove certificados SSL do servidor web","Intercepta HTTPS inicial e estabelece HTTP com o usuário enquanto mantém HTTPS com o servidor","Quebra a criptografia SSL por força bruta","Injeta scripts maliciosos através de conexão HTTPS"], c:1, e:"SSL Stripping (MitM): atacante intercepta a requisição inicial, mantém HTTPS com o servidor mas entrega HTTP ao usuário, que não percebe a diferença visualmente."},
+    {q:"O atributo 'HttpOnly' em cookies protege contra qual tipo de ataque?", o:["CSRF (Cross-Site Request Forgery)","SQL Injection","XSS (Cross-Site Scripting)","Clickjacking"], c:2, e:"HttpOnly impede que scripts JavaScript acessem o cookie. Mesmo que um atacante injete JS via XSS, não conseguirá roubar cookies HttpOnly."},
+    {q:"O atributo 'SameSite' em cookies protege principalmente contra qual ataque?", o:["XSS (Cross-Site Scripting)","Session Hijacking","CSRF (Cross-Site Request Forgery)","SQL Injection"], c:2, e:"SameSite limita quando cookies são enviados em requisições cross-site. Previne CSRF ao não enviar cookies em requisições originadas de outros domínios."},
+    {q:"Um buffer overflow pode diretamente resultar em qual impacto crítico de segurança?", o:["Apenas DoS do serviço afetado","Execução de código arbitrário (ACE) ou DoS","Apenas roubo de dados do banco","Apenas escalação de privilégios horizontal"], c:1, e:"Buffer overflow pode sobrescrever o instruction pointer, redirecionando a execução para código malicioso (Arbitrary Code Execution). Pode também corromper dados causando DoS."},
+    {q:"O TOCTTOU bug é um tipo específico de qual vulnerabilidade?", o:["Buffer Overflow","SQL Injection","Race Condition","Memory Leak"], c:2, e:"TOCTTOU (Time-Of-Check to Time-Of-Use) é uma Race Condition: o estado muda entre a verificação e o uso. Mitigado com locks de arquivo e operações atômicas."},
+    {q:"Qual é a mitigação mais eficaz contra o ataque SSL Stripping?", o:["Usar certificados EV (Extended Validation)","Adicionar o domínio à lista HSTS preload do navegador","Forçar uso de TLS 1.3","Implementar DNSSEC no domínio"], c:1, e:"HSTS preload informa ao navegador que o domínio SEMPRE usa HTTPS, impedindo o downgrade para HTTP. O navegador rejeita qualquer conexão HTTP antes mesmo de tentar."},
+    {q:"Um atacante modifica o código interno de um driver de dispositivo, mas o hardware continua funcionando normalmente. Qual técnica de ataque é essa?", o:["Shimming","Rootkit de boot","Driver Refactoring","Code Injection"], c:2, e:"Driver Refactoring: o comportamento externo (hardware funciona) não muda, mas o código interno é modificado com funções ocultas maliciosas. Difícil de detectar por não causar falhas visíveis."},
+    {q:"Rate limiting em APIs protege principalmente contra qual tipo de ameaça?", o:["SQL injection nos endpoints","XSS via parâmetros de API","Enumeração excessiva, scraping e abuso de endpoints","CSRF em chamadas de API"], c:2, e:"Rate limiting limita o número de chamadas por cliente em um período, prevenindo enumeração, scraping de dados, brute force de tokens e abuso geral de endpoints."},
 
-        // ========== FUNÇÕES DOS FLASHCARDS ==========
-        
-        function updateCard() {
-            if (filteredCards.length === 0) {
-                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
-                document.getElementById('card-counter').textContent = 'Card 0 de 0';
-                document.getElementById('side-indicator').textContent = 'FRENTE';
-                return;
-            }
-            const cardIndex = filteredCards[currentCard];
-            const card = cards[cardIndex];
-            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
-            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
-            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
-            const btn = document.getElementById('master-btn');
-            const isMastered = mastered.has(cardIndex);
-            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
-            btn.classList.toggle('mastered', isMastered);
-            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
-            const progress = (mastered.size / cards.length) * 100;
-            document.getElementById('progress-fill').style.width = progress + '%';
-            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
-        }
+    // BLOCO H: SDLC e Dev Seguro (12)
+    {q:"Qual tipo de teste de segurança analisa o código fonte ANTES do deployment sem executar a aplicação?", o:["DAST (Dynamic Application Security Testing)","IAST (Interactive Application Security Testing)","SAST (Static Application Security Testing)","Penetration Testing"], c:2, e:"SAST é white box testing — analisa source code, binaries ou byte code em estado estático antes do deployment. Identifica vulnerabilidades como SQLi e buffer overflows no código."},
+    {q:"Qual é a principal vantagem do DAST sobre o SAST?", o:["Encontra mais vulnerabilidades no total","É mais rápido de executar","Não é específico de linguagem e tem menor taxa de falsos positivos","Pode ser executado mais cedo no ciclo de desenvolvimento"], c:2, e:"DAST testa a aplicação em execução de fora (black box), não depende da linguagem de programação e gera menos falsos positivos, embora não possa identificar a linha exata do bug."},
+    {q:"O Code Signing garante quais propriedades do software publicado?", o:["Que o código está completamente livre de vulnerabilidades","Integridade e autenticidade (origem verificada), mas NÃO que o código é seguro","Que o código passou por auditoria completa de segurança","Que o código não contém malware ou backdoors"], c:1, e:"Code Signing certifica ORIGEM (identidade do publisher) e INTEGRIDADE (não foi modificado desde a assinatura). NÃO certifica qualidade, segurança ou ausência de vulnerabilidades."},
+    {q:"Stored Procedures no banco de dados previnem principalmente qual tipo de ataque?", o:["XSS (Cross-Site Scripting)","Buffer Overflow","SQL Injection","Path Traversal"], c:2, e:"Stored Procedures centralizam SQL no banco e restringem o acesso direto às tabelas. Aplicações chamam procedures sem interagir diretamente com o SQL, limitando injection."},
+    {q:"No modelo Agile de desenvolvimento, os ciclos curtos de desenvolvimento são chamados de:", o:["Phases","Iterations","Sprints","Modules"], c:2, e:"Sprints são os ciclos do Agile, geralmente de 2-3 semanas. Cada sprint inclui requisitos, design, desenvolvimento, testes e deployment de um recurso específico."},
+    {q:"Em Fuzz Testing, o tipo 'Generation-based' se diferencia do 'Mutation-based' porque:", o:["É mais rápido de executar","Define novos dados de teste baseados em modelos de input, sem partir de dados existentes","Usa inteligência artificial para gerar casos de teste","Foca exclusivamente em inputs numéricos e de data"], c:1, e:"Generation-based fuzzing cria dados de teste a partir de modelos (especificações de protocolo/formato). Mutation-based parte de dados existentes válidos e os modifica."},
+    {q:"O que é 'Dead Code' e qual é o principal risco de segurança?", o:["Código comentado que pode vazar informações nos comentários","Código não executado em runtime ou obsoleto que aumenta a superfície de ataque","Código de loop que nunca termina (loop infinito)","Código duplicado que causa inconsistências e bugs"], c:1, e:"Dead Code é código inacessível ou obsoleto. Se não existe, não pode ser explorado. Deve sempre ser removido para reduzir a superfície de ataque e simplificar auditorias."},
+    {q:"Qual é a diferença entre um 'Error' e uma 'Exception' em programação?", o:["São sinônimos — usados indistintamente","Error é irrecuperável (ex: OutOfMemory); Exception pode ser tratada por bloco de código sem crash","Error é mais grave e sempre causa crash; Exception pode ser ignorada","Exception ocorre em compilação; Error ocorre em runtime"], c:1, e:"Error: condição irrecuperável que o programa não pode tratar (ex: sistema sem memória). Exception: condição de erro que pode ser capturada e tratada por blocos try/catch."},
+    {q:"O sandboxing do Chrome isola cada aba do navegador como:", o:["Thread separada dentro do processo principal","Processo separado do sistema operacional","Container Docker dedicado","Máquina Virtual leve"], c:1, e:"Chrome usa multi-process architecture: cada aba e extensão é um processo separado do SO. Código malicioso em uma aba fica confinado ao seu processo — crash de aba não afeta o navegador."},
+    {q:"Qual das seguintes é uma ferramenta de análise estática de código (SAST)?", o:["Burp Suite (intercepting proxy)","Metasploit (framework de exploração)","SonarQube (análise de código)","Wireshark (analisador de pacotes)"], c:2, e:"SonarQube é uma ferramenta SAST que analisa source code automaticamente, identificando bugs, vulnerabilidades e code smells. Outros SAST: Coverity, Fortify, Checkmarx."},
+    {q:"Por que Third-party SDKs representam um risco de segurança para aplicações?", o:["São sempre desenvolvidos com intenção maliciosa","Contêm código externo com possíveis falhas sem urgência de correção, especialmente se open-source","Aumentam significativamente o tamanho do binário final","São incompatíveis com ferramentas SAST modernas"], c:1, e:"SDKs externos podem conter vulnerabilidades não corrigidas rapidamente (especialmente open-source). Código em bundles pode incluir mais funcionalidades do que necessário, ampliando a superfície de ataque."},
+    {q:"Em Sensitive Data Exposure, qual é a mitigação mais abrangente?", o:["Usar WAF (Web Application Firewall) para filtrar respostas","Criptografar dados em trânsito E em repouso, e implementar hash+salt em senhas","Usar apenas HTTPS em páginas que coletam dados","Restringir acesso por endereço IP autorizado"], c:1, e:"A mitigação completa inclui: criptografia em trânsito (TLS) e repouso (AES), hash+salt em senhas (bcrypt/Argon2), desabilitar caching em formulários sensíveis."},
+];
 
-        function flipCard() { flipped = !flipped; updateCard(); }
-        function nextCard() { currentCard = (currentCard + 1) % filteredCards.length; flipped = false; updateCard(); }
-        function prevCard() { currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length; flipped = false; updateCard(); }
-        
-        function toggleMaster() {
-            const cardIndex = filteredCards[currentCard];
-            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
-            else mastered.add(cardIndex);
-            saveProgress();
-            updateCard();
-        }
+// ========== ESTADO ==========
+let currentCard = 0, flipped = false;
+let mastered = new Set();
+let sessionCards = [], currentFilter = 'all', filteredPool = [];
+let quizSession = [], answers = {}, checked = false;
 
-        function shuffleCards() {
-            for (let i = filteredCards.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
-            }
-            currentCard = 0; flipped = false; updateCard();
-            
-            // Feedback visual
-            const shuffleBtn = document.querySelector('.btn-shuffle');
-            shuffleBtn.style.transform = 'rotate(180deg)';
-            setTimeout(() => {
-                shuffleBtn.style.transform = 'rotate(0deg)';
-            }, 300);
-        }
+// ========== INIT ==========
+function init() {
+    loadProgress();
+    document.getElementById('total-cards-stat').textContent = allCards.length;
+    buildFilteredPool();
+    newSession();
+}
 
-        function filterCards(type, event) {
-            currentFilter = type;
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            if (type === 'all') filteredCards = [...Array(cards.length).keys()];
-            else if (type === 'mastered') filteredCards = Array.from(mastered);
-            else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
-            currentCard = 0; flipped = false; updateCard();
-        }
+function loadProgress() {
+    try {
+        const saved = localStorage.getItem('cap8v2_mastered');
+        if (saved) mastered = new Set(JSON.parse(saved));
+    } catch(e) {}
+}
 
-        function loadQuiz() {
-            const container = document.getElementById('questions');
-            quiz.forEach((q, qi) => {
-                const div = document.createElement('div');
-                div.className = 'question';
-                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
-                q.o.forEach((opt, oi) => {
-                    const odiv = document.createElement('div');
-                    odiv.className = 'option';
-                    odiv.textContent = opt;
-                    odiv.onclick = () => selectOpt(qi, oi);
-                    odiv.id = `q${qi}o${oi}`;
-                    div.appendChild(odiv);
-                });
-                const exp = document.createElement('div');
-                exp.className = 'explanation';
-                exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
-                div.appendChild(exp);
-                container.appendChild(div);
-            });
-        }
+function saveProgress() {
+    try {
+        localStorage.setItem('cap8v2_mastered', JSON.stringify([...mastered]));
+    } catch(e) {}
+}
 
-        function selectOpt(qi, oi) {
-            if (checked) return;
-            quiz[qi].o.forEach((_, i) => {
-                document.getElementById(`q${qi}o${i}`).classList.remove('selected');
-            });
-            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
-            answers[qi] = oi;
-        }
+// ========== FLASHCARDS ==========
+function buildFilteredPool() {
+    if (currentFilter === 'all') {
+        filteredPool = [...Array(allCards.length).keys()];
+    } else if (currentFilter === 'mastered') {
+        filteredPool = Array.from(mastered);
+    } else {
+        filteredPool = [...Array(allCards.length).keys()].filter(i => !mastered.has(i));
+    }
+}
 
-        function checkAnswers() {
-            checked = true;
-            let correct = 0;
-            quiz.forEach((q, qi) => {
-                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
-                q.o.forEach((_, oi) => {
-                    const el = document.getElementById(`q${qi}o${oi}`);
-                    if (correctAnswer.includes(oi)) {
-                        el.classList.add('correct');
-                    } else if (answers[qi] === oi) {
-                        el.classList.add('incorrect');
-                    }
-                });
-                document.getElementById(`exp${qi}`).style.display = 'block';
-                if (correctAnswer.includes(answers[qi])) correct++;
-            });
-            const pct = Math.round((correct / quiz.length) * 100);
-            document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
-            document.getElementById('results-modal').classList.add('show');
-        }
+function newSession() {
+    buildFilteredPool();
+    if (filteredPool.length === 0) { sessionCards = []; updateCardDisplay(); return; }
+    const shuffled = [...filteredPool].sort(() => Math.random() - 0.5);
+    sessionCards = shuffled.slice(0, Math.min(15, shuffled.length));
+    currentCard = 0;
+    flipped = false;
+    updateCardDisplay();
+}
 
-        function resetQuiz() {
-            checked = false;
-            answers = {};
-            document.getElementById('questions').innerHTML = '';
-            document.getElementById('results-modal').classList.remove('show');
-            loadQuiz();
-        }
+function updateCardDisplay() {
+    if (sessionCards.length === 0) {
+        document.getElementById('card-text').textContent = 'Nenhum card neste filtro.';
+        document.getElementById('card-counter').textContent = 'Sem cards';
+        document.getElementById('side-indicator').textContent = 'FRENTE';
+        document.getElementById('category-badge').textContent = '';
+        return;
+    }
+    const card = allCards[sessionCards[currentCard]];
+    document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+    document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${sessionCards.length}`;
+    document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+    document.getElementById('category-badge').textContent = card.cat || '';
+    const btn = document.getElementById('btn-master');
+    const isMastered = mastered.has(sessionCards[currentCard]);
+    btn.textContent = isMastered ? '✅ Dominado' : '⭐ Marcar Dominado';
+    btn.className = 'btn btn-master' + (isMastered ? ' mastered' : '');
+    const progress = allCards.length > 0 ? (mastered.size / allCards.length) * 100 : 0;
+    document.getElementById('progress-fill').style.width = progress + '%';
+    document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
+    document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+}
 
-        updateCard();
-    </script>
+function flipCard() { flipped = !flipped; updateCardDisplay(); }
+
+function nextCard() {
+    if (sessionCards.length === 0) return;
+    currentCard = (currentCard + 1) % sessionCards.length;
+    flipped = false;
+    updateCardDisplay();
+}
+
+function prevCard() {
+    if (sessionCards.length === 0) return;
+    currentCard = (currentCard - 1 + sessionCards.length) % sessionCards.length;
+    flipped = false;
+    updateCardDisplay();
+}
+
+function toggleMaster() {
+    if (sessionCards.length === 0) return;
+    const idx = sessionCards[currentCard];
+    if (mastered.has(idx)) { mastered.delete(idx); } else { mastered.add(idx); }
+    saveProgress();
+    updateCardDisplay();
+}
+
+function filterCards(type, evt) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (evt && evt.target) evt.target.classList.add('active');
+    newSession();
+}
+
+// ========== TABS ==========
+function showTab(n) {
+    document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
+    document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+    if (n === 2 && quizSession.length === 0) startQuizSession();
+}
+
+// ========== QUIZ ==========
+function startQuizSession() {
+    answers = {};
+    checked = false;
+    const shuffled = [...Array(allQuiz.length).keys()].sort(() => Math.random() - 0.5);
+    quizSession = shuffled.slice(0, 15);
+    loadQuiz();
+}
+
+function loadQuiz() {
+    const container = document.getElementById('questions');
+    container.innerHTML = '';
+    quizSession.forEach((qi, pos) => {
+        const q = allQuiz[qi];
+        const div = document.createElement('div');
+        div.className = 'question';
+        div.innerHTML = `<h3>${pos + 1}. ${q.q}</h3>`;
+        q.o.forEach((opt, oi) => {
+            const odiv = document.createElement('div');
+            odiv.className = 'option';
+            odiv.textContent = opt;
+            odiv.onclick = () => selectOpt(pos, oi);
+            odiv.id = `q${pos}o${oi}`;
+            div.appendChild(odiv);
+        });
+        const exp = document.createElement('div');
+        exp.className = 'explanation';
+        exp.id = `exp${pos}`;
+        exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
+        div.appendChild(exp);
+        container.appendChild(div);
+    });
+}
+
+function selectOpt(pos, oi) {
+    if (checked) return;
+    const q = allQuiz[quizSession[pos]];
+    q.o.forEach((_, i) => {
+        const el = document.getElementById(`q${pos}o${i}`);
+        if (el) el.classList.remove('selected');
+    });
+    const el = document.getElementById(`q${pos}o${oi}`);
+    if (el) el.classList.add('selected');
+    answers[pos] = oi;
+}
+
+function checkAnswers() {
+    checked = true;
+    let correct = 0;
+    quizSession.forEach((qi, pos) => {
+        const q = allQuiz[qi];
+        const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+        q.o.forEach((_, oi) => {
+            const el = document.getElementById(`q${pos}o${oi}`);
+            if (!el) return;
+            if (correctAnswer.includes(oi)) el.classList.add('correct');
+            else if (answers[pos] === oi) el.classList.add('incorrect');
+        });
+        const expEl = document.getElementById(`exp${pos}`);
+        if (expEl) expEl.style.display = 'block';
+        if (correctAnswer.includes(answers[pos])) correct++;
+    });
+    const pct = Math.round((correct / quizSession.length) * 100);
+    document.getElementById('score-circle').textContent = `${pct}%`;
+    let emoji, title, msg;
+    if (pct >= 80) {
+        emoji = '🎉'; title = 'APROVADO!';
+        msg = `${correct}/${quizSession.length} corretas — Excelente! Você atingiu o threshold de 80%.`;
+    } else if (pct >= 60) {
+        emoji = '⚠️'; title = 'Quase lá!';
+        msg = `${correct}/${quizSession.length} corretas — Você precisa de 80% para passar. Continue praticando!`;
+    } else {
+        emoji = '📚'; title = 'Precisa estudar mais';
+        msg = `${correct}/${quizSession.length} corretas — Revise o material e tente novamente!`;
+    }
+    document.getElementById('result-emoji').textContent = emoji;
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('score-text').textContent = msg;
+    document.getElementById('results-modal').classList.add('show');
+}
+
+function newQuizSession() {
+    document.getElementById('results-modal').classList.remove('show');
+    startQuizSession();
+    window.scrollTo({ top: document.getElementById('tab2').offsetTop - 100, behavior: 'smooth' });
+}
+
+function closeModal() {
+    document.getElementById('results-modal').classList.remove('show');
+}
+
+function scrollToExplanations() {
+    document.getElementById('results-modal').classList.remove('show');
+    setTimeout(() => {
+        const firstExp = document.getElementById('exp0');
+        if (firstExp) firstExp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 200);
+}
+
+// ========== START ==========
+init();
+</script>
 </body>
 </html>
