@@ -158,6 +158,17 @@
             background: white;
             border-radius: 20px;
             padding: 40px;
+            overflow-x: hidden;
+        }
+
+        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 15px 0; border-radius: 8px; }
+        .summary table { min-width: 400px; margin: 0; }
+
+        @media (max-width: 600px) {
+            .summary { padding: 20px 15px; border-radius: 12px; }
+            .summary h2 { font-size: 1.1rem; }
+            .summary h3 { font-size: 1rem; }
+            body { padding: 10px; }
         }
         
         /* ===== QUIZ ===== */
@@ -274,7 +285,7 @@
 
                 <h2>1️⃣ Tríade CIA (CIA Triad)</h2>
                 <p>Todos os controles de segurança são projetados para cumprir três objetivos principais:</p>
-                <table>
+                <div class="table-wrap"><table>
                     <tr>
                         <th>Pilar</th>
                         <th>Objetivo</th>
@@ -295,7 +306,7 @@
                         <td>Garantir que dados estejam disponíveis quando necessário</td>
                         <td>Redundância, backups, balanceamento de carga</td>
                     </tr>
-                </table>
+                </table></div>
 
                 <h2>2️⃣ Framework AAA</h2>
                 <ul>
@@ -319,7 +330,7 @@
                     </div>
                 </div>
 
-                <table>
+                <div class="table-wrap"><table>
                     <tr>
                         <th>Tipo</th>
                         <th>Função</th>
@@ -355,14 +366,14 @@
                         <td>Orienta comportamento através de políticas e procedimentos</td>
                         <td>Políticas de segurança, SOPs, códigos de conduta</td>
                     </tr>
-                </table>
+                </table></div>
 
                 <div class="golden-rule">
                     <strong>💡 DICA CRÍTICA:</strong> Preventivo <em>bloqueia fisicamente</em> a ameaça. Deterrente/Dissuassor <em>desencoraja psicologicamente</em> — não impede fisicamente.
                 </div>
 
                 <h2>4️⃣ Controles por Implementação</h2>
-                <table>
+                <div class="table-wrap"><table>
                     <tr>
                         <th>Tipo</th>
                         <th>Descrição</th>
@@ -388,7 +399,7 @@
                         <td>Impedem e detectam acesso a instalações e hardware</td>
                         <td>Alarmes, portões, fechaduras, iluminação, câmeras</td>
                     </tr>
-                </table>
+                </table></div>
 
                 <h2>5️⃣ Princípios Importantes</h2>
                 <ul>
@@ -423,7 +434,7 @@
                 </ul>
 
                 <h2>7️⃣ Frameworks e Normas</h2>
-                <table>
+                <div class="table-wrap"><table>
                     <tr>
                         <th>Framework/Norma</th>
                         <th>Descrição</th>
@@ -448,7 +459,7 @@
                         <td><strong>LGPD / GDPR</strong></td>
                         <td>Leis de proteção de dados pessoais: LGPD (Brasil) e GDPR (Europa)</td>
                     </tr>
-                </table>
+                </table></div>
 
                 <div class="tip-box">
                     <strong>📌 DICAS FINAIS PARA PROVA:</strong>
