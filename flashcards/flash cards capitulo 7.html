@@ -73,14 +73,25 @@
         .btn-explain-modal { background: #7c3aed; color: white; margin-top: 12px; width: 100%; }
 
         /* RESUMO */
-        .summary-area { max-width: 900px; margin: 0 auto; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .summary-area { max-width: 900px; margin: 0 auto; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow-x: hidden; }
+        @media (max-width: 600px) {
+            .summary-area { padding: 20px 15px; border-radius: 12px; }
+            .summary-area h1 { font-size: 1.5rem; }
+            .summary-area h2 { font-size: 1.15rem; padding: 10px 14px; }
+            .header h1 { font-size: 2rem; }
+            .flashcard { padding: 40px 20px; min-height: 250px; }
+            .flashcard-text { font-size: 1.1rem; }
+            .grid-2 > div { min-width: 100% !important; }
+            body { padding: 10px; }
+        }
         .summary-area h1 { color: #11998e; margin-bottom: 20px; font-size: 2rem; }
         .summary-area h2 { color: #38ef7d; background: #064e3b; padding: 12px 20px; border-radius: 8px; margin: 30px 0 15px 0; font-size: 1.4rem; }
         .summary-area h3 { color: #11998e; margin: 20px 0 10px 0; font-size: 1.1rem; }
         .summary-area ul { margin-left: 25px; margin-bottom: 15px; line-height: 1.8; }
-        .summary-area table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        .summary-area th { background: #11998e; color: white; padding: 10px; }
-        .summary-area td { padding: 10px; border: 1px solid #e5e7eb; }
+        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 15px 0; border-radius: 8px; }
+        .summary-area table { width: 100%; border-collapse: collapse; min-width: 400px; margin: 0; }
+        .summary-area th { background: #11998e; color: white; padding: 10px; white-space: nowrap; }
+        .summary-area td { padding: 10px; border: 1px solid #e5e7eb; font-size: 0.95rem; }
         .summary-area tr:nth-child(even) td { background: #f9fafb; }
         .tip-box { background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 20px 0; border-radius: 8px; }
         .tip-box h3 { color: #ec4899; margin-bottom: 10px; }
@@ -157,7 +168,7 @@
                 <li>Atualização de bibliotecas de terceiros</li>
             </ul>
             <h3>Vulnerabilidades Notáveis por SO</h3>
-            <table>
+            <div class="table-wrap"><table>
                 <tr><th>Vulnerabilidade</th><th>Ano</th><th>SO/Componente</th><th>Impacto</th></tr>
                 <tr><td><strong>MS08-067 / Conficker</strong></td><td>2008</td><td>Windows Server Service</td><td>Milhões de computadores infectados</td></tr>
                 <tr><td><strong>MS17-010 / WannaCry</strong></td><td>2017</td><td>Windows SMB (EternalBlue)</td><td>Execução remota de código em escala global</td></tr>
@@ -166,7 +177,7 @@
                 <tr><td><strong>Stagefright</strong></td><td>2015</td><td>Android (MMS)</td><td>Execução de código via mensagem MMS</td></tr>
                 <tr><td><strong>Meltdown/Spectre</strong></td><td>2018</td><td>Processadores (CPUs)</td><td>Roubo de dados em processamento</td></tr>
                 <tr><td><strong>LoJax</strong></td><td>2018</td><td>Firmware UEFI</td><td>Persistência mesmo após troca de HD ou reinstalação do SO</td></tr>
-            </table>
+</table></div>
 
             <h2>2️⃣ Sistemas Legados e EOL</h2>
             <div class="grid-2">
@@ -199,12 +210,12 @@
 
             <h2>3️⃣ Métodos de Identificação de Vulnerabilidades</h2>
             <h3>Threat Feeds</h3>
-            <table>
+            <div class="table-wrap"><table>
                 <tr><th>Tipo</th><th>Exemplos</th><th>Característica</th></tr>
                 <tr><td><strong>Open-Source</strong></td><td>Cyber Threat Alliance, MISP</td><td>Gratuito, pode faltar profundidade</td></tr>
                 <tr><td><strong>Proprietário</strong></td><td>IBM X-Force, Mandiant, Recorded Future</td><td>Abrangente, análise avançada, custo</td></tr>
                 <tr><td><strong>ISACs</strong></td><td>Setorial (saúde, finanças, energia)</td><td>Compartilhamento colaborativo</td></tr>
-            </table>
+</table></div>
             <h3>Ferramentas OSINT</h3>
             <ul>
                 <li><strong>Shodan:</strong> Investiga dispositivos conectados à internet (IoT, servidores)</li>
@@ -216,14 +227,14 @@
                 <strong>Deep Web vs Dark Web:</strong> Deep Web = não indexada por buscadores. Dark Web = acessível apenas via Dark Net (TOR, I2P) — requer software especial. Usos legítimos: anonimato para whistleblowers, acesso a informação censurada, pesquisa de ameaças.
             </div>
             <h3>Pen Testing vs Bug Bounty</h3>
-            <table>
+            <div class="table-wrap"><table>
                 <tr><th>Característica</th><th>Pen Testing</th><th>Bug Bounty</th></tr>
                 <tr><td>Quem faz</td><td>Equipe contratada</td><td>Comunidade global</td></tr>
                 <tr><td>Prazo</td><td>Confinado</td><td>Aberto / contínuo</td></tr>
                 <tr><td>Escopo</td><td>Estruturado e focado</td><td>Mais amplo</td></tr>
                 <tr><td>Custo</td><td>Previsível</td><td>Por severidade</td></tr>
                 <tr><td>Melhor para</td><td>Conformidade, componentes específicos</td><td>Perspectivas diversas</td></tr>
-            </table>
+</table></div>
             <h3>Tipos de Auditoria de Cibersegurança</h3>
             <ul>
                 <li><strong>Conformidade:</strong> Aderência a GDPR, HIPAA, PCI DSS</li>
@@ -242,14 +253,14 @@
                 <li><strong>Tolerância a Risco:</strong> Nível de risco aceito — varia por tamanho, setor, objetivos</li>
             </ul>
             <h3>CVSS — Common Vulnerability Scoring System</h3>
-            <table>
+            <div class="table-wrap"><table>
                 <tr><th>Score</th><th>Severidade</th></tr>
                 <tr><td>9.0 – 10.0</td><td>🔴 Critical</td></tr>
                 <tr><td>7.0 – 8.9</td><td>🟠 High</td></tr>
                 <tr><td>4.0 – 6.9</td><td>🟡 Medium</td></tr>
                 <tr><td>0.1 – 3.9</td><td>🟢 Low</td></tr>
                 <tr><td>0.0</td><td>⚪ None</td></tr>
-            </table>
+</table></div>
             <h3>Métodos de Validação de Remediação</h3>
             <ul>
                 <li><strong>Re-scanning:</strong> Escanear novamente — se vulnerabilidade não aparece = sucesso</li>
@@ -257,13 +268,13 @@
                 <li><strong>Verificação:</strong> Checks manuais, testes automatizados, revisão de logs</li>
             </ul>
             <h3>Tipos de Scan de Vulnerabilidades</h3>
-            <table>
+            <div class="table-wrap"><table>
                 <tr><th>Tipo</th><th>Característica</th><th>Uso</th></tr>
                 <tr><td><strong>Intrusivo</strong></td><td>Tenta explorar ativamente — mais preciso</td><td>Não pode ser em sistema vivo</td></tr>
                 <tr><td><strong>Não-Intrusivo</strong></td><td>Lista vulnerabilidades sem explorar</td><td>Pode ser em sistemas vivos</td></tr>
                 <tr><td><strong>Credenciado</strong></td><td>Com login — análise mais profunda</td><td>Detecta configurações incorretas</td></tr>
                 <tr><td><strong>Não-Credenciado</strong></td><td>Visão de atacante externo</td><td>Avaliação de perímetro</td></tr>
-            </table>
+</table></div>
 
             <h2>5️⃣ Alerta, Monitoramento e SIEM</h2>
             <h3>Ferramentas de Monitoramento</h3>
@@ -274,12 +285,12 @@
                 <li><strong>EPP/Antivírus:</strong> Detecção por assinatura + UEBA + análise por IA</li>
             </ul>
             <h3>SIEM — Coleta de Dados</h3>
-            <table>
+            <div class="table-wrap"><table>
                 <tr><th>Método</th><th>Como funciona</th></tr>
                 <tr><td><strong>Agente</strong></td><td>Instalado no host — processa e envia dados ao SIEM</td></tr>
                 <tr><td><strong>Listener/Collector</strong></td><td>Host empurra logs via Syslog — para switches, roteadores, firewalls</td></tr>
                 <tr><td><strong>Sensor</strong></td><td>Captura de pacotes via porta espelho — dados de flow de sniffers</td></tr>
-            </table>
+</table></div>
             <h3>Níveis de Alerta no SIEM</h3>
             <ul>
                 <li><strong>Log only:</strong> Registra automaticamente, sem notificação ativa</li>
@@ -290,12 +301,12 @@
                 <strong>⚠️ Alert Fatigue:</strong> Volume excessivo de falsos positivos faz analistas perderem alertas reais. Técnicas de alert tuning: refinar regras, redirecionar floods, usar ML para ajuste automático.
             </div>
             <h3>DLP — Data Loss Prevention</h3>
-            <table>
+            <div class="table-wrap"><table>
                 <tr><th>Componente</th><th>Função</th></tr>
                 <tr><td><strong>Servidor de Política</strong></td><td>Configura regras, registra incidentes, compila relatórios</td></tr>
                 <tr><td><strong>Agente de Endpoint</strong></td><td>Aplica política no cliente, mesmo offline</td></tr>
                 <tr><td><strong>Agente de Rede</strong></td><td>Escaneia comunicações nas fronteiras de rede</td></tr>
-            </table>
+</table></div>
             <h3>Mecanismos de Remediação DLP</h3>
             <ul>
                 <li><strong>Alert Only:</strong> Permite cópia, registra incidente</li>
