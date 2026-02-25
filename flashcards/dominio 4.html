@@ -477,7 +477,7 @@
                 <div class="controls">
                     <button class="btn btn-nav" onclick="prevCard()">‹</button>
                     <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
-                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn btn-new-session" onclick="newSession()">🎲 Nova Sessão (15)</button>
                     <button class="btn btn-nav" onclick="nextCard()">›</button>
                 </div>
             </div>
@@ -683,8 +683,8 @@
         <div id="tab2" class="content">
             <div class="quiz-area">
                 <div class="quiz-header">
-                    <h2>Quiz - 40 Questões</h2>
-                    <p>Passing Score: 70% (28/40 corretas)</p>
+                    <h2>Quiz — Sessão de 15 Questões</h2>
+                    <p>Pool completo • Nova sessão sorteia 15 aleatórias • Passing Score: 80%</p>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
@@ -696,10 +696,15 @@
 
     <div class="results-modal" id="results-modal">
         <div class="results-content">
-            <h2>Resultado</h2>
+            <div class="result-emoji" id="result-emoji">🎉</div>
+            <h2 id="result-title" style="font-size:1.6rem; margin-bottom:5px;">Resultado</h2>
             <div class="score-circle" id="score-circle">0%</div>
-            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+            <p id="score-text" style="font-size:1.1rem; color:#374151; margin-bottom:10px;"></p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="newQuizSession()">🎲 Nova Sessão</button>
+                <button class="btn btn-secondary" onclick="closeModal()">✕ Fechar</button>
+            </div>
+            <button class="btn btn-explain-modal" onclick="closeModal(); scrollToExplanations();">📖 Ver Explicações</button>
         </div>
     </div>
 
@@ -1085,6 +1090,7 @@
         let mastered = new Set();
         let answers = {};
         let checked = false;
+        let quizSession = [];
         let filteredCards = [...Array(cards.length).keys()];
         let currentFilter = 'all';
 
@@ -1106,9 +1112,7 @@
             document.querySelectorAll('.tab-btn').forEach((b, i) => {
                 b.classList.toggle('active', i === n);
             });
-            if (n === 2 && !document.getElementById('questions').innerHTML) {
-                loadQuiz();
-            }
+            if (n === 2 && quizSession.length === 0) startQuizSession();
         }
 
         function updateCard() {
@@ -1145,14 +1149,6 @@
             updateCard();
         }
 
-        function shuffleCards() {
-            for (let i = filteredCards.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
-            }
-            currentCard = 0; flipped = false; updateCard();
-        }
-
         function filterCards(type) {
             currentFilter = type;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
@@ -1160,72 +1156,117 @@
             if (type === 'all') filteredCards = [...Array(cards.length).keys()];
             else if (type === 'mastered') filteredCards = Array.from(mastered);
             else filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            newSession();
+        }
+
+        // ===== SESSÃO FLASHCARDS =====
+        function newSession() {
+            let pool = [];
+            if (currentFilter === 'all') pool = [...Array(cards.length).keys()];
+            else if (currentFilter === 'mastered') pool = Array.from(mastered);
+            else pool = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            if (pool.length === 0) { filteredCards = []; updateCard(); return; }
+            const shuffled = [...pool].sort(() => Math.random() - 0.5);
+            filteredCards = shuffled.slice(0, Math.min(15, shuffled.length));
             currentCard = 0; flipped = false; updateCard();
+        }
+
+        // ===== SESSÃO QUIZ =====
+        function startQuizSession() {
+            answers = {}; checked = false;
+            const shuffled = [...Array(quiz.length).keys()].sort(() => Math.random() - 0.5);
+            quizSession = shuffled.slice(0, 15);
+            loadQuiz();
+        }
+
+        function newQuizSession() {
+            document.getElementById('results-modal').classList.remove('show');
+            startQuizSession();
+            window.scrollTo(0, document.getElementById('tab2').offsetTop - 100);
+        }
+
+        function closeModal() {
+            document.getElementById('results-modal').classList.remove('show');
+        }
+
+        function scrollToExplanations() {
+            const firstExp = document.getElementById('exp0');
+            if (firstExp) firstExp.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         function loadQuiz() {
             const container = document.getElementById('questions');
-            quiz.forEach((q, qi) => {
+            container.innerHTML = '';
+            quizSession.forEach((qi, pos) => {
+                const q = quiz[qi];
                 const div = document.createElement('div');
                 div.className = 'question';
-                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                div.innerHTML = `<h3>${pos + 1}. ${q.q}</h3>`;
                 q.o.forEach((opt, oi) => {
                     const odiv = document.createElement('div');
                     odiv.className = 'option';
                     odiv.textContent = opt;
-                    odiv.onclick = () => selectOpt(qi, oi);
-                    odiv.id = `q${qi}o${oi}`;
+                    odiv.onclick = () => selectOpt(pos, oi);
+                    odiv.id = `q${pos}o${oi}`;
                     div.appendChild(odiv);
                 });
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
-                exp.id = `exp${qi}`;
+                exp.id = `exp${pos}`;
                 exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
                 div.appendChild(exp);
                 container.appendChild(div);
             });
         }
 
-        function selectOpt(qi, oi) {
+        function selectOpt(pos, oi) {
             if (checked) return;
-            quiz[qi].o.forEach((_, i) => {
-                document.getElementById(`q${qi}o${i}`).classList.remove('selected');
+            quiz[quizSession[pos]].o.forEach((_, i) => {
+                const el = document.getElementById(`q${pos}o${i}`);
+                if (el) el.classList.remove('selected');
             });
-            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
-            answers[qi] = oi;
+            const el = document.getElementById(`q${pos}o${oi}`);
+            if (el) el.classList.add('selected');
+            answers[pos] = oi;
         }
 
         function checkAnswers() {
             checked = true;
             let correct = 0;
-            quiz.forEach((q, qi) => {
+            quizSession.forEach((qi, pos) => {
+                const q = quiz[qi];
                 const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
                 q.o.forEach((_, oi) => {
-                    const el = document.getElementById(`q${qi}o${oi}`);
-                    if (correctAnswer.includes(oi)) {
-                        el.classList.add('correct');
-                    } else if (answers[qi] === oi) {
-                        el.classList.add('incorrect');
-                    }
+                    const el = document.getElementById(`q${pos}o${oi}`);
+                    if (!el) return;
+                    if (correctAnswer.includes(oi)) el.classList.add('correct');
+                    else if (answers[pos] === oi) el.classList.add('incorrect');
                 });
-                document.getElementById(`exp${qi}`).style.display = 'block';
-                if (correctAnswer.includes(answers[qi])) correct++;
+                const expEl = document.getElementById(`exp${pos}`);
+                if (expEl) expEl.style.display = 'block';
+                if (correctAnswer.includes(answers[pos])) correct++;
             });
-            const pct = Math.round((correct / quiz.length) * 100);
+            const pct = Math.round((correct / quizSession.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            let emoji, title, msg;
+            if (pct >= 80) {
+                emoji = '🎉'; title = 'APROVADO!';
+                msg = `${correct}/${quizSession.length} corretas — Excelente! Você atingiu 80%.`;
+            } else if (pct >= 60) {
+                emoji = '⚠️'; title = 'Quase lá!';
+                msg = `${correct}/${quizSession.length} corretas — Você precisa de 80% para passar.`;
+            } else {
+                emoji = '📚'; title = 'Precisa estudar mais';
+                msg = `${correct}/${quizSession.length} corretas — Revise o material e tente novamente!`;
+            }
+            document.getElementById('result-emoji').textContent = emoji;
+            document.getElementById('result-title').textContent = title;
+            document.getElementById('score-text').textContent = msg;
             document.getElementById('results-modal').classList.add('show');
         }
 
-        function resetQuiz() {
-            checked = false;
-            answers = {};
-            document.getElementById('questions').innerHTML = '';
-            document.getElementById('results-modal').classList.remove('show');
-            loadQuiz();
-        }
-
-        updateCard();
+        newSession();
+        startQuizSession();
     </script>
 </body>
 </html>
