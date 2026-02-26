@@ -115,7 +115,7 @@
         <p style="font-size:1.3rem; opacity:0.9;">Resposta a Incidentes</p>
         <div class="stats-bar">
             <div class="stat-card">🧠 <span id="total-cards-stat">0</span> Flashcards</div>
-            <div class="stat-card">❓ 90 Questões no pool</div>
+            <div class="stat-card">❓ <span id="total-questions-stat">0</span> Questões no pool</div>
             <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
         </div>
     </div>
@@ -162,10 +162,10 @@
     <div id="tab1" class="content">
         <div class="summary-area">
             <h1>📋 Resumo — Capítulo 9</h1>
-            <p style="color:#6b7280; margin-bottom:10px;">Resposta a Incidentes </p>
+            <p style="color:#6b7280; margin-bottom:10px;">Resposta a Incidentes</p>
 
             <div class="tip-box">
-                <h3>🎯 Pontos-Chave para a Prova</h3>
+                <h3>🎯 Pontos-Chave</h3>
                 <ul>
                     <li><strong>7 fases do IR:</strong> Preparation → Detection → Analysis → Containment → Eradication → Recovery → Lessons Learned</li>
                     <li><strong>Lessons Learned</strong> alimenta Preparation (ciclo contínuo)</li>
@@ -194,7 +194,7 @@
                 <tr><td>7</td><td><strong>Lessons Learned</strong></td><td>Documentar, analisar, melhorar → alimenta Preparation (ciclo)</td></tr>
             </table></div>
             <div class="warning-box">
-                <h3>⚠️ Distinções Críticas para a Prova</h3>
+                <h3>⚠️ Distinções Críticas</h3>
                 <ul>
                     <li><strong>Containment ≠ Eradication:</strong> Containment limita escopo; Eradication remove a causa</li>
                     <li><strong>Incidente cyber vs Major Incident:</strong> Incidente cyber → IR normal. Ameaça existencial → Disaster Recovery</li>
@@ -229,7 +229,7 @@
                 <tr><td><strong>SOAR</strong></td><td>Security Orchestration, Automation and Response</td><td>Compila alertas, cria casos, automatiza via playbooks</td></tr>
                 <tr><td><strong>Runbook</strong></td><td>Protocolos automatizados por condições</td><td>Foco em automação de processos de IR</td></tr>
                 <tr><td><strong>Playbook</strong></td><td>Checklist ordenado para ameaça específica</td><td>Foco em padronização e consistência</td></tr>
-                <tr><td><strong>SIEM</strong></td><td>SIM + SEM — compila e examina pontos de dados</td><td>7 componentes: vulnerability scan, dashboard, sensores, sensibilidade, trends, alertas, correlação</td></tr>
+                <tr><td><strong>SIEM</strong></td><td>SIM + SEM — compila e examina pontos de dados</td><td>7 componentes: scan, dashboard, sensores, sensibilidade, trends, alertas, correlação</td></tr>
             </table></div>
 
             <h2>4️⃣ Log Data e Metadata</h2>
@@ -345,7 +345,7 @@
                 <tr><td><strong>Cold Site</strong></td><td>Dias a semanas</td><td>Baixo</td><td>Alto</td></tr>
             </table></div>
             <div class="info-box">
-                <h3>📊 Métricas de Continuidade</h3>
+                <h3>📊 Métricas de Recuperação</h3>
                 <ul>
                     <li><strong>RTO</strong> (Recovery Time Objective): Tempo máximo aceitável de downtime</li>
                     <li><strong>RPO</strong> (Recovery Point Objective): Máximo de dados perdidos (em tempo)</li>
@@ -355,7 +355,7 @@
             </div>
 
             <div class="warning-box">
-                <h3>🎯 Dicas Finais para a Prova</h3>
+                <h3>🎯 Dicas Finais</h3>
                 <ul>
                     <li><strong>Runbook ≠ Playbook:</strong> Runbook = automação por condições; Playbook = checklist para ameaça específica</li>
                     <li><strong>sFlow</strong> é o único que opera até camada 7 (aplicação)</li>
@@ -374,7 +374,7 @@
         <div class="quiz-area">
             <div class="quiz-header">
                 <h2 style="font-size:1.8rem; margin-bottom:10px;">❓ Quiz — Capítulo 9</h2>
-                <p style="font-size:1.1rem; opacity:0.9;">15 questões sorteadas do pool de 90 • Aprovação: 80%</p>
+                <p style="font-size:1.1rem; opacity:0.9;">15 questões sorteadas do pool • Aprovação: 80%</p>
             </div>
             <div id="questions"></div>
             <div class="quiz-controls">
@@ -400,12 +400,12 @@
 </div>
 
 <script>
-// ========== FLASHCARDS ==========
+// ========== FLASHCARDS (Mantidos os mesmos, mas removendo cards de BCP/DRP) ==========
 const allCards = [
     // BLOCO 1: Processo de Resposta a Incidentes (14 cards)
     {f:"O que é um Security Incident (Incidente de Segurança)?", b:"Evento ou série de eventos resultantes de violação de política de segurança. Pode ou não afetar a capacidade da organização de conduzir negócios. É crucial que seja reconhecido e tratado adequadamente.", cat:"Processo IR"},
     {f:"Quais são os 5 tipos de incidentes de segurança reconhecidos?", b:"Employee Errors (não intencionais), Unauthorized Act by Employee (insider threat intencional), External Intrusion Attempts, Virus/Harmful Code Attacks, Unethical Gathering of Competitive Information (espionagem corporativa).", cat:"Processo IR"},
-    {f:"Quais são as 7 etapas do Processo de Resposta a Incidentes ?", b:"1) Preparation, 2) Detection, 3) Analysis, 4) Containment, 5) Eradication, 6) Recovery, 7) Lessons Learned.", cat:"Processo IR"},
+    {f:"Quais são as 7 etapas do Processo de Resposta a Incidentes?", b:"1) Preparation, 2) Detection, 3) Analysis, 4) Containment, 5) Eradication, 6) Recovery, 7) Lessons Learned.", cat:"Processo IR"},
     {f:"O que acontece na fase de Preparation (Preparação)?", b:"Tornar o sistema resiliente: hardening de sistemas, escrever políticas e procedimentos, configurar linhas de comunicação confidenciais, criar recursos e procedimentos de resposta a incidentes.", cat:"Processo IR"},
     {f:"O que acontece na fase de Detection (Detecção)?", b:"Descobrir indicadores de atividade de threat actor. Fontes: sistemas automatizados de intrusão, operações de threat hunting, relatórios de funcionários, clientes ou law enforcement.", cat:"Processo IR"},
     {f:"O que acontece na fase de Analysis (Análise)?", b:"Determinar se o incidente realmente ocorreu, realizar triage para avaliar severidade e analisar os dados reportados como indicadores.", cat:"Processo IR"},
@@ -505,7 +505,7 @@ const allCards = [
     {f:"O que é Geographic Dispersal?", b:"Uso de múltiplas localizações físicas para armazenar dados e hospedar serviços. Mitiga downtime causado por desastres regionais ou falhas de uma localização específica.", cat:"Alta Disponibilidade"},
     {f:"O que é Multipath em alta disponibilidade?", b:"Técnica de tolerância a falhas com múltiplos caminhos físicos entre CPU e appliance de armazenamento. Se um caminho falhar, outros continuam funcionando sem interrupção.", cat:"Alta Disponibilidade"},
     {f:"O que é UPS (Uninterrupted Power Supply)?", b:"Banco standalone de baterias que permite shutdown gracioso de appliances quando a energia cai. Fornece energia por tempo curto — complementado por generator para situações mais longas.", cat:"Alta Disponibilidade"},
-    {f:"O que é um Generator em continuidade de negócios?", b:"Dispositivo de grande escala que fornece energia por período estendido, normalmente entre 24 e 48 horas durante falhas de energia. Complementa o UPS que cobre os primeiros minutos.", cat:"Alta Disponibilidade"},
+    {f:"O que é um Generator?", b:"Dispositivo de grande escala que fornece energia por período estendido, normalmente entre 24 e 48 horas durante falhas de energia. Complementa o UPS que cobre os primeiros minutos.", cat:"Alta Disponibilidade"},
     {f:"O que é Dual Supply em appliances de rede?", b:"Duas fontes de alimentação independentes em servidores e firewalls. Permite que uma falhe sem interrupção do serviço, com hot-swapping (troca sem desligar o equipamento).", cat:"Alta Disponibilidade"},
     {f:"O que é uma Managed PDU?", b:"Power Distribution Unit montada em rack para datacenters. Distribui energia em grande escala com capacidade de monitoramento e gerenciamento remoto.", cat:"Alta Disponibilidade"},
     {f:"O que é Clustering?", b:"Múltiplos nodes de processamento redundantes que compartilham dados. Se um node falha, conexões fazem failover para outro. Para clientes, o cluster aparece como servidor único.", cat:"Alta Disponibilidade"},
@@ -516,31 +516,25 @@ const allCards = [
     {f:"O que é o protocolo CARP (Common Address Redundancy Protocol)?", b:"Protocolo de redundância usado em Virtual IP. Implementa mecanismo de heartbeat que permite ao node ativo 'possuir' o IP virtual e detectar falhas para automático failover.", cat:"Alta Disponibilidade"},
     {f:"O que é o mecanismo heartbeat em clustering?", b:"Sinal periódico enviado entre nodes para verificar se estão ativos. Se o node ativo não responde ao heartbeat, o node passivo assume automaticamente o VIP (failover).", cat:"Alta Disponibilidade"},
 
-    // BLOCO 9: Backups e Continuidade (22 cards)
-    {f:"O que é Full Backup?", b:"Cópia completa de todos os dados selecionados. Maior tempo de backup, menor tempo de restauração (apenas 1 conjunto). Usado como base para outros tipos de backup.", cat:"Backup/BC"},
-    {f:"O que é Incremental Backup?", b:"Copia apenas os dados modificados desde o último backup de qualquer tipo (full ou incremental). Menor tempo de backup, maior tempo de restauração (requer full + todos os incrementais em sequência).", cat:"Backup/BC"},
-    {f:"O que é Differential Backup?", b:"Copia todos os dados modificados desde o último full backup. Tempo intermediário. Restauração mais rápida que incremental (requer apenas o full + o último differential).", cat:"Backup/BC"},
-    {f:"O que é a Regra 3-2-1 de backup?", b:"3 cópias dos dados, em 2 tipos de mídia diferentes, com 1 cópia offsite. Garante redundância e recuperação mesmo em desastres que afetam a localização primária.", cat:"Backup/BC"},
-    {f:"O que é RTO (Recovery Time Objective)?", b:"Tempo máximo aceitável para restaurar um sistema após falha — define o downtime máximo tolerável. Exemplo: 'estar de volta online em no máximo 4 horas'.", cat:"Backup/BC"},
-    {f:"O que é RPO (Recovery Point Objective)?", b:"Máximo de dados (em tempo) que a organização pode perder em caso de desastre. Define a frequência ideal de backups. Exemplo: 'perder no máximo 1 hora de dados'.", cat:"Backup/BC"},
-    {f:"O que é um Snapshot em backups?", b:"Cópia point-in-time do estado de um sistema, muito usada em VMs. Permite reverter rapidamente para um estado anterior sem restauração completa.", cat:"Backup/BC"},
-    {f:"Por que backups simples são insuficientes em ambientes enterprise?", b:"Problemas: escalabilidade (não acompanha crescimento), performance (afeta aplicações), granularidade (falta customização), e compliance/segurança (sem criptografia, controles avançados).", cat:"Backup/BC"},
-    {f:"O que é RAID 0?", b:"Striping sem paridade. Melhora performance dividindo dados entre discos. SEM tolerância a falhas — falha de 1 disco perde TODOS os dados. Mínimo: 2 discos.", cat:"Backup/BC"},
-    {f:"O que é RAID 1?", b:"Mirroring. Dados copiados identicamente em dois discos. Tolerância a 1 falha. Sem melhora de performance de escrita. 50% de capacidade utilizável. Mínimo: 2 discos.", cat:"Backup/BC"},
-    {f:"O que é RAID 5?", b:"Striping com paridade distribuída. Tolerância a 1 falha de disco. Bom equilíbrio entre performance, capacidade e redundância. Mínimo: 3 discos.", cat:"Backup/BC"},
-    {f:"O que é RAID 6?", b:"Striping com paridade dupla. Tolerância a 2 falhas de disco simultâneas. Mais robusto que RAID 5 para ambientes críticos. Mínimo: 4 discos.", cat:"Backup/BC"},
-    {f:"O que é RAID 10 (1+0)?", b:"Combina Mirroring (RAID 1) e Striping (RAID 0). Alta performance E tolerância a falhas. Custo elevado (50% de capacidade). Mínimo: 4 discos.", cat:"Backup/BC"},
-    {f:"O que é BCP (Business Continuity Plan)?", b:"Plano abrangente que define como a organização continuará operando durante e após um desastre. Inclui estratégias para manutenção de funções críticas de negócio.", cat:"Backup/BC"},
-    {f:"O que é DRP (Disaster Recovery Plan)?", b:"Plano focado em restaurar sistemas de TI e dados após desastre. Subconjunto do BCP, com foco técnico na recuperação de infraestrutura.", cat:"Backup/BC"},
-    {f:"O que é um Hot Site?", b:"Site de recuperação totalmente equipado e operacional que pode assumir operações em minutos a horas. Mais caro, menor RTO.", cat:"Backup/BC"},
-    {f:"O que é um Warm Site?", b:"Site parcialmente equipado que pode ser ativado em horas a dias. Equilíbrio entre custo e RTO. Tem infraestrutura básica, mas dados podem não estar completamente atualizados.", cat:"Backup/BC"},
-    {f:"O que é um Cold Site?", b:"Site com apenas infraestrutura básica (energia, rede, espaço físico). Pode levar dias a semanas para ativar. Mais barato, maior RTO.", cat:"Backup/BC"},
-    {f:"O que é MTTR (Mean Time to Repair)?", b:"Tempo médio para reparar um componente ou sistema após falha. Métrica de eficiência da equipe de manutenção e recuperação.", cat:"Backup/BC"},
-    {f:"O que é MTBF (Mean Time Between Failures)?", b:"Tempo médio entre falhas de um componente. Métrica de confiabilidade — quanto maior o MTBF, mais confiável o equipamento.", cat:"Backup/BC"},
-    {f:"O que é Tabletop Exercise em continuidade de negócios?", b:"Simulação de incidente onde equipes discutem respostas a cenários hipotéticos sem interromper operações reais. Testa planos e identifica lacunas.", cat:"Backup/BC"},
-    {f:"O que é Power Scheduling em redundância de energia?", b:"Configuração de redundância ativa que redireciona energia para redes quando a fonte principal cai, prevenindo perda total de energia durante eventos catastróficos.", cat:"Backup/BC"},
+    // BLOCO 9: Backups (14 cards - removidos cards de BCP/DRP)
+    {f:"O que é Full Backup?", b:"Cópia completa de todos os dados selecionados. Maior tempo de backup, menor tempo de restauração (apenas 1 conjunto). Usado como base para outros tipos de backup.", cat:"Backup"},
+    {f:"O que é Incremental Backup?", b:"Copia apenas os dados modificados desde o último backup de qualquer tipo (full ou incremental). Menor tempo de backup, maior tempo de restauração (requer full + todos os incrementais em sequência).", cat:"Backup"},
+    {f:"O que é Differential Backup?", b:"Copia todos os dados modificados desde o último full backup. Tempo intermediário. Restauração mais rápida que incremental (requer apenas o full + o último differential).", cat:"Backup"},
+    {f:"O que é a Regra 3-2-1 de backup?", b:"3 cópias dos dados, em 2 tipos de mídia diferentes, com 1 cópia offsite. Garante redundância e recuperação mesmo em desastres que afetam a localização primária.", cat:"Backup"},
+    {f:"O que é RTO (Recovery Time Objective)?", b:"Tempo máximo aceitável para restaurar um sistema após falha — define o downtime máximo tolerável. Exemplo: 'estar de volta online em no máximo 4 horas'.", cat:"Backup"},
+    {f:"O que é RPO (Recovery Point Objective)?", b:"Máximo de dados (em tempo) que a organização pode perder em caso de desastre. Define a frequência ideal de backups. Exemplo: 'perder no máximo 1 hora de dados'.", cat:"Backup"},
+    {f:"O que é um Snapshot em backups?", b:"Cópia point-in-time do estado de um sistema, muito usada em VMs. Permite reverter rapidamente para um estado anterior sem restauração completa.", cat:"Backup"},
+    {f:"Por que backups simples são insuficientes em ambientes enterprise?", b:"Problemas: escalabilidade (não acompanha crescimento), performance (afeta aplicações), granularidade (falta customização), e compliance/segurança (sem criptografia, controles avançados).", cat:"Backup"},
+    {f:"O que é RAID 0?", b:"Striping sem paridade. Melhora performance dividindo dados entre discos. SEM tolerância a falhas — falha de 1 disco perde TODOS os dados. Mínimo: 2 discos.", cat:"Backup"},
+    {f:"O que é RAID 1?", b:"Mirroring. Dados copiados identicamente em dois discos. Tolerância a 1 falha. Sem melhora de performance de escrita. 50% de capacidade utilizável. Mínimo: 2 discos.", cat:"Backup"},
+    {f:"O que é RAID 5?", b:"Striping com paridade distribuída. Tolerância a 1 falha de disco. Bom equilíbrio entre performance, capacidade e redundância. Mínimo: 3 discos.", cat:"Backup"},
+    {f:"O que é RAID 6?", b:"Striping com paridade dupla. Tolerância a 2 falhas de disco simultâneas. Mais robusto que RAID 5 para ambientes críticos. Mínimo: 4 discos.", cat:"Backup"},
+    {f:"O que é RAID 10 (1+0)?", b:"Combina Mirroring (RAID 1) e Striping (RAID 0). Alta performance E tolerância a falhas. Custo elevado (50% de capacidade). Mínimo: 4 discos.", cat:"Backup"},
+    {f:"O que é MTTR (Mean Time to Repair)?", b:"Tempo médio para reparar um componente ou sistema após falha. Métrica de eficiência da equipe de manutenção e recuperação.", cat:"Backup"},
+    {f:"O que é MTBF (Mean Time Between Failures)?", b:"Tempo médio entre falhas de um componente. Métrica de confiabilidade — quanto maior o MTBF, mais confiável o equipamento.", cat:"Backup"},
+    {f:"O que é Power Scheduling em redundância de energia?", b:"Configuração de redundância ativa que redireciona energia para redes quando a fonte principal cai, prevenindo perda total de energia durante eventos catastróficos.", cat:"Backup"},
 
-    // BLOCO 10: Conceitos Avançados IR e Forense (10 cards)
+    // BLOCO 10: Conceitos Avançados IR e Forense (8 cards)
     {f:"O que é Threat Hunting?", b:"Busca proativa por ameaças dentro da rede que ainda não foram detectadas por ferramentas automatizadas. Analistas humanos buscam indicadores sutis de comprometimento (IoC).", cat:"Avançado"},
     {f:"O que são IoCs (Indicators of Compromise)?", b:"Artefatos observáveis que indicam comprometimento: hashes de malware, endereços IP maliciosos, nomes de domínio suspeitos, padrões de tráfego anômalos, entradas de registry suspeitas.", cat:"Avançado"},
     {f:"O que é Threat Intelligence no contexto de IR?", b:"Informações sobre ameaças atuais e emergentes usadas para melhorar detecção e resposta. Fontes: ISACs, feeds proprietários (IBM X-Force, Mandiant), relatórios de threat hunting.", cat:"Avançado"},
@@ -550,10 +544,9 @@ const allCards = [
     {f:"O que é DFIR (Digital Forensics and Incident Response)?", b:"Disciplina que combina forense digital com IR. A forense fornece evidências para suportar o IR, e o IR usa técnicas forenses para investigar e documentar comprometimentos.", cat:"Avançado"},
     {f:"O que é um Artifact em investigação forense?", b:"Qualquer item de evidência deixado por atividade maliciosa: arquivos de log, entradas de registry, arquivos temporários, conexões de rede registradas, histórico de browser.", cat:"Avançado"},
     {f:"O que é Tabletop Exercise vs Live Exercise em IR?", b:"Tabletop: simulação discussiva sem interromper operações (equipes debatem respostas). Live Exercise: teste real com interrupção controlada de sistemas para verificar efetividade dos planos.", cat:"Avançado"},
-    {f:"O que é a diferença entre BCP e DRP?", b:"BCP (Business Continuity Plan): plano abrangente para continuidade operacional completa durante e após desastre. DRP (Disaster Recovery Plan): subconjunto técnico focado em restaurar sistemas de TI.", cat:"Avançado"},
 ];
 
-// ========== QUIZ ==========
+// ========== QUIZ (Removidas questões de continuidade de negócios) ==========
 const allQuiz = [
     // BLOCO A: Processo de IR (12)
     {q:"Qual é a PRIMEIRA fase do processo de Resposta a Incidentes?", o:["Detection","Analysis","Preparation","Containment"], c:2, e:"Preparation é a fase 1. O processo completo: Preparation → Detection → Analysis → Containment → Eradication → Recovery → Lessons Learned."},
@@ -653,7 +646,7 @@ const allQuiz = [
     {q:"O que é Power Scheduling?", o:["Agendamento de manutenção de geradores","Configuração de redundância ativa que redireciona energia quando fonte principal falha","Balanceamento de carga elétrica entre datacenters","Monitoramento de consumo energético em tempo real"], c:1, e:"Power Scheduling: configuração de redundância ativa que envia energia para redes quando a facilidade de energia cai, prevenindo perda total durante eventos catastróficos."},
     {q:"Qual é a função da Managed PDU em um datacenter?", o:["Backup de energia de curto prazo (como UPS)","Geração de energia em emergências (como generator)","Distribuição de energia em rack com monitoramento e gerenciamento remoto","Proteção contra surtos elétricos"], c:2, e:"Managed PDU (Power Distribution Unit): unidade montada em rack que distribui energia em grande escala, com capacidade de monitoramento de consumo e controle remoto por tomada."},
 
-    // BLOCO I: Backups e Continuidade (14)
+    // BLOCO I: Backups (12 - removidas questões de BCP/DRP)
     {q:"Qual tipo de backup copia APENAS dados modificados desde o último backup de qualquer tipo?", o:["Full Backup","Incremental Backup","Differential Backup","Snapshot"], c:1, e:"Incremental: copia apenas o que mudou desde o último backup (full ou incremental). Menor tempo de backup, maior tempo de restauração (full + todos incrementais em sequência)."},
     {q:"Para restaurar usando Differential Backup, quantos conjuntos são necessários?", o:["Apenas o último differential","Full + todos os differentials","Full + apenas o último differential","Apenas o último full backup"], c:2, e:"Differential: copia tudo desde o último full. Restauração = full + último differential (apenas 2 conjuntos). Mais rápido que incremental, mais lento de backup que incremental."},
     {q:"A Regra 3-2-1 de backup especifica:", o:["3 backups completos, 2 locais, 1 na nuvem","3 cópias dos dados, em 2 tipos de mídia, com 1 cópia offsite","3 incrementais, 2 diferenciais, 1 completo","3 sites de recuperação, 2 ativos, 1 passivo"], c:1, e:"Regra 3-2-1: 3 cópias (original + 2 cópias), 2 tipos de mídia diferentes (ex: HDD + fita), 1 cópia offsite. Garante sobrevivência a qualquer desastre local."},
@@ -665,9 +658,7 @@ const allQuiz = [
     {q:"Qual site de recuperação pode assumir operações em minutos a horas?", o:["Cold Site","Warm Site","Hot Site","Cloud Site"], c:2, e:"Hot Site: totalmente equipado e operacional. Assume em minutos a horas. Custo mais elevado mas RTO mínimo. Warm Site: horas a dias. Cold Site: dias a semanas."},
     {q:"O que é MTBF e para que serve?", o:["Tempo para reparar — mede eficiência de manutenção","Tempo médio entre falhas — mede confiabilidade de equipamentos","Tempo para restaurar backups","Tempo médio entre incidentes de segurança"], c:1, e:"MTBF (Mean Time Between Failures): tempo médio entre falhas. Métrica de confiabilidade — quanto maior o MTBF, mais confiável o equipamento."},
     {q:"Por que backups simples são insuficientes em ambientes enterprise?", o:["Por limitações de velocidade de rede apenas","Por falta de escalabilidade, performance, granularidade e recursos de compliance/segurança","Por incompatibilidade com sistemas modernos","Por alto custo de armazenamento exclusivamente"], c:1, e:"Backups simples falham em: escalabilidade (não acompanha crescimento), performance (afeta aplicações durante execução), granularidade (sem customização), compliance (sem criptografia, controles)."},
-    {q:"O que é um Tabletop Exercise em planejamento de continuidade?", o:["Teste completo de failover interrompendo produção","Simulação onde equipes discutem respostas a cenários hipotéticos sem interromper operações","Exercício cronometrado de backup e restauração","Avaliação de riscos em reunião executiva"], c:1, e:"Tabletop Exercise: simulação discussiva onde equipes respondem a cenários hipotéticos. Testa planos, identifica lacunas e treina respondedores sem risco de interromper operações reais."},
     {q:"Qual RAID combina performance de striping com redundância de mirroring?", o:["RAID 5","RAID 6","RAID 10 (1+0)","RAID 0+5"], c:2, e:"RAID 10: combina RAID 1 (mirroring) e RAID 0 (striping). Alta performance E tolerância a falhas. Custo: 50% de capacidade utilizável. Mínimo 4 discos."},
-    {q:"Qual é a diferença entre BCP e DRP?", o:["São sinônimos para o mesmo plano","BCP abrange continuidade operacional completa; DRP foca em restaurar sistemas de TI","BCP é para desastres naturais; DRP para ataques cibernéticos","BCP é preventivo; DRP é apenas reativo"], c:1, e:"BCP (Business Continuity Plan): plano abrangente para continuidade de todo o negócio. DRP (Disaster Recovery Plan): subconjunto técnico do BCP focado em restaurar infraestrutura de TI."},
 
     // BLOCO J: Conceitos Avançados (8)
     {q:"O que é Threat Hunting e como difere de detecção automatizada?", o:["São o mesmo processo com nomenclaturas diferentes","Threat Hunting é busca proativa por humanos; detecção automatizada responde a assinaturas conhecidas","Threat Hunting usa IA avançada; detecção usa regras manuais","Threat Hunting é reativo; detecção automática é proativa"], c:1, e:"Threat Hunting: busca proativa por analistas humanos por ameaças não detectadas por ferramentas automáticas. Complementa a detecção automática que é baseada em assinaturas conhecidas."},
@@ -690,6 +681,7 @@ let quizSession = [], answers = {}, checked = false;
 function init() {
     loadProgress();
     document.getElementById('total-cards-stat').textContent = allCards.length;
+    document.getElementById('total-questions-stat').textContent = allQuiz.length;
     buildFilteredPool();
     newSession();
 }
@@ -794,7 +786,7 @@ function startQuizSession() {
     answers = {};
     checked = false;
     const shuffled = [...Array(allQuiz.length).keys()].sort(() => Math.random() - 0.5);
-    quizSession = shuffled.slice(0, 15);
+    quizSession = shuffled.slice(0, Math.min(15, shuffled.length));
     loadQuiz();
 }
 
