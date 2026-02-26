@@ -3,957 +3,777 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security+ Cap 10 - Virtualização, Cloud e Email Security</title>
+    <title>Security+ Cap 10 - Virtualização, Cloud, Mobile, IoT e Email Security</title>
     <style>
-        /* ===== RESET CSS ===== */
-        /* Remove todas as margens e paddings padrão do navegador */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Gradiente roxo - tema do capítulo 10 (Virtualização, Cloud e Email) */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; /* Centraliza horizontalmente */
-        }
-        
-        /* ===== CABEÇALHO ===== */
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-            animation: fadeIn 0.5s;
-        }
-        
-        .header h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        /* Barra de estatísticas */
-        .stats-bar {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .stat-card {
-            background: rgba(255,255,255,0.2);
-            padding: 15px 25px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px); /* Efeito vidro fosco */
-            color: white;
-            font-weight: bold;
-        }
-        
-        /* ===== ABAS (TABS) ===== */
-        .tabs {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .tab-btn {
-            padding: 15px 30px;
-            background: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .tab-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-        
-        .tab-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        /* Controle de visibilidade das abas */
-        .content { 
-            display: none;
-            animation: fadeIn 0.4s;
-        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; color: white; margin-bottom: 40px; animation: fadeIn 0.5s; }
+        .header h1 { font-size: 2.8rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .stats-bar { display: flex; gap: 20px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        .stat-card { background: rgba(255,255,255,0.2); padding: 15px 25px; border-radius: 12px; backdrop-filter: blur(10px); color: white; font-weight: bold; }
+        .tabs { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        .tab-btn { padding: 15px 30px; background: white; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .tab-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .tab-btn.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .content { display: none; animation: fadeIn 0.4s; }
         .content.active { display: block; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* ===== FLASHCARDS ===== */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* FLASHCARDS */
         .flashcard-area { max-width: 900px; margin: 0 auto; }
-        
-        .card-info {
-            background: rgba(255,255,255,0.25);
-            padding: 20px;
-            border-radius: 15px;
-            color: white;
-            margin-bottom: 25px;
-            backdrop-filter: blur(10px);
-        }
-        
-        /* Barra de progresso */
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #10b981, #34d399);
-            transition: width 0.3s ease;
-        }
-        
-        /* O flashcard */
-        .flashcard {
-            background: white;
-            border-radius: 20px;
-            padding: 60px 40px;
-            min-height: 350px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            position: relative;
-            margin-bottom: 30px;
-        }
-        
+        .card-info { background: rgba(255,255,255,0.25); padding: 20px; border-radius: 15px; color: white; margin-bottom: 25px; backdrop-filter: blur(10px); }
+        .progress-bar { width: 100%; height: 8px; background: rgba(255,255,255,0.3); border-radius: 10px; overflow: hidden; margin-top: 10px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.3s ease; }
+        .flashcard { background: white; border-radius: 20px; padding: 60px 40px; min-height: 350px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; margin-bottom: 30px; }
         .flashcard:hover { transform: scale(1.02); }
-        
-        .side-indicator {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 8px 16px;
-            background: #667eea;
-            color: white;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        
-        .flashcard-text {
-            font-size: 1.4rem;
-            line-height: 1.8;
-            text-align: center;
-            color: #1f2937;
-        }
-        
-        .flip-hint {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #6b7280;
-            font-style: italic;
-        }
-        
-        /* ===== CONTROLES ===== */
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-        
-        .btn-nav {
-            background: white;
-            font-size: 1.5rem;
-            width: 55px;
-            height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .btn-master {
-            background: #e5e7eb;
-            color: #1f2937;
-        }
-        
-        .btn-master.mastered {
-            background: #10b981;
-            color: white;
-        }
-        
-        .btn-shuffle {
-            background: #f59e0b;
-            color: white;
-        }
-        
-        /* ===== QUIZ ===== */
+        .side-indicator { position: absolute; top: 20px; left: 20px; padding: 8px 16px; background: #667eea; color: white; border-radius: 8px; font-size: 0.9rem; font-weight: 600; }
+        .category-badge { position: absolute; top: 20px; right: 20px; padding: 8px 16px; background: #ede9fe; color: #5b21b6; border-radius: 8px; font-size: 0.85rem; font-weight: 600; }
+        .flashcard-text { font-size: 1.4rem; line-height: 1.8; text-align: center; color: #1f2937; }
+        .flip-hint { margin-top: 20px; font-size: 0.9rem; color: #6b7280; font-style: italic; }
+        .controls { display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap; }
+        .btn { padding: 15px 30px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .btn-nav { background: white; font-size: 1.5rem; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; padding: 0; }
+        .btn-master { background: #e5e7eb; color: #1f2937; }
+        .btn-master.mastered { background: #10b981; color: white; }
+        .btn-new-session { background: #f59e0b; color: white; }
+        .filter-bar { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-btn { padding: 10px 20px; border: 2px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.2); color: white; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .filter-btn.active { background: white; color: #667eea; }
+
+        /* QUIZ */
         .quiz-area { max-width: 1000px; margin: 0 auto; }
-        
-        .quiz-header {
-            text-align: center;
-            color: white;
-            margin-bottom: 35px;
-        }
-        
-        .question {
-            background: white;
-            border-radius: 18px;
-            padding: 35px;
-            margin-bottom: 25px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-        
-        .question h3 {
-            color: #1f2937;
-            margin-bottom: 20px;
-            font-size: 1.25rem;
-            line-height: 1.6;
-        }
-        
-        .option {
-            padding: 18px 20px;
-            border: 3px solid #e5e7eb;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: white;
-            font-size: 1.05rem;
-        }
-        
-        .option:hover {
-            background: #e0f7ff;
-            border-color: #667eea;
-            transform: translateX(5px);
-        }
-        
-        .option.selected {
-            border-color: #667eea;
-            background: #e0f7ff;
-            font-weight: 600;
-        }
-        
-        .option.correct {
-            border-color: #10b981;
-            background: #d1fae5;
-            font-weight: 600;
-        }
-        
-        .option.incorrect {
-            border-color: #ef4444;
-            background: #fee2e2;
-            font-weight: 600;
-        }
-        
-        .explanation {
-            margin-top: 20px;
-            padding: 20px;
-            background: #e0f7ff;
-            border-left: 5px solid #667eea;
-            border-radius: 8px;
-            display: none;
-            line-height: 1.6;
-        }
-        
-        /* ===== MODAL DE RESULTADOS ===== */
-        .results-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        
+        .quiz-header { text-align: center; color: white; margin-bottom: 35px; }
+        .question { background: white; border-radius: 18px; padding: 35px; margin-bottom: 25px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+        .question h3 { color: #1f2937; margin-bottom: 20px; font-size: 1.25rem; line-height: 1.6; }
+        .option { padding: 18px 20px; border: 3px solid #e5e7eb; border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s ease; background: white; font-size: 1.05rem; }
+        .option:hover { background: #ede9fe; border-color: #667eea; transform: translateX(5px); }
+        .option.selected { border-color: #667eea; background: #ede9fe; font-weight: 600; }
+        .option.correct { border-color: #10b981; background: #d1fae5; font-weight: 600; }
+        .option.incorrect { border-color: #ef4444; background: #fee2e2; font-weight: 600; }
+        .explanation { margin-top: 20px; padding: 20px; background: #ede9fe; border-left: 5px solid #667eea; border-radius: 8px; display: none; line-height: 1.6; }
+        .quiz-controls { text-align: center; margin-top: 30px; margin-bottom: 20px; }
+        .btn-check { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 1.1rem; padding: 18px 45px; }
+
+        /* MODAL */
+        .results-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
         .results-modal.show { display: flex; }
-        
-        .results-content {
-            background: white;
-            padding: 50px;
-            border-radius: 25px;
-            max-width: 500px;
-            text-align: center;
-            animation: scaleIn 0.3s ease;
-        }
-        
-        @keyframes scaleIn {
-            from { transform: scale(0.9); }
-            to { transform: scale(1); }
-        }
-        
-        .score-circle {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            font-weight: bold;
-            margin: 30px auto;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 18px 45px;
-            font-size: 1.1rem;
-        }
-        
-        /* ===== BOTÕES DE FILTRO ===== */
-        .filter-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .filter-btn {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.3);
-            border: 2px solid white;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-        
-        .filter-btn.active {
-            background: white;
-            color: #667eea;
+        .results-content { background: white; padding: 50px; border-radius: 25px; max-width: 500px; width: 90%; text-align: center; animation: scaleIn 0.3s ease; }
+        @keyframes scaleIn { from { transform: scale(0.9); } to { transform: scale(1); } }
+        .result-emoji { font-size: 3.5rem; margin-bottom: 10px; }
+        .score-circle { width: 180px; height: 180px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: bold; margin: 20px auto; }
+        .modal-buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-secondary { background: #6b7280; color: white; }
+        .btn-explain-modal { background: #7c3aed; color: white; width: 100%; }
+
+        /* RESUMO */
+        .summary-area { max-width: 900px; margin: 0 auto; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow-x: hidden; }
+        .summary-area h1 { color: #667eea; margin-bottom: 20px; font-size: 2rem; }
+        .summary-area h2 { color: white; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 12px 20px; border-radius: 8px; margin: 30px 0 15px 0; font-size: 1.4rem; }
+        .summary-area h3 { color: #5b21b6; margin: 20px 0 10px 0; font-size: 1.1rem; }
+        .summary-area ul { margin-left: 25px; margin-bottom: 15px; line-height: 1.8; }
+        .summary-area p { line-height: 1.8; margin-bottom: 12px; }
+        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 15px 0; border-radius: 8px; }
+        .summary-area table { width: 100%; border-collapse: collapse; min-width: 400px; margin: 0; }
+        .summary-area th { background: #667eea; color: white; padding: 10px; white-space: nowrap; }
+        .summary-area td { padding: 10px; border: 1px solid #e5e7eb; font-size: 0.95rem; }
+        .summary-area tr:nth-child(even) td { background: #f5f3ff; }
+        .tip-box { background: #ede9fe; border-left: 5px solid #667eea; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .tip-box h3 { color: #5b21b6; margin-bottom: 10px; margin-top: 0; }
+        .warning-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .warning-box h3 { color: #d97706; margin-bottom: 10px; margin-top: 0; }
+        .info-box { background: #d1fae5; border-left: 5px solid #10b981; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .info-box h3 { color: #065f46; margin-bottom: 10px; margin-top: 0; }
+        .grid-2 { display: flex; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
+        .grid-2 > div { flex: 1; min-width: 250px; padding: 20px; border-radius: 10px; }
+        code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9rem; }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .header h1 { font-size: 2rem; }
+            .flashcard { padding: 40px 20px; min-height: 250px; }
+            .flashcard-text { font-size: 1.1rem; }
+            .summary-area { padding: 20px 15px; border-radius: 12px; }
+            .summary-area h1 { font-size: 1.5rem; }
+            .summary-area h2 { font-size: 1.15rem; padding: 10px 14px; }
+            .grid-2 > div { min-width: 100% !important; }
+            .results-content { padding: 30px 20px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- ===== CABEÇALHO ===== -->
-        <div class="header">
-            <h1>☁️ Security+ Capítulo 10</h1>
-            <p>Virtualização, Cloud, Mobile, Embedded e Email Security</p>
-            <div class="stats-bar">
-                <div class="stat-card">📚 30 Flashcards</div>
-                <div class="stat-card">❓ 15 Questões</div>
-                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+<div class="container">
+    <div class="header">
+        <h1>☁️ Capítulo 10</h1>
+        <p style="font-size:1.3rem; opacity:0.9;">Virtualização, Cloud, Mobile, IoT e Email Security</p>
+        <div class="stats-bar">
+            <div class="stat-card">🧠 <span id="total-cards-stat">0</span> Flashcards</div>
+            <div class="stat-card">❓ 90 Questões no pool</div>
+            <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+        <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
+        <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+    </div>
+
+    <!-- ABA 0: FLASHCARDS -->
+    <div id="tab0" class="content active">
+        <div class="flashcard-area">
+            <div class="card-info">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <span id="card-counter">Card 1 de 15</span>
+                    <span id="mastered-count">0 dominados</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
             </div>
-        </div>
-
-        <!-- ===== ABAS ===== -->
-        <div class="tabs">
-            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
-            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
-            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
-        </div>
-
-        <!-- ===== ABA 0: FLASHCARDS ===== -->
-        <div id="tab0" class="content active">
-            <div class="flashcard-area">
-                <div class="card-info">
-                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
-                        <div>
-                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 30</div>
-                            <div id="mastered-count">0 dominados</div>
-                        </div>
-                        <div class="filter-buttons">
-                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
-                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
-                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
-                        </div>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
-                    </div>
-                </div>
-                
-                <div class="flashcard" onclick="flipCard()">
-                    <div class="side-indicator" id="side-indicator">FRENTE</div>
-                    <div class="flashcard-text" id="card-text"></div>
-                    <div class="flip-hint">👆 Clique para virar</div>
-                </div>
-
-                <div class="controls">
-                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
-                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
-                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
-                    <button class="btn btn-nav" onclick="nextCard()">›</button>
-                </div>
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
+                <button class="filter-btn" onclick="filterCards('unmastered', event)">Não Dominados</button>
+                <button class="filter-btn" onclick="filterCards('mastered', event)">Dominados</button>
             </div>
-        </div>
-
-        <!-- ===== ABA 1: RESUMO ===== -->
-        <div id="tab1" class="content">
-            <div class="summary" style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-                <h1 style="color: #667eea; margin-bottom: 30px; font-size: 2.5rem; border-bottom: 4px solid #667eea; padding-bottom: 15px;">📖 Resumo - Capítulo 10</h1>
-                
-                <!-- Destaque com conceitos críticos -->
-                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 20px 0; border-radius: 8px;">
-                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
-                    <ul style="margin-top: 10px; margin-left: 20px;">
-                        <li><strong>Hypervisor Type 1:</strong> Bare metal (ESXi, Hyper-V) | <strong>Type 2:</strong> Hosted (VirtualBox)</li>
-                        <li><strong>VM Escape:</strong> VM compromete hypervisor (crítico!)</li>
-                        <li><strong>SaaS, PaaS, IaaS:</strong> Cliente gerencia: SaaS (nada), PaaS (app+dados), IaaS (OS+app+dados)</li>
-                        <li><strong>SPF, DKIM, DMARC:</strong> Autenticação de email (anti-phishing)</li>
-                    </ul>
-                </div>
-
-                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">1️⃣ Virtualização</h2>
-
-                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Hypervisors</h3>
-                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-                    <tr><th style="background:#667eea; color:white;">Tipo</th><th style="background:#667eea; color:white;">Descrição</th><th style="background:#667eea; color:white;">Exemplos</th></tr>
-                    <tr><td><strong>Type 1 (Bare Metal)</strong></td><td>Executa diretamente no hardware. Melhor performance, mais seguro.</td><td>VMware ESXi, Microsoft Hyper-V, Xen, KVM</td></tr>
-                    <tr><td><strong>Type 2 (Hosted)</strong></td><td>Executa sobre um sistema operacional. Para desenvolvimento/teste.</td><td>VMware Workstation, VirtualBox, Parallels</td></tr>
-                </table>
-
-                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Ameaças em Virtualização</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>VM Sprawl:</strong> Proliferação descontrolada de VMs sem gerenciamento. Dificulta inventário e patches.</li>
-                    <li><strong>VM Escape:</strong> Ataque onde um processo dentro da VM consegue comprometer o hypervisor. Raro, mas crítico.</li>
-                </ul>
-
-                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Containers vs VMs</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Containers:</strong> Compartilham o kernel do host. Mais leves, inicialização rápida. Isolamento em nível de processo.</li>
-                    <li><strong>Container Security:</strong> Image scanning, least privilege, network segmentation, runtime protection.</li>
-                </ul>
-
-                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Virtual Networking</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>vSwitch (Virtual Switch):</strong> Switch virtual que conecta VMs entre si e com a rede física.</li>
-                    <li><strong>NIC Teaming (Bonding):</strong> Agregação de múltiplas placas de rede para balanceamento de carga e failover.</li>
-                    <li><strong>VLAN:</strong> Segmentação lógica de rede em switches físicos ou virtuais.</li>
-                </ul>
-
-                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">SDN (Software-Defined Networking)</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Control Plane:</strong> Tomada de decisão (roteamento, políticas). Centralizado.</li>
-                    <li><strong>Data Plane:</strong> Encaminhamento de pacotes. Segue regras do control plane.</li>
-                    <li><strong>Northbound API:</strong> Comunicação control plane → aplicações (REST).</li>
-                    <li><strong>Southbound API:</strong> Comunicação control plane → data plane (OpenFlow, NETCONF).</li>
-                </ul>
-
-                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ Cloud Services</h2>
-
-                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Modelos de Serviço</h3>
-                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-                    <tr><th style="background:#667eea; color:white;">Modelo</th><th style="background:#667eea; color:white;">Cliente gerencia</th><th style="background:#667eea; color:white;">Provedor gerencia</th><th style="background:#667eea; color:white;">Exemplos</th></tr>
-                    <tr><td><strong>SaaS</strong></td><td>Nada (só usa)</td><td>Tudo</td><td>Gmail, Office 365, Salesforce</td></tr>
-                    <tr><td><strong>PaaS</strong></td><td>Aplicação + dados</td><td>Plataforma + runtime + OS + infra</td><td>Heroku, Google App Engine</td></tr>
-                    <tr><td><strong>IaaS</strong></td><td>OS + aplicação + dados</td><td>Virtualização + hardware</td><td>AWS EC2, Azure VMs</td></tr>
-                </table>
-
-                <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">Modelos de Implantação Cloud</h3>
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Public Cloud:</strong> Recursos compartilhados (multi-tenant). AWS, Azure, Google Cloud.</li>
-                    <li><strong>Private Cloud:</strong> Nuvem exclusiva da organização. Mais controle, mais caro.</li>
-                    <li><strong>Hybrid Cloud:</strong> Combinação de pública e privada. Portabilidade de workloads.</li>
-                    <li><strong>Community Cloud:</strong> Compartilhada por organizações com interesses comuns (ex: governos, saúde).</li>
-                </ul>
-
-                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Mobile Device Management</h2>
-
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>MDM (Mobile Device Management):</strong> Gerenciamento centralizado: políticas, remote wipe, distribuição de apps.</li>
-                    <li><strong>MAM (Mobile Application Management):</strong> Gerenciamento de aplicações específicas (app distribution, update, removal).</li>
-                    <li><strong>BYOD (Bring Your Own Device):</strong> Funcionário usa dispositivo pessoal. Containerização, políticas.</li>
-                    <li><strong>COPE (Corporate Owned, Personally Enabled):</strong> Dispositivo da empresa com uso pessoal permitido.</li>
-                    <li><strong>CYOD (Choose Your Own Device):</strong> Funcionário escolhe de lista aprovada.</li>
-                </ul>
-
-                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">4️⃣ Embedded Systems</h2>
-
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>IoT (Internet of Things):</strong> Dispositivos conectados. Limitações: CPU, memória, energia. Segurança: segmentação, atualizações, trocar senhas padrão.</li>
-                    <li><strong>SCADA:</strong> Sistemas de controle industrial. Infraestrutura crítica. Isolamento (air gap), monitoramento.</li>
-                    <li><strong>RTOS (Real-Time OS):</strong> Tempo determinístico. Industrial, automotivo, médico. Previsibilidade > performance.</li>
-                    <li><strong>SoC (System on a Chip):</strong> Processador + componentes em um chip. IoT, mobile. Eficiência energética.</li>
-                </ul>
-
-                <h2 style="color: #764ba2; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">5️⃣ Email Security</h2>
-
-                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
-                    <tr><th style="background:#667eea; color:white;">Protocolo</th><th style="background:#667eea; color:white;">Descrição</th></tr>
-                    <tr><td><strong>SPF (Sender Policy Framework)</strong></td><td>Registro DNS lista IPs autorizados a enviar email do domínio. Previne spoofing.</td></tr>
-                    <tr><td><strong>DKIM (DomainKeys Identified Mail)</strong></td><td>Assinatura digital do email. Valida integridade e autenticidade.</td></tr>
-                    <tr><td><strong>DMARC (Domain-based Message Authentication)</strong></td><td>Política para o que fazer quando SPF/DKIM falham (quarentena, rejeitar).</td></tr>
-                    <tr><td><strong>SMTP TLS</strong></td><td>Criptografia em trânsito entre servidores de email.</td></tr>
-                </table>
-
-                <div style="background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px;">
-                    <strong>⚠️ REGRAS DE OURO:</strong>
-                    <ul style="margin-top: 10px;">
-                        <li><strong>Type 1:</strong> Bare metal (performance) | <strong>Type 2:</strong> Hosted (desenvolvimento)</li>
-                        <li><strong>SaaS:</strong> cliente não gerencia nada | <strong>PaaS:</strong> gerencia app+dados | <strong>IaaS:</strong> gerencia OS+app+dados</li>
-                        <li><strong>SPF:</strong> lista IPs | <strong>DKIM:</strong> assinatura | <strong>DMARC:</strong> política</li>
-                        <li><strong>VM Escape</strong> é o pior ataque em virtualização</li>
-                    </ul>
-                </div>
-
-                <!-- Dicas finais para a prova -->
-                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 30px 0; border-radius: 8px;">
-                    <h3 style="color: #ec4899; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
-                    <ul style="margin-left: 20px; line-height: 1.8;">
-                        <li><strong>Hypervisor Type 1:</strong> ESXi, Hyper-V, Xen | <strong>Type 2:</strong> VirtualBox, Workstation</li>
-                        <li><strong>VM Sprawl</strong> = muitas VMs sem controle</li>
-                        <li><strong>VM Escape</strong> = VM compromete hypervisor</li>
-                        <li><strong>SDN:</strong> Control Plane (decisão) vs Data Plane (encaminhamento)</li>
-                        <li><strong>Cloud:</strong> Public, Private, Hybrid, Community</li>
-                        <li><strong>Mobile:</strong> BYOD (pessoal), COPE (corporativo), CYOD (escolhido)</li>
-                        <li><strong>SCADA:</strong> sistemas industriais, air gap</li>
-                        <li><strong>Email auth:</strong> SPF, DKIM, DMARC (anti-phishing)</li>
-                    </ul>
-                </div>
+            <div style="text-align:center; margin-bottom:20px;">
+                <button class="btn btn-new-session" onclick="newSession()">🎲 Nova Sessão (15)</button>
             </div>
-        </div>
-
-        <!-- ===== ABA 2: QUIZ ===== -->
-        <div id="tab2" class="content">
-            <div class="quiz-area">
-                <div class="quiz-header">
-                    <h2>Quiz - 15 Questões</h2>
-                </div>
-                <div id="questions"></div>
-                <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
-                </div>
+            <div class="flashcard" onclick="flipCard()">
+                <div class="side-indicator" id="side-indicator">FRENTE</div>
+                <div class="category-badge" id="category-badge"></div>
+                <div class="flashcard-text" id="card-text"></div>
+                <div class="flip-hint">👆 Clique para virar</div>
+            </div>
+            <div class="controls">
+                <button class="btn btn-nav" onclick="prevCard()">←</button>
+                <button class="btn btn-master" id="btn-master" onclick="toggleMaster()">⭐ Marcar Dominado</button>
+                <button class="btn btn-nav" onclick="nextCard()">→</button>
             </div>
         </div>
     </div>
 
-    <!-- ===== MODAL DE RESULTADOS ===== -->
-    <div class="results-modal" id="results-modal">
-        <div class="results-content">
-            <h2>Resultado</h2>
-            <div class="score-circle" id="score-circle">0%</div>
-            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+    <!-- ABA 1: RESUMO -->
+    <div id="tab1" class="content">
+        <div class="summary-area">
+            <h1>📋 Resumo — Capítulo 10</h1>
+            <p style="color:#6b7280; margin-bottom:10px;">Virtualização, Cloud, Mobile, IoT e Email Security • CompTIA Security+</p>
+
+            <div class="tip-box">
+                <h3>🎯 Pontos-Chave para a Prova</h3>
+                <ul>
+                    <li><strong>Type 1</strong> (bare metal) = direto no hardware | <strong>Type 2</strong> (hosted) = sobre SO existente</li>
+                    <li><strong>VM Escape</strong> = VM compromete o hypervisor (crítico) | <strong>VM Sprawl</strong> = proliferação descontrolada</li>
+                    <li><strong>Container</strong> compartilha kernel do host — mais leve que VM, menos isolado</li>
+                    <li><strong>SDN Control Plane</strong> = decisões | <strong>Data Plane</strong> = encaminhamento</li>
+                    <li><strong>SaaS</strong> = provider gerencia tudo | <strong>PaaS</strong> = provider gerencia plataforma | <strong>IaaS</strong> = provider gerencia hardware</li>
+                    <li><strong>CASB</strong> = proxy de segurança entre usuários e provedores cloud</li>
+                    <li><strong>Shared Responsibility</strong>: em IaaS o cliente é responsável pelo SO e acima</li>
+                    <li><strong>MDM</strong> = gerencia dispositivo | <strong>MAM</strong> = gerencia apenas apps</li>
+                    <li><strong>BYOD</strong> = maior risco | <strong>COPE</strong> = empresa controla tudo | <strong>CYOD</strong> = lista aprovada</li>
+                    <li><strong>SPF</strong> = DNS lista IPs autorizados | <strong>DKIM</strong> = assinatura digital | <strong>DMARC</strong> = política de falha</li>
+                    <li><strong>SCADA/ICS</strong>: isolamento (air gap) é a principal proteção</li>
+                    <li><strong>IoT</strong>: segmentar em VLAN separada, trocar senhas padrão</li>
+                </ul>
+            </div>
+
+            <h2>1️⃣ Virtualização</h2>
+            <div class="grid-2">
+                <div style="background:#f5f3ff;">
+                    <h3 style="color:#5b21b6; margin-top:0;">🖥️ Hypervisor Type 1 (Bare Metal)</h3>
+                    <ul>
+                        <li>Executa diretamente no hardware</li>
+                        <li>Melhor performance e segurança</li>
+                        <li>Usado em produção/datacenter</li>
+                        <li>Exemplos: VMware ESXi, Hyper-V, Xen, KVM</li>
+                    </ul>
+                </div>
+                <div style="background:#fef3c7;">
+                    <h3 style="color:#d97706; margin-top:0;">💻 Hypervisor Type 2 (Hosted)</h3>
+                    <ul>
+                        <li>Executa sobre um SO existente</li>
+                        <li>Menor performance, mais simples</li>
+                        <li>Usado em dev, teste, workstations</li>
+                        <li>Exemplos: VMware Workstation, VirtualBox, Parallels</li>
+                    </ul>
+                </div>
+            </div>
+            <h3>Ameaças em Virtualização</h3>
+            <div class="table-wrap"><table>
+                <tr><th>Ameaça</th><th>Descrição</th><th>Impacto</th></tr>
+                <tr><td><strong>VM Escape</strong></td><td>VM compromete o hypervisor ou host</td><td>Crítico — acesso a todas as VMs</td></tr>
+                <tr><td><strong>VM Sprawl</strong></td><td>Proliferação descontrolada de VMs</td><td>Patches não aplicados, inventário perdido</td></tr>
+                <tr><td><strong>Hyperjacking</strong></td><td>Atacante instala hypervisor rogue abaixo do legítimo</td><td>Controle total e invisível do sistema</td></tr>
+                <tr><td><strong>Live VM Migration</strong></td><td>Migração de VM por canal não criptografado</td><td>Interceptação de dados em trânsito</td></tr>
+                <tr><td><strong>Resource Reuse</strong></td><td>Dados residuais de VM desativada em memória/disco</td><td>Exposição de dados de outra VM</td></tr>
+            </table></div>
+            <h3>Containers vs VMs</h3>
+            <div class="table-wrap"><table>
+                <tr><th>Característica</th><th>VM</th><th>Container</th></tr>
+                <tr><td>Isolamento</td><td>✅ Completo (SO próprio)</td><td>⚠️ Compartilha kernel do host</td></tr>
+                <tr><td>Leveza</td><td>Pesado (GB)</td><td>Leve (MB)</td></tr>
+                <tr><td>Boot</td><td>Minutos</td><td>Segundos</td></tr>
+                <tr><td>Exemplo</td><td>VMware ESXi, Hyper-V</td><td>Docker, Kubernetes</td></tr>
+                <tr><td>Risco</td><td>VM Escape</td><td>Container Escape (kernel compartilhado)</td></tr>
+            </table></div>
+
+            <h2>2️⃣ Redes Virtuais e SDN</h2>
+            <h3>Componentes de Rede Virtual</h3>
+            <ul>
+                <li><strong>vSwitch:</strong> Switch virtual que conecta VMs entre si e à rede física</li>
+                <li><strong>NIC Teaming (Bonding):</strong> Agrupa múltiplas NICs para balanceamento de carga e failover</li>
+                <li><strong>VLAN:</strong> Segmentação lógica — separa domínios de broadcast sem hardware adicional</li>
+                <li><strong>Microsegmentação:</strong> VLANs granulares no nível de workload, não apenas de subnet</li>
+            </ul>
+            <h3>SDN — Software-Defined Networking</h3>
+            <div class="table-wrap"><table>
+                <tr><th>Plano</th><th>Função</th><th>Implementação</th></tr>
+                <tr><td><strong>Control Plane</strong></td><td>Toma decisões de roteamento/encaminhamento</td><td>Software centralizado (SDN Controller)</td></tr>
+                <tr><td><strong>Data Plane</strong></td><td>Executa o encaminhamento de pacotes</td><td>Hardware (switches, roteadores)</td></tr>
+                <tr><td><strong>Management Plane</strong></td><td>Configuração e monitoramento</td><td>Interface de gerenciamento</td></tr>
+            </table></div>
+            <ul>
+                <li><strong>APIs Northbound:</strong> Control Plane ↔ Aplicações (automação, orquestração) — geralmente REST</li>
+                <li><strong>APIs Southbound:</strong> Control Plane ↔ Dispositivos de rede — ex: OpenFlow, NETCONF</li>
+            </ul>
+
+            <h2>3️⃣ Cloud Computing</h2>
+            <h3>Modelos de Serviço (XaaS)</h3>
+            <div class="table-wrap"><table>
+                <tr><th>Modelo</th><th>Cliente gerencia</th><th>Provider gerencia</th><th>Exemplos</th></tr>
+                <tr><td><strong>SaaS</strong></td><td>Apenas uso</td><td>Tudo</td><td>Gmail, Office 365, Salesforce</td></tr>
+                <tr><td><strong>PaaS</strong></td><td>App + Dados</td><td>Runtime, SO, Infra</td><td>Heroku, Google App Engine</td></tr>
+                <tr><td><strong>IaaS</strong></td><td>SO, App, Dados</td><td>Virtualização, Hardware</td><td>AWS EC2, Azure VMs, GCP</td></tr>
+                <tr><td><strong>FaaS</strong></td><td>Funções/código</td><td>Infra completa</td><td>AWS Lambda, Azure Functions</td></tr>
+            </table></div>
+            <h3>Modelos de Implantação</h3>
+            <div class="table-wrap"><table>
+                <tr><th>Modelo</th><th>Descrição</th><th>Segurança</th></tr>
+                <tr><td><strong>Public Cloud</strong></td><td>Multi-tenant, internet, pay-per-use</td><td>Menor controle</td></tr>
+                <tr><td><strong>Private Cloud</strong></td><td>Dedicado a uma organização</td><td>Maior controle</td></tr>
+                <tr><td><strong>Hybrid Cloud</strong></td><td>Pública + Privada com portabilidade</td><td>Balanceia custo/controle</td></tr>
+                <tr><td><strong>Community Cloud</strong></td><td>Compartilhado por organizações similares</td><td>Custos e políticas compartilhados</td></tr>
+            </table></div>
+
+            <div class="warning-box">
+                <h3>⚠️ Shared Responsibility Model</h3>
+                <ul>
+                    <li><strong>SaaS:</strong> Provider responsável por quase tudo. Cliente: dados e acesso</li>
+                    <li><strong>PaaS:</strong> Cliente: aplicação e dados. Provider: todo o resto</li>
+                    <li><strong>IaaS:</strong> Cliente: SO, middleware, apps, dados. Provider: hardware e virtualização</li>
+                    <li>Segurança é SEMPRE responsabilidade compartilhada — o cliente NUNCA está isento</li>
+                </ul>
+            </div>
+
+            <h3>Segurança em Cloud</h3>
+            <ul>
+                <li><strong>CASB (Cloud Access Security Broker):</strong> Proxy entre usuários e provedores cloud — aplica políticas, detecta shadow IT, DLP</li>
+                <li><strong>CSPM (Cloud Security Posture Management):</strong> Identifica misconfigurações em ambientes cloud</li>
+                <li><strong>CWPP (Cloud Workload Protection Platform):</strong> Proteção de workloads em runtime</li>
+                <li><strong>Serverless Security:</strong> Funções efêmeras com superfície de ataque reduzida mas sem visibilidade tradicional</li>
+                <li><strong>API Gateway:</strong> Ponto central de controle para APIs cloud — autenticação, rate limiting, logging</li>
+            </ul>
+
+            <h2>4️⃣ Segurança Mobile</h2>
+            <h3>Políticas de Dispositivo</h3>
+            <div class="table-wrap"><table>
+                <tr><th>Política</th><th>Quem é dono</th><th>Controle empresa</th><th>Risco</th></tr>
+                <tr><td><strong>BYOD</strong></td><td>Funcionário</td><td>Limitado</td><td>Alto</td></tr>
+                <tr><td><strong>COPE</strong></td><td>Empresa</td><td>Total</td><td>Baixo</td></tr>
+                <tr><td><strong>CYOD</strong></td><td>Empresa</td><td>Alto</td><td>Baixo/Médio</td></tr>
+                <tr><td><strong>COBO</strong></td><td>Empresa</td><td>Total (só trabalho)</td><td>Mínimo</td></tr>
+            </table></div>
+            <h3>Gerenciamento Mobile</h3>
+            <ul>
+                <li><strong>MDM (Mobile Device Management):</strong> Gerencia o dispositivo inteiro — políticas, remote wipe, apps, inventário</li>
+                <li><strong>MAM (Mobile Application Management):</strong> Gerencia apenas aplicações específicas — sem controle do dispositivo pessoal</li>
+                <li><strong>UEM (Unified Endpoint Management):</strong> MDM estendido para todos endpoints (mobile, desktop, IoT)</li>
+                <li><strong>Containerização:</strong> Separa ambiente corporativo do pessoal em BYOD</li>
+            </ul>
+            <h3>Ameaças Mobile</h3>
+            <ul>
+                <li><strong>Jailbreaking (iOS) / Rooting (Android):</strong> Remove restrições do SO — expõe a malware</li>
+                <li><strong>Sideloading:</strong> Instalar apps fora da loja oficial — risco de malware</li>
+                <li><strong>Rogue App:</strong> App malicioso na loja ou fora dela</li>
+                <li><strong>SMS Phishing (Smishing):</strong> Phishing via SMS</li>
+                <li><strong>Baseband Attack:</strong> Exploração do processador de rádio (modem)</li>
+                <li><strong>Evil Twin Wi-Fi:</strong> Redes falsas para interceptar tráfego mobile</li>
+            </ul>
+
+            <h2>5️⃣ IoT e Sistemas Embarcados</h2>
+            <div class="table-wrap"><table>
+                <tr><th>Sistema</th><th>Descrição</th><th>Proteção Principal</th></tr>
+                <tr><td><strong>IoT</strong></td><td>Dispositivos conectados — câmeras, sensores, smart devices</td><td>Segmentar em VLAN, trocar senhas padrão</td></tr>
+                <tr><td><strong>SCADA/ICS</strong></td><td>Controle industrial (energia, água, manufatura)</td><td>Air gap, monitoramento dedicado</td></tr>
+                <tr><td><strong>RTOS</strong></td><td>SO de tempo real — determinismo &gt; performance</td><td>Patches rígidos, isolamento</td></tr>
+                <tr><td><strong>SoC</strong></td><td>Processador+memória+periféricos em 1 chip</td><td>Secure boot, firmware signing</td></tr>
+                <tr><td><strong>ICS</strong></td><td>Industrial Control System — supervisão de processos</td><td>Protocolo OT separado de IT</td></tr>
+                <tr><td><strong>HVAC</strong></td><td>Controle de temperatura/ambiente em datacenters</td><td>Segmentar da rede principal</td></tr>
+            </table></div>
+            <div class="info-box">
+                <h3>🏭 Por que SCADA/ICS é crítico?</h3>
+                <p>Sistemas SCADA controlam infraestrutura crítica nacional (energia elétrica, água, oleodutos). Um ataque bem-sucedido pode ter impacto físico real. Protocolo Modbus/DNP3 são legados e sem segurança nativa.</p>
+            </div>
+
+            <h2>6️⃣ Email Security</h2>
+            <h3>Autenticação de Email (SPF, DKIM, DMARC)</h3>
+            <div class="table-wrap"><table>
+                <tr><th>Protocolo</th><th>Mecanismo</th><th>O que previne</th></tr>
+                <tr><td><strong>SPF</strong></td><td>Registro DNS TXT com IPs autorizados a enviar</td><td>Spoofing de envelope (Return-Path)</td></tr>
+                <tr><td><strong>DKIM</strong></td><td>Assinatura criptográfica no header do email</td><td>Spoofing + adulteração em trânsito</td></tr>
+                <tr><td><strong>DMARC</strong></td><td>Política de o que fazer quando SPF/DKIM falham</td><td>Phishing — define: none, quarantine, reject</td></tr>
+            </table></div>
+            <h3>Outros Controles de Email</h3>
+            <ul>
+                <li><strong>S/MIME:</strong> Criptografia e assinatura digital de email ponta a ponta (certificados PKI)</li>
+                <li><strong>PGP/GPG:</strong> Criptografia de email com web of trust (sem CA central)</li>
+                <li><strong>Email Gateway:</strong> Filtra spam, malware e phishing antes de chegar ao usuário</li>
+                <li><strong>Anti-Spam:</strong> Filtragem por reputação, conteúdo, SPF/DKIM/DMARC</li>
+                <li><strong>Email DLP:</strong> Previne vazamento de dados via email</li>
+                <li><strong>MX Record:</strong> Registro DNS que define os servidores de email do domínio</li>
+            </ul>
+
+            <div class="warning-box">
+                <h3>🎯 Dicas Finais para a Prova</h3>
+                <ul>
+                    <li><strong>Type 1 vs Type 2:</strong> Type 1 = datacenter (bare metal). Type 2 = dev (sobre SO)</li>
+                    <li><strong>VM Escape ≠ VM Sprawl:</strong> Escape = ataque ao hypervisor. Sprawl = gestão inadequada</li>
+                    <li><strong>Container ≠ VM:</strong> Container compartilha kernel — menos isolado mas mais eficiente</li>
+                    <li><strong>CASB</strong> é o controle de segurança específico para cloud (não confundir com firewall)</li>
+                    <li><strong>Northbound</strong> = apps (REST) | <strong>Southbound</strong> = dispositivos (OpenFlow)</li>
+                    <li><strong>SPF = DNS</strong> | <strong>DKIM = assinatura</strong> | <strong>DMARC = política</strong></li>
+                    <li><strong>MDM</strong> gerencia dispositivo inteiro | <strong>MAM</strong> gerencia apenas apps específicas</li>
+                    <li><strong>BYOD</strong> = maior risco | <strong>COBO</strong> = menor risco</li>
+                    <li><strong>Air gap</strong> é a proteção mais forte para SCADA/ICS</li>
+                </ul>
+            </div>
         </div>
     </div>
 
-    <script>
-        // ========== CARDS DO CAPÍTULO 10 ==========
-        /**
-         * ARRAY cards: armazena TODOS os flashcards do capítulo
-         * Cada card tem:
-         * - f: frente (a pergunta/conceito)
-         * - b: verso (a resposta/definição)
-         */
-        const cards = [
-            // Virtualização (1-14)
-            {f: "O que é um Hypervisor Type 1 (bare metal)?", 
-             b: "Hypervisor que executa diretamente no hardware, sem um sistema operacional hospedeiro. Melhor performance e segurança. Exemplos: VMware ESXi, Microsoft Hyper-V, Xen, KVM."},
-             
-            {f: "O que é um Hypervisor Type 2 (hosted)?", 
-             b: "Hypervisor que executa sobre um sistema operacional existente. Usado para desenvolvimento, teste e ambientes de estação de trabalho. Exemplos: VMware Workstation, VirtualBox, Parallels."},
-             
-            {f: "O que é VM Sprawl?", 
-             b: "Proliferação descontrolada de máquinas virtuais sem gerenciamento adequado. Dificulta inventário, aplicação de patches e pode criar riscos de segurança."},
-             
-            {f: "O que é VM Escape?", 
-             b: "Ataque onde um processo executando dentro de uma máquina virtual consegue 'escapar' e comprometer o hypervisor ou o host. É raro, mas crítico."},
-             
-            {f: "O que são Containers?", 
-             b: "Tecnologia de virtualização a nível de sistema operacional que permite executar aplicações isoladas compartilhando o mesmo kernel. Mais leves e rápidos que VMs. Ex: Docker, Kubernetes."},
-             
-            {f: "Quais as principais práticas de segurança em containers?", 
-             b: "Image scanning (escaneamento de imagens por vulnerabilidades), princípio do menor privilégio, segmentação de rede, proteção em runtime."},
-             
-            {f: "O que é um vSwitch (Virtual Switch)?", 
-             b: "Switch virtual que conecta máquinas virtuais entre si e com a rede física. Presente em hypervisors como VMware vSwitch e Hyper-V Virtual Switch."},
-             
-            {f: "O que é NIC Teaming (Bonding)?", 
-             b: "Agregação de múltiplas interfaces de rede para fornecer balanceamento de carga e failover. Aumenta disponibilidade e performance."},
-             
-            {f: "O que é VLAN (Virtual LAN)?", 
-             b: "Segmentação lógica de uma rede física em múltiplas redes broadcast separadas. Melhora segurança e performance."},
-             
-            {f: "O que é SDN (Software-Defined Networking)?", 
-             b: "Arquitetura que separa o plano de controle (decisões de roteamento) do plano de dados (encaminhamento de pacotes). Centraliza o gerenciamento."},
-             
-            {f: "O que é Control Plane no SDN?", 
-             b: "Plano de controle: toma decisões sobre como os pacotes devem ser encaminhados. É centralizado e baseado em software."},
-             
-            {f: "O que é Data Plane no SDN?", 
-             b: "Plano de dados: executa o encaminhamento de pacotes conforme as regras definidas pelo plano de controle. Geralmente implementado em hardware."},
-             
-            {f: "O que são APIs Northbound no SDN?", 
-             b: "APIs que permitem a comunicação do plano de controle com aplicações e serviços (automação, orquestração). Geralmente REST."},
-             
-            {f: "O que são APIs Southbound no SDN?", 
-             b: "APIs que permitem a comunicação do plano de controle com dispositivos de rede (switches, roteadores). Ex: OpenFlow, NETCONF."},
+    <!-- ABA 2: QUIZ -->
+    <div id="tab2" class="content">
+        <div class="quiz-area">
+            <div class="quiz-header">
+                <h2 style="font-size:1.8rem; margin-bottom:10px;">❓ Quiz — Capítulo 10</h2>
+                <p style="font-size:1.1rem; opacity:0.9;">15 questões sorteadas do pool de 90 • Aprovação: 80%</p>
+            </div>
+            <div id="questions"></div>
+            <div class="quiz-controls">
+                <button class="btn btn-check" onclick="checkAnswers()">✅ Ver Resultados</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-            // Cloud (15-21)
-            {f: "O que é SaaS (Software as a Service)?", 
-             b: "Software como Serviço. O cliente usa o software sem gerenciar infraestrutura. O provedor gerencia tudo. Ex: Gmail, Office 365, Salesforce."},
-             
-            {f: "O que é PaaS (Platform as a Service)?", 
-             b: "Plataforma como Serviço. O cliente gerencia apenas aplicação e dados. O provedor gerencia a plataforma. Ex: Heroku, Google App Engine."},
-             
-            {f: "O que é IaaS (Infrastructure as a Service)?", 
-             b: "Infraestrutura como Serviço. O cliente gerencia SO, aplicação e dados. O provedor gerencia virtualização e hardware. Ex: AWS EC2, Azure VMs."},
-             
-            {f: "O que é Public Cloud?", 
-             b: "Nuvem pública: recursos compartilhados (multi-tenant), acessíveis pela internet. Ex: AWS, Azure, Google Cloud. Pagamento por uso."},
-             
-            {f: "O que é Private Cloud?", 
-             b: "Nuvem privada: infraestrutura dedicada a uma única organização. Mais controle, mas mais cara. Pode ser on-premises ou hospedada."},
-             
-            {f: "O que é Hybrid Cloud?", 
-             b: "Nuvem híbrida: combinação de nuvem pública e privada, permitindo portabilidade de workloads. Balanceia custo e controle."},
-             
-            {f: "O que é Community Cloud?", 
-             b: "Nuvem comunitária: compartilhada por organizações com interesses comuns (ex: governo, saúde). Custos e benefícios compartilhados."},
+<!-- MODAL DE RESULTADO -->
+<div class="results-modal" id="results-modal">
+    <div class="results-content">
+        <div class="result-emoji" id="result-emoji">🎉</div>
+        <h2 id="result-title" style="font-size:1.8rem; margin-bottom:10px;">APROVADO!</h2>
+        <div class="score-circle" id="score-circle">0%</div>
+        <p id="score-text" style="font-size:1.1rem; line-height:1.6; margin-bottom:10px;"></p>
+        <div class="modal-buttons">
+            <button class="btn btn-primary" onclick="newQuizSession()">🎲 Nova Sessão</button>
+            <button class="btn btn-secondary" onclick="closeModal()">✕ Fechar</button>
+        </div>
+        <button class="btn btn-explain-modal" onclick="scrollToExplanations()">📖 Ver Explicações</button>
+    </div>
+</div>
 
-            // Mobile (22-26)
-            {f: "O que é MDM (Mobile Device Management)?", 
-             b: "Gerenciamento centralizado de dispositivos móveis: aplicação de políticas, remote wipe (apagamento remoto), distribuição de apps, controle de acesso."},
-             
-            {f: "O que é MAM (Mobile Application Management)?", 
-             b: "Gerenciamento de aplicações móveis: distribuição, atualização e remoção de apps específicas, sem gerenciar o dispositivo inteiro."},
-             
-            {f: "O que é BYOD (Bring Your Own Device)?", 
-             b: "Política onde funcionários usam seus próprios dispositivos para trabalho. Desafios: separação de dados pessoais/corporativos (containerização), políticas de segurança."},
-             
-            {f: "O que é COPE (Corporate Owned, Personally Enabled)?", 
-             b: "Dispositivo fornecido pela empresa, mas com uso pessoal permitido. A empresa mantém controle total."},
-             
-            {f: "O que é CYOD (Choose Your Own Device)?", 
-             b: "Funcionário escolhe um dispositivo de uma lista aprovada pela empresa. Balanceia flexibilidade e controle."},
+<script>
+const allCards = [
+    // BLOCO 1: Hypervisors e VMs (15 cards)
+    {f:"O que é um Hypervisor Type 1 (Bare Metal)?", b:"Hypervisor que executa diretamente no hardware, sem SO hospedeiro. Melhor performance e segurança. Usado em datacenters. Exemplos: VMware ESXi, Microsoft Hyper-V, Xen, KVM.", cat:"Virtualização"},
+    {f:"O que é um Hypervisor Type 2 (Hosted)?", b:"Hypervisor que executa sobre um SO existente. Menor performance, mais simples de instalar. Usado para desenvolvimento, teste e workstations. Exemplos: VMware Workstation, VirtualBox, Parallels.", cat:"Virtualização"},
+    {f:"Qual a diferença de segurança entre Type 1 e Type 2?", b:"Type 1: superfície de ataque menor — não há SO hospedeiro para explorar. Type 2: se o SO hospedeiro for comprometido, o hypervisor e todas as VMs estão em risco.", cat:"Virtualização"},
+    {f:"O que é VM Sprawl?", b:"Proliferação descontrolada de máquinas virtuais sem gerenciamento adequado. Problema: VMs sem patches, sem inventário, sem monitoramento — cada VM esquecida é uma vulnerabilidade.", cat:"Virtualização"},
+    {f:"O que é VM Escape?", b:"Ataque crítico onde um processo dentro de uma VM consegue 'escapar' e comprometer o hypervisor ou o host físico. Se bem-sucedido, dá acesso a TODAS as VMs do host.", cat:"Virtualização"},
+    {f:"O que é Hyperjacking?", b:"Atacante instala um hypervisor rogue abaixo do hypervisor legítimo (rootkit de hypervisor). O hypervisor real passa a executar como VM sem perceber. Controle total e invisível.", cat:"Virtualização"},
+    {f:"O que é Live VM Migration e qual risco de segurança apresenta?", b:"Migração de VM em execução de um host físico para outro. Risco: se o canal de migração não for criptografado, dados da VM podem ser interceptados em trânsito.", cat:"Virtualização"},
+    {f:"O que é Resource Reuse em virtualização?", b:"Dados residuais de uma VM desativada que permanecem na memória ou disco e podem ser lidos por outra VM. O hypervisor deve garantir limpeza (zeroing) de recursos antes de realocá-los.", cat:"Virtualização"},
+    {f:"O que são Containers e como diferem de VMs?", b:"Virtualização a nível de SO — compartilham o kernel do host. Mais leves (MB vs GB), iniciam em segundos. Menos isolados que VMs: uma vulnerabilidade no kernel afeta todos os containers.", cat:"Virtualização"},
+    {f:"Qual é o risco específico de segurança nos containers?", b:"Container Escape: processo malicioso no container explora vulnerabilidade do kernel para escapar e acessar o host. Mitigado com: imagens mínimas, princípio do menor privilégio, runtime security.", cat:"Virtualização"},
+    {f:"Quais são as boas práticas de segurança para containers?", b:"Image scanning (varredura de vulnerabilidades em imagens), imagens mínimas (distroless), não executar como root, segmentação de rede, monitoramento de runtime, namespaces e cgroups.", cat:"Virtualização"},
+    {f:"O que é um vSwitch (Virtual Switch)?", b:"Switch virtual que conecta VMs entre si e com a rede física, dentro do hypervisor. Implementa políticas de rede virtualizadas. Exemplos: VMware vSwitch, Hyper-V Virtual Switch.", cat:"Virtualização"},
+    {f:"O que é NIC Teaming (Bonding)?", b:"Agregação de múltiplas interfaces de rede físicas em uma lógica. Fornece balanceamento de carga (aumenta throughput) e failover (alta disponibilidade) simultaneamente.", cat:"Virtualização"},
+    {f:"O que é Microsegmentação em virtualização?", b:"Criação de zonas de segurança granulares no nível de workload individual (não apenas de subnet/VLAN). Implementada via SDN ou políticas de hypervisor. Limita movimento lateral.", cat:"Virtualização"},
+    {f:"O que é uma snapshot de VM e qual risco de segurança apresenta?", b:"Cópia point-in-time do estado completo de uma VM. Risco: snapshots antigas podem conter vulnerabilidades ou credenciais antigas. Crescem indefinidamente e podem expor dados sensíveis.", cat:"Virtualização"},
 
-            // Embedded Systems (27-30)
-            {f: "O que é IoT (Internet of Things) e quais seus desafios de segurança?", 
-             b: "Dispositivos conectados com limitações de CPU, memória e energia. Segurança: segmentação de rede, atualizações, troca de senhas padrão."},
-             
-            {f: "O que é SCADA?", 
-             b: "Supervisory Control and Data Acquisition. Sistemas de controle industrial para infraestrutura crítica. Segurança: isolamento (air gap), monitoramento."},
-             
-            {f: "O que é RTOS (Real-Time Operating System)?", 
-             b: "Sistema operacional de tempo real. Prioriza determinismo e previsibilidade sobre performance. Usado em sistemas industriais, automotivos, médicos."},
-             
-            {f: "O que é SoC (System on a Chip)?", 
-             b: "Integração de processador, memória e periféricos em um único chip. Comum em IoT e dispositivos móveis. Eficiência energética."},
+    // BLOCO 2: SDN e Redes Virtuais (10 cards)
+    {f:"O que é SDN (Software-Defined Networking)?", b:"Arquitetura que separa o Control Plane (decisões de roteamento) do Data Plane (encaminhamento de pacotes). Centraliza o gerenciamento de rede em software, tornando-a programável.", cat:"SDN"},
+    {f:"O que é o Control Plane no SDN?", b:"Plano de controle: toma decisões sobre como pacotes devem ser encaminhados. Centralizado no SDN Controller (software). Calcula rotas e define políticas para todos os dispositivos.", cat:"SDN"},
+    {f:"O que é o Data Plane no SDN?", b:"Plano de dados: executa o encaminhamento de pacotes conforme as regras definidas pelo Control Plane. Implementado em hardware (switches, roteadores). Não toma decisões — apenas executa.", cat:"SDN"},
+    {f:"O que são APIs Northbound no SDN?", b:"APIs que permitem comunicação do SDN Controller com aplicações e serviços de nível superior (automação, orquestração, análise). Geralmente RESTful. Permitem programar a rede via software.", cat:"SDN"},
+    {f:"O que são APIs Southbound no SDN?", b:"APIs que permitem comunicação do SDN Controller com dispositivos de rede físicos (switches, roteadores). Exemplos: OpenFlow, NETCONF, OVSDB. Instalam as regras de encaminhamento.", cat:"SDN"},
+    {f:"Qual é o risco de segurança específico do SDN?", b:"O SDN Controller é um ponto único de falha e alvo de alto valor. Se comprometido, o atacante controla toda a rede. Requer proteção robusta: autenticação forte, criptografia de APIs, HA.", cat:"SDN"},
+    {f:"O que é VLAN (Virtual LAN) e seu benefício de segurança?", b:"Segmentação lógica de rede física em múltiplos domínios de broadcast independentes. Isola tráfego sem hardware adicional. Impede que dispositivos em VLANs diferentes se comuniquem sem roteamento/ACL.", cat:"SDN"},
+    {f:"O que é VLAN Hopping?", b:"Ataque onde o atacante envia frames com múltiplos tags 802.1Q para acessar VLANs não autorizadas. Mitigação: desabilitar DTP, configurar PVLAN, nunca usar VLAN nativa para dados de usuário.", cat:"SDN"},
+    {f:"O que é Network Function Virtualization (NFV)?", b:"Virtualização de funções de rede (firewall, load balancer, IDS) em software rodando em hardware commodity, ao invés de appliances físicos dedicados. Relacionado ao SDN.", cat:"SDN"},
+    {f:"O que é East-West traffic em datacenters virtualizados?", b:"Tráfego que circula entre VMs/containers dentro do datacenter (lateral). Ao contrário do North-South (entrada/saída do DC), não passa pelo firewall perimetral — exige microsegmentação.", cat:"SDN"},
 
-            // Email Security (31-33)
-            {f: "O que é SPF (Sender Policy Framework)?", 
-             b: "Registro DNS que lista os endereços IP autorizados a enviar email em nome de um domínio. Ajuda a prevenir spoofing de email."},
-             
-            {f: "O que é DKIM (DomainKeys Identified Mail)?", 
-             b: "Assinatura digital anexada ao email que permite ao receptor validar que o email veio do domínio e não foi alterado durante o trânsito."},
-             
-            {f: "O que é DMARC (Domain-based Message Authentication)?", 
-             b: "Política que define o que fazer com emails que falham nas verificações SPF e/ou DKIM: monitorar, quarentena ou rejeitar."}
-        ];
+    // BLOCO 3: Cloud Computing (20 cards)
+    {f:"O que é SaaS (Software as a Service)?", b:"Software como Serviço: o cliente usa o software sem gerenciar nenhuma infraestrutura. O provider gerencia tudo. Cliente é responsável apenas pelos dados e controle de acesso. Ex: Gmail, Office 365, Salesforce.", cat:"Cloud"},
+    {f:"O que é PaaS (Platform as a Service)?", b:"Plataforma como Serviço: cliente gerencia aplicação e dados. Provider gerencia runtime, SO, middleware, infra. Ideal para desenvolvedores. Ex: Heroku, Google App Engine, Azure App Service.", cat:"Cloud"},
+    {f:"O que é IaaS (Infrastructure as a Service)?", b:"Infraestrutura como Serviço: cliente gerencia SO, middleware, aplicações e dados. Provider gerencia virtualização, servidores, storage e rede. Maior controle e responsabilidade. Ex: AWS EC2, Azure VMs.", cat:"Cloud"},
+    {f:"O que é FaaS (Function as a Service) / Serverless?", b:"Funções como Serviço: cliente escreve apenas funções de código, execução gerenciada pelo provider. Escala automática, sem gerenciar servidores. Ex: AWS Lambda, Azure Functions, Google Cloud Functions.", cat:"Cloud"},
+    {f:"O que é o Shared Responsibility Model?", b:"Define quem é responsável por o quê em cloud. IaaS: cliente cuida de SO para cima. PaaS: cliente cuida de app e dados. SaaS: cliente cuida apenas de dados e acesso. Provider NUNCA é 100% responsável.", cat:"Cloud"},
+    {f:"O que é Public Cloud?", b:"Recursos compartilhados entre múltiplos clientes (multi-tenant), acessíveis pela internet. Modelos pay-per-use. Ex: AWS, Azure, Google Cloud. Menor controle do cliente.", cat:"Cloud"},
+    {f:"O que é Private Cloud?", b:"Infraestrutura dedicada a uma única organização. Maior controle e privacidade, custo mais elevado. Pode ser on-premises (auto-gerenciada) ou hospedada por um provider.", cat:"Cloud"},
+    {f:"O que é Hybrid Cloud?", b:"Combinação de nuvem pública e privada com portabilidade de workloads entre elas. Balanceia custo (pública para cargas variáveis) e controle (privada para dados sensíveis).", cat:"Cloud"},
+    {f:"O que é Community Cloud?", b:"Nuvem compartilhada por organizações com interesses, requisitos ou missão comuns (ex: governo federal, saúde, financeiro). Custos e políticas compartilhados.", cat:"Cloud"},
+    {f:"O que é CASB (Cloud Access Security Broker)?", b:"Ponto de controle de segurança entre usuários e provedores cloud. Aplica políticas de segurança, detecta Shadow IT, implementa DLP, autenticação, logging e criptografia em trânsito.", cat:"Cloud"},
+    {f:"O que é Shadow IT no contexto de cloud?", b:"Uso não autorizado de serviços cloud por funcionários sem aprovação do departamento de TI. Risco: dados corporativos em serviços não controlados. CASB é a principal ferramenta de detecção.", cat:"Cloud"},
+    {f:"O que é CSPM (Cloud Security Posture Management)?", b:"Ferramenta que identifica automaticamente misconfigurações em ambientes cloud (buckets S3 públicos, portas abertas, privilégios excessivos). Garante conformidade contínua com políticas de segurança.", cat:"Cloud"},
+    {f:"O que é Cloud Misconfiguration e por que é o risco #1 em cloud?", b:"Configuração incorreta de serviços cloud (ex: S3 bucket público, security group aberto para 0.0.0.0/0). É o principal vetor de violações em cloud — erros humanos de configuração, não falhas do provider.", cat:"Cloud"},
+    {f:"O que é um API Gateway em cloud?", b:"Ponto central de controle para APIs cloud. Responsável por: autenticação, autorização, rate limiting, logging, transformação de requisições e roteamento. Reduz exposição direta das APIs.", cat:"Cloud"},
+    {f:"O que é Cloud Storage Security?", b:"Proteção de dados em storage cloud (S3, Blob Storage). Boas práticas: criptografia em repouso (AES-256), acesso mínimo (IAM), versionamento, logging de acesso, prevenção de acesso público.", cat:"Cloud"},
+    {f:"O que é um Tenant em cloud?", b:"Cliente individual que usa recursos cloud. Em multi-tenant (nuvem pública), múltiplos tenants compartilham a mesma infraestrutura física mas são logicamente isolados. Isolamento inadequado = risco.", cat:"Cloud"},
+    {f:"O que é Cloud IAM (Identity and Access Management)?", b:"Sistema de gerenciamento de identidades e permissões em cloud. Define quem pode fazer o quê em quais recursos. Princípio do menor privilégio é crítico — permissões excessivas são risco #2 em cloud.", cat:"Cloud"},
+    {f:"O que é um Security Group em cloud (AWS/Azure)?", b:"Firewall virtual que controla tráfego de entrada e saída de recursos cloud (VMs, containers). Define regras por protocolo, porta e IP de origem/destino. Misconfiguration é um risco crítico.", cat:"Cloud"},
+    {f:"O que é Cloud Encryption e quais os tipos?", b:"Criptografia de dados em trânsito (TLS) e em repouso (AES-256). Gerenciamento de chaves: provider-managed (simples), customer-managed (CMEK — mais controle), ou customer-provided (CSEK).", cat:"Cloud"},
+    {f:"O que é Serverless Security e seus desafios?", b:"Em FaaS/Serverless, a superfície de ataque é reduzida (sem SO para gerenciar), mas há: funções com permissões excessivas, código inseguro, event injection, dependências vulneráveis e pouca visibilidade.", cat:"Cloud"},
 
-        // ========== QUIZ DO CAPÍTULO 10 (15 QUESTÕES) ==========
-        const quiz = [
-            {q: "Hypervisor que executa diretamente no hardware (melhor performance):", 
-             o: ["Type 1 (Bare Metal)", "Type 2 (Hosted)", "Type 3", "Container"], 
-             c: 0},
-             
-            {q: "Proliferação descontrolada de VMs sem gerenciamento:", 
-             o: ["VM Escape", "VM Sprawl", "VM Hopping", "VM Spoofing"], 
-             c: 1},
-             
-            {q: "Ataque onde uma VM compromete o hypervisor:", 
-             o: ["VM Sprawl", "VM Escape", "Container Escape", "Hyperjacking"], 
-             c: 1},
-             
-            {q: "Tecnologia que compartilha o kernel do host e é mais leve que VM:", 
-             o: ["vSwitch", "Hypervisor", "Container", "VLAN"], 
-             c: 2},
-             
-            {q: "Switch virtual que conecta VMs entre si:", 
-             o: ["vSwitch", "SDN", "VLAN", "NIC Teaming"], 
-             c: 0},
-             
-            {q: "Agregação de múltiplas NICs para balanceamento e failover:", 
-             o: ["VLAN", "SDN", "NIC Teaming", "vSwitch"], 
-             c: 2},
-             
-            {q: "Plano SDN responsável por tomar decisões de roteamento:", 
-             o: ["Data Plane", "Management Plane", "Control Plane", "Forwarding Plane"], 
-             c: 2},
-             
-            {q: "Gmail e Office 365 são exemplos de:", 
-             o: ["IaaS", "PaaS", "SaaS", "DaaS"], 
-             c: 2},
-             
-            {q: "AWS EC2 é um exemplo de:", 
-             o: ["SaaS", "PaaS", "IaaS", "CaaS"], 
-             c: 2},
-             
-            {q: "Modelo de implantação cloud com recursos compartilhados (multi-tenant):", 
-             o: ["Private Cloud", "Public Cloud", "Hybrid Cloud", "Community Cloud"], 
-             c: 1},
-             
-            {q: "Gerenciamento centralizado de dispositivos móveis:", 
-             o: ["MAM", "MDM", "BYOD", "COPE"], 
-             c: 1},
-             
-            {q: "Política onde funcionário usa dispositivo pessoal:", 
-             o: ["COPE", "CYOD", "BYOD", "MDM"], 
-             c: 2},
-             
-            {q: "Sistema de controle industrial para infraestrutura crítica:", 
-             o: ["IoT", "RTOS", "SCADA", "SoC"], 
-             c: 2},
-             
-            {q: "Registro DNS que lista IPs autorizados a enviar email do domínio:", 
-             o: ["DKIM", "DMARC", "SPF", "TLS"], 
-             c: 2},
-             
-            {q: "Assinatura digital para autenticação de email:", 
-             o: ["SPF", "DMARC", "DKIM", "S/MIME"], 
-             c: 2}
-        ];
+    // BLOCO 4: Segurança Mobile (18 cards)
+    {f:"O que é MDM (Mobile Device Management)?", b:"Gerenciamento centralizado de dispositivos móveis: aplicar políticas de segurança, remote wipe, distribuição de apps, inventário, geolocalização, controle de câmera/Bluetooth/Wi-Fi.", cat:"Mobile"},
+    {f:"O que é MAM (Mobile Application Management)?", b:"Gerenciamento apenas de aplicações específicas, não do dispositivo inteiro. Ideal para BYOD: controla apps corporativas sem afetar apps pessoais do funcionário.", cat:"Mobile"},
+    {f:"O que é UEM (Unified Endpoint Management)?", b:"MDM estendido para gerenciar todos os tipos de endpoints: smartphones, tablets, laptops, desktops e IoT em uma plataforma única.", cat:"Mobile"},
+    {f:"O que é BYOD (Bring Your Own Device)?", b:"Funcionários usam dispositivos pessoais para trabalho. Maior risco: dados corporativos em dispositivo não controlado. Mitigação: containerização (separar ambiente pessoal/corporativo), MDM/MAM, políticas claras.", cat:"Mobile"},
+    {f:"O que é COPE (Corporate Owned, Personally Enabled)?", b:"Dispositivo fornecido e de propriedade da empresa, mas com uso pessoal permitido. Empresa mantém controle total via MDM enquanto o funcionário pode usar apps pessoais.", cat:"Mobile"},
+    {f:"O que é CYOD (Choose Your Own Device)?", b:"Funcionário escolhe um dispositivo de uma lista aprovada pela empresa. Balanceia flexibilidade (funcionário escolhe) e controle (empresa define opções aprovadas).", cat:"Mobile"},
+    {f:"O que é COBO (Corporate Owned, Business Only)?", b:"Dispositivo da empresa com uso restrito apenas a aplicações de trabalho. Menor flexibilidade, maior controle e segurança. Comum em ambientes de alta segurança.", cat:"Mobile"},
+    {f:"O que é Containerização em dispositivos mobile?", b:"Separação de ambiente corporativo e pessoal no mesmo dispositivo (especialmente BYOD). Apps e dados corporativos ficam em container criptografado, isolado das apps pessoais.", cat:"Mobile"},
+    {f:"O que é Jailbreaking (iOS) e Rooting (Android)?", b:"Remoção das restrições do SO original. Permite instalar apps não autorizados e acessar o sistema de arquivos raiz. Expõe o dispositivo a malware e invalida garantias e políticas MDM.", cat:"Mobile"},
+    {f:"O que é Sideloading em dispositivos mobile?", b:"Instalação de aplicativos fora da loja oficial (App Store/Google Play). Risco elevado de malware pois apps não passaram pelo processo de revisão da loja. Bloqueado por MDM em ambientes corporativos.", cat:"Mobile"},
+    {f:"O que é Smishing (SMS Phishing)?", b:"Ataque de phishing via mensagens SMS. Usuário recebe SMS com link malicioso ou pedido urgente de dados. Cresceu com popularização do mobile banking. Mais difícil de verificar que email.", cat:"Mobile"},
+    {f:"O que é um Rogue App?", b:"Aplicativo malicioso que se passa por app legítimo. Pode estar na loja (escapou da revisão) ou em lojas alternativas. Rouba credenciais, acessa microfone/câmera, instala malware adicional.", cat:"Mobile"},
+    {f:"O que é Remote Wipe em MDM?", b:"Capacidade de apagar remotamente todos os dados de um dispositivo perdido ou roubado. Pode ser: full wipe (apaga tudo) ou selective wipe (apaga apenas dados corporativos, preservando pessoais).", cat:"Mobile"},
+    {f:"O que é GPS Tracking em contexto de MDM?", b:"Localização remota de dispositivos via GPS. Permite: localizar dispositivos perdidos, geofencing (alertar se dispositivo sair de área definida), inventário de ativos móveis.", cat:"Mobile"},
+    {f:"O que é Geofencing em segurança mobile?", b:"Perímetro virtual geográfico. Se dispositivo sai da área definida: alertas, bloqueio automático de apps sensíveis, requisição de autenticação adicional. Implementado via MDM.", cat:"Mobile"},
+    {f:"O que é Screen Lock e por que é crítico em mobile?", b:"Bloqueio automático de tela com PIN/senha/biometria. Primeira linha de defesa em caso de perda/roubo. MDM pode forçar: tipo de lock, complexidade mínima, timeout máximo e número de tentativas.", cat:"Mobile"},
+    {f:"O que é Full Device Encryption em mobile?", b:"Criptografia de todos os dados no dispositivo. iOS: ativada por padrão. Android: depende do fabricante. Protege dados se dispositivo for perdido/roubado e torna remote wipe mais seguro.", cat:"Mobile"},
+    {f:"O que é Application Whitelisting em mobile?", b:"Política MDM que permite instalação apenas de apps aprovadas pela empresa. Bloqueia todas as demais, incluindo potencial malware. Mais restritivo que blacklisting.", cat:"Mobile"},
 
-        // ========== VARIÁVEIS DE ESTADO ==========
-        
-        let currentCard = 0;        // POSIÇÃO no array filteredCards
-        let flipped = false;        // false = frente, true = verso
-        let mastered = new Set();   // Índices originais dos cards dominados
-        let answers = {};           // Respostas do quiz
-        let checked = false;        // Quiz já foi verificado?
-        let filteredCards = [...Array(cards.length).keys()]; // Índices na ordem atual
-        let currentFilter = 'all';  // Filtro atual
+    // BLOCO 5: IoT e Sistemas Embarcados (15 cards)
+    {f:"O que é IoT (Internet of Things) e seus desafios de segurança?", b:"Dispositivos conectados à internet com limitações de CPU, memória e energia. Desafios: senhas padrão fracas, firmware desatualizado, sem criptografia, difícil de patchar, grande superfície de ataque.", cat:"IoT/ICS"},
+    {f:"Por que IoT é um alvo atraente para atacantes?", b:"Volume massivo (bilhões de dispositivos), geralmente sem segurança by design, raramente atualizados, difíceis de monitorar, e podem ser usados como pivot para rede corporativa ou em botnets (Mirai).", cat:"IoT/ICS"},
+    {f:"Quais são as melhores práticas para segurança de IoT?", b:"Segmentar em VLAN separada, trocar senhas padrão, atualizar firmware, desabilitar serviços desnecessários, inventariar todos os dispositivos, monitorar tráfego anômalo.", cat:"IoT/ICS"},
+    {f:"O que é SCADA (Supervisory Control and Data Acquisition)?", b:"Sistema que monitora e controla processos industriais e infraestrutura crítica (energia, água, gás, manufatura). Coleta dados de sensores e permite controle remoto de atuadores.", cat:"IoT/ICS"},
+    {f:"O que é ICS (Industrial Control System)?", b:"Categoria geral de sistemas de controle industrial, incluindo SCADA, DCS (Distributed Control Systems) e PLCs (Programmable Logic Controllers). Controlam processos físicos críticos.", cat:"IoT/ICS"},
+    {f:"Por que SCADA/ICS é difícil de proteger?", b:"Protocolos legados (Modbus, DNP3) sem autenticação/criptografia nativa, ciclos de vida longos (décadas), patches que exigem downtime inaceitável, e mistura de sistemas OT e IT modernos.", cat:"IoT/ICS"},
+    {f:"O que é Air Gap em segurança ICS/SCADA?", b:"Isolamento físico completo da rede — sem conexão com internet ou rede corporativa. Proteção mais forte para sistemas críticos. Risco residual: ataques via USB (ex: Stuxnet) ou engenharia social.", cat:"IoT/ICS"},
+    {f:"O que é Stuxnet e por que é historicamente importante?", b:"Worm criado para sabotar centrífugas de enriquecimento de urânio do Irã. Primeiro malware conhecido projetado para causar dano físico. Demonstrou que air gaps podem ser contornados via USB.", cat:"IoT/ICS"},
+    {f:"O que é RTOS (Real-Time Operating System)?", b:"SO que prioriza determinismo e previsibilidade de tempo de resposta sobre performance bruta. Usado em sistemas industriais, automotivos, médicos, aviônicos. Falhas de timing = desastres físicos.", cat:"IoT/ICS"},
+    {f:"O que é SoC (System on a Chip)?", b:"Integração de processador, memória, GPU e periféricos em um único chip. Comum em IoT e dispositivos mobile (Raspberry Pi, smartphones). Eficiência energética alta, atualizações de firmware complexas.", cat:"IoT/ICS"},
+    {f:"O que é Firmware e qual o risco de não atualizá-lo?", b:"Software embarcado em hardware (roteadores, câmeras IoT, impressoras). Firmware desatualizado contém vulnerabilidades conhecidas. Atacantes exploram CVEs em firmware para comprometer dispositivos.", cat:"IoT/ICS"},
+    {f:"O que é Secure Boot em sistemas embarcados?", b:"Processo que verifica assinatura digital do firmware antes de executá-lo. Impede execução de firmware modificado/malicioso. Protege contra ataques de persistência em nível de firmware.", cat:"IoT/ICS"},
+    {f:"O que é um HVAC comprometido como vetor de ataque?", b:"Sistema de controle de temperatura/ambiente (HVAC) conectado à rede pode ser pivô para outros sistemas. Caso Target (2013): atacantes entraram pela rede de um fornecedor de HVAC e chegaram ao POS.", cat:"IoT/ICS"},
+    {f:"O que é OT (Operational Technology) vs IT?", b:"OT: tecnologia que monitora/controla processos físicos (SCADA, ICS, robôs). IT: tecnologia de informação (servidores, redes de dados). Convergência OT/IT aumenta a superfície de ataque de sistemas críticos.", cat:"IoT/ICS"},
+    {f:"O que é um PLC (Programmable Logic Controller)?", b:"Computador industrial que controla máquinas e processos automatizados. Componente central de ICS/SCADA. Programados para executar tarefas repetitivas e de tempo real sem SO convencional.", cat:"IoT/ICS"},
 
-        // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
-        
-        function loadProgress() {
-            const saved = localStorage.getItem('security_plus_cap10_mastered');
-            if (saved) {
-                mastered = new Set(JSON.parse(saved));
-            }
-        }
+    // BLOCO 6: Email Security (12 cards)
+    {f:"O que é SPF (Sender Policy Framework)?", b:"Registro DNS TXT que lista os endereços IP autorizados a enviar email em nome de um domínio. Receptor verifica se o IP do servidor remetente está na lista. Previne spoofing de envelope (Return-Path).", cat:"Email"},
+    {f:"O que é DKIM (DomainKeys Identified Mail)?", b:"Assinatura criptográfica adicionada ao header do email pelo servidor remetente. Receptor verifica com a chave pública publicada no DNS. Prova que o email veio do domínio e não foi alterado em trânsito.", cat:"Email"},
+    {f:"O que é DMARC (Domain-based Message Authentication, Reporting and Conformance)?", b:"Política que define o que fazer quando emails falham SPF e/ou DKIM. Políticas: none (monitorar), quarantine (spam), reject (bloquear). Gera relatórios de autenticação de volta ao domínio remetente.", cat:"Email"},
+    {f:"Como SPF, DKIM e DMARC trabalham juntos?", b:"SPF verifica o IP do servidor. DKIM verifica a assinatura do conteúdo. DMARC define a ação quando SPF e/ou DKIM falham. Juntos formam a principal defesa contra phishing e spoofing de email.", cat:"Email"},
+    {f:"O que é S/MIME?", b:"Secure/Multipurpose Internet Mail Extensions: criptografia e assinatura digital de email ponta a ponta usando certificados PKI. Garante confidencialidade (criptografia) e autenticidade (assinatura). Requer PKI.", cat:"Email"},
+    {f:"O que é PGP/GPG para email?", b:"Pretty Good Privacy: criptografia de email usando web of trust (sem CA central). GPG é a implementação open-source. Alternativa ao S/MIME sem necessidade de PKI centralizada.", cat:"Email"},
+    {f:"O que é um Email Gateway (MTA Security)?", b:"Servidor de borda que filtra emails antes de chegarem ao servidor interno. Bloqueia: spam, phishing, malware, spoofing via SPF/DKIM/DMARC. Primeiro filtro da cadeia de entrega.", cat:"Email"},
+    {f:"O que é um MX Record?", b:"Mail Exchanger Record: registro DNS que especifica quais servidores são responsáveis por receber emails para um domínio. Prioridade (número menor = mais prioritário). Necessário para receber email.", cat:"Email"},
+    {f:"O que é Email Spoofing e como é mitigado?", b:"Forjar o endereço do remetente para parecer legítimo. Usado em phishing e BEC (Business Email Compromise). Mitigado por: SPF, DKIM, DMARC e treinamento de usuários.", cat:"Email"},
+    {f:"O que é BEC (Business Email Compromise)?", b:"Ataque sofisticado onde atacante se passa por executivo ou fornecedor para enganar funcionários a transferir dinheiro ou dados. Frequentemente usa spoofing ou conta comprometida — não malware.", cat:"Email"},
+    {f:"O que é Email DLP (Data Loss Prevention)?", b:"Sistema que inspeciona emails de saída para detectar e bloquear envio não autorizado de dados sensíveis (números de cartão, PII, propriedade intelectual). Pode bloquear, criptografar ou alertar.", cat:"Email"},
+    {f:"O que é Phishing vs Spear Phishing vs Whaling?", b:"Phishing: genérico, em massa. Spear Phishing: direcionado a indivíduo/organização específica. Whaling: Spear Phishing contra executivos (CEO, CFO). Quanto mais direcionado, maior a taxa de sucesso.", cat:"Email"},
+];
 
-        function saveProgress() {
-            localStorage.setItem('security_plus_cap10_mastered', JSON.stringify([...mastered]));
-        }
+// ========== QUIZ ==========
+const allQuiz = [
+    // BLOCO A: Virtualização (15)
+    {q:"Qual hypervisor executa diretamente no hardware sem SO hospedeiro?", o:["Type 2 (Hosted)","Type 1 (Bare Metal)","Type 3 (Containerized)","Nested Hypervisor"], c:1, e:"Type 1 (Bare Metal): executa direto no hardware, sem SO hospedeiro. Melhor performance e segurança. Exemplos: VMware ESXi, Hyper-V. Type 2 executa sobre um SO existente."},
+    {q:"Em qual cenário o Hypervisor Type 2 é mais adequado?", o:["Datacenter de produção com centenas de VMs","Servidor de banco de dados crítico","Estação de trabalho de desenvolvedor para testes","Infraestrutura de cloud pública"], c:2, e:"Type 2 (Hosted) é mais adequado para dev/teste em workstations. Type 1 é para produção/datacenter por ter melhor performance e menor superfície de ataque."},
+    {q:"VM Sprawl representa qual tipo de risco de segurança?", o:["VM compromete o hypervisor","VMs sem patches, sem inventário, sem monitoramento criam vulnerabilidades não gerenciadas","Migração de VM interceptada em trânsito","Dados residuais entre VMs"], c:1, e:"VM Sprawl: proliferação descontrolada. VMs 'esquecidas' acumulam vulnerabilidades sem patches, não são monitoradas e podem se tornar vetores de ataque."},
+    {q:"O que torna o VM Escape um ataque tão crítico?", o:["Afeta apenas a VM comprometida","Causa negação de serviço em outras VMs","Dá acesso ao hypervisor e potencialmente a TODAS as VMs do host","Apenas afeta a performance do host"], c:2, e:"VM Escape é crítico porque um processo que escapa de uma VM pode comprometer o hypervisor, dando acesso a TODAS as outras VMs no mesmo host físico."},
+    {q:"O que é Hyperjacking?", o:["Roubar credenciais de um hypervisor","Instalar hypervisor rogue abaixo do legítimo para controle total e invisível","Proliferação descontrolada de hypervisors","Ataque DoS contra o hypervisor"], c:1, e:"Hyperjacking: rootkit de hypervisor. O atacante instala um hypervisor malicioso ABAIXO do legítimo. O hypervisor real passa a executar como VM sem perceber — controle total e quase impossível de detectar."},
+    {q:"Por que a migração de VMs (Live Migration) deve ocorrer em canal criptografado?", o:["Para melhorar a performance da migração","Para evitar que dados da VM sejam interceptados em trânsito","Para reduzir o tempo de migração","Para garantir que a VM inicie corretamente no novo host"], c:1, e:"Live Migration move a memória e estado da VM pela rede. Sem criptografia, um atacante na rede pode capturar dados em trânsito, incluindo credenciais e dados sensíveis."},
+    {q:"Qual é a principal diferença de segurança entre Containers e VMs?", o:["Containers são mais seguros pois são menores","VMs compartilham kernel; containers têm SO próprio","Containers compartilham o kernel do host — vulnerabilidade no kernel afeta todos os containers","São equivalentes em termos de isolamento"], c:2, e:"Container compartilha o kernel do host. Uma vulnerabilidade no kernel pode permitir Container Escape, afetando o host e todos os outros containers. VMs têm SO próprio — isolamento completo."},
+    {q:"O que é Container Escape e como é mitigado?", o:["Container consome todos os recursos do host","Processo malicioso no container explora kernel para acessar o host; mitigado com imagens mínimas e rootless containers","Container falha ao inicializar","Conflito entre containers no mesmo pod"], c:1, e:"Container Escape: exploração de vulnerabilidade no kernel compartilhado para sair do container e acessar o host. Mitigação: imagens mínimas, não executar como root, namespaces, runtime security (Falco)."},
+    {q:"O que é Microsegmentação e qual ameaça mitiga?", o:["Segmentação por país de origem do tráfego","Criação de zonas granulares por workload individual para limitar movimento lateral","Segmentação baseada em tamanho do pacote","Filtrar microsserviços por protocolo"], c:1, e:"Microsegmentação: isolamento no nível de workload individual (não apenas VLAN). Impede que um container/VM comprometido se comunique livremente com outros — limita movimento lateral."},
+    {q:"Uma VM antiga foi desativada mas não destruída. Qual risco representa?", o:["Nenhum risco pois está desativada","Resource Reuse — dados residuais de memória/disco podem ser lidos por novas VMs","VM Sprawl apenas afeta performance","Apenas ocupa espaço em disco desnecessariamente"], c:1, e:"Resource Reuse: dados de VMs desativadas podem persistir em memória ou disco. O hypervisor deve 'zerar' recursos antes de realocar. VMs antigas também têm patches desatualizados se reativadas."},
+    {q:"Qual é a boa prática para snapshots de VMs em produção?", o:["Manter todas as snapshots indefinidamente para máxima reversibilidade","Snapshots frequentes não têm risco de segurança","Gerenciar ciclo de vida das snapshots — deletar as antigas pois podem conter vulnerabilidades e credenciais antigas","Converter snapshots em VMs completas semanalmente"], c:2, e:"Snapshots antigas representam risco: contêm o estado da VM em um momento anterior, potencialmente com vulnerabilidades corrigidas depois, credenciais que já deveriam ter expirado, etc."},
+    {q:"O que é NIC Teaming e qual benefício oferece?", o:["Criar múltiplas NICs virtuais em uma VM","Agregar múltiplas NICs físicas para balanceamento de carga e failover de rede","Isolar NICs por VLAN","Monitorar tráfego de rede por interface"], c:1, e:"NIC Teaming (Bonding): agrupa múltiplas interfaces físicas. Fornece: balanceamento de carga (mais throughput) e failover (se uma NIC falhar, as outras continuam)."},
+    {q:"Por que Image Scanning é crítico em ambientes de containers?", o:["Para reduzir o tamanho das imagens","Para garantir que imagens não contenham vulnerabilidades conhecidas antes do deploy","Para acelerar o tempo de build","Para verificar licenças de software"], c:1, e:"Image Scanning analisa layers da imagem de container antes do deploy, identificando CVEs em pacotes, bibliotecas e dependências. Evita publicar vulnerabilidades conhecidas em produção."},
+    {q:"O que é um vSwitch e qual é sua importância de segurança?", o:["Switch físico dedicado para VMs","Switch virtual no hypervisor que conecta VMs — deve ter políticas de segurança como um switch físico","Protocolo de comunicação entre VMs","Balanceador de carga virtual"], c:1, e:"vSwitch: switch virtual no hypervisor. Assim como switches físicos, deve ter: VLANs configuradas, port security, monitoramento de tráfego. Misconfiguration pode permitir VMs se comunicarem sem restrições."},
+    {q:"Uma organização descobriu VMs em produção sem patches há 6 meses. Qual problema de gerenciamento isso indica?", o:["VM Escape","Hyperjacking","VM Sprawl — VMs não gerenciadas adequadamente","Resource Reuse"], c:2, e:"VM Sprawl: VMs 'perdidas' no inventário sem gerenciamento, sem patches, sem monitoramento. O remédio é: inventário automatizado, políticas de ciclo de vida, patch management centralizado."},
 
-        loadProgress(); // Carrega progresso ao iniciar
+    // BLOCO B: SDN e Redes Virtuais (8)
+    {q:"No SDN, qual componente toma as decisões de roteamento?", o:["Data Plane","Management Plane","Control Plane","Forwarding Plane"], c:2, e:"Control Plane: toma DECISÕES sobre como pacotes devem ser encaminhados. É centralizado no SDN Controller. Data Plane: EXECUTA o encaminhamento conforme as regras do Control Plane."},
+    {q:"Qual é o risco específico de segurança do SDN Controller?", o:["Consome muita CPU do servidor","É ponto único de falha e alvo de alto valor — se comprometido, o atacante controla toda a rede","Não suporta IPv6","Incompatível com switches legados"], c:1, e:"SDN Controller centraliza o controle de toda a rede. Se comprometido, o atacante pode modificar rotas, interceptar tráfego, isolar segmentos ou causar DoS em toda a rede. Requer proteção robusta."},
+    {q:"APIs Northbound no SDN comunicam o Controller com o quê?", o:["Dispositivos de rede físicos (switches)","Aplicações e serviços de nível superior (automação, orquestração)","Outros SDN Controllers","Servidores de autenticação RADIUS"], c:1, e:"Northbound APIs: comunicação do Controller PARA CIMA — com aplicações, sistemas de orquestração e automação. Geralmente REST. Southbound: comunicação PARA BAIXO com dispositivos físicos (OpenFlow)."},
+    {q:"O protocolo OpenFlow é um exemplo de qual tipo de API no SDN?", o:["Northbound API","Management API","Southbound API","Eastbound API"], c:2, e:"Southbound APIs: comunicam o Control Plane com dispositivos de rede físicos (switches, roteadores). OpenFlow e NETCONF são exemplos. Instalam as regras de encaminhamento nos dispositivos."},
+    {q:"O que é VLAN Hopping e como é mitigado?", o:["Funcionário mudando de VLAN sem autorização","Atacante usa frames 802.1Q duplos para acessar VLANs não autorizadas; mitigado desabilitando DTP e usando PVLAN","VM migrando entre VLANs automaticamente","Roteamento dinâmico entre VLANs"], c:1, e:"VLAN Hopping: frames com double-tagging 802.1Q enganam switches para encaminhar para VLAN errada. Mitigação: desabilitar DTP auto-negotiate, configurar PVLAN, nunca usar VLAN nativa para dados de usuário."},
+    {q:"O que é East-West traffic e por que exige microsegmentação?", o:["Tráfego entre datacenters em continentes diferentes","Tráfego lateral entre VMs/containers dentro do DC que não passa pelo firewall perimetral","Tráfego de entrada/saída do datacenter","Tráfego de backup e replicação"], c:1, e:"East-West: tráfego entre workloads DENTRO do datacenter. Não passa pelo firewall perimetral (North-South). Um atacante que compromete uma VM pode mover-se livremente sem microsegmentação."},
+    {q:"O que é NFV (Network Function Virtualization)?", o:["Virtualizar servidores de aplicação","Virtualizar funções de rede (firewall, LB, IDS) em software sobre hardware commodity","Virtualizar storage de rede","Virtualizar switches físicos apenas"], c:1, e:"NFV: substituir appliances de rede dedicados (firewall físico, load balancer, IDS) por software rodando em servidores padrão (commodity hardware). Reduz custos e aumenta flexibilidade."},
+    {q:"Por que VLANs melhoram a segurança de redes?", o:["Aumentam velocidade de transmissão","Separam domínios de broadcast — dispositivos em VLANs diferentes não se comunicam sem roteamento e ACL controlada","Criptografam o tráfego de rede","Substituem a necessidade de firewalls"], c:1, e:"VLANs isolam logicamente grupos de dispositivos. Sem roteamento inter-VLAN configurado, dispositivos em VLANs diferentes não podem se comunicar — limita propagação de ataques."},
 
-        // ========== FUNÇÕES DAS ABAS ==========
-        
-        function showTab(n) {
-            document.querySelectorAll('.content').forEach((c, i) => {
-                c.classList.toggle('active', i === n);
-            });
-            
-            document.querySelectorAll('.tab-btn').forEach((b, i) => {
-                b.classList.toggle('active', i === n);
-            });
-            
-            if (n === 2 && !document.getElementById('questions').innerHTML) {
-                loadQuiz();
-            }
-        }
+    // BLOCO C: Cloud Computing (20)
+    {q:"Em qual modelo de serviço cloud o cliente é responsável pelo sistema operacional?", o:["SaaS","PaaS","IaaS","FaaS"], c:2, e:"IaaS: cliente gerencia SO, middleware, aplicações e dados. Provider gerencia virtualização e hardware. PaaS: provider gerencia o SO. SaaS: provider gerencia tudo."},
+    {q:"Gmail e Office 365 são exemplos de qual modelo de serviço?", o:["IaaS","PaaS","FaaS","SaaS"], c:3, e:"SaaS: cliente usa o software sem gerenciar infraestrutura alguma. Provider gerencia tudo. Outros exemplos: Salesforce, Dropbox, Zoom."},
+    {q:"AWS EC2 e Azure Virtual Machines são exemplos de qual modelo?", o:["SaaS","PaaS","IaaS","FaaS"], c:2, e:"IaaS: cliente aluga VMs (infraestrutura) e gerencia o SO e tudo acima. Provider gerencia o hardware físico e a camada de virtualização."},
+    {q:"O que o Shared Responsibility Model define?", o:["Que o provider cloud é responsável por toda a segurança","Divisão de responsabilidades de segurança entre provider e cliente conforme o modelo de serviço","Que o cliente é responsável por toda a segurança","Apenas as SLAs de disponibilidade do serviço"], c:1, e:"Shared Responsibility: IaaS = cliente cuida de SO para cima. PaaS = cliente cuida de app e dados. SaaS = cliente cuida de dados e acesso. O provider NUNCA assume 100% da responsabilidade."},
+    {q:"Qual modelo de cloud deployment oferece maior controle ao cliente?", o:["Public Cloud","Community Cloud","Hybrid Cloud","Private Cloud"], c:3, e:"Private Cloud: infraestrutura dedicada a uma organização. Maior controle sobre dados e configurações. Mais cara. Pode ser on-premises ou hospedada por provider dedicado."},
+    {q:"O que é CASB (Cloud Access Security Broker)?", o:["Firewall dedicado para ambiente cloud","Ponto de controle entre usuários e provedores cloud que aplica políticas de segurança e detecta Shadow IT","Serviço de backup automatizado em cloud","Gerenciador de identidades cloud"], c:1, e:"CASB: proxy de segurança entre usuários e serviços cloud. Aplica políticas, detecta Shadow IT (uso não autorizado), implementa DLP, logging e autenticação — visibilidade e controle sobre cloud."},
+    {q:"O que é Shadow IT e qual é a principal ferramenta para detectá-lo?", o:["TI obsoleta em uso; detectada por auditorias anuais","Uso não autorizado de serviços cloud por funcionários; detectado pelo CASB","Software pirata na rede; detectado por antivírus","Serviços cloud não pagos; detectados por contabilidade"], c:1, e:"Shadow IT: funcionários usam serviços cloud sem aprovação do TI (Dropbox pessoal, Google Drive, etc.). CASB detecta esse uso e aplica políticas — bloquear, alertar ou permitir com controles."},
+    {q:"Qual é o risco de segurança #1 em ambientes cloud?", o:["Ataques zero-day ao hypervisor do provider","Cloud Misconfiguration (configuração incorreta de serviços)","Falhas de hardware no datacenter do provider","Ataques DDoS ao provider cloud"], c:1, e:"Cloud Misconfiguration: S3 buckets públicos, security groups abertos para 0.0.0.0/0, IAM com permissões excessivas. É o principal vetor de violações em cloud — erro humano, não falha do provider."},
+    {q:"O que é CSPM (Cloud Security Posture Management)?", o:["Ferramenta de backup para ambiente cloud","Sistema de detecção de intrusão em cloud","Ferramenta que identifica automaticamente misconfigurações e não-conformidades em cloud","Gerenciador de custo cloud"], c:2, e:"CSPM: monitora continuamente o ambiente cloud para detectar misconfigurações (bucket público, porta 22 aberta para internet, MFA desabilitado). Garante conformidade contínua com políticas de segurança."},
+    {q:"Em IaaS, o cliente configura um Security Group que permite acesso SSH (porta 22) de 0.0.0.0/0. Qual problema isso representa?", o:["Problema de performance apenas","Cloud Misconfiguration crítica — permite SSH de qualquer IP na internet","Violação de SLA do provider","Problema apenas se não houver senha forte"], c:1, e:"Porta 22 aberta para 0.0.0.0/0 é uma misconfiguration clássica. Expõe o servidor a brute force e ataques automatizados de toda a internet. Security Groups devem permitir apenas IPs específicos ou via VPN."},
+    {q:"O que é Cloud IAM e qual princípio é mais crítico?", o:["Gerenciamento de sistemas de ar condicionado em datacenters","Gerenciamento de identidades e permissões cloud; princípio do menor privilégio é crítico","Sistema de inventário de recursos cloud","Ferramenta de monitoramento de custo"], c:1, e:"Cloud IAM define quem pode fazer o quê em quais recursos. Permissões excessivas (risco #2 em cloud) podem ser exploradas se uma credencial for comprometida. Menor privilégio = mínimo necessário."},
+    {q:"O que é Multi-Tenancy em cloud pública e qual risco associado?", o:["Múltiplos administradores na mesma conta cloud","Múltiplos clientes compartilham infraestrutura física — isolamento inadequado pode vazar dados entre tenants","Múltiplas regiões geográficas da mesma conta","Múltiplos planos de suporte contratados"], c:1, e:"Multi-tenancy: clientes compartilham hardware físico, logicamente isolados. Se o isolamento falhar (bug no hypervisor/container runtime), dados de um tenant podem ser acessados por outro."},
+    {q:"Qual é a responsabilidade do cliente em SaaS em relação à segurança?", o:["Sem responsabilidade alguma — provider cuida de tudo","Apenas os dados e controles de acesso (quem tem acesso ao quê)","Responsável pelo SO e aplicação","Responsável pela infra física"], c:1, e:"Em SaaS, o provider gerencia tudo da infra à aplicação. O cliente é responsável pelos DADOS (o que armazena) e ACESSO (quem tem permissão, MFA habilitado, credenciais fortes)."},
+    {q:"O que é Serverless/FaaS e qual desafio de segurança apresenta?", o:["Sem servidores físicos; desafio é performance","Execução de funções efêmeras; desafios: permissões IAM excessivas, event injection e pouca visibilidade","Servidores sem SO; desafio é compatibilidade","Funções automáticas de backup; desafio é custo"], c:1, e:"FaaS/Serverless: sem gerenciamento de servidores. Desafios: funções com IAM excessivo (podem ser exploradas), event injection (entrada maliciosa nos triggers), e pouca visibilidade de runtime."},
+    {q:"O que é Cloud Encryption at Rest vs in Transit?", o:["Em repouso = backup; em trânsito = transmissão real-time","Em repouso = dados armazenados (AES-256); em trânsito = dados se movendo pela rede (TLS)","São equivalentes em cloud","Em repouso = dentro do DC; em trânsito = fora do DC"], c:1, e:"Encryption at rest: protege dados armazenados (S3, bancos de dados) — AES-256. In transit: protege dados em movimento (entre cliente e cloud, entre serviços) — TLS 1.2+. Ambos são necessários."},
+    {q:"O que é Hybrid Cloud e qual é seu principal caso de uso?", o:["Mistura de nuvens de diferentes providers (AWS + Azure)","Nuvem privada + pública com portabilidade de workloads; dados sensíveis na privada, cargas variáveis na pública","Nuvem para uso híbrido (pessoal e profissional)","Combinação de cloud e sistemas legados on-premises"], c:1, e:"Hybrid Cloud: private + public com portabilidade. Dados regulados/sensíveis ficam na private cloud (controle). Cargas de trabalho variáveis (picos) vão para a public cloud (custo). Balanceia controle e escala."},
+    {q:"O que é um API Gateway em segurança cloud?", o:["Porta de entrada física do datacenter","Ponto central de controle para APIs: autenticação, rate limiting, logging, roteamento","Protocolo de comunicação entre microserviços","Ferramenta de monitoramento de APIs"], c:1, e:"API Gateway: ponto único de entrada para APIs. Centraliza: autenticação (JWT, OAuth), rate limiting (previne abuso), logging (auditoria), e roteamento. Reduz exposição das APIs de backend."},
+    {q:"O que define o Community Cloud?", o:["Nuvem criada por uma comunidade de desenvolvedores open-source","Compartilhada por organizações com interesses, requisitos ou missão comuns","Nuvem para uso de pequenas comunidades/startups","Nuvem gerenciada por consórcio de providers"], c:1, e:"Community Cloud: compartilhada por organizações com características comuns (setor governamental, saúde, financeiro, pesquisa). Custos divididos, políticas adaptadas às necessidades do grupo."},
+    {q:"O que é Customer-Managed Encryption Key (CMEK) em cloud?", o:["Chave gerada automaticamente pelo provider sem intervenção do cliente","Cliente controla e gerencia suas próprias chaves de criptografia — provider não pode descriptografar os dados","Chave compartilhada entre cliente e provider para auditoria","Chave de acesso à conta cloud do cliente"], c:1, e:"CMEK: cliente gerencia suas próprias chaves no KMS (Key Management Service). O provider não tem acesso à chave — não pode descriptografar os dados. Maior controle e conformidade regulatória."},
 
-        // ========== FUNÇÕES DOS FLASHCARDS ==========
-        
-        function updateCard() {
-            if (filteredCards.length === 0) {
-                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
-                document.getElementById('card-counter').textContent = 'Card 0 de 0';
-                document.getElementById('side-indicator').textContent = 'FRENTE';
-                return;
-            }
-            
-            const cardIndex = filteredCards[currentCard];
-            const card = cards[cardIndex];
-            
-            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
-            document.getElementById('card-counter').textContent = 
-                `Card ${currentCard + 1} de ${filteredCards.length}`;
-            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
-            
-            const btn = document.getElementById('master-btn');
-            const isMastered = mastered.has(cardIndex);
-            btn.textContent = isMastered ? '✓ Dominado' : 'Marcar Dominado';
-            btn.classList.toggle('mastered', isMastered);
-            
-            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
-            
-            const progress = (mastered.size / cards.length) * 100;
-            document.getElementById('progress-fill').style.width = progress + '%';
-            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
-        }
+    // BLOCO D: Segurança Mobile (15)
+    {q:"Qual política de dispositivo mobile oferece MAIOR controle para a empresa?", o:["BYOD","CYOD","COPE","Nenhuma política formal"], c:2, e:"COPE (Corporate Owned, Personally Enabled): dispositivo da empresa com MDM completo. Empresa tem controle total sobre configurações, apps e dados, enquanto permite uso pessoal limitado."},
+    {q:"Qual política de dispositivo mobile apresenta MAIOR risco de segurança?", o:["COPE","COBO","CYOD","BYOD"], c:3, e:"BYOD (Bring Your Own Device): funcionário usa dispositivo pessoal. Menor controle da empresa — dispositivo pode ter apps não aprovadas, sem MDM completo, dados pessoais misturados com corporativos."},
+    {q:"Diferença entre MDM e MAM?", o:["MDM gerencia apps; MAM gerencia o dispositivo","MDM gerencia o dispositivo inteiro (políticas, wipe, inventário); MAM gerencia apenas aplicações específicas","São equivalentes, apenas nomenclaturas diferentes","MDM é para iOS; MAM é para Android"], c:1, e:"MDM: controle total do dispositivo (remote wipe, políticas de senha, câmera, GPS). MAM: controle apenas das apps corporativas específicas. MAM é ideal para BYOD — não invade o espaço pessoal."},
+    {q:"O que é Remote Wipe e qual é a versão mais adequada para BYOD?", o:["Full wipe é ideal para BYOD pois apaga tudo","Selective wipe é ideal para BYOD — apaga apenas dados corporativos, preserva dados pessoais","Remote wipe não é aplicável em BYOD","Ambos são equivalentes em BYOD"], c:1, e:"Selective Wipe em BYOD: apaga apenas o container corporativo (apps e dados da empresa) sem afetar fotos, apps e dados pessoais do funcionário — respeita a privacidade."},
+    {q:"O que é Jailbreaking/Rooting e por que é problemático em ambiente corporativo?", o:["Processo de configuração inicial do dispositivo","Remove restrições do SO — expõe a malware, invalida garantias e pode contornar políticas MDM","Processo de atualização do SO mobile","Configuração de VPN no dispositivo"], c:1, e:"Jailbreak/Root remove as proteções do SO. O dispositivo pode instalar qualquer app (incluindo malware), o MDM pode ser contornado e a sandbox de apps é comprometida. Deve ser detectado e bloqueado pelo MDM."},
+    {q:"O que é Sideloading e qual risco representa?", o:["Sincronizar dados do dispositivo com computador","Instalar apps fora da loja oficial — sem revisão de segurança, alto risco de malware","Carregar o dispositivo lateralmente (carregamento sem fio)","Transferir apps de um dispositivo para outro"], c:1, e:"Sideloading: instalar .apk (Android) ou IPA (iOS) fora da loja oficial. Apps não passaram por revisão. Risco de malware, spyware, apps modificadas. MDM pode bloquear sideloading corporativo."},
+    {q:"O que é Containerização em dispositivos mobile para BYOD?", o:["Usar Docker no smartphone","Separar ambiente corporativo do pessoal em container criptografado no mesmo dispositivo","Virtualizar múltiplos SOs no smartphone","Isolar cada app em seu próprio processo"], c:1, e:"Containerização mobile: cria ambiente corporativo isolado (criptografado) dentro do dispositivo pessoal. Apps corporativas veem apenas os dados do container — não acessam fotos, contacts pessoais."},
+    {q:"O que é Smishing?", o:["Phishing via redes sociais","Phishing via mensagens SMS","Phishing direcionado a smartphones via email","Ataque de força bruta em SIM cards"], c:1, e:"Smishing: phishing via SMS. Mensagem com link malicioso ou pedido urgente (banco, entrega). Mais difícil de verificar que email. Cresceu com mobile banking. Usuários tendem a confiar mais em SMS."},
+    {q:"O que é Geofencing em segurança mobile?", o:["Bloquear acesso a sites geográficos específicos","Perímetro virtual — alertas ou restrições automáticas quando dispositivo sai da área definida","Rastrear funcionários em tempo real","Bloquear roaming internacional"], c:1, e:"Geofencing: perímetro GPS virtual. Se dispositivo sai da área: alertas, bloqueio automático de apps sensíveis, requisição de autenticação adicional. Implementado via MDM para proteger dados em áreas não autorizadas."},
+    {q:"Por que Full Device Encryption é crítico em dispositivos mobile?", o:["Aumenta a performance do dispositivo","Protege dados se dispositivo for perdido/roubado — dados ilegíveis sem autenticação","Reduz o consumo de bateria","Acelera a sincronização de dados com a nuvem"], c:1, e:"Full Encryption: se o dispositivo for perdido ou roubado, todos os dados são ilegíveis sem a chave (geralmente derivada do PIN/senha). Torna o Remote Wipe ainda mais eficaz."},
+    {q:"O que é Application Whitelisting em mobile e como difere de Blacklisting?", o:["Whitelist bloqueia apps ruins; Blacklist permite apenas apps aprovadas","Whitelist permite APENAS apps aprovadas (bloqueia tudo mais); Blacklist bloqueia apenas apps específicas (permite tudo mais)","São equivalentes em termos de segurança","Whitelist é para iOS; Blacklist para Android"], c:1, e:"Whitelist: apenas apps da lista podem ser instaladas — mais seguro. Blacklist: apenas apps da lista são bloqueadas — menos seguro pois novas ameaças não estão na lista ainda. Whitelist é mais restritivo."},
+    {q:"O que é BEC (Business Email Compromise) em contexto mobile?", o:["Ataque de vírus exclusivo para email mobile","Ataque sofisticado onde atacante se passa por executivo para enganar funcionários a transferir dinheiro — frequentemente via mobile","App maliciosa que monitora emails corporativos","Bloqueio de email corporativo em dispositivo mobile"], c:1, e:"BEC: atacante se passa por CEO/CFO via email (spoofing ou conta comprometida). Funcionário recebe email urgente pedindo transferência. Comum em mobile onde usuário verifica email rapidamente sem atenção ao detalhe."},
+    {q:"O que o MDM pode bloquear ou controlar em dispositivos mobile?", o:["Apenas senhas e bloqueio de tela","Câmera, Bluetooth, Wi-Fi, apps, VPN, GPS, remote wipe, políticas de senha, criptografia","Apenas a câmera por questões de privacidade","Apenas apps instaladas via sideloading"], c:1, e:"MDM tem controle extenso: câmera (ambientes seguros), Bluetooth/Wi-Fi (evitar conexões inseguras), apps (whitelist/blacklist), VPN obrigatória, remote wipe, políticas de complexidade de senha."},
+    {q:"O que é UEM (Unified Endpoint Management)?", o:["Versão mais barata do MDM","MDM estendido para todos os endpoints: mobile, desktop, IoT em uma plataforma única","Ferramenta apenas para gerenciar IoT","Sistema de inventário de equipamentos de TI"], c:1, e:"UEM: evolução do MDM que gerencia todos os endpoints de uma organização — smartphones, tablets, laptops, desktops, e IoT — em uma plataforma centralizada única."},
+    {q:"Por que Screen Lock com complexidade mínima é uma política MDM crítica?", o:["Para economizar bateria","Primeira linha de defesa em caso de perda/roubo — impede acesso físico não autorizado aos dados","Para cumprir requisitos estéticos do produto","Para acelerar a autenticação biométrica"], c:1, e:"Screen Lock: sem bloqueio de tela, qualquer pessoa que pegar o dispositivo tem acesso imediato a todos os dados. MDM garante: tipo de lock (PIN/biometria), complexidade mínima, timeout e tentativas máximas."},
 
-        function flipCard() {
-            flipped = !flipped;
-            updateCard();
-        }
+    // BLOCO E: IoT e ICS (12)
+    {q:"Por que dispositivos IoT são alvos atraentes para atacantes?", o:["Possuem dados financeiros valiosos","Volume massivo, sem segurança by design, raramente atualizados, usados em botnets e como pivot","São facilmente identificados na rede","Possuem hardware poderoso para mineração"], c:1, e:"IoT: bilhões de dispositivos, geralmente sem segurança, firmware não atualizado, senhas padrão, sem criptografia. Usados em botnets massivos (Mirai) ou como pivot para redes corporativas."},
+    {q:"Qual é a proteção mais eficaz para dispositivos IoT em rede corporativa?", o:["Instalar antivírus em cada dispositivo IoT","Segmentar IoT em VLAN separada, isolando da rede corporativa e da internet direta","Usar senhas fortes em todos os dispositivos IoT","Monitorar apenas dispositivos IoT médicos"], c:1, e:"Segmentação em VLAN: isola IoT da rede corporativa. Mesmo que um dispositivo seja comprometido, o atacante não alcança servidores e workstations. Combine com: troca de senhas padrão e firmware atualizado."},
+    {q:"O que é SCADA e por que controla infraestrutura crítica?", o:["Software de análise de dados empresariais","Sistema de monitoramento e controle de processos industriais e infraestrutura crítica (energia, água, gás)","Protocolo de segurança para redes industriais","Sistema de backup para ambientes industriais"], c:1, e:"SCADA (Supervisory Control and Data Acquisition): monitora e controla infraestrutura crítica em tempo real. Um ataque bem-sucedido pode afetar energia elétrica, fornecimento de água, oleodutos — impacto físico real."},
+    {q:"O que é Air Gap e por que é a proteção mais forte para SCADA?", o:["Espaço físico entre servidores para ventilação","Isolamento físico completo da rede — sem conexão com internet ou redes externas","Protocolo de criptografia para redes industriais","Backup offline de dados SCADA"], c:1, e:"Air Gap: sem conexão física alguma com o mundo externo. Atacante remoto não pode alcançar o sistema. Risco residual: vetores físicos (USB, engenharia social). Stuxnet demonstrou que air gaps podem ser contornados via USB."},
+    {q:"Por que protocolos como Modbus e DNP3 são problemáticos em segurança?", o:["São muito lentos para redes modernas","Protocolos legados sem autenticação ou criptografia nativa — projetados para confiabilidade, não segurança","São proprietários e difíceis de monitorar","Incompatíveis com sistemas modernos de TI"], c:1, e:"Modbus/DNP3: criados décadas atrás para redes isoladas. Sem autenticação (qualquer mensagem é aceita) e sem criptografia (tráfego em cleartext). Convergência com IT expõe esses protocolos a atacantes."},
+    {q:"O que foi o Stuxnet e por que é historicamente significativo?", o:["Primeiro ransomware em sistema industrial","Primeiro malware projetado para causar dano físico — sabotou centrífugas nucleares iranianas via USB, contornando air gap","Primeiro worm a infectar IoT em massa","Primeiro ataque a infraestrutura elétrica americana"], c:1, e:"Stuxnet (2010): worm criado (atribuído a EUA/Israel) para sabotar centrífugas de enriquecimento de urânio do Irã. Entrou via USB em sistema air-gapped. Primeiro malware com dano físico demonstrado em ICS."},
+    {q:"O que é RTOS e por que falhas de timing são críticas?", o:["SO para dispositivos de armazenamento em tempo real","SO que prioriza determinismo de tempo — em sistemas críticos, atraso na resposta pode causar desastre físico","SO para processamento de big data em tempo real","SO para streaming de dados em redes industriais"], c:1, e:"RTOS: garante que tarefas críticas respondam dentro de prazos precisos. Em sistemas médicos (marca-passo), automotivos (freios ABS) ou industriais, atraso de milissegundos pode ser fatal."},
+    {q:"O que é OT (Operational Technology) e qual risco traz a convergência com IT?", o:["Tecnologia de software voltada a operações empresariais","Tecnologia de controle de processos físicos; convergência com IT expõe sistemas críticos a ameaças cibernéticas modernas","Departamento de operações de TI","Tecnologia de automação de escritório"], c:1, e:"OT: tecnologia que monitora/controla processos físicos (SCADA, ICS, robôs industriais). Convergência OT/IT (conectar OT à internet para monitoramento) expõe sistemas sem segurança aos ataques IT modernos."},
+    {q:"O que é Secure Boot em sistemas embarcados/IoT?", o:["Processo de inicialização acelerado para IoT","Verifica assinatura digital do firmware antes de executá-lo — impede execução de firmware modificado/malicioso","Método de criptografia do boot disk","Protocolo de autenticação no boot de dispositivos SCADA"], c:1, e:"Secure Boot: cadeia de confiança no boot. Cada componente verifica a assinatura do próximo. Se firmware for modificado (ataque), a assinatura não bate e o boot é bloqueado. Protege contra persistência em firmware."},
+    {q:"Como o caso Target (2013) demonstra o risco de IoT/HVAC?", o:["Atacantes comprometeram terminais POS diretamente via internet","Atacantes acessaram a rede através de um fornecedor de sistemas HVAC com acesso remoto à rede do Target","Funcionários da Target vazaram credenciais de POS","Atacantes comprometeram o aplicativo mobile da Target"], c:1, e:"Target 2013: 40 milhões de cartões roubados. Vetor: credenciais roubadas de fornecedor de HVAC com acesso remoto à rede. Moveram-se lateralmente até os sistemas POS. Demonstra: parceiros/fornecedores são vetores de ataque."},
+    {q:"O que é um PLC (Programmable Logic Controller) em ICS?", o:["Computador pessoal usado em fábricas","Computador industrial dedicado que controla máquinas e processos automatizados com determinismo de tempo real","Protocolo de comunicação entre equipamentos industriais","Sistema de logging de eventos em ICS"], c:1, e:"PLC: computador industrial programado para executar lógica de controle em tempo real (abrir válvula, acionar motor). Componente central em ICS/SCADA. Criados sem segurança — vulneráveis se conectados à rede."},
+    {q:"Por que Firmware desatualizado em dispositivos IoT é crítico?", o:["Apenas reduz a performance do dispositivo","Contém vulnerabilidades conhecidas (CVEs) que atacantes exploram — dispositivos IoT raramente são atualizados","Apenas causa problemas de compatibilidade","Aumenta o consumo de energia do dispositivo"], c:1, e:"IoT raramente recebe updates. Firmware antigo = CVEs conhecidos + exploits públicos disponíveis. Atacantes escaneiam CVE-IDs específicos em dispositivos IoT. Política de atualização de firmware é essencial."},
 
-        function nextCard() {
-            if (filteredCards.length === 0) return;
-            currentCard = (currentCard + 1) % filteredCards.length;
-            flipped = false;
-            updateCard();
-        }
+    // BLOCO F: Email Security (10)
+    {q:"O que SPF verifica durante a entrega de um email?", o:["Se o conteúdo do email contém malware","Se o IP do servidor remetente está na lista DNS de IPs autorizados a enviar pelo domínio","Se a assinatura digital do email é válida","O que fazer quando a autenticação falha"], c:1, e:"SPF: registro DNS TXT com IPs autorizados. Servidor receptor verifica se o IP que enviou o email está na lista SPF do domínio. Previne spoofing do envelope (Return-Path/MAIL FROM)."},
+    {q:"O que o DKIM garante que o SPF não garante?", o:["Que o IP remetente é autorizado","Que o email não foi alterado em trânsito e veio do domínio declarado (assinatura criptográfica)","Que o email não contém spam","Que o destinatário recebeu o email"], c:1, e:"DKIM: assinatura criptográfica no header. Garante integridade (email não foi alterado) e autenticidade (veio do domínio). SPF verifica apenas o IP do servidor — DKIM verifica o conteúdo assinado."},
+    {q:"O que o DMARC adiciona ao SPF e DKIM?", o:["Criptografia do conteúdo do email","Política de ação quando SPF e/ou DKIM falham: none, quarantine ou reject; mais geração de relatórios","Verificação do certificado SSL do servidor de email","Autenticação de dois fatores para envio de email"], c:1, e:"DMARC: define O QUE FAZER quando falham: none (monitorar, não agir), quarantine (mover para spam) ou reject (bloquear). Também gera relatórios diários para o domínio remetente sobre autenticações."},
+    {q:"Qual é o papel do DMARC policy 'reject'?", o:["Rejeita emails com conteúdo de spam","Bloqueia completamente emails que falham SPF e/ou DKIM — a proteção mais forte contra phishing e spoofing","Rejeita emails de domínios não confiáveis","Rejeita emails maiores que o limite de tamanho"], c:1, e:"DMARC reject: emails que falham SPF/DKIM são recusados pelo servidor receptor — nunca chegam ao usuário. É a configuração mais forte. 'none' só monitora; 'quarantine' vai para spam."},
+    {q:"O que é S/MIME e para que serve?", o:["Protocolo de envio de email seguro (substituto ao SMTP)","Criptografia e assinatura digital de email ponta a ponta usando certificados PKI — confidencialidade e autenticidade","Sistema de filtragem de spam baseado em machine learning","Protocolo de autenticação para servidores de email"], c:1, e:"S/MIME: usa PKI (certificados X.509) para criptografar (confidencialidade) e assinar (autenticidade) emails. Criptografia ponta a ponta — nem o email gateway pode ver o conteúdo. Requer PKI e troca de certificados."},
+    {q:"O que diferencia PGP do S/MIME em segurança de email?", o:["PGP é mais fraco criptograficamente","PGP usa web of trust (sem CA central); S/MIME usa PKI com CA centralizada","PGP é para Windows; S/MIME para Mac","São idênticos tecnicamente, apenas nomenclaturas diferentes"], c:1, e:"PGP/GPG: web of trust — usuários validam as chaves uns dos outros sem CA centralizada. S/MIME: PKI com CA — certificados emitidos por autoridade confiável. S/MIME mais corporativo; PGP mais individual."},
+    {q:"O que é BEC (Business Email Compromise)?", o:["Backup Encryption Compliance — padrão de criptografia","Ataque sofisticado onde atacante se passa por executivo para enganar funcionários a transferir dinheiro ou dados","Botnet de Email Comprometidos usada para spam","Breach de dados via servidor de email corporativo"], c:1, e:"BEC: atacante usa spoofing ou conta comprometida para se passar por CEO/CFO. Funcionário recebe email urgente solicitando transferência. Sem malware — usa engenharia social. Causa bilhões em perdas anuais."},
+    {q:"O que é Email DLP e quando bloqueia um email?", o:["Sistema que bloqueia emails de remetentes desconhecidos","Inspeciona emails de SAÍDA para detectar e bloquear envio não autorizado de dados sensíveis (PII, cartões, IP)","Sistema que bloqueia anexos maliciosos em emails de entrada","Ferramenta de arquivamento de emails para compliance"], c:1, e:"Email DLP: monitoração de emails SAINDO da organização. Detecta: números de cartão de crédito, CPF, dados médicos, código-fonte, documentos confidenciais. Ações: bloquear, criptografar, quarentena ou alertar."},
+    {q:"O que é Spear Phishing e como difere do Phishing comum?", o:["Spear Phishing usa malware; Phishing usa links apenas","Spear Phishing é direcionado a indivíduo/organização específica com pesquisa prévia; Phishing é genérico em massa","Spear Phishing é mais antigo; Phishing é moderno","São o mesmo ataque com nomes regionais diferentes"], c:1, e:"Phishing: genérico, em massa ('Caro cliente...'). Spear Phishing: direcionado — pesquisa o alvo (LinkedIn, redes sociais), usa nome real, cargo, contexto relevante. Taxa de sucesso muito maior por ser convincente."},
+    {q:"O que é um MX Record e por que é importante?", o:["Registro que define o IP do servidor web do domínio","Registro DNS que especifica os servidores responsáveis por receber emails do domínio","Registro que define a política SPF do domínio","Registro DNS para resolução reversa de endereços de email"], c:1, e:"MX Record (Mail Exchanger): registro DNS obrigatório para receber emails. Define quais servidores aceitam email para o domínio e a prioridade entre eles (número menor = mais prioritário). Sem MX, o domínio não recebe emails."},
+];
 
-        function prevCard() {
-            if (filteredCards.length === 0) return;
-            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
-            flipped = false;
-            updateCard();
-        }
+// ========== ESTADO ==========
+let currentCard = 0, flipped = false;
+let mastered = new Set();
+let sessionCards = [], currentFilter = 'all', filteredPool = [];
+let quizSession = [], answers = {}, checked = false;
 
-        function toggleMaster() {
-            if (filteredCards.length === 0) return;
-            
-            const cardIndex = filteredCards[currentCard];
-            
-            if (mastered.has(cardIndex)) {
-                mastered.delete(cardIndex);
-            } else {
-                mastered.add(cardIndex);
-            }
-            
-            saveProgress();
-            updateCard();
-        }
+function init() {
+    loadProgress();
+    document.getElementById('total-cards-stat').textContent = allCards.length;
+    buildFilteredPool();
+    newSession();
+}
 
-        // ========== FUNÇÃO DE EMBARALHAR ==========
-        
-        function shuffleCards() {
-            for (let i = filteredCards.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
-            }
-            currentCard = 0;
-            flipped = false;
-            updateCard();
-        }
+function loadProgress() {
+    try {
+        const saved = localStorage.getItem('cap10v2_mastered');
+        if (saved) mastered = new Set(JSON.parse(saved));
+    } catch(e) {}
+}
 
-        // ========== FUNÇÕES DE FILTRO ==========
-        
-        function filterCards(type) {
-            currentFilter = type;
-            
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            if (type === 'all') {
-                filteredCards = [...Array(cards.length).keys()];
-            } else if (type === 'mastered') {
-                filteredCards = Array.from(mastered);
-            } else {
-                filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
-            }
-            
-            currentCard = 0;
-            flipped = false;
-            updateCard();
-        }
+function saveProgress() {
+    try {
+        localStorage.setItem('cap10v2_mastered', JSON.stringify([...mastered]));
+    } catch(e) {}
+}
 
-        // ========== FUNÇÕES DO QUIZ ==========
-        
-        function loadQuiz() {
-            const container = document.getElementById('questions');
-            quiz.forEach((q, qi) => {
-                const div = document.createElement('div');
-                div.className = 'question';
-                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
-                q.o.forEach((opt, oi) => {
-                    const odiv = document.createElement('div');
-                    odiv.className = 'option';
-                    odiv.textContent = opt;
-                    odiv.onclick = () => selectOpt(qi, oi);
-                    odiv.id = `q${qi}o${oi}`;
-                    div.appendChild(odiv);
-                });
-                const exp = document.createElement('div');
-                exp.className = 'explanation';
-                exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
-                div.appendChild(exp);
-                container.appendChild(div);
-            });
-        }
+function buildFilteredPool() {
+    if (currentFilter === 'all') {
+        filteredPool = [...Array(allCards.length).keys()];
+    } else if (currentFilter === 'mastered') {
+        filteredPool = Array.from(mastered);
+    } else {
+        filteredPool = [...Array(allCards.length).keys()].filter(i => !mastered.has(i));
+    }
+}
 
-        function selectOpt(qi, oi) {
-            if (checked) return;
-            quiz[qi].o.forEach((_, i) => {
-                const el = document.getElementById(`q${qi}o${i}`);
-                el.classList.remove('selected');
-            });
-            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
-            answers[qi] = oi;
-        }
+function newSession() {
+    buildFilteredPool();
+    if (filteredPool.length === 0) { sessionCards = []; updateCardDisplay(); return; }
+    const shuffled = [...filteredPool].sort(() => Math.random() - 0.5);
+    sessionCards = shuffled.slice(0, Math.min(15, shuffled.length));
+    currentCard = 0; flipped = false;
+    updateCardDisplay();
+}
 
-        function checkAnswers() {
-            checked = true;
-            let correct = 0;
-            quiz.forEach((q, qi) => {
-                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
-                q.o.forEach((_, oi) => {
-                    const el = document.getElementById(`q${qi}o${oi}`);
-                    if (correctAnswer.includes(oi)) {
-                        el.classList.add('correct');
-                    } else if (answers[qi] === oi) {
-                        el.classList.add('incorrect');
-                    }
-                });
-                document.getElementById(`exp${qi}`).style.display = 'block';
-                if (correctAnswer.includes(answers[qi])) correct++;
-            });
-            
-            const pct = Math.round((correct / quiz.length) * 100);
-            document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = 
-                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
-            document.getElementById('results-modal').classList.add('show');
-        }
+function updateCardDisplay() {
+    if (sessionCards.length === 0) {
+        document.getElementById('card-text').textContent = 'Nenhum card neste filtro.';
+        document.getElementById('card-counter').textContent = 'Sem cards';
+        document.getElementById('side-indicator').textContent = 'FRENTE';
+        document.getElementById('category-badge').textContent = '';
+        return;
+    }
+    const card = allCards[sessionCards[currentCard]];
+    document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+    document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${sessionCards.length}`;
+    document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+    document.getElementById('category-badge').textContent = card.cat || '';
+    const btn = document.getElementById('btn-master');
+    const isMastered = mastered.has(sessionCards[currentCard]);
+    btn.textContent = isMastered ? '✅ Dominado' : '⭐ Marcar Dominado';
+    btn.className = 'btn btn-master' + (isMastered ? ' mastered' : '');
+    const progress = allCards.length > 0 ? (mastered.size / allCards.length) * 100 : 0;
+    document.getElementById('progress-fill').style.width = progress + '%';
+    document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
+    document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+}
 
-        function resetQuiz() {
-            checked = false;
-            answers = {};
-            document.getElementById('questions').innerHTML = '';
-            document.getElementById('results-modal').classList.remove('show');
-            loadQuiz();
-        }
+function flipCard() { flipped = !flipped; updateCardDisplay(); }
 
-        // ========== INICIALIZAÇÃO ==========
-        updateCard();
-    </script>
+function nextCard() {
+    if (sessionCards.length === 0) return;
+    currentCard = (currentCard + 1) % sessionCards.length;
+    flipped = false; updateCardDisplay();
+}
+
+function prevCard() {
+    if (sessionCards.length === 0) return;
+    currentCard = (currentCard - 1 + sessionCards.length) % sessionCards.length;
+    flipped = false; updateCardDisplay();
+}
+
+function toggleMaster() {
+    if (sessionCards.length === 0) return;
+    const idx = sessionCards[currentCard];
+    if (mastered.has(idx)) { mastered.delete(idx); } else { mastered.add(idx); }
+    saveProgress(); updateCardDisplay();
+}
+
+function filterCards(type, evt) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (evt && evt.target) evt.target.classList.add('active');
+    newSession();
+}
+
+function showTab(n) {
+    document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
+    document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+    if (n === 2 && quizSession.length === 0) startQuizSession();
+}
+
+function startQuizSession() {
+    answers = {}; checked = false;
+    const shuffled = [...Array(allQuiz.length).keys()].sort(() => Math.random() - 0.5);
+    quizSession = shuffled.slice(0, 15);
+    loadQuiz();
+}
+
+function loadQuiz() {
+    const container = document.getElementById('questions');
+    container.innerHTML = '';
+    quizSession.forEach((qi, pos) => {
+        const q = allQuiz[qi];
+        const div = document.createElement('div');
+        div.className = 'question';
+        div.innerHTML = `<h3>${pos + 1}. ${q.q}</h3>`;
+        q.o.forEach((opt, oi) => {
+            const odiv = document.createElement('div');
+            odiv.className = 'option';
+            odiv.textContent = opt;
+            odiv.onclick = () => selectOpt(pos, oi);
+            odiv.id = `q${pos}o${oi}`;
+            div.appendChild(odiv);
+        });
+        const exp = document.createElement('div');
+        exp.className = 'explanation';
+        exp.id = `exp${pos}`;
+        exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
+        div.appendChild(exp);
+        container.appendChild(div);
+    });
+}
+
+function selectOpt(pos, oi) {
+    if (checked) return;
+    allQuiz[quizSession[pos]].o.forEach((_, i) => {
+        const el = document.getElementById(`q${pos}o${i}`);
+        if (el) el.classList.remove('selected');
+    });
+    const el = document.getElementById(`q${pos}o${oi}`);
+    if (el) el.classList.add('selected');
+    answers[pos] = oi;
+}
+
+function checkAnswers() {
+    checked = true;
+    let correct = 0;
+    quizSession.forEach((qi, pos) => {
+        const q = allQuiz[qi];
+        const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+        q.o.forEach((_, oi) => {
+            const el = document.getElementById(`q${pos}o${oi}`);
+            if (!el) return;
+            if (correctAnswer.includes(oi)) el.classList.add('correct');
+            else if (answers[pos] === oi) el.classList.add('incorrect');
+        });
+        const expEl = document.getElementById(`exp${pos}`);
+        if (expEl) expEl.style.display = 'block';
+        if (correctAnswer.includes(answers[pos])) correct++;
+    });
+    const pct = Math.round((correct / quizSession.length) * 100);
+    document.getElementById('score-circle').textContent = `${pct}%`;
+    let emoji, title, msg;
+    if (pct >= 80) { emoji = '🎉'; title = 'APROVADO!'; msg = `${correct}/${quizSession.length} corretas — Excelente! Você atingiu o threshold de 80%.`; }
+    else if (pct >= 60) { emoji = '⚠️'; title = 'Quase lá!'; msg = `${correct}/${quizSession.length} corretas — Você precisa de 80% para passar. Continue praticando!`; }
+    else { emoji = '📚'; title = 'Precisa estudar mais'; msg = `${correct}/${quizSession.length} corretas — Revise o material e tente novamente!`; }
+    document.getElementById('result-emoji').textContent = emoji;
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('score-text').textContent = msg;
+    document.getElementById('results-modal').classList.add('show');
+}
+
+function newQuizSession() {
+    document.getElementById('results-modal').classList.remove('show');
+    startQuizSession();
+    window.scrollTo({ top: document.getElementById('tab2').offsetTop - 100, behavior: 'smooth' });
+}
+
+function closeModal() { document.getElementById('results-modal').classList.remove('show'); }
+
+function scrollToExplanations() {
+    document.getElementById('results-modal').classList.remove('show');
+    setTimeout(() => {
+        const firstExp = document.getElementById('exp0');
+        if (firstExp) firstExp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 200);
+}
+
+init();
+</script>
 </body>
 </html>

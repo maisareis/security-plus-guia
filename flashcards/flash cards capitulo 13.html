@@ -6,23 +6,17 @@
     <title>Security+ Cap 13 - Data Protection and Compliance</title>
     <style>
         /* ===== RESET CSS ===== */
-        /* Remove todas as margens e paddings padrão do navegador */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Gradiente azul escuro - tema do capítulo 13 (Data Protection) */
             background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
             min-height: 100vh;
             padding: 20px;
         }
         
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; /* Centraliza horizontalmente */
-        }
+        .container { max-width: 1200px; margin: 0 auto; }
         
-        /* ===== CABEÇALHO ===== */
         .header {
             text-align: center;
             color: white;
@@ -36,7 +30,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
         
-        /* Barra de estatísticas */
         .stats-bar {
             display: flex;
             gap: 20px;
@@ -49,12 +42,11 @@
             background: rgba(255,255,255,0.2);
             padding: 15px 25px;
             border-radius: 12px;
-            backdrop-filter: blur(10px); /* Efeito vidro fosco */
+            backdrop-filter: blur(10px);
             color: white;
             font-weight: bold;
         }
         
-        /* ===== ABAS (TABS) ===== */
         .tabs {
             display: flex;
             gap: 12px;
@@ -85,11 +77,7 @@
             color: white;
         }
         
-        /* Controle de visibilidade das abas */
-        .content { 
-            display: none;
-            animation: fadeIn 0.4s;
-        }
+        .content { display: none; animation: fadeIn 0.4s; }
         .content.active { display: block; }
         
         @keyframes fadeIn {
@@ -97,7 +85,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* ===== FLASHCARDS ===== */
         .flashcard-area { max-width: 900px; margin: 0 auto; }
         
         .card-info {
@@ -109,7 +96,6 @@
             backdrop-filter: blur(10px);
         }
         
-        /* Barra de progresso */
         .progress-bar {
             width: 100%;
             height: 8px;
@@ -125,7 +111,6 @@
             transition: width 0.3s ease;
         }
         
-        /* O flashcard */
         .flashcard {
             background: white;
             border-radius: 20px;
@@ -170,7 +155,6 @@
             font-style: italic;
         }
         
-        /* ===== CONTROLES ===== */
         .controls {
             display: flex;
             gap: 15px;
@@ -220,7 +204,36 @@
             color: white;
         }
         
-        /* ===== QUIZ ===== */
+        .btn-primary {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .filter-btn.active {
+            background: white;
+            color: #2c3e50;
+        }
+
         .quiz-area { max-width: 1000px; margin: 0 auto; }
         
         .quiz-header {
@@ -289,7 +302,6 @@
             line-height: 1.6;
         }
         
-        /* ===== MODAL DE RESULTADOS ===== */
         .results-modal {
             position: fixed;
             top: 0;
@@ -340,29 +352,22 @@
             font-size: 1.1rem;
         }
         
-        /* ===== BOTÕES DE FILTRO ===== */
-        .filter-buttons {
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1rem;
+        }
+        
+        .modal-buttons {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
-            flex-wrap: wrap;
+            margin-top: 20px;
         }
         
-        .filter-btn {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.3);
-            border: 2px solid white;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-        
-        .filter-btn.active {
-            background: white;
-            color: #2c3e50;
-        }
+        .result-emoji { font-size: 3.5rem; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -370,10 +375,10 @@
         <!-- ===== CABEÇALHO ===== -->
         <div class="header">
             <h1>🔒 Security+ Capítulo 13</h1>
-            <p>Data Protection and Compliance - 20 Cards | 10 Questões</p>
+            <p>Data Protection and Compliance - 35 Cards | 30 Questões</p>
             <div class="stats-bar">
-                <div class="stat-card">📚 20 Flashcards</div>
-                <div class="stat-card">❓ 10 Questões</div>
+                <div class="stat-card">📚 35 Flashcards</div>
+                <div class="stat-card">❓ 30 Questões</div>
                 <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
             </div>
         </div>
@@ -391,13 +396,13 @@
                 <div class="card-info">
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
                         <div>
-                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 20</div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 35</div>
                             <div id="mastered-count">0 dominados</div>
                         </div>
                         <div class="filter-buttons">
-                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
-                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
-                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                            <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered', event)">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered', event)">Dominados</button>
                         </div>
                     </div>
                     <div class="progress-bar">
@@ -415,6 +420,7 @@
                     <button class="btn btn-nav" onclick="prevCard()">‹</button>
                     <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
                     <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn" style="background:#10b981;color:white;" onclick="newSession()">🎲 Nova Sessão (15)</button>
                     <button class="btn btn-nav" onclick="nextCard()">›</button>
                 </div>
             </div>
@@ -432,8 +438,17 @@
                         <li><strong>Data Classification:</strong> Public, Internal, Confidential, Restricted</li>
                         <li><strong>GDPR (UE):</strong> Consentimento, right to be forgotten, data portability</li>
                         <li><strong>LGPD (Brasil):</strong> Baseada no GDPR, multas até 2% do faturamento</li>
+                        <li><strong>HIPAA:</strong> Proteção de dados de saúde (EUA)</li>
+                        <li><strong>PCI DSS:</strong> Proteção de dados de cartões de pagamento</li>
+                        <li><strong>Data Controller vs Data Processor:</strong> Controlador define; Processador executa</li>
+                        <li><strong>Data Subject (Titular dos Dados):</strong> Pessoa a quem os dados pertencem</li>
+                        <li><strong>Right to be Forgotten (Direito ao Esquecimento):</strong> Solicitar exclusão de dados</li>
+                        <li><strong>Data Sovereignty (Soberania de Dados):</strong> Dados sujeitos às leis do país onde estão armazenados</li>
+                        <li><strong>Data Minimization (Minimização de Dados):</strong> Coletar apenas o necessário</li>
                         <li><strong>Data Destruction:</strong> Shredding (físico), Wiping (sobrescrita), Degaussing (magnético)</li>
-                        <li><strong>PoLP (Least Privilege):</strong> Menor privilégio necessário</li>
+                        <li><strong>SBOM (Software Bill of Materials):</strong> Lista de componentes de software</li>
+                        <li><strong>PoLP (Princípio do Menor Privilégio):</strong> Apenas o mínimo necessário</li>
+                        <li><strong>SoD (Separação de Funções):</strong> Dividir tarefas críticas</li>
                     </ul>
                 </div>
 
@@ -441,10 +456,10 @@
 
                 <table style="width:100%; border-collapse:collapse; margin:20px 0;">
                     <tr><th style="background:#2c3e50; color:white;">Nível</th><th style="background:#2c3e50; color:white;">Descrição</th><th style="background:#2c3e50; color:white;">Exemplos</th></tr>
-                    <tr><td><strong>Public</strong></td><td>Informações públicas, sem impacto se divulgadas</td><td>Website, materiais de marketing, press releases</td></tr>
-                    <tr><td><strong>Internal</strong></td><td>Uso interno da organização. Impacto moderado se divulgado</td><td>Manuais, políticas internas, organogramas</td></tr>
-                    <tr><td><strong>Confidential</strong></td><td>Dados sensíveis. Impacto significativo se divulgado</td><td>PII (dados pessoais), informações financeiras, dados de saúde</td></tr>
-                    <tr><td><strong>Restricted</strong></td><td>Altamente sensível. Impacto máximo se divulgado</td><td>Segredos comerciais, propriedade intelectual, planos de fusão</td></tr>
+                    <tr><td><strong>Public (Público)</strong></td><td>Informações públicas, sem impacto se divulgadas</td><td>Website, materiais de marketing, press releases</td></tr>
+                    <tr><td><strong>Internal (Interno)</strong></td><td>Uso interno da organização. Impacto moderado se divulgado</td><td>Manuais, políticas internas, organogramas</td></tr>
+                    <tr><td><strong>Confidential (Confidencial)</strong></td><td>Dados sensíveis. Impacto significativo se divulgado</td><td>PII (dados pessoais), informações financeiras, dados de saúde</td></tr>
+                    <tr><td><strong>Restricted (Restrito)</strong></td><td>Altamente sensível. Impacto máximo se divulgado</td><td>Segredos comerciais, propriedade intelectual, planos de fusão</td></tr>
                 </table>
 
                 <h3 style="color: #2c3e50; margin-top: 20px; margin-bottom: 10px;">Consequências de Violações de Dados</h3>
@@ -453,6 +468,7 @@
                     <li><strong>Perda de reputação:</strong> Confiança dos clientes e parceiros abalada</li>
                     <li><strong>Ações judiciais:</strong> Processos e indenizações</li>
                     <li><strong>Perda de negócios:</strong> Clientes migram para concorrentes</li>
+                    <li><strong>Identity theft (Roubo de identidade):</strong> Dados pessoais usados para fraudes</li>
                 </ul>
 
                 <h2 style="color: #3498db; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ Regulamentações e Compliance</h2>
@@ -463,10 +479,37 @@
                     <tr><td><strong>LGPD</strong></td><td>Lei Geral de Proteção de Dados. Brasil. Baseada no GDPR. Fiscalizada pela ANPD. Multas de até 2% do faturamento (limitado a R$50 milhões por infração).</td></tr>
                     <tr><td><strong>HIPAA</strong></td><td>Health Insurance Portability and Accountability Act. EUA. Proteção de dados de saúde (PHI). Regras de privacidade e segurança.</td></tr>
                     <tr><td><strong>PCI DSS</strong></td><td>Payment Card Industry Data Security Standard. Proteção de dados de cartões de crédito. Requisitos para comerciantes e processadores.</td></tr>
+                    <tr><td><strong>CCPA</strong></td><td>California Consumer Privacy Act. Proteção de dados de consumidores na Califórnia. Direitos de acesso, exclusão e opt-out.</td></tr>
                     <tr><td><strong>SOX</strong></td><td>Sarbanes-Oxley Act. EUA. Governança corporativa e controles financeiros para empresas públicas.</td></tr>
                 </table>
 
-                <h2 style="color: #3498db; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Data Destruction (Destruição de Dados)</h2>
+                <h2 style="color: #3498db; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Papéis e Responsabilidades (GDPR)</h2>
+
+                <div style="display: flex; gap: 20px; margin: 30px 0; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px; background: #f3f4f6; padding: 20px; border-radius: 10px; border-left: 5px solid #2c3e50;">
+                        <strong>📌 Data Controller (Controlador)</strong>
+                        <p>Determina os propósitos, condições e meios de processamento de dados pessoais. Responsável por garantir conformidade.</p>
+                    </div>
+                    <div style="flex: 1; min-width: 250px; background: #f3f4f6; padding: 20px; border-radius: 10px; border-left: 5px solid #2c3e50;">
+                        <strong>📌 Data Processor (Processador)</strong>
+                        <p>Processa dados pessoais em nome do controller. Ex: provedores cloud, empresas de folha de pagamento.</p>
+                    </div>
+                    <div style="flex: 1; min-width: 250px; background: #f3f4f6; padding: 20px; border-radius: 10px; border-left: 5px solid #2c3e50;">
+                        <strong>📌 Data Subject (Titular dos Dados)</strong>
+                        <p>Pessoa física a quem os dados pessoais se referem. Tem direitos de acesso, correção, exclusão, portabilidade.</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #2c3e50; margin-top: 20px; margin-bottom: 10px;">Direitos dos Titulares (GDPR)</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Direito de acesso:</strong> Saber quais dados são processados</li>
+                    <li><strong>Direito de retificação:</strong> Corrigir dados incorretos</li>
+                    <li><strong>Direito ao esquecimento (right to be forgotten):</strong> Solicitar exclusão de dados</li>
+                    <li><strong>Direito à portabilidade:</strong> Receber dados em formato estruturado</li>
+                    <li><strong>Direito de retirar consentimento:</strong> Revogar autorização a qualquer momento</li>
+                </ul>
+
+                <h2 style="color: #3498db; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">4️⃣ Data Destruction (Destruição de Dados)</h2>
 
                 <div style="display: flex; gap: 20px; margin: 30px 0; flex-wrap: wrap;">
                     <div style="flex: 1; min-width: 200px; background: #f3f4f6; padding: 20px; border-radius: 10px; border-left: 5px solid #2c3e50;">
@@ -479,7 +522,7 @@
                     </div>
                     <div style="flex: 1; min-width: 200px; background: #f3f4f6; padding: 20px; border-radius: 10px; border-left: 5px solid #2c3e50;">
                         <strong>🧲 Degaussing</strong>
-                        <p>Campo magnético forte para apagar mídias magnéticas (HDDs, fitas). Torna a mídia inutilizável.</p>
+                        <p>Campo magnético forte para apagar mídias magnéticas (HDDs, fitas). Torna a mídia inutilizável. Eficaz para SSDs.</p>
                     </div>
                     <div style="flex: 1; min-width: 200px; background: #f3f4f6; padding: 20px; border-radius: 10px; border-left: 5px solid #2c3e50;">
                         <strong>🔥 Incineration</strong>
@@ -492,7 +535,39 @@
                     <strong>⚠️ IMPORTANTE:</strong> Apenas o degaussing e a incineração garantem que dados em SSDs não podem ser recuperados. Wiping em SSDs pode não ser eficaz devido ao wear leveling.
                 </div>
 
-                <h2 style="color: #3498db; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">4️⃣ Personnel Policies (Políticas de Pessoal)</h2>
+                <h3 style="color: #2c3e50; margin-top: 20px; margin-bottom: 10px;">Certificate of Destruction (Certificado de Destruição)</h3>
+                <p>Documentação que atesta que dados foram seguramente destruídos em conformidade com padrões, geralmente emitido por terceiros. Importante para compliance e auditorias.</p>
+
+                <h2 style="color: #3498db; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">5️⃣ Data Sovereignty e Geolocalização</h2>
+
+                <h3 style="color: #2c3e50; margin-top: 20px; margin-bottom: 10px;">Data Sovereignty (Soberania de Dados)</h3>
+                <p>Jurisdição que impede ou restringe o processamento e armazenamento de dados em sistemas que não residem fisicamente dentro daquela jurisdição. Ex: dados de cidadãos da UE devem permanecer na UE (GDPR).</p>
+
+                <h3 style="color: #2c3e50; margin-top: 20px; margin-bottom: 10px;">Geolocation (Geolocalização)</h3>
+                <ul>
+                    <li><strong>Restrições de localização:</strong> Dados devem permanecer em fronteiras específicas</li>
+                    <li><strong>Impacto em investigações forenses:</strong> Restrições de acesso a dados por jurisdição</li>
+                    <li><strong>Cloud providers:</strong> Permitem escolher datacenters em regiões específicas</li>
+                </ul>
+
+                <h2 style="color: #3498db; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">6️⃣ Data Retention Policies (Políticas de Retenção)</h2>
+
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Define por quanto tempo os dados devem ser mantidos</strong> (base legal e de negócio)</li>
+                    <li><strong>Procedimentos de arquivamento e destruição</strong> quando o prazo expira</li>
+                    <li><strong>Reduz custos de discovery em ações judiciais</strong></li>
+                    <li><strong>Minimiza exposição em litígios</strong></li>
+                </ul>
+
+                <h3 style="color: #2c3e50; margin-top: 20px; margin-bottom: 10px;">Boas Práticas</h3>
+                <ul>
+                    <li>Excluir emails após 90 dias</li>
+                    <li>Manter informações fiscais por 7 anos</li>
+                    <li>Manter registros de funcionários por 4 anos após saída</li>
+                    <li>Manter patentes por 25 anos</li>
+                </ul>
+
+                <h2 style="color: #3498db; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">7️⃣ Personnel Policies (Políticas de Pessoal)</h2>
 
                 <h3 style="color: #2c3e50; margin-top: 20px; margin-bottom: 10px;">Políticas Pré-Contratação</h3>
                 <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
@@ -504,6 +579,7 @@
                 <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
                     <li><strong>AUP (Acceptable Use Policy):</strong> Define uso aceitável de recursos corporativos (email, internet, dispositivos). Inclui monitoramento.</li>
                     <li><strong>Security Training:</strong> Treinamento contínuo de conscientização em segurança (phishing, engenharia social).</li>
+                    <li><strong>Clean Desk Policy:</strong> Área de trabalho livre de documentos sensíveis.</li>
                 </ul>
 
                 <h3 style="color: #2c3e50; margin-top: 20px; margin-bottom: 10px;">Ciclo de Vida do Funcionário</h3>
@@ -511,40 +587,47 @@
                     <tr><th style="background:#2c3e50; color:white;">Fase</th><th style="background:#2c3e50; color:white;">Ações</th></tr>
                     <tr><td><strong>Onboarding (Admissão)</strong></td><td>Concessão gradual de acessos (least privilege), treinamento de segurança, assinatura de políticas (AUP, NDA).</td></tr>
                     <tr><td><strong>Role Changes (Mudança de Função)</strong></td><td>Revisão de privilégios, remoção de acessos antigos, novo treinamento se necessário.</td></tr>
-                    <tr><td><strong>Offboarding (Desligamento)</strong></td><td>Revogação imediata de todos os acessos, recolhimento de ativos (laptop, badge), exit interview.</td></tr>
+                    <tr><td><strong>Offboarding (Desligamento)</strong></td><td>Revogação imediata de todos os acessos, recolhimento de ativos (laptop, badge), exit interview, wipe de dados corporativos em dispositivos pessoais.</td></tr>
                 </table>
 
-                <h2 style="color: #3498db; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">5️⃣ Data Protection Policies</h2>
-
-                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
-                    <li><strong>Data Retention (Retenção de Dados):</strong> Define por quanto tempo os dados devem ser mantidos (baseado em requisitos legais e de negócio).</li>
-                    <li><strong>Data Handling (Manipulação de Dados):</strong> Como dados sensíveis devem ser coletados, processados, armazenados e descartados.</li>
-                    <li><strong>Encryption:</strong> Exigências de criptografia para dados em repouso (disco, banco de dados) e em trânsito (rede).</li>
-                    <li><strong>Backup:</strong> Frequência de backups, período de retenção, testes de restore, backup offsite.</li>
-                </ul>
-
-                <h2 style="color: #3498db; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">6️⃣ Princípios Fundamentais</h2>
+                <h2 style="color: #3498db; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">8️⃣ Princípios Fundamentais</h2>
 
                 <div style="display: flex; gap: 20px; margin: 30px 0; flex-wrap: wrap;">
                     <div style="flex: 1; min-width: 250px; background: #dbeafe; padding: 20px; border-radius: 10px;">
                         <h3 style="color:#3b82f6; margin-top:0;">🔑 PoLP</h3>
-                        <p><strong>Principle of Least Privilege</strong> (Menor Privilégio)</p>
+                        <p><strong>Principle of Least Privilege (Menor Privilégio)</strong></p>
                         <p>Usuários recebem apenas as permissões mínimas necessárias para realizar seu trabalho. Minimiza o risco de insider threats e danos de contas comprometidas.</p>
                     </div>
                     <div style="flex: 1; min-width: 250px; background: #fee2e2; padding: 20px; border-radius: 10px;">
                         <h3 style="color:#ef4444; margin-top:0;">👥 SoD</h3>
-                        <p><strong>Separation of Duties</strong> (Segregação de Funções)</p>
+                        <p><strong>Separation of Duties (Segregação de Funções)</strong></p>
                         <p>Divide tarefas críticas entre múltiplas pessoas para prevenir fraudes e erros. Requer conluio para burlar.</p>
                     </div>
                 </div>
+
+                <h3 style="color: #2c3e50; margin-top: 20px; margin-bottom: 10px;">Data Minimization (Minimização de Dados)</h3>
+                <p>Princípio de que organizações devem coletar e processar apenas os dados estritamente necessários para a finalidade específica, nada além disso.</p>
+
+                <h3 style="color: #2c3e50; margin-top: 20px; margin-bottom: 10px;">Informed Consent (Consentimento Informado)</h3>
+                <p>Dados pessoais só podem ser coletados e processados com consentimento claro do indivíduo, descrito em linguagem simples, não em jargão legal.</p>
+
+                <h2 style="color: #3498db; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">9️⃣ SBOM (Software Bill of Materials)</h2>
+                <p>Lista completa de todos os componentes de um software: bibliotecas, dependências open source e de terceiros, com suas versões. Essencial para gerenciar riscos da cadeia de suprimentos de software.</p>
 
                 <!-- Dicas finais para a prova -->
                 <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 30px 0; border-radius: 8px;">
                     <h3 style="color: #ec4899; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
                     <ul style="margin-left: 20px; line-height: 1.8;">
                         <li><strong>Data Classification:</strong> Public (público) → Internal (interno) → Confidential (confidencial) → Restricted (restrito)</li>
-                        <li><strong>GDPR (UE)</strong> | <strong>LGPD (Brasil)</strong> | <strong>HIPAA (saúde)</strong> | <strong>PCI DSS (cartões)</strong></li>
+                        <li><strong>GDPR (UE)</strong> | <strong>LGPD (Brasil)</strong> | <strong>HIPAA (saúde)</strong> | <strong>PCI DSS (cartões)</strong> | <strong>CCPA (Califórnia)</strong></li>
+                        <li><strong>Data Controller:</strong> define o processamento | <strong>Data Processor:</strong> executa o processamento</li>
+                        <li><strong>Data Subject Rights:</strong> acesso, retificação, exclusão, portabilidade, retirar consentimento</li>
                         <li><strong>Data Destruction:</strong> Shredding (físico), Wiping (sobrescrita), Degaussing (magnético)</li>
+                        <li><strong>Certificate of Destruction:</strong> documentação da destruição segura</li>
+                        <li><strong>Data Sovereignty:</strong> dados sujeitos às leis do país onde estão</li>
+                        <li><strong>Data Minimization:</strong> coletar apenas o necessário</li>
+                        <li><strong>Informed Consent:</strong> consentimento claro e em linguagem simples</li>
+                        <li><strong>SBOM:</strong> lista de componentes de software</li>
                         <li><strong>Onboarding:</strong> dar acesso | <strong>Offboarding:</strong> remover acesso</li>
                         <li><strong>PoLP:</strong> menor privilégio | <strong>SoD:</strong> segregação de funções</li>
                         <li><strong>NDA:</strong> confidencialidade | <strong>AUP:</strong> uso aceitável</li>
@@ -557,7 +640,11 @@
         <div id="tab2" class="content">
             <div class="quiz-area">
                 <div class="quiz-header">
-                    <h2>Quiz - 10 Questões</h2>
+                    <h2>Quiz - 15 Questões Aleatórias</h2>
+                    <p>Passing Score: 80% (12/15 corretas) | Pool: 30 questões</p>
+                </div>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button class="btn btn-primary" onclick="newQuizSession()">🔄 Nova Sessão</button>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
@@ -570,27 +657,26 @@
     <!-- ===== MODAL DE RESULTADOS ===== -->
     <div class="results-modal" id="results-modal">
         <div class="results-content">
-            <h2>Resultado</h2>
+            <div class="result-emoji" id="result-emoji">🎉</div>
+            <h2 id="result-title">Resultado</h2>
             <div class="score-circle" id="score-circle">0%</div>
             <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="newQuizSession()">🔄 Nova Sessão</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Fechar</button>
+            </div>
+            <button class="btn" style="background:#7c3aed;color:white;margin-top:12px;width:100%;" onclick="scrollToExplanations()">📖 Ver Explicações</button>
         </div>
     </div>
 
     <script>
-        // ========== CARDS DO CAPÍTULO 13 ==========
-        /**
-         * ARRAY cards: armazena TODOS os flashcards do capítulo
-         * Cada card tem:
-         * - f: frente (a pergunta/conceito)
-         * - b: verso (a resposta/definição)
-         */
+        // ========== CARDS DO CAPÍTULO 13 (com traduções) ==========
         const cards = [
             {f: "O que é Data Classification (Classificação de Dados)?", 
              b: "Processo de categorizar dados baseado em sensibilidade e impacto. Níveis comuns: Public, Internal, Confidential, Restricted. Cada categoria define controles de proteção específicos."},
              
             {f: "O que são dados Public (Públicos)?", 
-             b: "Informações que podem ser divulgadas publicamente sem causar danos à organização. Ex: site público, materiais de marketing, press releases. Sem impacto se divulgado."},
+             b: "Informações que podem ser divulgadas publicamente sem causar danos à organização. Ex: site, materiais de marketing, press releases. Sem impacto se divulgado."},
              
             {f: "O que são dados Internal (Internos)?", 
              b: "Informações de uso interno da organização, não destinadas ao público. Ex: manuais, políticas internas, organogramas. Impacto moderado se divulgado."},
@@ -613,6 +699,9 @@
             {f: "O que é PCI DSS?", 
              b: "Payment Card Industry Data Security Standard. Padrão de segurança para organizações que processam, armazenam ou transmitem dados de cartões de crédito. 12 requisitos principais."},
              
+            {f: "O que é CCPA?", 
+             b: "California Consumer Privacy Act. Lei da Califórnia que protege dados de consumidores. Direitos: acessar, deletar, opt-out da venda de dados. Aplica-se a empresas com receita > $25M."},
+             
             {f: "O que é Data Retention (Retenção de Dados)?", 
              b: "Política que define por quanto tempo os dados devem ser mantidos, baseada em requisitos legais (compliance) e necessidades de negócio."},
              
@@ -626,7 +715,10 @@
              b: "Processo de sobrescrever dados em discos magnéticos ou SSDs com padrões de bits para impedir recuperação. 1 pass geralmente suficiente; padrões como DoD 5220.22-M para alta segurança."},
              
             {f: "O que é Degaussing?", 
-             b: "Uso de campo magnético extremamente forte para apagar dados em mídias magnéticas (HDDs, fitas). Torna a mídia inutilizável. Eficaz, mas não funciona em SSDs."},
+             b: "Uso de campo magnético extremamente forte para apagar dados em mídias magnéticas (HDDs, fitas). Torna a mídia inutilizável. Eficaz também para SSDs."},
+             
+            {f: "O que é Certificate of Destruction (Certificado de Destruição)?", 
+             b: "Documentação que atesta que dados foram seguramente destruídos em conformidade com padrões, geralmente emitido por terceiros. Importante para compliance."},
              
             {f: "O que são Personnel Policies (Políticas de Pessoal)?", 
              b: "Conjunto de políticas de RH relacionadas à segurança: Background checks (verificação de antecedentes), NDAs (acordos de confidencialidade), treinamento de segurança, política de uso aceitável, procedimentos de offboarding."},
@@ -644,21 +736,61 @@
              b: "Principle of Least Privilege. Usuários recebem apenas as permissões mínimas necessárias para realizar suas funções. Reduz o impacto de contas comprometidas e insider threats."},
              
             {f: "O que é Segregação de Funções (SoD)?", 
-             b: "Separation of Duties. Divide tarefas críticas entre múltiplas pessoas para prevenir fraudes e erros. Ex: quem autoriza um pagamento não pode executá-lo. Requer conluio para burlar."}
+             b: "Separation of Duties. Divide tarefas críticas entre múltiplas pessoas para prevenir fraudes e erros. Ex: quem autoriza um pagamento não pode executá-lo. Requer conluio para burlar."},
+             
+            {f: "O que é Data Controller (Controlador de Dados)?", 
+             b: "Entidade que determina os propósitos, condições e meios de processamento de dados pessoais. Responsável por garantir conformidade com leis de proteção de dados."},
+             
+            {f: "O que é Data Processor (Processador de Dados)?", 
+             b: "Entidade que processa dados pessoais em nome do controlador. Ex: provedores de serviços cloud, empresas de folha de pagamento. Segue instruções do controlador."},
+             
+            {f: "O que é Data Subject (Titular dos Dados)?", 
+             b: "Pessoa física a quem os dados pessoais se referem. Tem direitos garantidos por leis como GDPR: acesso, correção, exclusão, portabilidade."},
+             
+            {f: "O que é o direito ao esquecimento (right to be forgotten)?", 
+             b: "Direito do titular de solicitar a exclusão de seus dados pessoais quando não forem mais necessários, quando o consentimento for retirado, ou quando o processamento for ilícito."},
+             
+            {f: "O que é data sovereignty (soberania de dados)?", 
+             b: "Jurisdição que impede ou restringe o processamento e armazenamento de dados em sistemas que não residem fisicamente dentro daquela jurisdição. Ex: dados de cidadãos da UE devem permanecer na UE."},
+             
+            {f: "O que é data minimization (minimização de dados)?", 
+             b: "Princípio de que organizações devem coletar e processar apenas os dados estritamente necessários para a finalidade específica, nada além disso."},
+             
+            {f: "O que é informed consent (consentimento informado)?", 
+             b: "Dados pessoais só podem ser coletados e processados com consentimento claro do indivíduo, descrito em linguagem simples, não em jargão legal."},
+             
+            {f: "O que é um SBOM (Software Bill of Materials)?", 
+             b: "Lista completa de todos os componentes de um software: bibliotecas, dependências open source e de terceiros, com suas versões. Essencial para gerenciar riscos da cadeia de suprimentos de software."},
+             
+            {f: "O que é clean desk policy?", 
+             b: "Política que determina que cada área de trabalho deve estar livre de documentos deixados à vista. Objetivo: prevenir que informações sensíveis sejam obtidas por pessoas não autorizadas."},
+             
+            {f: "O que é offboarding em segurança da informação?", 
+             b: "Processo de remover acessos e recuperar ativos quando um funcionário deixa a organização. Inclui: desabilitar contas, revogar permissões, recuperar equipamentos, fazer wipe de dados corporativos."},
+             
+            {f: "O que é shadow IT?", 
+             b: "Uso de software, hardware ou serviços sem aprovação do departamento de TI. Cria riscos de segurança por falta de controle e monitoramento."},
+             
+            {f: "O que é data breach (violação de dados)?", 
+             b: "Incidente onde informações são lidas, modificadas ou deletadas sem autorização. Pode envolver dados corporativos, propriedade intelectual ou dados pessoais."},
+             
+            {f: "O que é privacy breach (violação de privacidade)?", 
+             b: "Tipo específico de violação envolvendo perda ou divulgação de dados pessoais e sensíveis."}
         ];
 
-        // ========== QUIZ DO CAPÍTULO 13 (10 QUESTÕES) ==========
-        const quiz = [
+        // ========== QUIZ DO CAPÍTULO 13 (30 QUESTÕES com traduções) ==========
+        const allQuiz = [
+            // Questões existentes (10)
             {q: "Processo de categorizar dados por sensibilidade:", 
-             o: ["Data Retention", "Data Classification", "Data Destruction", "Data Masking"], 
+             o: ["Data Retention", "Data Classification (Classificação de Dados)", "Data Destruction", "Data Masking"], 
              c: 1},
              
             {q: "Nível de classificação para dados de uso interno (manuais, políticas):", 
-             o: ["Public", "Internal", "Confidential", "Restricted"], 
+             o: ["Public (Público)", "Internal (Interno)", "Confidential (Confidencial)", "Restricted (Restrito)"], 
              c: 1},
              
             {q: "Nível de classificação para dados altamente sensíveis como segredos comerciais:", 
-             o: ["Internal", "Confidential", "Restricted", "Private"], 
+             o: ["Internal (Interno)", "Confidential (Confidencial)", "Restricted (Restrito)", "Private"], 
              c: 2},
              
             {q: "Regulamentação de proteção de dados da União Europeia:", 
@@ -687,18 +819,120 @@
              
             {q: "Princípio que determina que usuários tenham apenas as permissões mínimas necessárias:", 
              o: ["SoD (Separation of Duties)", "PoLP (Principle of Least Privilege)", "RBAC", "ABAC"], 
-             c: 1}
+             c: 1},
+             
+            // NOVAS QUESTÕES (20)
+            {q: "O que estabelece o princípio de 'informed consent' (consentimento informado) no GDPR?",
+             o: ["Dados podem ser processados sem consentimento", "Dados pessoais só podem ser coletados com consentimento claro do indivíduo, descrito em linguagem simples", "Consentimento deve ser obtido apenas uma vez", "Empresas podem compartilhar dados livremente"],
+             c: 1,
+             e: "Informed consent (consentimento informado): dados pessoais só podem ser coletados e processados com consentimento claro do indivíduo. O propósito deve ser claramente descrito em linguagem simples, não em jargão legal."},
+             
+            {q: "Qual direito NÃO é garantido pelo GDPR aos titulares dos dados?",
+             o: ["Direito de acessar seus dados", "Direito de retirar consentimento", "Direito ao esquecimento (apagar dados)", "Direito de vender seus dados a terceiros"],
+             c: 3,
+             e: "GDPR garante direitos de acesso, correção, exclusão (direito ao esquecimento), portabilidade e retirada de consentimento. Não inclui direito de vender dados."},
+             
+            {q: "A CCPA (California Consumer Privacy Act) se aplica a organizações que:",
+             o: ["Operam apenas na Califórnia", "Têm receita anual acima de $25 milhões OU processam dados de 50.000+ consumidores", "São empresas de tecnologia apenas", "Têm menos de 100 funcionários"],
+             c: 1,
+             e: "CCPA aplica-se a organizações (qualquer localização) que: têm receita anual > $25 milhões; OU compram/vendem dados de 50.000+ consumidores; OU derivam 50%+ da receita da venda de dados pessoais."},
+             
+            {q: "Qual método de destruição de dados é mais eficaz para SSDs?",
+             o: ["Wiping com múltiplas sobrescritas", "Degaussing", "Formatação rápida", "Exclusão de arquivos"],
+             c: 1,
+             e: "Degaussing (campo magnético) e incineração são os únicos métodos que garantem que dados em SSDs não possam ser recuperados. Wiping pode não ser eficaz devido ao wear leveling."},
+             
+            {q: "O que é um SBOM (Software Bill of Materials)?",
+             o: ["Lista de componentes de software, bibliotecas e dependências", "Orçamento anual de segurança", "Plano de continuidade de negócios", "Certificado de conformidade"],
+             c: 0,
+             e: "SBOM (Software Bill of Materials): lista completa de todos os componentes de um software: bibliotecas, dependências open source e de terceiros, com suas versões. Essencial para gerenciar riscos da cadeia de suprimentos de software."},
+             
+            {q: "Qual é a diferença entre data breach (violação de dados) e privacy breach (violação de privacidade)?",
+             o: ["São sinônimos", "Data breach envolve qualquer dado; privacy breach envolve especificamente dados pessoais", "Privacy breach é mais grave", "Data breach é interno; privacy breach é externo"],
+             c: 1,
+             e: "Data breach: perda de qualquer tipo de dado (corporativo, IP). Privacy breach: perda ou divulgação especificamente de dados pessoais e sensíveis."},
+             
+            {q: "Sob o GDPR, qual é o prazo para notificar uma violação de dados pessoais?",
+             o: ["24 horas", "48 horas", "72 horas", "7 dias"],
+             c: 2,
+             e: "Sob o GDPR, a notificação deve ser feita dentro de 72 horas após a organização tomar conhecimento da violação de dados pessoais."},
+             
+            {q: "O que são trade secrets (segredos comerciais)?",
+             o: ["Segredos de rede descobertos por scanners", "Informações confidenciais que dão vantagem competitiva (fórmulas, processos, listas de clientes)", "Dados criptografados", "Backups offline"],
+             c: 1,
+             e: "Trade secrets (segredos comerciais): informações confidenciais valiosas que dão vantagem competitiva: fórmulas, processos, métodos, listas de clientes, estratégias de marketing. Protegidas por NDAs."},
+             
+            {q: "Qual classificação de dados é usada para informações que, se divulgadas, podem causar danos significativos a indivíduos, organizações ou segurança nacional?",
+             o: ["Público", "Interno", "Confidencial", "Restrito (Restricted)"],
+             c: 3,
+             e: "Restrito (Restricted): classificação para dados altamente sensíveis que exigem controles rigorosos e acesso limitado. Se divulgados, podem causar danos significativos."},
+             
+            {q: "O que é data sovereignty (soberania de dados)?",
+             o: ["Propriedade dos dados pela empresa", "Jurisdição que restringe processamento e armazenamento de dados fora de seus limites geográficos", "Criptografia de dados em repouso", "Backup em nuvem"],
+             c: 1,
+             e: "Data sovereignty (soberania de dados): jurisdição que impede ou restringe o processamento e armazenamento de dados em sistemas que não residem fisicamente dentro daquela jurisdição."},
+             
+            {q: "Qual é a diferença entre data controller (controlador) e data processor (processador) no GDPR?",
+             o: ["Controller processa dados; Processor decide como processar", "Controller determina propósitos e meios; Processor processa em nome do controller", "São funções idênticas", "Controller é pessoa física; Processor é jurídica"],
+             c: 1,
+             e: "Data controller: entidade que determina os propósitos e meios de processamento. Data processor: processa dados em nome do controller, seguindo suas instruções."},
+             
+            {q: "O que é o direito à portabilidade de dados no GDPR?",
+             o: ["Direito de transferir dados para outro dispositivo", "Direito de receber dados em formato estruturado e transferir para outro controlador", "Direito de exportar backups", "Direito de vender dados pessoais"],
+             c: 1,
+             e: "Direito à portabilidade: titular tem direito de receber seus dados em formato estruturado, de uso comum e leitura mecânica, e transferi-los a outro controlador."},
+             
+            {q: "O que significa data minimization (minimização de dados)?",
+             o: ["Reduzir espaço em disco usado por backups", "Coletar e processar apenas os dados necessários para a finalidade específica", "Minimizar o número de cópias de dados", "Comprimir dados para economizar storage"],
+             c: 1,
+             e: "Data minimization (minimização de dados): princípio de que organizações devem coletar e processar apenas os dados estritamente necessários para a finalidade específica, nada além disso."},
+             
+            {q: "O que é um certificate of destruction (certificado de destruição)?",
+             o: ["Certificado de garantia do hardware", "Documentação que atesta que dados foram seguramente destruídos em conformidade com padrões", "Licença de software", "Certificado digital do dispositivo"],
+             c: 1,
+             e: "Certificate of destruction: documentação que verifica o processo de sanitização ou destruição de dados, geralmente emitido por terceiros, atestando que os dados foram removidos com segurança."},
+             
+            {q: "Qual é a diferença entre dados estruturados e não estruturados em DLP?",
+             o: ["Estruturados: banco de dados; Não estruturados: documentos, emails", "Estruturados são criptografados; Não estruturados são texto plano", "Estruturados são internos; Não estruturados são externos", "São equivalentes"],
+             c: 0,
+             e: "Dados estruturados: formatos com modelo formal (bancos de dados). Dados não estruturados: documentos, emails, imagens - requerem 'file cracking' para serem escaneados consistentemente por soluções DLP."},
+             
+            {q: "O que é uma clean desk policy?",
+             o: ["Política de limpeza de mesas", "Política que determina que áreas de trabalho devem estar livres de documentos sensíveis", "Política de uso de tablets", "Política de descarte de equipamentos"],
+             c: 1,
+             e: "Clean desk policy: política que determina que cada área de trabalho deve estar livre de documentos deixados à vista. Objetivo: prevenir que informações sensíveis sejam obtidas por pessoas não autorizadas."},
+             
+            {q: "O que é shadow IT?",
+             o: ["TI que trabalha no período noturno", "Uso de software, hardware ou serviços sem aprovação do departamento de TI", "Ataque que usa sombras para se esconder", "Departamento de TI terceirizado"],
+             c: 1,
+             e: "Shadow IT: uso de software, hardware ou serviços sem aprovação do departamento de TI. Cria riscos de segurança por falta de controle e monitoramento."},
+             
+            {q: "O que deve ser feito imediatamente no offboarding de um funcionário?",
+             o: ["Manter a conta ativa por 30 dias", "Desabilitar a conta e revogar todos os acessos", "Transferir os dados para o novo funcionário", "Enviar um email de despedida"],
+             c: 1,
+             e: "No offboarding: desabilitar conta imediatamente, revogar todos os acessos, recuperar equipamentos, fazer wipe de dados corporativos em dispositivos pessoais, e realizar exit interview."},
+             
+            {q: "O que é uma violação de dados (data breach)?",
+             o: ["Queda de energia no datacenter", "Incidente onde informações são lidas, modificadas ou deletadas sem autorização", "Perda de conexão com a internet", "Atualização de sistema"],
+             c: 1,
+             e: "Data breach: incidente onde informações são lidas, modificadas ou deletadas sem autorização. Pode envolver dados corporativos, propriedade intelectual ou dados pessoais."},
+             
+            {q: "Qual a principal diferença entre Confidential e Restricted na classificação de dados?",
+             o: ["Confidential é mais restritivo que Restricted", "Restricted é para dados altamente sensíveis com controles rigorosos; Confidential é sensível mas com menos restrições", "São equivalentes", "Confidential é para dados públicos"],
+             c: 1,
+             e: "Confidential: dados sensíveis com impacto significativo se divulgados. Restricted: dados altamente sensíveis com controles rigorosos e acesso extremamente limitado."}
         ];
 
         // ========== VARIÁVEIS DE ESTADO ==========
         
-        let currentCard = 0;        // POSIÇÃO no array filteredCards
-        let flipped = false;        // false = frente, true = verso
-        let mastered = new Set();   // Índices originais dos cards dominados
-        let answers = {};           // Respostas do quiz
-        let checked = false;        // Quiz já foi verificado?
-        let filteredCards = [...Array(cards.length).keys()]; // Índices na ordem atual
-        let currentFilter = 'all';  // Filtro atual
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
+        let sessionQuiz = [];
 
         // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
         
@@ -713,7 +947,7 @@
             localStorage.setItem('security_plus_cap13_mastered', JSON.stringify([...mastered]));
         }
 
-        loadProgress(); // Carrega progresso ao iniciar
+        loadProgress();
 
         // ========== FUNÇÕES DAS ABAS ==========
         
@@ -726,13 +960,18 @@
                 b.classList.toggle('active', i === n);
             });
             
-            if (n === 2 && !document.getElementById('questions').innerHTML) {
-                loadQuiz();
+            if (n === 2 && sessionQuiz.length === 0) {
+                newQuizSession();
             }
         }
 
         // ========== FUNÇÕES DOS FLASHCARDS ==========
         
+        function getSession(arr, n) {
+            const shuffled = [...arr].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, Math.min(n, arr.length));
+        }
+
         function updateCard() {
             if (filteredCards.length === 0) {
                 document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
@@ -795,8 +1034,6 @@
             updateCard();
         }
 
-        // ========== FUNÇÃO DE EMBARALHAR ==========
-        
         function shuffleCards() {
             for (let i = filteredCards.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -807,9 +1044,7 @@
             updateCard();
         }
 
-        // ========== FUNÇÕES DE FILTRO ==========
-        
-        function filterCards(type) {
+        function filterCards(type, event) {
             currentFilter = type;
             
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
@@ -828,75 +1063,130 @@
             updateCard();
         }
 
+        function newSession() {
+            filteredCards = getSession([...Array(cards.length).keys()], 15);
+            currentCard = 0; flipped = false;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.filter-btn')[0].classList.add('active');
+            updateCard();
+        }
+
         // ========== FUNÇÕES DO QUIZ ==========
         
+        function newQuizSession() {
+            answers = {};
+            checked = false;
+            document.getElementById('results-modal').classList.remove('show');
+            
+            // Embaralha e pega 15 questões aleatórias do pool de 30
+            const shuffled = [...Array(allQuiz.length).keys()].sort(() => Math.random() - 0.5);
+            sessionQuiz = shuffled.slice(0, 15);
+            loadQuiz();
+        }
+
         function loadQuiz() {
             const container = document.getElementById('questions');
-            quiz.forEach((q, qi) => {
+            container.innerHTML = '';
+            
+            sessionQuiz.forEach((qi, pos) => {
+                const q = allQuiz[qi];
                 const div = document.createElement('div');
                 div.className = 'question';
-                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                div.innerHTML = `<h3>${pos + 1}. ${q.q}</h3>`;
+                
                 q.o.forEach((opt, oi) => {
                     const odiv = document.createElement('div');
                     odiv.className = 'option';
                     odiv.textContent = opt;
-                    odiv.onclick = () => selectOpt(qi, oi);
-                    odiv.id = `q${qi}o${oi}`;
+                    odiv.onclick = () => selectOpt(pos, oi);
+                    odiv.id = `q${pos}o${oi}`;
                     div.appendChild(odiv);
                 });
+                
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
-                exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                exp.id = `exp${pos}`;
+                exp.innerHTML = q.e ? `<strong>✓ Explicação:</strong> ${q.e}` : `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
                 div.appendChild(exp);
+                
                 container.appendChild(div);
             });
         }
 
-        function selectOpt(qi, oi) {
+        function selectOpt(pos, oi) {
             if (checked) return;
-            quiz[qi].o.forEach((_, i) => {
-                const el = document.getElementById(`q${qi}o${i}`);
-                el.classList.remove('selected');
+            
+            allQuiz[sessionQuiz[pos]].o.forEach((_, i) => {
+                const el = document.getElementById(`q${pos}o${i}`);
+                if (el) el.classList.remove('selected');
             });
-            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
-            answers[qi] = oi;
+            
+            const el = document.getElementById(`q${pos}o${oi}`);
+            if (el) el.classList.add('selected');
+            
+            answers[pos] = oi;
         }
 
         function checkAnswers() {
             checked = true;
             let correct = 0;
-            quiz.forEach((q, qi) => {
+            
+            sessionQuiz.forEach((qi, pos) => {
+                const q = allQuiz[qi];
                 const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                
                 q.o.forEach((_, oi) => {
-                    const el = document.getElementById(`q${qi}o${oi}`);
+                    const el = document.getElementById(`q${pos}o${oi}`);
+                    if (!el) return;
+                    
                     if (correctAnswer.includes(oi)) {
                         el.classList.add('correct');
-                    } else if (answers[qi] === oi) {
+                    } else if (answers[pos] === oi) {
                         el.classList.add('incorrect');
                     }
                 });
-                document.getElementById(`exp${qi}`).style.display = 'block';
-                if (correctAnswer.includes(answers[qi])) correct++;
+                
+                const expEl = document.getElementById(`exp${pos}`);
+                if (expEl) expEl.style.display = 'block';
+                
+                if (correctAnswer.includes(answers[pos])) correct++;
             });
             
-            const pct = Math.round((correct / quiz.length) * 100);
+            const pct = Math.round((correct / sessionQuiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = 
-                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            
+            let emoji, title, msg;
+            if (pct >= 80) {
+                emoji = '🎉'; title = 'APROVADO!';
+                msg = `${correct}/${sessionQuiz.length} corretas — Excelente! Você atingiu o threshold de 80%.`;
+            } else if (pct >= 60) {
+                emoji = '⚠️'; title = 'Quase lá!';
+                msg = `${correct}/${sessionQuiz.length} corretas — Você precisa de 80% para passar. Continue praticando!`;
+            } else {
+                emoji = '📚'; title = 'Precisa estudar mais';
+                msg = `${correct}/${sessionQuiz.length} corretas — Revise o material e tente novamente!`;
+            }
+            
+            document.getElementById('result-emoji').textContent = emoji;
+            document.getElementById('result-title').textContent = title;
+            document.getElementById('score-text').textContent = msg;
             document.getElementById('results-modal').classList.add('show');
         }
 
-        function resetQuiz() {
-            checked = false;
-            answers = {};
-            document.getElementById('questions').innerHTML = '';
+        function closeModal() {
             document.getElementById('results-modal').classList.remove('show');
-            loadQuiz();
+        }
+
+        function scrollToExplanations() {
+            document.getElementById('results-modal').classList.remove('show');
+            setTimeout(() => {
+                const firstExp = document.getElementById('exp0');
+                if (firstExp) firstExp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 200);
         }
 
         // ========== INICIALIZAÇÃO ==========
-        updateCard();
+        newSession();
     </script>
 </body>
 </html>
