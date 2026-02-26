@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security+ Cap 9 - Resposta a Incidentes e Continuidade</title>
+    <title>Security+ Cap 9 - Incident Response</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -13,883 +13,814 @@
             padding: 20px;
         }
         .container { max-width: 1200px; margin: 0 auto; }
-        .header { text-align: center; color: white; margin-bottom: 40px; animation: fadeIn 0.5s; }
-        .header h1 { font-size: 2.8rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-        .stats-bar { display: flex; gap: 20px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
-        .stat-card { background: rgba(255,255,255,0.2); padding: 15px 25px; border-radius: 12px; backdrop-filter: blur(10px); color: white; font-weight: bold; }
-        .tabs { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
-        .tab-btn { padding: 15px 30px; background: white; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .tab-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-        .tab-btn.active { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
-        .content { display: none; animation: fadeIn 0.4s; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: bold;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        .content { 
+            display: none;
+            animation: fadeIn 0.4s;
+        }
         .content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         /* FLASHCARDS */
         .flashcard-area { max-width: 900px; margin: 0 auto; }
-        .card-info { background: rgba(255,255,255,0.25); padding: 20px; border-radius: 15px; color: white; margin-bottom: 25px; backdrop-filter: blur(10px); }
-        .progress-bar { width: 100%; height: 8px; background: rgba(255,255,255,0.3); border-radius: 10px; overflow: hidden; margin-top: 10px; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #4facfe, #00f2fe); transition: width 0.3s ease; }
-        .flashcard { background: white; border-radius: 20px; padding: 60px 40px; min-height: 350px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; margin-bottom: 30px; }
+        .card-info {
+            background: rgba(255,255,255,0.25);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            margin-bottom: 30px;
+        }
         .flashcard:hover { transform: scale(1.02); }
-        .side-indicator { position: absolute; top: 20px; left: 20px; padding: 8px 16px; background: #4facfe; color: white; border-radius: 8px; font-size: 0.9rem; font-weight: 600; }
-        .category-badge { position: absolute; top: 20px; right: 20px; padding: 8px 16px; background: #e0f2fe; color: #0369a1; border-radius: 8px; font-size: 0.85rem; font-weight: 600; }
-        .flashcard-text { font-size: 1.4rem; line-height: 1.8; text-align: center; color: #1f2937; }
-        .flip-hint { margin-top: 20px; font-size: 0.9rem; color: #6b7280; font-style: italic; }
-        .controls { display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap; }
-        .btn { padding: 15px 30px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-        .btn-nav { background: white; font-size: 1.5rem; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; padding: 0; }
-        .btn-master { background: #e5e7eb; color: #1f2937; }
-        .btn-master.mastered { background: #10b981; color: white; }
-        .btn-new-session { background: #f59e0b; color: white; }
-        .filter-bar { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
-        .filter-btn { padding: 10px 20px; border: 2px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.2); color: white; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
-        .filter-btn.active { background: white; color: #4facfe; }
-
+        .side-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #4facfe;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .flashcard-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #1f2937;
+        }
+        .flip-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn-nav {
+            background: white;
+            font-size: 1.5rem;
+            width: 55px;
+            height: 55px;
+        }
+        .btn-master {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        .btn-master.mastered {
+            background: #10b981;
+            color: white;
+        }
+        .btn-shuffle {
+            background: #f59e0b;
+            color: white;
+        }
+        
         /* QUIZ */
         .quiz-area { max-width: 1000px; margin: 0 auto; }
-        .quiz-header { text-align: center; color: white; margin-bottom: 35px; }
-        .question { background: white; border-radius: 18px; padding: 35px; margin-bottom: 25px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
-        .question h3 { color: #1f2937; margin-bottom: 20px; font-size: 1.25rem; line-height: 1.6; }
-        .option { padding: 18px 20px; border: 3px solid #e5e7eb; border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s ease; background: white; font-size: 1.05rem; }
-        .option:hover { background: #e0f2fe; border-color: #4facfe; transform: translateX(5px); }
-        .option.selected { border-color: #4facfe; background: #e0f2fe; font-weight: 600; }
-        .option.correct { border-color: #10b981; background: #d1fae5; font-weight: 600; }
-        .option.incorrect { border-color: #ef4444; background: #fee2e2; font-weight: 600; }
-        .explanation { margin-top: 20px; padding: 20px; background: #e0f2fe; border-left: 5px solid #4facfe; border-radius: 8px; display: none; line-height: 1.6; }
-        .quiz-controls { text-align: center; margin-top: 30px; margin-bottom: 20px; }
-        .btn-check { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; font-size: 1.1rem; padding: 18px 45px; }
-
-        /* MODAL */
-        .results-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        .quiz-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+        }
+        .question {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .question h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        .option {
+            padding: 18px 20px;
+            border: 3px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.05rem;
+        }
+        .option:hover {
+            background: #e0f7ff;
+            border-color: #4facfe;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            border-color: #4facfe;
+            background: #e0f7ff;
+            font-weight: 600;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+            font-weight: 600;
+        }
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+            font-weight: 600;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e0f7ff;
+            border-left: 5px solid #4facfe;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.6;
+        }
+        .results-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
         .results-modal.show { display: flex; }
-        .results-content { background: white; padding: 50px; border-radius: 25px; max-width: 500px; width: 90%; text-align: center; animation: scaleIn 0.3s ease; }
-        @keyframes scaleIn { from { transform: scale(0.9); } to { transform: scale(1); } }
-        .result-emoji { font-size: 3.5rem; margin-bottom: 10px; }
-        .score-circle { width: 180px; height: 180px; border-radius: 50%; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: bold; margin: 20px auto; }
-        .modal-buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; }
-        .btn-primary { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
-        .btn-secondary { background: #6b7280; color: white; }
-        .btn-explain-modal { background: #7c3aed; color: white; width: 100%; }
-
-        /* RESUMO */
-        .summary-area { max-width: 900px; margin: 0 auto; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow-x: hidden; }
-        .summary-area h1 { color: #4facfe; margin-bottom: 20px; font-size: 2rem; }
-        .summary-area h2 { color: white; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 12px 20px; border-radius: 8px; margin: 30px 0 15px 0; font-size: 1.4rem; }
-        .summary-area h3 { color: #0369a1; margin: 20px 0 10px 0; font-size: 1.1rem; }
-        .summary-area ul { margin-left: 25px; margin-bottom: 15px; line-height: 1.8; }
-        .summary-area p { line-height: 1.8; margin-bottom: 12px; }
-        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 15px 0; border-radius: 8px; }
-        .summary-area table { width: 100%; border-collapse: collapse; min-width: 400px; margin: 0; }
-        .summary-area th { background: #4facfe; color: white; padding: 10px; white-space: nowrap; }
-        .summary-area td { padding: 10px; border: 1px solid #e5e7eb; font-size: 0.95rem; }
-        .summary-area tr:nth-child(even) td { background: #f0f9ff; }
-        .tip-box { background: #e0f2fe; border-left: 5px solid #4facfe; padding: 20px; margin: 20px 0; border-radius: 8px; }
-        .tip-box h3 { color: #0369a1; margin-bottom: 10px; margin-top: 0; }
-        .warning-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px; }
-        .warning-box h3 { color: #d97706; margin-bottom: 10px; margin-top: 0; }
-        .info-box { background: #d1fae5; border-left: 5px solid #10b981; padding: 20px; margin: 20px 0; border-radius: 8px; }
-        .info-box h3 { color: #065f46; margin-bottom: 10px; margin-top: 0; }
-        .grid-2 { display: flex; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
-        .grid-2 > div { flex: 1; min-width: 250px; padding: 20px; border-radius: 10px; }
-        code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9rem; }
-
-        @media (max-width: 600px) {
-            body { padding: 10px; }
-            .header h1 { font-size: 2rem; }
-            .flashcard { padding: 40px 20px; min-height: 250px; }
-            .flashcard-text { font-size: 1.1rem; }
-            .summary-area { padding: 20px 15px; border-radius: 12px; }
-            .summary-area h1 { font-size: 1.5rem; }
-            .summary-area h2 { font-size: 1.15rem; padding: 10px 14px; }
-            .grid-2 > div { min-width: 100% !important; }
-            .results-content { padding: 30px 20px; }
+        .results-content {
+            background: white;
+            padding: 50px;
+            border-radius: 25px;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px auto;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .filter-btn.active {
+            background: white;
+            color: #4facfe;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <h1>🚨 Capítulo 9</h1>
-        <p style="font-size:1.3rem; opacity:0.9;">Resposta a Incidentes e Continuidade de Negócios</p>
-        <div class="stats-bar">
-            <div class="stat-card">🧠 <span id="total-cards-stat">0</span> Flashcards</div>
-            <div class="stat-card">❓ 90 Questões no pool</div>
-            <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+    <div class="container">
+        <div class="header">
+            <h1>🚨 Security+ Capítulo 9</h1>
+            <p>Incident Response - 50 Cards | 25 Questões</p>
+            <div class="stats-bar">
+                <div class="stat-card">📚 50 Flashcards</div>
+                <div class="stat-card">❓ 25 Questões</div>
+                <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
+            </div>
         </div>
-    </div>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
-        <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
-        <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
-    </div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(0)">🧠 Flashcards</button>
+            <button class="tab-btn" onclick="showTab(1)">📖 Resumo</button>
+            <button class="tab-btn" onclick="showTab(2)">❓ Quiz</button>
+        </div>
 
-    <!-- ABA 0: FLASHCARDS -->
-    <div id="tab0" class="content active">
-        <div class="flashcard-area">
-            <div class="card-info">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                    <span id="card-counter">Card 1 de 15</span>
-                    <span id="mastered-count">0 dominados</span>
+        <div id="tab0" class="content active">
+            <div class="flashcard-area">
+                <div class="card-info">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
+                        <div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 50</div>
+                            <div id="mastered-count">0 dominados</div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
                 </div>
-                <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-            </div>
-            <div class="filter-bar">
-                <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
-                <button class="filter-btn" onclick="filterCards('unmastered', event)">Não Dominados</button>
-                <button class="filter-btn" onclick="filterCards('mastered', event)">Dominados</button>
-            </div>
-            <div style="text-align:center; margin-bottom:20px;">
-                <button class="btn btn-new-session" onclick="newSession()">🎲 Nova Sessão (15)</button>
-            </div>
-            <div class="flashcard" onclick="flipCard()">
-                <div class="side-indicator" id="side-indicator">FRENTE</div>
-                <div class="category-badge" id="category-badge"></div>
-                <div class="flashcard-text" id="card-text"></div>
-                <div class="flip-hint">👆 Clique para virar</div>
-            </div>
-            <div class="controls">
-                <button class="btn btn-nav" onclick="prevCard()">←</button>
-                <button class="btn btn-master" id="btn-master" onclick="toggleMaster()">⭐ Marcar Dominado</button>
-                <button class="btn btn-nav" onclick="nextCard()">→</button>
+                
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="side-indicator" id="side-indicator">FRENTE</div>
+                    <div class="flashcard-text" id="card-text"></div>
+                    <div class="flip-hint">👆 Clique para virar</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-nav" onclick="prevCard()">‹</button>
+                    <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
+                    <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn btn-nav" onclick="nextCard()">›</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- ABA 1: RESUMO -->
-    <div id="tab1" class="content">
-        <div class="summary-area">
-            <h1>📋 Resumo — Capítulo 9</h1>
-            <p style="color:#6b7280; margin-bottom:10px;">Resposta a Incidentes e Continuidade de Negócios • CompTIA Security+</p>
-
-            <div class="tip-box">
-                <h3>🎯 Pontos-Chave para a Prova</h3>
-                <ul>
-                    <li><strong>7 fases do IR:</strong> Preparation → Detection → Analysis → Containment → Eradication → Recovery → Lessons Learned</li>
-                    <li><strong>Lessons Learned</strong> alimenta Preparation (ciclo contínuo)</li>
-                    <li><strong>Containment</strong> = limitar escopo | <strong>Eradication</strong> = remover causa</li>
-                    <li><strong>Runbook</strong> = automação por condições | <strong>Playbook</strong> = checklist ordenado</li>
-                    <li><strong>Write Blocker</strong> = obrigatório para imagem forensicamente sólida</li>
-                    <li><strong>Ordem de Volatilidade:</strong> CPU/RAM → Swap → Rede → Disco → Logs remotos</li>
-                    <li><strong>Chain of Custody</strong> = onde/quando/quem coletou e manuseou</li>
-                    <li><strong>RTO</strong> = tempo máximo de downtime | <strong>RPO</strong> = máximo de dados perdidos</li>
-                    <li><strong>RAID 0</strong> = sem redundância | <strong>RAID 6</strong> = tolera 2 falhas</li>
-                    <li><strong>Hot Site</strong> (minutos) &gt; Warm Site (horas) &gt; Cold Site (dias/semanas)</li>
-                    <li><strong>Active/Passive</strong> = sem degradação no failover | <strong>Active/Active</strong> = usa capacidade total</li>
-                    <li><strong>Regra 3-2-1:</strong> 3 cópias, 2 mídias, 1 offsite</li>
-                </ul>
-            </div>
-
-            <h2>1️⃣ Processo de Resposta a Incidentes (7 Fases)</h2>
-            <div class="table-wrap"><table>
-                <tr><th>#</th><th>Fase</th><th>Objetivo Principal</th></tr>
-                <tr><td>1</td><td><strong>Preparation</strong></td><td>Hardening, políticas, comunicação confidencial, recursos de IR</td></tr>
-                <tr><td>2</td><td><strong>Detection</strong></td><td>Descobrir indicadores via sistemas automáticos, threat hunting ou pessoas</td></tr>
-                <tr><td>3</td><td><strong>Analysis</strong></td><td>Confirmar incidente, triage de severidade, analisar indicadores</td></tr>
-                <tr><td>4</td><td><strong>Containment</strong></td><td>Limitar escopo, proteger dados, notificar stakeholders</td></tr>
-                <tr><td>5</td><td><strong>Eradication</strong></td><td>Remover causa, restaurar estado seguro, aplicar patches</td></tr>
-                <tr><td>6</td><td><strong>Recovery</strong></td><td>Reintegrar ao negócio, restaurar backups, monitorar de perto</td></tr>
-                <tr><td>7</td><td><strong>Lessons Learned</strong></td><td>Documentar, analisar, melhorar → alimenta Preparation (ciclo)</td></tr>
-            </table></div>
-            <div class="warning-box">
-                <h3>⚠️ Distinções Críticas para a Prova</h3>
-                <ul>
-                    <li><strong>Containment ≠ Eradication:</strong> Containment limita escopo; Eradication remove a causa</li>
-                    <li><strong>Incidente cyber vs Major Incident:</strong> Incidente cyber → IR normal. Ameaça existencial → Disaster Recovery</li>
-                    <li><strong>Lessons Learned → Preparation:</strong> O ciclo é contínuo — cada incidente melhora a preparação futura</li>
-                </ul>
-            </div>
-
-            <h2>2️⃣ Isolamento, Contenção e Segmentação</h2>
-            <div class="grid-2">
-                <div style="background:#fef3c7;">
-                    <h3 style="color:#d97706; margin-top:0;">🔒 Isolation vs Containment</h3>
-                    <ul>
-                        <li><strong>Process Isolation:</strong> Processo comprometido só afeta seus recursos</li>
-                        <li><strong>Containment:</strong> Desconectar máquina da rede (desplugando cabo ou desabilitando NIC)</li>
-                        <li>Estar em subnet diferente <strong>NÃO é suficiente</strong> — precisa de regras de ACL</li>
+        <div id="tab1" class="content">
+            <div class="summary" style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <h1 style="color: #4facfe; margin-bottom: 30px; font-size: 2.5rem; border-bottom: 4px solid #4facfe; padding-bottom: 15px;">📖 Resumo - Capítulo 9</h1>
+                
+                <div style="background: #e0f7ff; border-left: 5px solid #4facfe; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>6 fases do Incident Response:</strong> Preparation → Identification → Containment → Eradication → Recovery → Lessons Learned</li>
+                        <li><strong>Ordem de Volatilidade:</strong> CPU/RAM (mais volátil) → Disco → Logs → Backups (menos volátil)</li>
+                        <li><strong>Chain of Custody:</strong> Documentar tudo para admissibilidade legal</li>
+                        <li><strong>3-2-1 Rule:</strong> 3 cópias, 2 mídias, 1 offsite</li>
+                        <li><strong>RPO vs RTO:</strong> RPO = quanto dado perder, RTO = tempo de recuperação</li>
                     </ul>
                 </div>
-                <div style="background:#e0f2fe;">
-                    <h3 style="color:#0369a1; margin-top:0;">🌐 Segmentação de Rede</h3>
-                    <ul>
-                        <li>VLANs, SDN, switches, subnetting, física</li>
-                        <li>Previne lateral movement (pivot)</li>
-                        <li>Screened Subnet (DMZ): 1 ou 2 firewalls</li>
-                        <li>Atua como controle em Preparation e Containment</li>
-                    </ul>
+
+                <h2 style="color: #00f2fe; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">1️⃣ Processo de Resposta a Incidentes</h2>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0;">
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #4facfe;">
+                        <strong>1. Preparation</strong><br>Planos, ferramentas
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #4facfe;">
+                        <strong>2. Identification</strong><br>Detectar
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #4facfe;">
+                        <strong>3. Containment</strong><br>Isolar
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #4facfe;">
+                        <strong>4. Eradication</strong><br>Remover causa
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #4facfe;">
+                        <strong>5. Recovery</strong><br>Restaurar
+                    </div>
+                    <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #4facfe;">
+                        <strong>6. Lessons Learned</strong><br>Melhorias
+                    </div>
                 </div>
-            </div>
 
-            <h2>3️⃣ SOAR, Playbooks e SIEM</h2>
-            <div class="table-wrap"><table>
-                <tr><th>Conceito</th><th>Definição</th><th>Característica</th></tr>
-                <tr><td><strong>SOAR</strong></td><td>Security Orchestration, Automation and Response</td><td>Compila alertas, cria casos, automatiza via playbooks</td></tr>
-                <tr><td><strong>Runbook</strong></td><td>Protocolos automatizados por condições</td><td>Foco em automação de processos de IR</td></tr>
-                <tr><td><strong>Playbook</strong></td><td>Checklist ordenado para ameaça específica</td><td>Foco em padronização e consistência</td></tr>
-                <tr><td><strong>SIEM</strong></td><td>SIM + SEM — compila e examina pontos de dados</td><td>7 componentes: scan, dashboard, sensores, sensibilidade, trends, alertas, correlação</td></tr>
-            </table></div>
-
-            <h2>4️⃣ Log Data e Metadata</h2>
-            <h3>Logs do Windows</h3>
-            <ul>
-                <li><strong>Application:</strong> Eventos de processos de aplicação (crash, instalação)</li>
-                <li><strong>Security:</strong> Eventos de auditoria (login falhado, acesso negado) ← mais importante para IR</li>
-                <li><strong>System:</strong> Eventos de processos kernel e serviços do SO</li>
-            </ul>
-            <h3>Tipos de Metadata</h3>
-            <div class="table-wrap"><table>
-                <tr><th>Tipo</th><th>O que contém</th><th>Uso em IR</th></tr>
-                <tr><td><strong>File Metadata</strong></td><td>Created/accessed/modified, ACL, atributos</td><td>Timeline de acesso a arquivos</td></tr>
-                <tr><td><strong>Email Metadata</strong></td><td>Header com remetente real, servidores, X-headers</td><td>Rastrear phishing, identificar IP real</td></tr>
-                <tr><td><strong>Mobile Metadata</strong></td><td>Timestamp, geolocation, dados de apps</td><td>Identificar pessoas, lugares, tempos</td></tr>
-                <tr><td><strong>Web Metadata</strong></td><td>IPs, requisições, downloads, cookies, cache</td><td>Reconstruir atividade de navegação</td></tr>
-            </table></div>
-            <div class="info-box">
-                <h3>⏰ Sincronização de Tempo</h3>
-                <p>Logging preciso requer sincronização NTP de todos os hosts. Usar <strong>UTC</strong> como timezone neutro em ambientes multi-localização para garantir timeline coerente em investigações.</p>
-            </div>
-
-            <h2>5️⃣ Analisadores de Dados de Rede</h2>
-            <div class="table-wrap"><table>
-                <tr><th>Ferramenta</th><th>Camadas OSI</th><th>Modo</th><th>Característica</th></tr>
-                <tr><td><strong>NetFlow</strong></td><td>2-4</td><td>Completo ou amostragem</td><td>Feature nativa em roteadores Cisco</td></tr>
-                <tr><td><strong>sFlow</strong></td><td>2-7</td><td>Apenas amostragem (stateless)</td><td>Mais rápido, visibilidade até camada 7</td></tr>
-                <tr><td><strong>IPfix</strong></td><td>2-4</td><td>Completo</td><td>Protocolo padronizado, substitui Syslog/SNMP separados</td></tr>
-            </table></div>
-
-            <h2>6️⃣ Investigação Forense Digital</h2>
-            <h3>Princípios Fundamentais</h3>
-            <ul>
-                <li><strong>Due Process:</strong> Salvaguardas procedurais para garantir fairness (common law US/UK)</li>
-                <li><strong>Legal Hold:</strong> Suspender deleção rotineira quando há litígio</li>
-                <li><strong>Chain of Custody:</strong> Documentar onde/quando/quem coletou e manuseou</li>
-                <li><strong>Análise sem viés:</strong> Conclusões apenas de evidência direta</li>
-                <li><strong>Métodos repetíveis:</strong> Terceiros podem reproduzir a análise</li>
-            </ul>
-            <h3>Ordem de Volatilidade (do mais ao menos volátil)</h3>
-            <div class="tip-box">
-                <p><strong>1.</strong> Registradores e cache da CPU → <strong>2.</strong> RAM → <strong>3.</strong> Swap/arquivos temporários → <strong>4.</strong> Dados de rede → <strong>5.</strong> Disco → <strong>6.</strong> Logs remotos → <strong>7.</strong> Mídia de arquivo</p>
-            </div>
-            <h3>E-Discovery (5 funções)</h3>
-            <ul>
-                <li><strong>Identify & De-duplicate:</strong> Filtrar arquivos padrão e cópias</li>
-                <li><strong>Search:</strong> Keyword e semantic search</li>
-                <li><strong>Tags:</strong> Labels e keywords para organizar evidências</li>
-                <li><strong>Security:</strong> Garantir integridade em todo o processo</li>
-                <li><strong>Disclosure:</strong> Mesma evidência disponível para ambas as partes</li>
-            </ul>
-
-            <h2>7️⃣ Aquisição de Dados Forenses</h2>
-            <div class="grid-2">
-                <div style="background:#fee2e2;">
-                    <h3 style="color:#dc2626; margin-top:0;">⚡ Memória (Volátil)</h3>
-                    <ul>
-                        <li>RAM — perdida ao desligar</li>
-                        <li>Captura: processos, registry, conexões, chaves criptográficas</li>
-                        <li>Requer ferramenta pré-instalada com driver kernel</li>
-                        <li>Live Acquisition (sistema em execução)</li>
-                    </ul>
-                </div>
-                <div style="background:#d1fae5;">
-                    <h3 style="color:#065f46; margin-top:0;">💾 Disco (Não Volátil)</h3>
-                    <ul>
-                        <li>HDD, SSD, USB, mídia ótica</li>
-                        <li>Write Blocker: OBRIGATÓRIO — previne alteração</li>
-                        <li>Hash verification: prova integridade da cópia</li>
-                        <li>Gravação em vídeo: estabelece provenance</li>
-                    </ul>
-                </div>
-            </div>
-
-            <h2>8️⃣ Redundância e Alta Disponibilidade</h2>
-            <div class="table-wrap"><table>
-                <tr><th>Tecnologia</th><th>Descrição</th><th>Trade-off</th></tr>
-                <tr><td><strong>Active/Active LB</strong></td><td>Dois balanceadores em tandem</td><td>Usa capacidade total; degradação em failover</td></tr>
-                <tr><td><strong>Active/Passive LB</strong></td><td>Um ativo, um em standby</td><td>Sem degradação; capacidade ociosa</td></tr>
-                <tr><td><strong>Virtual IP (VIP)</strong></td><td>IP compartilhado entre cluster via CARP</td><td>Failover transparente para clientes</td></tr>
-                <tr><td><strong>Geographic Dispersal</strong></td><td>Múltiplos datacenters físicos</td><td>Mitiga desastres regionais</td></tr>
-                <tr><td><strong>Multipath</strong></td><td>Múltiplos caminhos CPU ↔ storage</td><td>Tolera falha de caminho físico</td></tr>
-            </table></div>
-            <h3>Opções de Energia Redundante</h3>
-            <ul>
-                <li><strong>UPS:</strong> Baterias para shutdown gracioso (curto prazo)</li>
-                <li><strong>Generator:</strong> 24-48 horas de energia (médio/longo prazo)</li>
-                <li><strong>Dual Supply:</strong> Duas fontes em servidores com hot-swap</li>
-                <li><strong>Managed PDU:</strong> Distribuição e monitoramento de energia em rack</li>
-            </ul>
-
-            <h2>9️⃣ RAID e Backups</h2>
-            <div class="table-wrap"><table>
-                <tr><th>RAID</th><th>Técnica</th><th>Discos Mín.</th><th>Tolera Falhas</th><th>Performance</th></tr>
-                <tr><td><strong>RAID 0</strong></td><td>Striping</td><td>2</td><td>❌ Nenhuma</td><td>✅ Alta</td></tr>
-                <tr><td><strong>RAID 1</strong></td><td>Mirroring</td><td>2</td><td>✅ 1 disco</td><td>➖ Normal</td></tr>
-                <tr><td><strong>RAID 5</strong></td><td>Striping + paridade</td><td>3</td><td>✅ 1 disco</td><td>✅ Boa</td></tr>
-                <tr><td><strong>RAID 6</strong></td><td>Striping + paridade dupla</td><td>4</td><td>✅ 2 discos</td><td>➖ Normal</td></tr>
-                <tr><td><strong>RAID 10</strong></td><td>Mirror + Striping</td><td>4</td><td>✅ 1 por par</td><td>✅ Alta</td></tr>
-            </table></div>
-            <div class="table-wrap"><table>
-                <tr><th>Tipo de Backup</th><th>O que copia</th><th>Tempo Backup</th><th>Restauração</th></tr>
-                <tr><td><strong>Full</strong></td><td>Tudo</td><td>Longo</td><td>Rápida (apenas 1 conjunto)</td></tr>
-                <tr><td><strong>Incremental</strong></td><td>Desde último backup (qualquer tipo)</td><td>Rápido</td><td>Lenta (full + todos incrementais)</td></tr>
-                <tr><td><strong>Differential</strong></td><td>Desde último full</td><td>Médio</td><td>Média (full + último differential)</td></tr>
-            </table></div>
-
-            <h2>🔟 Sites de Recuperação e Métricas</h2>
-            <div class="table-wrap"><table>
-                <tr><th>Site</th><th>Ativação</th><th>Custo</th><th>RTO</th></tr>
-                <tr><td><strong>Hot Site</strong></td><td>Minutos a horas</td><td>Alto</td><td>Mínimo</td></tr>
-                <tr><td><strong>Warm Site</strong></td><td>Horas a dias</td><td>Médio</td><td>Moderado</td></tr>
-                <tr><td><strong>Cold Site</strong></td><td>Dias a semanas</td><td>Baixo</td><td>Alto</td></tr>
-            </table></div>
-            <div class="info-box">
-                <h3>📊 Métricas de Continuidade</h3>
-                <ul>
-                    <li><strong>RTO</strong> (Recovery Time Objective): Tempo máximo aceitável de downtime</li>
-                    <li><strong>RPO</strong> (Recovery Point Objective): Máximo de dados perdidos (em tempo)</li>
-                    <li><strong>MTTR</strong> (Mean Time to Repair): Tempo médio para reparar após falha</li>
-                    <li><strong>MTBF</strong> (Mean Time Between Failures): Tempo médio entre falhas — mede confiabilidade</li>
+                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Containment (Contenção)</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Isolation:</strong> Desconectar sistema da rede para prevenir propagação, mas mantendo evidências.</li>
+                    <li><strong>Segmentation:</strong> Mover sistema para uma VLAN isolada (quarentena).</li>
+                    <li><strong>Removal:</strong> Desligar sistema (último caso, pois perde dados voláteis).</li>
                 </ul>
-            </div>
 
-            <div class="warning-box">
-                <h3>🎯 Dicas Finais para a Prova</h3>
-                <ul>
-                    <li><strong>Runbook ≠ Playbook:</strong> Runbook = automação por condições; Playbook = checklist para ameaça específica</li>
-                    <li><strong>sFlow</strong> é o único que opera até camada 7 (aplicação)</li>
-                    <li><strong>CARP</strong> é o protocolo de redundância usado em Virtual IP</li>
-                    <li><strong>Due Process</strong> ≠ Chain of Custody: Due Process = fairness jurídica; CoC = documentação da evidência</li>
-                    <li><strong>ESI</strong> = Electronically Stored Information (requisito moderno em litígios)</li>
-                    <li><strong>Semantic Search</strong> vai além de keywords — busca por contexto</li>
-                    <li><strong>Regra 3-2-1:</strong> 3 cópias, 2 mídias diferentes, 1 offsite</li>
+                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Eradication e Recovery</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Eradication:</strong> Remover causa raiz: deletar malware, fechar vulnerabilidade, revogar credenciais comprometidas.</li>
+                    <li><strong>Recovery:</strong> Restaurar sistemas à operação normal: restore de backup, rebuild, aplicar patches, monitorar.</li>
                 </ul>
+
+                <h2 style="color: #00f2fe; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ Log Management</h2>
+
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>SIEM:</strong> Coleta, agrega e correlaciona logs de múltiplas fontes para detecção de ameaças.</li>
+                    <li><strong>Retention:</strong> Armazenar logs conforme requisitos de compliance (ex: 1 ano).</li>
+                    <li><strong>ELK Stack:</strong> Elasticsearch (busca), Logstash (coleta/processamento), Kibana (visualização). Solução open source de log management.</li>
+                </ul>
+
+                <h2 style="color: #00f2fe; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Digital Forensics</h2>
+
+                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Ordem de Volatilidade (coletar do mais volátil para o menos volátil)</h3>
+                <ol style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>CPU registers, cache</strong> - extremamente volátil</li>
+                    <li><strong>RAM (memória volátil)</strong> - se desligar, perde</li>
+                    <li><strong>Swap/Page file</strong> - memória virtual</li>
+                    <li><strong>Disco rígido</strong> - persistente</li>
+                    <li><strong>Logs remotos</strong> - armazenados em outro sistema</li>
+                    <li><strong>Backups</strong> - menos volátil</li>
+                </ol>
+
+                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Chain of Custody (Cadeia de Custódia)</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li>Documentar quem teve acesso à evidência, quando, onde e por quê.</li>
+                    <li>Essencial para admissibilidade da evidência em tribunal.</li>
+                    <li>Cada transferência deve ser registrada.</li>
+                </ul>
+
+                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Ferramentas Forenses</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#4facfe; color:white;">Ferramenta</th><th style="background:#4facfe; color:white;">Uso</th></tr>
+                    <tr><td><strong>FTK Imager</strong></td><td>Criar imagens forenses (E01, raw). GUI, Windows.</td></tr>
+                    <tr><td><strong>dd/dcfldd</strong></td><td>Disk imaging no Linux. Bit-by-bit copy. dcfldd tem hash integrado.</td></tr>
+                    <tr><td><strong>Autopsy</strong></td><td>Análise forense GUI. Timeline, file recovery, keyword search.</td></tr>
+                    <tr><td><strong>Volatility</strong></td><td>Memory forensics. Analisa RAM dumps (processos, conexões, malware).</td></tr>
+                    <tr><td><strong>Wireshark</strong></td><td>Network forensics. Análise de PCAPs.</td></tr>
+                    <tr><td><strong>NetworkMiner</strong></td><td>Network forensics passiva. Extrai arquivos e credenciais de PCAPs.</td></tr>
+                </table>
+
+                <div style="background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>⚠️ REGRAS DE OURO DA FORENSE:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Write Blocker:</strong> Usar hardware ou software para prevenir modificação da evidência durante análise.</li>
+                        <li><strong>Hash da Evidência:</strong> Calcular hash (MD5/SHA-256) antes e depois da análise para provar integridade.</li>
+                        <li><strong>Live Acquisition:</strong> Capturar RAM enquanto sistema está ligado (dados voláteis).</li>
+                        <li><strong>Dead Acquisition:</strong> Imaging de disco desligado.</li>
+                    </ul>
+                </div>
+
+                <h2 style="color: #00f2fe; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">4️⃣ Redundância</h2>
+
+                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">RAID (Redundant Array of Independent Disks)</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#4facfe; color:white;">Nível</th><th style="background:#4facfe; color:white;">Descrição</th><th style="background:#4facfe; color:white;">Tolerância</th></tr>
+                    <tr><td><strong>RAID 0</strong></td><td>Striping (distribuição). Alta performance. <span style="color:#ef4444;">SEM REDUNDÂNCIA!</span></td><td>0 falhas</td></tr>
+                    <tr><td><strong>RAID 1</strong></td><td>Mirroring (espelhamento). 50% capacidade.</td><td>1 falha</td></tr>
+                    <tr><td><strong>RAID 5</strong></td><td>Striping + parity. Mínimo 3 discos.</td><td>1 falha</td></tr>
+                    <tr><td><strong>RAID 6</strong></td><td>Striping + double parity. Mínimo 4 discos.</td><td>2 falhas</td></tr>
+                    <tr><td><strong>RAID 10 (1+0)</strong></td><td>Mirror de stripes. Alto custo, alta performance.</td><td>Múltiplas falhas</td></tr>
+                </table>
+
+                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Alta Disponibilidade</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Clustering:</strong> Múltiplos servidores atuando como um. Active-active ou active-passive. Failover automático.</li>
+                    <li><strong>Load Balancing:</strong> Distribui tráfego entre servidores (round-robin, least connections). Aumenta performance e disponibilidade.</li>
+                    <li><strong>Failover:</strong> Troca automática para servidor/componente de backup quando o primário falha.</li>
+                </ul>
+
+                <h2 style="color: #00f2fe; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">5️⃣ Backup</h2>
+
+                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Tipos de Backup</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#4facfe; color:white;">Tipo</th><th style="background:#4facfe; color:white;">Descrição</th><th style="background:#4facfe; color:white;">Backup</th><th style="background:#4facfe; color:white;">Restore</th></tr>
+                    <tr><td><strong>Full</strong></td><td>Cópia completa de todos os dados</td><td>Lento</td><td>Rápido (1 fita)</td></tr>
+                    <tr><td><strong>Incremental</strong></td><td>Mudanças desde o ÚLTIMO backup (qualquer tipo)</td><td>Rápido</td><td>Lento (full + todos incrementais)</td></tr>
+                    <tr><td><strong>Differential</strong></td><td>Mudanças desde o último FULL</td><td>Médio</td><td>Médio (full + último differential)</td></tr>
+                </table>
+
+                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Regra 3-2-1</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>3</strong> cópias dos dados (original + 2 backups)</li>
+                    <li><strong>2</strong> tipos de mídia diferentes (ex: disco + fita)</li>
+                    <li><strong>1</strong> cópia offsite (fora do local físico) ou offline (air gap)</li>
+                </ul>
+
+                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">Conceitos Importantes</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>RPO (Recovery Point Objective):</strong> Quanto dado pode ser perdido (em tempo). Ex: RPO 24h = backup diário.</li>
+                    <li><strong>RTO (Recovery Time Objective):</strong> Tempo máximo para recuperar o serviço.</li>
+                    <li><strong>MTBF (Mean Time Between Failures):</strong> Confiabilidade. Tempo médio entre falhas.</li>
+                    <li><strong>MTTR (Mean Time To Repair):</strong> Tempo médio para consertar. Impacta o RTO.</li>
+                </ul>
+
+                <h3 style="color: #4facfe; margin-top: 20px; margin-bottom: 10px;">DR Sites (Disaster Recovery)</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#4facfe; color:white;">Tipo</th><th style="background:#4facfe; color:white;">Descrição</th><th style="background:#4facfe; color:white;">RTO</th><th style="background:#4facfe; color:white;">Custo</th></tr>
+                    <tr><td><strong>Hot Site</strong></td><td>Totalmente equipado, dados sincronizados, failover imediato</td><td>Minutos</td><td>💰💰💰</td></tr>
+                    <tr><td><strong>Warm Site</strong></td><td>Equipado mas sem dados atuais. Setup em horas/dias</td><td>Horas/dias</td><td>💰💰</td></tr>
+                    <tr><td><strong>Cold Site</strong></td><td>Apenas espaço físico. Setup em semanas</td><td>Semanas</td><td>💰</td></tr>
+                </table>
+
+                <div style="background: #e0f7ff; border-left: 5px solid #4facfe; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                    <strong>💡 BACKUP MODERNO:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Immutable Backup:</strong> Backup que não pode ser modificado/deletado (WORM). Protege contra ransomware.</li>
+                        <li><strong>Air Gap Backup:</strong> Backup fisicamente desconectado da rede (fita, disco removido).</li>
+                        <li><strong>Snapshot:</strong> Estado de VM/storage em momento. Rápido mas NÃO é backup (mesmo storage).</li>
+                        <li><strong>Replication:</strong> Cópia contínua para outro local (síncrona/assíncrona).</li>
+                        <li><strong>Backup Testing:</strong> Testar restore regularmente. Backup não testado = sem backup.</li>
+                    </ul>
+                </div>
+
+                <div style="background: #fce7f3; border-left: 5px solid #ec4899; padding: 20px; margin: 30px 0; border-radius: 8px;">
+                    <h3 style="color: #ec4899; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>6 fases IR:</strong> Preparation, Identification, Containment, Eradication, Recovery, Lessons Learned</li>
+                        <li><strong>Ordem de volatilidade:</strong> CPU/RAM > Disco > Logs > Backups</li>
+                        <li><strong>Chain of Custody</strong> = documentar tudo</li>
+                        <li><strong>Write Blocker</strong> = não modificar evidência</li>
+                        <li><strong>RAID 0</strong> = performance, <strong>RAID 1</strong> = mirror, <strong>RAID 5</strong> = parity, <strong>RAID 6</strong> = double parity, <strong>RAID 10</strong> = mirror+stripe</li>
+                        <li><strong>3-2-1 rule:</strong> 3 cópias, 2 mídias, 1 offsite</li>
+                        <li><strong>Incremental</strong> = desde último backup, <strong>Differential</strong> = desde último full</li>
+                        <li><strong>RPO</strong> = quanto dado perder, <strong>RTO</strong> = tempo recuperar</li>
+                        <li><strong>Hot site</strong> = RTO minutos, <strong>Cold site</strong> = RTO dias/semanas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab2" class="content">
+            <div class="quiz-area">
+                <div class="quiz-header">
+                    <h2>Quiz - 25 Questões</h2>
+                </div>
+                <div id="questions"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()">Ver Resultados</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ABA 2: QUIZ -->
-    <div id="tab2" class="content">
-        <div class="quiz-area">
-            <div class="quiz-header">
-                <h2 style="font-size:1.8rem; margin-bottom:10px;">❓ Quiz — Capítulo 9</h2>
-                <p style="font-size:1.1rem; opacity:0.9;">15 questões sorteadas do pool de 90 • Aprovação: 80%</p>
-            </div>
-            <div id="questions"></div>
-            <div class="quiz-controls">
-                <button class="btn btn-check" onclick="checkAnswers()">✅ Ver Resultados</button>
-            </div>
+    <div class="results-modal" id="results-modal">
+        <div class="results-content">
+            <h2>Resultado</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
         </div>
     </div>
-</div>
 
-<!-- MODAL DE RESULTADO -->
-<div class="results-modal" id="results-modal">
-    <div class="results-content">
-        <div class="result-emoji" id="result-emoji">🎉</div>
-        <h2 id="result-title" style="font-size:1.8rem; margin-bottom:10px;">APROVADO!</h2>
-        <div class="score-circle" id="score-circle">0%</div>
-        <p id="score-text" style="font-size:1.1rem; line-height:1.6; margin-bottom:10px;"></p>
-        <div class="modal-buttons">
-            <button class="btn btn-primary" onclick="newQuizSession()">🎲 Nova Sessão</button>
-            <button class="btn btn-secondary" onclick="closeModal()">✕ Fechar</button>
-        </div>
-        <button class="btn btn-explain-modal" onclick="scrollToExplanations()">📖 Ver Explicações</button>
-    </div>
-</div>
+    <script>
+        // ========== CARDS TRADUZIDOS PARA PORTUGUÊS ==========
+        const cards = [
+            // Incident Response Steps (1-6)
+            {f: "Quais são as 6 fases do processo de resposta a incidentes (Incident Response)?", b: "1) Preparation (preparação) 2) Identification (identificação) 3) Containment (contenção) 4) Eradication (erradicação) 5) Recovery (recuperação) 6) Lessons Learned (lições aprendidas)."},
+            {f: "O que é a fase de Containment (contenção)?", b: "Isolar a ameaça para evitar propagação. Short-term: ação rápida mas temporária. Long-term: solução permanente. Previne o spread do ataque."},
+            {f: "O que é a fase de Eradication (erradicação)?", b: "Remover a causa raiz do incidente: deletar malware, fechar vulnerabilidades exploradas, revogar credenciais comprometidas."},
+            {f: "O que é a fase de Recovery (recuperação)?", b: "Restaurar sistemas à operação normal. Restaurar backups, rebuild de servidores, aplicar patches, monitorar para garantir que não há resquícios."},
+            {f: "O que é a fase de Lessons Learned (lições aprendidas)?", b: "Post-mortem do incidente. Documentar o que funcionou, o que falhou, e propor melhorias no plano de resposta. Realizado após a recuperação."},
+            {f: "O que é Isolation em resposta a incidentes?", b: "Desconectar o sistema comprometido da rede para prevenir propagação, mas mantendo o sistema ligado para preservar evidências voláteis (RAM)."},
 
-<script>
-// ========== FLASHCARDS ==========
-const allCards = [
-    // BLOCO 1: Processo de Resposta a Incidentes (14 cards)
-    {f:"O que é um Security Incident (Incidente de Segurança)?", b:"Evento ou série de eventos resultantes de violação de política de segurança. Pode ou não afetar a capacidade da organização de conduzir negócios. Crucial que seja reconhecido e tratado adequadamente.", cat:"Processo IR"},
-    {f:"Quais são os 5 tipos de incidentes de segurança reconhecidos?", b:"Employee Errors (não intencionais), Unauthorized Act by Employee (insider threat intencional), External Intrusion Attempts, Virus/Harmful Code Attacks, Unethical Gathering of Competitive Information (espionagem corporativa).", cat:"Processo IR"},
-    {f:"Quais são as 7 etapas do Processo de Resposta a Incidentes (CompTIA)?", b:"1) Preparation, 2) Detection, 3) Analysis, 4) Containment, 5) Eradication, 6) Recovery, 7) Lessons Learned.", cat:"Processo IR"},
-    {f:"O que acontece na fase de Preparation (Preparação)?", b:"Tornar o sistema resiliente: hardening de sistemas, escrever políticas e procedimentos, configurar linhas de comunicação confidenciais, criar recursos e procedimentos de resposta a incidentes.", cat:"Processo IR"},
-    {f:"O que acontece na fase de Detection (Detecção)?", b:"Descobrir indicadores de atividade de threat actor. Fontes: sistemas automatizados de intrusão, operações de threat hunting, relatórios de funcionários, clientes ou law enforcement.", cat:"Processo IR"},
-    {f:"O que acontece na fase de Analysis (Análise)?", b:"Determinar se o incidente realmente ocorreu, realizar triage para avaliar severidade e analisar os dados reportados como indicadores.", cat:"Processo IR"},
-    {f:"O que acontece na fase de Containment (Contenção)?", b:"Limitar escopo e magnitude do incidente, proteger dados enquanto limita impacto imediato, notificar stakeholders e identificar requisitos de reporting.", cat:"Processo IR"},
-    {f:"O que acontece na fase de Eradication (Erradicação)?", b:"Remover a causa do incidente, restaurar o sistema ao estado seguro, aplicar configurações seguras e instalar patches após a contenção.", cat:"Processo IR"},
-    {f:"O que acontece na fase de Recovery (Recuperação)?", b:"Reintegrar o sistema ao processo de negócio: restauração de backups, testes de segurança, monitoramento próximo para detectar/prevenir reocorrência. Pode iterar múltiplas vezes.", cat:"Processo IR"},
-    {f:"O que acontece na fase de Lessons Learned (Lições Aprendidas)?", b:"Analisar o incidente e as respostas, identificar melhorias em procedimentos ou sistemas e documentar tudo. Os outputs alimentam a nova fase de Preparation (ciclo contínuo).", cat:"Processo IR"},
-    {f:"Por que a fase de Lessons Learned é crítica para o ciclo de IR?", b:"Porque seus outputs realimentam a fase de Preparation, tornando o processo cíclico e evolutivo. Cada incidente melhora a postura de segurança futura.", cat:"Processo IR"},
-    {f:"Qual é a diferença entre um incidente de cibersegurança e um 'major incident'?", b:"Incidente de cibersegurança: tratado pelo processo de IR (7 fases). Major incident (ameaça existencial): tratado por processos de Disaster Recovery. Um incidente cyber pode escalar para major incident.", cat:"Processo IR"},
-    {f:"Por que a Resposta a Incidentes exige ação coordenada?", b:"Porque requer autorização e participação de vários departamentos e gerentes. Não é responsabilidade de uma única equipe ou pessoa.", cat:"Processo IR"},
-    {f:"O que é triage em resposta a incidentes?", b:"Processo de avaliar a severidade de um incidente para priorizar a resposta. Determina quais sistemas/dados estão em maior risco e quais ações devem ser tomadas primeiro.", cat:"Processo IR"},
+            // Forensics (7-15)
+            {f: "O que é Chain of Custody (cadeia de custódia)?", b: "Documentação detalhada de quem teve acesso à evidência, quando, onde e por quê. Essencial para garantir a integridade da evidência e sua admissibilidade em tribunal."},
+            {f: "O que é Ordem de Volatilidade (Order of Volatility)?", b: "Princípio forense de coletar as evidências mais voláteis primeiro: 1) CPU/registradores, 2) RAM, 3) Swap, 4) Disco, 5) Logs remotos, 6) Backups."},
+            {f: "O que é um Write Blocker?", b: "Dispositivo (hardware) ou software que previne qualquer modificação na evidência durante a coleta ou análise forense. Garante a integridade dos dados."},
+            {f: "Por que calcular hash da evidência em forense?", b: "Para provar a integridade da evidência. Calcula-se o hash (MD5, SHA-256) antes e depois da análise. Se os hashes coincidirem, a evidência não foi alterada."},
+            {f: "O que é Live Acquisition em forense?", b: "Coleta de dados voláteis (como RAM) enquanto o sistema está ligado. Usa ferramentas como FTK Imager ou Volatility. Captura informações que seriam perdidas ao desligar."},
+            {f: "O que é Dead Acquisition em forense?", b: "Criação de imagem forense do disco com o sistema desligado. Usa ferramentas como dd, dcfldd ou FTK Imager. Preserva o estado do disco."},
+            {f: "O que é FTK Imager?", b: "Ferramenta forense da AccessData para criar imagens de disco (E01, raw). Interface gráfica fácil de usar no Windows. Pode também visualizar arquivos."},
+            {f: "O que é dd/dcfldd?", b: "Comandos Linux para disk imaging. dd faz cópia bit-a-bit. dcfldd é uma versão melhorada com hash integrado e progresso."},
+            {f: "O que é Autopsy?", b: "Ferramenta forense de código aberto com interface gráfica. Analisa imagens de disco, timeline, recuperação de arquivos, busca por palavras-chave."},
+            {f: "O que é Volatility?", b: "Framework para análise de memória RAM (memory forensics). Analisa dumps de memória para encontrar processos, conexões de rede, drivers e malware."},
+            {f: "O que é NetworkMiner?", b: "Ferramenta de network forensics passiva. Analisa arquivos PCAP e extrai arquivos, credenciais, certificados e metadados sem gerar tráfego."},
+            {f: "O que é ELK Stack?", b: "Conjunto de ferramentas para log management: Elasticsearch (busca e armazenamento), Logstash (coleta e processamento), Kibana (visualização e dashboards). Usado como SIEM."},
 
-    // BLOCO 2: Isolamento, Contenção e Segmentação (10 cards)
-    {f:"Diferença entre Isolation (Isolamento) e Containment (Contenção)?", b:"Isolation: limita capacidade de processo/app comprometida de causar dano (Process Isolation). Containment: primeiro passo após detecção — desconectar fisicamente da rede para estancar o incidente.", cat:"Contenção"},
-    {f:"Como implementar Containment fisicamente?", b:"Desconectar a máquina da rede desplugando o cabo Ethernet ou desabilitando a NIC. Se conectada a outras redes, terminar essas conexões também.", cat:"Contenção"},
-    {f:"O que é Process Isolation?", b:"Garante que se um processo for comprometido, apenas os recursos usados por ele estão em risco — o restante do sistema permanece protegido.", cat:"Contenção"},
-    {f:"O que é Segmentação de rede no contexto de IR?", b:"Design estratégico que separa seções da rede para impedir que atores maliciosos façam pivot (movimento lateral). Métodos: VLANs, SDN, switches, subnetting, segmentação física.", cat:"Contenção"},
-    {f:"Estar em subnet diferente é suficiente para conter um atacante?", b:"NÃO. Estar em subnet diferente não é suficiente — é necessário implementar regras de controle de comunicação entre subnets (ACLs, firewalls).", cat:"Contenção"},
-    {f:"O que é uma Screened Subnet (DMZ)?", b:"Área virtual que separa assets públicos dos assets internos. Pode ter um ou dois firewalls. Acesso entre screened subnet e rede interna é controlado por access control.", cat:"Contenção"},
-    {f:"Quando usar dois firewalls em uma DMZ?", b:"Dois firewalls (double firewall DMZ) oferecem maior segurança por adicionar camada adicional de controle. Ideal para ambientes corporativos com alta criticidade.", cat:"Contenção"},
-    {f:"O que é lateral movement (pivot) em um ataque?", b:"Técnica onde o atacante, após comprometer um sistema, se move lateralmente para outros sistemas dentro da rede. A segmentação de rede é o principal controle para impedir esse movimento.", cat:"Contenção"},
-    {f:"Quais são os métodos de segmentação de rede?", b:"VLANs (Virtual LANs), Software-Defined Networks (SDN), switches com port-based segmentation, subnetting e segmentação física (redes completamente separadas).", cat:"Contenção"},
-    {f:"Em qual fase do IR a segmentação atua como controle preventivo E de contenção?", b:"Preventivo: na fase de Preparation (design da rede segmentada). Contenção: na fase de Containment (impede propagação lateral do incidente).", cat:"Contenção"},
+            // RAID (16-21)
+            {f: "O que é RAID 0?", b: "Striping (distribuição de dados entre discos). Alta performance. SEM REDUNDÂNCIA: se um disco falhar, todos os dados são perdidos."},
+            {f: "O que é RAID 1?", b: "Mirroring (espelhamento). Dados idênticos em dois ou mais discos. 50% da capacidade útil. Tolerância a 1 falha."},
+            {f: "O que é RAID 5?", b: "Striping com paridade distribuída. Mínimo 3 discos. Tolerância a 1 falha. Bom custo/benefício."},
+            {f: "O que é RAID 6?", b: "Striping com dupla paridade. Mínimo 4 discos. Tolerância a 2 falhas simultâneas. Mais seguro que RAID 5."},
+            {f: "O que é RAID 10 (1+0)?", b: "Striping de mirrors (RAID 1 + RAID 0). Alta performance e redundância. Tolerância a múltiplas falhas (desde que não no mesmo mirror). Alto custo."},
+            {f: "O que é Clustering?", b: "Agrupamento de múltiplos servidores que atuam como um único sistema. Alta disponibilidade com failover automático. Pode ser active-active ou active-passive."},
+            {f: "O que é Load Balancing?", b: "Distribuição de tráfego entre múltiplos servidores. Aumenta performance e disponibilidade. Algoritmos: round-robin, least connections, IP hash."},
 
-    // BLOCO 3: SOAR, Playbooks e SIEM (12 cards)
-    {f:"O que é SOAR (Security Orchestration, Automation, and Response)?", b:"Plataforma para compilar dados de segurança de diferentes endpoints, enviar a analistas para ação, liberar analistas de alertas constantes e permitir automação de respostas via playbooks.", cat:"SOAR/SIEM"},
-    {f:"Quais são as funcionalidades principais do SOAR?", b:"Coleta e centraliza dados de alerta, facilita integração entre aplicações, facilita análise focada, cria caso de segurança único, permite múltiplos playbooks e automação de etapas de resposta.", cat:"SOAR/SIEM"},
-    {f:"Qual é o principal benefício do SOAR para analistas?", b:"Libera analistas de receber alertas constantemente, permitindo que usem parâmetros para automatizar respostas a incidentes que atendam critérios específicos.", cat:"SOAR/SIEM"},
-    {f:"O que é um Runbook em resposta a incidentes?", b:"Série de protocolos baseados em condições que estabelecem processos automatizados para IR. Aceleram assessment, investigation e mitigation. Podem incluir análise humana em casos específicos.", cat:"SOAR/SIEM"},
-    {f:"O que é um Playbook em resposta a incidentes?", b:"Documento estilo checklist que especifica como responder a uma ameaça ou incidente específico, com passos listados na ordem de execução, garantindo abordagem consistente.", cat:"SOAR/SIEM"},
-    {f:"Diferença fundamental entre Runbook e Playbook?", b:"Runbook: protocolos automatizados baseados em condições (foco na automação de processos). Playbook: checklist ordenado para ameaças específicas (foco na padronização e consistência).", cat:"SOAR/SIEM"},
-    {f:"Como Runbooks e Playbooks contribuem para conformidade regulatória?", b:"Ajudam a atender frameworks como GDPR e NIST, fornecendo evidência de processos padronizados, consistentes e auditáveis de resposta a incidentes.", cat:"SOAR/SIEM"},
-    {f:"O que é o SIEM (Security Information and Event Management)?", b:"Sistema que combina SIM (Security Information Management) e SEM (Security Event Management). Compila e examina múltiplos pontos de dados coletados através da rede.", cat:"SOAR/SIEM"},
-    {f:"Quais são os 7 componentes do SIEM?", b:"1) Vulnerability Scan Output, 2) Dashboards, 3) Sensors, 4) Sensitivity, 5) Trends, 6) Alerts, 7) Correlation.", cat:"SOAR/SIEM"},
-    {f:"O que é Correlação no SIEM?", b:"Componente crítico que coleta dados de logs/aplicações/appliances, analisa e compara comportamento malicioso conhecido contra dados agregados. Identifica padrões que individualmente não seriam suspeitos.", cat:"SOAR/SIEM"},
-    {f:"O que são Trends (Tendências) no SIEM?", b:"Padrões de atividade descobertos e reportados ao SIEM, base para estabelecer baselines. Permitem identificar rapidamente quando atividade está fora do normal.", cat:"SOAR/SIEM"},
-    {f:"O que é Sensitivity (Sensibilidade) nos sensores do SIEM?", b:"Nível de sensibilidade definido quando sensores são implantados. Permite customizar quais dados são enviados ao SIEM, adaptando o monitoramento às necessidades de cada organização.", cat:"SOAR/SIEM"},
+            // Backup (22-30)
+            {f: "O que é Full Backup?", b: "Backup completo de todos os dados selecionados. É lento de executar, mas o restore é rápido (apenas uma fita/conjunto). O archive bit é limpo."},
+            {f: "O que é Incremental Backup?", b: "Backup apenas das mudanças desde o ÚLTIMO backup (seja full ou incremental). É rápido de executar, mas o restore é lento (precisa do full + todos incrementais em ordem)."},
+            {f: "O que é Differential Backup?", b: "Backup das mudanças desde o último FULL. É mais rápido que full, mais lento que incremental. Restore: full + último differential."},
+            {f: "O que é a regra 3-2-1 de backup?", b: "Estratégia de backup resiliente: 3 cópias dos dados (original + 2 backups), armazenadas em 2 tipos de mídia diferentes, com 1 cópia offsite (fora do local) ou offline (air gap)."},
+            {f: "O que é RPO (Recovery Point Objective)?", b: "Objetivo de ponto de recuperação. Define quanto dado pode ser perdido, medido em tempo. Ex: RPO de 24h significa que pode perder até 24h de dados (backup diário)."},
+            {f: "O que é RTO (Recovery Time Objective)?", b: "Objetivo de tempo de recuperação. Define quanto tempo o serviço pode ficar indisponível após um desastre."},
+            {f: "O que é MTBF (Mean Time Between Failures)?", b: "Tempo médio entre falhas. Medida de confiabilidade de um componente. Quanto maior, melhor."},
+            {f: "O que é MTTR (Mean Time To Repair)?", b: "Tempo médio para reparo. Impacta diretamente o RTO. Quanto menor, melhor."},
+            {f: "O que é um Hot Site?", b: "Site de recuperação de desastres totalmente equipado e com dados sincronizados. Failover imediato (RTO minutos). É a opção mais cara."},
+            {f: "O que é um Warm Site?", b: "Site com equipamentos mas sem dados atuais. Requer setup de horas/dias. Custo médio."},
+            {f: "O que é um Cold Site?", b: "Apenas espaço físico (energia, refrigeração). Todo equipamento precisa ser instalado. RTO de dias/semanas. Opção mais barata."},
+            {f: "O que é Snapshot?", b: "Instantâneo do estado de uma VM ou storage em um momento. Restore rápido, mas NÃO é backup (geralmente no mesmo storage). Se o storage falhar, snapshots são perdidos."},
+            {f: "O que é Replication?", b: "Cópia contínua de dados para outro local. Pode ser síncrona (confirma após replicar) ou assíncrona (confirma depois). Near real-time."},
+            {f: "O que é Immutable Backup?", b: "Backup que não pode ser modificado, deletado ou criptografado por um período. Usa tecnologia WORM (Write Once Read Many). Protege contra ransomware."},
+            {f: "O que é Air Gap Backup?", b: "Backup fisicamente desconectado da rede (ex: fita guardada em cofre, disco externo removido). Malware não consegue alcançar."},
+            {f: "Por que testar backups regularmente?", b: "Para verificar a integridade dos dados e garantir que o restore funciona. Backup não testado = sem backup."},
 
-    // BLOCO 4: Log Data e Metadata (14 cards)
-    {f:"Quais são os dois componentes de um evento de log?", b:"Event Message Data: notificação específica (ex: 'Login failure', 'Firewall rule dropped'). Event Metadata: fonte e tempo do evento (host, processo, campos de categorização/prioridade).", cat:"Logs/Metadata"},
-    {f:"Por que a sincronização de tempo é crítica para logs?", b:"Logging preciso requer que todos os hosts usem o mesmo valor de data/hora e formato. Idealmente UTC para evitar inconsistências em análises forenses e correlação de eventos.", cat:"Logs/Metadata"},
-    {f:"O que é o formato Syslog?", b:"Formato aberto, protocolo e software de servidor para logging de mensagens. Usado por switches, roteadores, firewalls, servidores UNIX/Linux. Estrutura: PRI code + Header + Message part.", cat:"Logs/Metadata"},
-    {f:"O que compõe um Syslog Header?", b:"Timestamp, hostname, app name, process ID e message ID. O PRI code é calculado a partir de facility e severity level.", cat:"Logs/Metadata"},
-    {f:"O que é File Metadata?", b:"Atributos armazenados pelo file system: timestamps de created/accessed/modified, atributos de segurança (read-only, hidden, system), ACL com permissões, atributos estendidos (autor, copyright, tags).", cat:"Logs/Metadata"},
-    {f:"O que é Email Metadata e como identificar o remetente real?", b:"Header do email contém informações sobre remetente, destinatário e servidores. Partes podem ser spoofed. X-headers adicionados por dispositivos de segurança revelam IP e conta real de origem.", cat:"Logs/Metadata"},
-    {f:"O que é Mobile Metadata?", b:"Produzido por tablets, laptops, smartphones, smartwatches. Pode identificar pessoas, lugares, tempos e dados deletados. Fotos contêm timestamp e geolocation stamp.", cat:"Logs/Metadata"},
-    {f:"O que é Web Metadata e o que inclui?", b:"Dados gerados por sites e navegadores. Inclui: endereços IP, requisições, downloads, tempo no site, tentativas de acesso, cookies, histórico de navegação e cache.", cat:"Logs/Metadata"},
-    {f:"Quais são os três principais arquivos de log do Windows?", b:"Application: eventos de processos de aplicação (crash, instalação). Security: eventos de auditoria (login falhado, acesso negado). System: eventos de processos kernel e serviços do SO.", cat:"Logs/Metadata"},
-    {f:"O que é Journald no Linux?", b:"Sistema de logging unificado com formato binário, alternativa ao syslog em algumas distribuições Linux. Mensagens lidas com o comando journalctl. Pode exportar para syslog em formato texto.", cat:"Logs/Metadata"},
-    {f:"O que são Endpoint Logs?", b:"Eventos monitorados por software de segurança no host (não pelo SO). Inclui: firewalls host-based, IDS, scanners de vulnerabilidade, antivírus. Integrados via EPP, EDR, XDR.", cat:"Logs/Metadata"},
-    {f:"Diferença entre EPP, EDR e XDR?", b:"EPP (Endpoint Protection Platform): proteção tradicional. EDR (Enhanced Detection and Response): detecção e resposta avançada no endpoint. XDR (Extended): correlaciona dados de múltiplas fontes (endpoint, rede, cloud).", cat:"Logs/Metadata"},
-    {f:"O que são IPS/IDS Logs e qual seu desafio?", b:"Registram eventos quando tráfego corresponde a uma regra de intrusão. Podem gerar volume muito alto — recomendado logar apenas regras de alta sensibilidade/impacto. Um pacote pode disparar múltiplas regras.", cat:"Logs/Metadata"},
-    {f:"O que são Network Logs e o que registram?", b:"Gerados por appliances: roteadores, firewalls, switches, access points. Registram: operação e status do appliance (system log) + traffic logs e access logs (comportamento de rede).", cat:"Logs/Metadata"},
+            // Backup Rotation (31-35)
+            {f: "O que é backup rotation (GFS)?", b: "Grandfather-Father-Son: esquema de rotação com retenção diária (son), semanal (father) e mensal (grandfather). Balanceia storage e retenção."},
+            {f: "O que é journaling em sistemas de arquivos?", b: "Registro de mudanças antes de serem aplicadas (write-ahead logging). Permite recuperação consistente após falha e rollback."},
+            {f: "O que é versioning de arquivos?", b: "Manter múltiplas versões de um arquivo ao longo do tempo. Permite restaurar versões anteriores em caso de alteração acidental ou ransomware."},
+            {f: "O que é backup encryption?", b: "Criptografar backups para proteger dados em trânsito e em repouso. Gerenciamento de chaves é crítico."},
+            {f: "O que é um Incident Response Plan?", b: "Documento formal com procedimentos, contatos de emergência, ferramentas e responsabilidades para resposta a incidentes. Deve ser testado regularmente (tabletop exercises)."},
+            {f: "O que é um Incident Response Team (CSIRT/CIRT)?", b: "Equipe responsável por responder a incidentes: coordenador, analistas, suporte legal, comunicação, gestão. Treinamento regular."},
+            {f: "O que é Tabletop Exercise?", b: "Simulação de incidente em sala de reunião, sem sistemas reais. Discute-se o plano, papéis e decisões. Testa comunicação e procedimentos."}
+        ];
 
-    // BLOCO 5: Data Analyzers (8 cards)
-    {f:"O que é NetFlow?", b:"Feature em roteadores Cisco que examina cada fluxo de dados que passa pela rede nas camadas 2-4. Pode ser configurado para examinar todos os fluxos ou amostrar sessões em intervalos.", cat:"Analisadores"},
-    {f:"O que é sFlow e como difere do NetFlow?", b:"sFlow: amostragem de pacotes stateless nas camadas 2-7. Diferente do NetFlow, só opera em modo de amostragem (não examina cada fluxo). Mais rápido e eficiente, com visibilidade até camada de aplicação.", cat:"Analisadores"},
-    {f:"O que é IPfix?", b:"Protocolo padronizado que integra dados que normalmente iriam para Syslog ou SNMP. Elimina serviços adicionais. Dados: dispositivo → exporter → collector. Como NetFlow, examina fluxos e pacotes.", cat:"Analisadores"},
-    {f:"NetFlow opera em quais camadas OSI?", b:"Camadas 2 a 4 (enlace, rede e transporte). sFlow opera nas camadas 2 a 7 (todas, incluindo aplicação). IPfix também camadas 2 a 4.", cat:"Analisadores"},
-    {f:"Qual analisador é mais adequado para visibilidade em nível de aplicação?", b:"sFlow, pois opera nas camadas 2-7, incluindo a camada de aplicação (7). NetFlow e IPfix operam apenas até a camada 4 (transporte).", cat:"Analisadores"},
-    {f:"O que é amostragem de pacotes (packet sampling) no sFlow?", b:"Técnica stateless que analisa uma amostra dos pacotes que passam pela rede ao invés de todos. Reduz overhead de processamento mantendo visibilidade estatística do tráfego.", cat:"Analisadores"},
-    {f:"Por que o IPfix foi criado?", b:"Para endereçar a necessidade de um protocolo padronizado para fluxos de protocolo interno, eliminando dependência de Syslog e SNMP separados e fornecendo campos de comprimento variável.", cat:"Analisadores"},
-    {f:"Como os dados do IPfix chegam ao collector?", b:"Dados são formatados pelo dispositivo, enviados a um exporter, depois enviados ao collector. Sistemas de mediação processam os dados vindos de roteadores, servidores e outros appliances.", cat:"Analisadores"},
+        const quiz = [
+            {q: "Primeira fase do processo de resposta a incidentes:", o: ["Identification", "Preparation", "Containment", "Recovery"], c: 1},
+            {q: "Fase onde a ameaça é isolada para não se propagar:", o: ["Identification", "Containment", "Eradication", "Recovery"], c: 1},
+            {q: "Fase onde a causa raiz é removida (malware deletado, vulnerabilidade corrigida):", o: ["Containment", "Eradication", "Recovery", "Lessons Learned"], c: 1},
+            {q: "Fase de post-mortem e melhorias após o incidente:", o: ["Recovery", "Eradication", "Lessons Learned", "Preparation"], c: 2},
+            {q: "Documentação que registra quem teve acesso à evidência forense:", o: ["Chain of custody", "Hash", "Write blocker", "Timeline"], c: 0},
+            {q: "Qual item é o MAIS volátil na ordem de volatilidade forense?", o: ["Disco rígido", "RAM", "Backup em fita", "Logs remotos"], c: 1},
+            {q: "Dispositivo que previne modificação da evidência durante análise:", o: ["Hash", "Write blocker", "Encryption", "Backup"], c: 1},
+            {q: "Ferramenta de análise de memória RAM (memory forensics):", o: ["Autopsy", "Volatility", "FTK Imager", "dd"], c: 1},
+            {q: "Comando Linux para disk imaging (cópia bit-a-bit):", o: ["FTK Imager", "Autopsy", "dd", "Wireshark"], c: 2},
+            {q: "Ferramenta forense com GUI para análise de disco:", o: ["dd", "Volatility", "Autopsy", "tcpdump"], c: 2},
+            {q: "Nível RAID que oferece apenas performance, SEM redundância:", o: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"], c: 0},
+            {q: "Nível RAID que usa mirroring (espelhamento):", o: ["RAID 0", "RAID 1", "RAID 5", "RAID 6"], c: 1},
+            {q: "Nível RAID que tolera 2 falhas simultâneas (dupla paridade):", o: ["RAID 1", "RAID 5", "RAID 6", "RAID 10"], c: 2},
+            {q: "Tipo de backup que copia TODOS os dados selecionados:", o: ["Full", "Incremental", "Differential", "Snapshot"], c: 0},
+            {q: "Tipo de backup que copia mudanças desde o ÚLTIMO backup (qualquer tipo):", o: ["Full", "Incremental", "Differential", "Mirror"], c: 1},
+            {q: "Tipo de backup que copia mudanças desde o último FULL:", o: ["Full", "Incremental", "Differential", "Clone"], c: 2},
+            {q: "Regra de backup: 3 cópias, 2 mídias, 1 offsite:", o: ["RAID", "Cluster", "3-2-1 rule", "Snapshot"], c: 2},
+            {q: "Métrica que define quanto dado pode ser perdido (em tempo):", o: ["RTO", "RPO", "MTBF", "MTTR"], c: 1},
+            {q: "Métrica que define tempo máximo de recuperação do serviço:", o: ["RPO", "RTO", "MTBF", "MTTR"], c: 1},
+            {q: "Site de DR totalmente equipado com failover imediato:", o: ["Cold site", "Warm site", "Hot site", "Backup site"], c: 2},
+            {q: "Site de DR que leva dias/semanas para ficar operacional:", o: ["Hot site", "Warm site", "Cold site", "Active site"], c: 2},
+            {q: "Cópia contínua de dados para outro local (quase em tempo real):", o: ["Backup", "Snapshot", "Replication", "Mirror"], c: 2},
+            {q: "Backup que não pode ser modificado/deletado (protege ransomware):", o: ["Encrypted", "Compressed", "Immutable", "Offsite"], c: 2},
+            {q: "Simulação de incidente em sala de reunião, sem sistemas reais:", o: ["Pentest", "Red team", "Tabletop exercise", "Drill"], c: 2},
+            {q: "Componentes da ELK Stack:", o: ["Elastic, Log, Kibana", "Elasticsearch, Logstash, Kibana", "Event, LDAP, Key", "Elk, Logstash, Kafka"], c: 1}
+        ];
 
-    // BLOCO 6: Investigação Forense Digital (14 cards)
-    {f:"O que é Investigação Forense Digital?", b:"Análise de evidências coletadas de sistemas e redes para descobrir arquivos deletados, timestamps, atividade de usuário e tráfego não autorizado. Processos devem demonstrar como a evidência foi adquirida.", cat:"Forense"},
-    {f:"O que é Due Process em forense digital?", b:"Termo de common law (US/UK) que requer condenação apenas com aplicação justa das leis. Na forense, significa salvaguardas procedurais para garantir fairness e integridade das evidências.", cat:"Forense"},
-    {f:"O que é Legal Hold?", b:"Obrigação de preservar informações relevantes a um caso judicial. A empresa deve suspender deleção/destruição rotineira de registros eletrônicos ou em papel enquanto o hold estiver ativo.", cat:"Forense"},
-    {f:"O que é Chain of Custody (Cadeia de Custódia)?", b:"Documentação de onde/quando/quem coletou a evidência e quem a manuseou subsequentemente. Estabelece integridade e manuseio apropriado, protegendo contra acusações de adulteração.", cat:"Forense"},
-    {f:"Como dispositivos/mídias devem ser tratados na coleta de evidências?", b:"Devem ser labeled (etiquetados), bagged (embalados), sealed (selados) em tamper-evident bags com proteção antiestática (ESD) para evitar adulteração e danos por eletricidade estática.", cat:"Forense"},
-    {f:"O que deve ser documentado na Chain of Custody?", b:"Onde/quando/quem coletou, quem manuseou subsequentemente, onde foi armazenada, métodos usados, ferramentas usadas. Cada pessoa na cadeia registra suas ações.", cat:"Forense"},
-    {f:"Quais são os 3 princípios éticos da análise forense?", b:"1) Análise sem viés (conclusões baseadas apenas em evidência direta), 2) Métodos repetíveis (terceiros podem reproduzir), 3) Não manipulação (se necessária, razões sólidas e processo registrado).", cat:"Forense"},
-    {f:"O que é E-Discovery?", b:"Meio de filtrar evidência relevante de todos os dados coletados em exame forense, armazenada em banco de dados em formato usável como evidência em julgamento.", cat:"Forense"},
-    {f:"Quais são as 5 funções de uma suite de E-Discovery?", b:"1) Identify & De-duplicate (filtrar arquivos padrão/duplicados), 2) Search (keyword e semantic), 3) Tags (labels organizadores), 4) Security (integridade), 5) Disclosure (evidência disponível para ambas as partes).", cat:"Forense"},
-    {f:"O que é Semantic Search em E-Discovery?", b:"Tipo de busca que combina keywords quando correspondem a um contexto particular, indo além da busca literal para encontrar documentos relacionados conceptualmente.", cat:"Forense"},
-    {f:"O que é ESI (Electronically Stored Information)?", b:"Informações eletrônicas que devem ser searchable em processos judiciais modernos, substituindo registros em papel. Requisito crescente em casos recentes.", cat:"Forense"},
-    {f:"Por que armazenamento seguro de evidências é essencial?", b:"Requer controle de acesso e controle ambiental (condensação, ESD, fogo). Sem isso, a defesa pode questionar a integridade das evidências e ter os achados descartados.", cat:"Forense"},
-    {f:"O que é System Memory Acquisition?", b:"Captura de dados voláteis mantidos em RAM (perdidos ao desligar). Pode identificar: processos em execução, file systems temporários, dados de registry, conexões de rede e chaves criptográficas.", cat:"Forense"},
-    {f:"Qual é a Ordem de Volatilidade em forense?", b:"Do mais ao menos volátil: 1) Registradores/cache CPU, 2) RAM, 3) Swap/arquivos temporários, 4) Dados de rede, 5) Disco, 6) Logs remotos, 7) Mídia de arquivo.", cat:"Forense"},
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
 
-    // BLOCO 7: Aquisição de Dados e Write Blocker (10 cards)
-    {f:"O que é Data Image Acquisition?", b:"Aquisição de dados de armazenamento não volátil: HDDs, SSDs, firmware, flash memory (USB, cartões), mídia ótica (CD/DVD/Blu-ray). Captura o estado completo do dispositivo.", cat:"Aquisição"},
-    {f:"O que é um Write Blocker e por que é essencial?", b:"Hardware/software que previne qualquer dado ou metadata no disco de ser modificado durante aquisição. Filtra comandos de escrita no nível de driver e SO, garantindo imagem forensicamente sólida.", cat:"Aquisição"},
-    {f:"O que é Live Acquisition vs Static Acquisition?", b:"Live: sistema em execução, captura dados voláteis além dos permanentes. Static: sistema desligado, captura apenas estado permanente. Com tempo suficiente na cena, ambas podem ser realizadas.", cat:"Aquisição"},
-    {f:"Por que gravação em vídeo do processo forense é importante?", b:"Estabelece proveniência (provenance) da evidência — timeline gravada mostra exatamente como a evidência foi coletada e que não foi adulterada, tornando-a defensável em corte.", cat:"Aquisição"},
-    {f:"O que é provenance em forense digital?", b:"Evidência de que os dados coletados são cópia verdadeira do estado do sistema no momento do evento, sem adulteração. Estabelecida por documentação rigorosa e gravação em vídeo do processo.", cat:"Aquisição"},
-    {f:"Por que é imperativo documentar cada passo na aquisição forense?", b:"Porque processos devem demonstrar exatamente como a evidência foi adquirida. Falta de documentação pode invalidar a evidência em corte e permitir que a defesa questione integridade.", cat:"Aquisição"},
-    {f:"O que uma aquisição de disco completa inclui?", b:"Captura do SO instalado (se boot volume incluído), todos os arquivos, metadata, espaço não alocado, dados deletados recuperáveis e slack space.", cat:"Aquisição"},
-    {f:"Por que ferramentas de captura de memória devem ser pré-instaladas?", b:"Requerem driver em kernel mode para dump de dados. Instalar durante o incidente altera o sistema (podendo sobrescrever evidências voláteis) e compromete a integridade forense.", cat:"Aquisição"},
-    {f:"O que é hash verification em forense?", b:"Calcular hash (MD5, SHA-256) da evidência original e da cópia forense para verificar que são idênticas. Prova que a cópia não foi alterada durante ou após a aquisição.", cat:"Aquisição"},
-    {f:"Cite exemplos de dados encontráveis em um System Memory Dump.", b:"Processos em execução, conteúdo de file systems temporários, dados de registry, conexões de rede ativas, chaves criptográficas em uso, senhas em memória e dados de aplicações abertas.", cat:"Aquisição"},
+        // ========== LOCALSTORAGE ==========
+        // Carregar progresso salvo
+        function loadProgress() {
+            const saved = localStorage.getItem('security_plus_cap9_mastered');
+            if (saved) {
+                mastered = new Set(JSON.parse(saved));
+            }
+        }
 
-    // BLOCO 8: Redundância e Alta Disponibilidade (16 cards)
-    {f:"O que é Load Balancing?", b:"Processo que distribui processamento entre múltiplos nodes. Active/Active: dois balanceadores em tandem. Active/Passive: um ativo, segundo em modo listening para failover.", cat:"Alta Disponibilidade"},
-    {f:"Diferença entre Load Balancing Active/Active e Active/Passive?", b:"Active/Active: dois balanceadores trabalhando simultaneamente, usa capacidade total — degradação em failover. Active/Passive: um ativo, um em standby — sem degradação no failover, mas capacidade ociosa.", cat:"Alta Disponibilidade"},
-    {f:"O que é Virtual IP (VIP) em load balancing?", b:"Endereço IP compartilhado entre instâncias de um cluster (não atribuído a endpoint fixo). Permite failover transparente — clientes continuam acessando o mesmo IP.", cat:"Alta Disponibilidade"},
-    {f:"O que é Geographic Dispersal?", b:"Uso de múltiplas localizações físicas para armazenar dados e hospedar serviços. Mitiga downtime causado por desastres regionais ou falhas de uma localização específica.", cat:"Alta Disponibilidade"},
-    {f:"O que é Multipath em alta disponibilidade?", b:"Técnica de tolerância a falhas com múltiplos caminhos físicos entre CPU e appliance de armazenamento. Se um caminho falhar, outros continuam funcionando sem interrupção.", cat:"Alta Disponibilidade"},
-    {f:"O que é UPS (Uninterrupted Power Supply)?", b:"Banco standalone de baterias que permite shutdown gracioso de appliances quando a energia cai. Fornece energia por tempo curto — complementado por generator para situações mais longas.", cat:"Alta Disponibilidade"},
-    {f:"O que é um Generator em continuidade de negócios?", b:"Dispositivo de grande escala que fornece energia por período estendido, normalmente entre 24 e 48 horas durante falhas de energia. Complementa o UPS que cobre os primeiros minutos.", cat:"Alta Disponibilidade"},
-    {f:"O que é Dual Supply em appliances de rede?", b:"Duas fontes de alimentação independentes em servidores e firewalls. Permite que uma falhe sem interrupção do serviço, com hot-swapping (troca sem desligar o equipamento).", cat:"Alta Disponibilidade"},
-    {f:"O que é uma Managed PDU?", b:"Power Distribution Unit montada em rack para datacenters. Distribui energia em grande escala com capacidade de monitoramento e gerenciamento remoto.", cat:"Alta Disponibilidade"},
-    {f:"O que é Clustering?", b:"Múltiplos nodes de processamento redundantes que compartilham dados. Se um node falha, conexões fazem failover para outro. Para clientes, o cluster aparece como servidor único.", cat:"Alta Disponibilidade"},
-    {f:"Diferença entre Load Balancing e Clustering?", b:"Load Balancing: distribui requisições de cliente através de nodes (geralmente associado a tráfego web). Clustering: provê redundância e HA para sistemas como bancos de dados e servidores de arquivo.", cat:"Alta Disponibilidade"},
-    {f:"O que é Active/Passive Clustering?", b:"Um node ativo e um passivo. Vantagem: performance não afetada durante failover. Desvantagem: custo mais alto — hardware e SO do node passivo não utilizado no dia a dia.", cat:"Alta Disponibilidade"},
-    {f:"O que é Active/Active Clustering?", b:"Ambos os nodes processam conexões concorrentemente. Vantagem: usa capacidade máxima de hardware. Desvantagem: em failover, node remanescente assume workload total com degradação de performance.", cat:"Alta Disponibilidade"},
-    {f:"O que é Application Clustering?", b:"Clustering para serviços de aplicação fault-tolerant. Servidores no cluster compartilham informações de sessão — se um falha, outro pode continuar a sessão do usuário sem perda de estado.", cat:"Alta Disponibilidade"},
-    {f:"O que é o protocolo CARP (Common Address Redundancy Protocol)?", b:"Protocolo de redundância usado em Virtual IP. Implementa mecanismo de heartbeat que permite ao node ativo 'possuir' o IP virtual e detectar falhas para automático failover.", cat:"Alta Disponibilidade"},
-    {f:"O que é o mecanismo heartbeat em clustering?", b:"Sinal periódico enviado entre nodes para verificar se estão ativos. Se o node ativo não responde ao heartbeat, o node passivo assume automaticamente o VIP (failover).", cat:"Alta Disponibilidade"},
+        // Salvar progresso
+        function saveProgress() {
+            localStorage.setItem('security_plus_cap9_mastered', JSON.stringify([...mastered]));
+        }
 
-    // BLOCO 9: Backups e Continuidade (22 cards)
-    {f:"O que é Full Backup?", b:"Cópia completa de todos os dados selecionados. Maior tempo de backup, menor tempo de restauração (apenas 1 conjunto). Usado como base para outros tipos de backup.", cat:"Backup/BC"},
-    {f:"O que é Incremental Backup?", b:"Copia apenas os dados modificados desde o último backup de qualquer tipo (full ou incremental). Menor tempo de backup, maior tempo de restauração (requer full + todos os incrementais em sequência).", cat:"Backup/BC"},
-    {f:"O que é Differential Backup?", b:"Copia todos os dados modificados desde o último full backup. Tempo intermediário. Restauração mais rápida que incremental (requer apenas o full + o último differential).", cat:"Backup/BC"},
-    {f:"O que é a Regra 3-2-1 de backup?", b:"3 cópias dos dados, em 2 tipos de mídia diferentes, com 1 cópia offsite. Garante redundância e recuperação mesmo em desastres que afetam a localização primária.", cat:"Backup/BC"},
-    {f:"O que é RTO (Recovery Time Objective)?", b:"Tempo máximo aceitável para restaurar um sistema após falha — define o downtime máximo tolerável. Exemplo: 'estar de volta online em no máximo 4 horas'.", cat:"Backup/BC"},
-    {f:"O que é RPO (Recovery Point Objective)?", b:"Máximo de dados (em tempo) que a organização pode perder em caso de desastre. Define a frequência ideal de backups. Exemplo: 'perder no máximo 1 hora de dados'.", cat:"Backup/BC"},
-    {f:"O que é um Snapshot em backups?", b:"Cópia point-in-time do estado de um sistema, muito usada em VMs. Permite reverter rapidamente para um estado anterior sem restauração completa.", cat:"Backup/BC"},
-    {f:"Por que backups simples são insuficientes em ambientes enterprise?", b:"Problemas: escalabilidade (não acompanha crescimento), performance (afeta aplicações), granularidade (falta customização), e compliance/segurança (sem criptografia, controles avançados).", cat:"Backup/BC"},
-    {f:"O que é RAID 0?", b:"Striping sem paridade. Melhora performance dividindo dados entre discos. SEM tolerância a falhas — falha de 1 disco perde TODOS os dados. Mínimo: 2 discos.", cat:"Backup/BC"},
-    {f:"O que é RAID 1?", b:"Mirroring. Dados copiados identicamente em dois discos. Tolerância a 1 falha. Sem melhora de performance de escrita. 50% de capacidade utilizável. Mínimo: 2 discos.", cat:"Backup/BC"},
-    {f:"O que é RAID 5?", b:"Striping com paridade distribuída. Tolerância a 1 falha de disco. Bom equilíbrio entre performance, capacidade e redundância. Mínimo: 3 discos.", cat:"Backup/BC"},
-    {f:"O que é RAID 6?", b:"Striping com paridade dupla. Tolerância a 2 falhas de disco simultâneas. Mais robusto que RAID 5 para ambientes críticos. Mínimo: 4 discos.", cat:"Backup/BC"},
-    {f:"O que é RAID 10 (1+0)?", b:"Combina Mirroring (RAID 1) e Striping (RAID 0). Alta performance E tolerância a falhas. Custo elevado (50% de capacidade). Mínimo: 4 discos.", cat:"Backup/BC"},
-    {f:"O que é BCP (Business Continuity Plan)?", b:"Plano abrangente que define como a organização continuará operando durante e após um desastre. Inclui estratégias para manutenção de funções críticas de negócio.", cat:"Backup/BC"},
-    {f:"O que é DRP (Disaster Recovery Plan)?", b:"Plano focado em restaurar sistemas de TI e dados após desastre. Subconjunto do BCP, com foco técnico na recuperação de infraestrutura.", cat:"Backup/BC"},
-    {f:"O que é um Hot Site?", b:"Site de recuperação totalmente equipado e operacional que pode assumir operações em minutos a horas. Mais caro, menor RTO.", cat:"Backup/BC"},
-    {f:"O que é um Warm Site?", b:"Site parcialmente equipado que pode ser ativado em horas a dias. Equilíbrio entre custo e RTO. Tem infraestrutura básica, mas dados podem não estar completamente atualizados.", cat:"Backup/BC"},
-    {f:"O que é um Cold Site?", b:"Site com apenas infraestrutura básica (energia, rede, espaço físico). Pode levar dias a semanas para ativar. Mais barato, maior RTO.", cat:"Backup/BC"},
-    {f:"O que é MTTR (Mean Time to Repair)?", b:"Tempo médio para reparar um componente ou sistema após falha. Métrica de eficiência da equipe de manutenção e recuperação.", cat:"Backup/BC"},
-    {f:"O que é MTBF (Mean Time Between Failures)?", b:"Tempo médio entre falhas de um componente. Métrica de confiabilidade — quanto maior o MTBF, mais confiável o equipamento.", cat:"Backup/BC"},
-    {f:"O que é Tabletop Exercise em continuidade de negócios?", b:"Simulação de incidente onde equipes discutem respostas a cenários hipotéticos sem interromper operações reais. Testa planos e identifica lacunas.", cat:"Backup/BC"},
-    {f:"O que é Power Scheduling em redundância de energia?", b:"Configuração de redundância ativa que redireciona energia para redes quando a fonte principal cai, prevenindo perda total de energia durante eventos catastróficos.", cat:"Backup/BC"},
+        // Chamar loadProgress assim que o script carregar
+        loadProgress();
 
-    // BLOCO 10: Conceitos Avançados IR e Forense (10 cards)
-    {f:"O que é Threat Hunting?", b:"Busca proativa por ameaças dentro da rede que ainda não foram detectadas por ferramentas automatizadas. Analistas humanos buscam indicadores sutis de comprometimento (IoC).", cat:"Avançado"},
-    {f:"O que são IoCs (Indicators of Compromise)?", b:"Artefatos observáveis que indicam comprometimento: hashes de malware, endereços IP maliciosos, nomes de domínio suspeitos, padrões de tráfego anômalos, entradas de registry suspeitas.", cat:"Avançado"},
-    {f:"O que é Threat Intelligence no contexto de IR?", b:"Informações sobre ameaças atuais e emergentes usadas para melhorar detecção e resposta. Fontes: ISACs, feeds proprietários (IBM X-Force, Mandiant), relatórios de threat hunting.", cat:"Avançado"},
-    {f:"O que é um Incident Response Plan (IRP)?", b:"Documento formal que define procedimentos para resposta a incidentes de segurança, incluindo papéis, responsabilidades, comunicação, escalação e referências a playbooks.", cat:"Avançado"},
-    {f:"O que é Forensic Imaging?", b:"Processo de criar cópia bit-a-bit exata de um dispositivo de armazenamento, preservando todos os dados incluindo espaço não alocado e arquivos deletados.", cat:"Avançado"},
-    {f:"O que é Steganography detection em forense?", b:"Técnica de detectar dados ocultos dentro de arquivos comuns (imagens, áudio, texto). Atores maliciosos usam esteganografia para ocultar comunicações ou exfiltrar dados.", cat:"Avançado"},
-    {f:"O que é DFIR (Digital Forensics and Incident Response)?", b:"Disciplina que combina forense digital com IR. A forense fornece evidências para suportar o IR, e o IR usa técnicas forenses para investigar e documentar comprometimentos.", cat:"Avançado"},
-    {f:"O que é um Artifact em investigação forense?", b:"Qualquer item de evidência deixado por atividade maliciosa: arquivos de log, entradas de registry, arquivos temporários, conexões de rede registradas, histórico de browser.", cat:"Avançado"},
-    {f:"O que é Tabletop Exercise vs Live Exercise em IR?", b:"Tabletop: simulação discussiva sem interromper operações (equipes debatem respostas). Live Exercise: teste real com interrupção controlada de sistemas para verificar efetividade dos planos.", cat:"Avançado"},
-    {f:"O que é a diferença entre BCP e DRP?", b:"BCP (Business Continuity Plan): plano abrangente para continuidade operacional completa durante e após desastre. DRP (Disaster Recovery Plan): subconjunto técnico focado em restaurar sistemas de TI.", cat:"Avançado"},
-];
+        function showTab(n) {
+            document.querySelectorAll('.content').forEach((c, i) => {
+                c.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === n);
+            });
+            if (n === 2 && !document.getElementById('questions').innerHTML) loadQuiz();
+        }
 
-// ========== QUIZ ==========
-const allQuiz = [
-    // BLOCO A: Processo de IR (12)
-    {q:"Qual é a PRIMEIRA fase do processo de Resposta a Incidentes segundo o CompTIA?", o:["Detection","Analysis","Preparation","Containment"], c:2, e:"Preparation é a fase 1. O processo completo: Preparation → Detection → Analysis → Containment → Eradication → Recovery → Lessons Learned."},
-    {q:"Durante qual fase de IR os stakeholders são notificados e os requisitos de reporting são identificados?", o:["Detection","Eradication","Recovery","Containment"], c:3, e:"Na fase de Containment: limitar escopo, proteger dados, notificar stakeholders e identificar requisitos de reporting."},
-    {q:"O que diferencia a fase de Eradication da fase de Containment?", o:["Eradication limita o escopo; Containment remove a causa","Containment limita o escopo; Eradication remove a causa","São equivalentes, apenas nomes diferentes","Eradication vem antes de Containment"], c:1, e:"Containment = limitar escopo e magnitude. Eradication = remover a causa, restaurar estado seguro, instalar patches."},
-    {q:"A fase de Lessons Learned alimenta diretamente qual outra fase, criando um ciclo contínuo?", o:["Detection","Analysis","Preparation","Recovery"], c:2, e:"Lessons Learned → Preparation. O ciclo é contínuo: cada incidente gera melhorias que alimentam a próxima Preparation."},
-    {q:"Um funcionário inadvertidamente clica em link malicioso causando infecção. Que tipo de incidente é esse?", o:["External Intrusion Attempt","Unauthorized Act by Employee","Employee Error","Virus and Harmful Code Attack"], c:2, e:"Employee Error: ação não intencional de funcionário que causa dano ou deixa sistema vulnerável. Diferente de Unauthorized Act (intencional)."},
-    {q:"Qual é o propósito da triage na fase de Analysis?", o:["Remover a causa do incidente","Avaliar a severidade e priorizar a resposta","Restaurar sistemas ao estado normal","Documentar o incidente para reporting"], c:1, e:"Triage na Analysis: determinar se incidente ocorreu e avaliar severidade para priorizar quais sistemas/dados estão em maior risco."},
-    {q:"Um incidente de cibersegurança que representa ameaça existencial para a organização deve ser tratado por qual processo?", o:["Processo normal de IR de 7 etapas","Processo de Disaster Recovery","Apenas pela equipe de segurança","Pelo processo de Lessons Learned"], c:1, e:"Incidentes maiores com ameaça existencial são tratados por Disaster Recovery. Um incidente cyber pode escalar para declaração de major incident."},
-    {q:"Na fase de Recovery, qual ação pode ser necessária?", o:["Desconectar o sistema da rede","Identificar a causa raiz do incidente","Restaurar dados de backup e monitorar de perto","Notificar law enforcement imediatamente"], c:2, e:"Recovery: reintegrar o sistema ao negócio, podendo envolver restauração de backups, testes de segurança e monitoramento próximo para prevenir reocorrência."},
-    {q:"Por que a Resposta a Incidentes requer ação coordenada de vários departamentos?", o:["Para aumentar a velocidade de resposta","Porque requer autorização de vários departamentos e gerentes","Para reduzir custos do processo","Para atender requisitos regulatórios automaticamente"], c:1, e:"IR requer ação coordenada e autorização de vários departamentos/gerentes. Não é responsabilidade de uma única equipe."},
-    {q:"Na fase de Detection, quais são as fontes de indicadores de atividade maliciosa?", o:["Apenas firewalls, IDS e antivírus","Sistemas automatizados, threat hunting e relatórios de funcionários/clientes/law enforcement","Apenas SIEM, SOAR e dashboards","Apenas logs de sistema, rede e aplicação"], c:1, e:"Detection: indicadores gerados por sistema automatizado de intrusão, operações de threat hunting, e relatórios de funcionários, clientes ou law enforcement."},
-    {q:"Aplicar patches no sistema afetado acontece em qual fase do IR?", o:["Preparation","Containment","Eradication","Recovery"], c:2, e:"Eradication: remover a causa, restaurar estado seguro, aplicar configurações seguras e instalar patches APÓS a contenção."},
-    {q:"Um funcionário deliberadamente vaza informações proprietárias para um concorrente. Que tipo de incidente é esse?", o:["Employee Error","External Intrusion Attempt","Virus and Harmful Code Attack","Unauthorized Act by Employee"], c:3, e:"Unauthorized Act by Employee: ação intencional de funcionário para causar dano — insider threat. Diferente de Employee Error (não intencional)."},
+        function updateCard() {
+            if (filteredCards.length === 0) {
+                document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
+                return;
+            }
+            const cardIndex = filteredCards[currentCard];
+            const card = cards[cardIndex];
+            document.getElementById('card-text').textContent = flipped ? card.b : card.f;
+            document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${filteredCards.length}`;
+            document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
+            const btn = document.getElementById('master-btn');
+            btn.textContent = mastered.has(cardIndex) ? '✓ Dominado' : 'Marcar Dominado';
+            btn.classList.toggle('mastered', mastered.has(cardIndex));
+            document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
+            
+            const progress = (mastered.size / cards.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
+        }
 
-    // BLOCO B: Isolamento, Contenção e Segmentação (8)
-    {q:"Qual é o PRIMEIRO passo após um evento ser detectado e identificado no processo de contenção?", o:["Notificar o CISO imediatamente","Aplicar patches de segurança urgentes","Conter o sistema comprometido (ex: desconectar da rede)","Realizar análise forense completa"], c:2, e:"Containment é o primeiro passo após detecção e identificação: desconectar da rede (cabo Ethernet ou NIC), terminar conexões com outras redes."},
-    {q:"Estar em uma subnet diferente é suficiente para conter um atacante que comprometeu um sistema?", o:["Sim, subnets provêm isolamento completo","Não — é necessário implementar regras de controle de comunicação entre subnets","Depende do tipo de ataque","Sim, desde que use VLAN privada"], c:1, e:"Estar em subnet diferente NÃO é suficiente. Deve-se implementar regras (ACLs, firewalls) para controlar comunicações entre subnets."},
-    {q:"O que é Process Isolation no contexto de contenção de incidentes?", o:["Separar fisicamente servidores de workstations","Garantir que um processo comprometido só afete seus próprios recursos, não o sistema todo","Isolar o processo de patch management","Criar processos separados para cada usuário do sistema"], c:1, e:"Process Isolation: se processo for comprometido, apenas recursos usados por ele estão em risco — o restante do sistema permanece protegido."},
-    {q:"Para impedir movimento lateral após comprometimento de servidor web, qual medida de segmentação é mais eficaz?", o:["Reinstalar o SO do servidor comprometido","Mudar a senha de administrador imediatamente","Implementar VLANs com ACLs controlando comunicação entre segmentos","Aumentar o nível de logging do servidor"], c:2, e:"VLANs com ACLs controlam comunicação entre segmentos, impedindo que o atacante faça pivot (movimento lateral) para outros sistemas."},
-    {q:"Uma DMZ com dois firewalls oferece que vantagem sobre uma com apenas um firewall?", o:["Menor custo de implementação e manutenção","Maior velocidade de processamento de pacotes","Maior segurança por adicionar camada adicional de controle entre zona pública e interna","Mais fácil de configurar e gerenciar"], c:2, e:"Double firewall DMZ: adiciona camada extra de controle. Mesmo que o primeiro firewall seja comprometido, o segundo protege a rede interna."},
-    {q:"O que é lateral movement (pivot) e o que o previne?", o:["Escalada vertical de privilégios; prevenido por MFA","Movimento entre sistemas após comprometimento inicial; prevenido por segmentação de rede","Ataque a BDs; prevenido por criptografia","Movimento entre VLANs; prevenido por firewalls de borda"], c:1, e:"Lateral movement: após comprometer um sistema, o atacante se move para outros. Segmentação de rede com controles de comunicação é o principal controle preventivo."},
-    {q:"Qual método de segmentação usa lógica de software para criar redes virtuais sobrepostas à infraestrutura física?", o:["VLANs","Subnetting","Software-Defined Networks (SDN)","Segmentação física"], c:2, e:"SDN (Software-Defined Networks) usa lógica de software para criar e gerenciar redes virtuais, proporcionando segmentação flexível sobre a infraestrutura física existente."},
-    {q:"Em qual fase do ciclo de IR a segmentação de rede atua como controle?", o:["Apenas na fase de Containment","Apenas na fase de Preparation","Nas fases de Preparation (preventivo) e Containment (limita propagação)","Apenas na fase de Recovery"], c:2, e:"Segmentação é preventiva (Preparation: design da rede) e de contenção (Containment: impede propagação lateral durante incidente)."},
+        function flipCard() {
+            flipped = !flipped;
+            updateCard();
+        }
 
-    // BLOCO C: SOAR, Playbooks e SIEM (12)
-    {q:"Qual é o principal benefício do SOAR para analistas de segurança sobrecarregados de alertas?", o:["Elimina completamente a necessidade de analistas humanos","Libera analistas de receber alertas constantes, permitindo focar em casos de maior complexidade","Aumenta a velocidade de geração de alertas","Substitui completamente o SIEM"], c:1, e:"SOAR libera analistas de receber alertas constantemente, permitindo usar parâmetros para automatizar respostas a incidentes que atendam critérios específicos."},
-    {q:"Qual é a diferença fundamental entre um Runbook e um Playbook?", o:["Runbooks são usados no Linux; Playbooks no Windows","Runbooks são protocolos automatizados por condições; Playbooks são checklists ordenados para ameaças específicas","Runbooks são manuais; Playbooks são automáticos","São sinônimos usados por diferentes frameworks"], c:1, e:"Runbook: protocolos automatizados por condições (foco em automação). Playbook: documento checklist para resposta a ameaça específica (foco em padronização)."},
-    {q:"Um analista quer automatizar a resposta a tentativas de login falhadas repetidas. Qual ferramenta é mais adequada?", o:["SIEM isolado","IDS/IPS tradicional","SOAR com Runbook automatizado","Firewall de nova geração"], c:2, e:"SOAR com Runbook automatizado: permite definir condições (N tentativas falhadas em X minutos) e automatizar a resposta (bloquear IP, criar ticket, notificar analista)."},
-    {q:"O SIEM combina quais dois sistemas?", o:["SIM (Security Information Management) e SEM (Security Event Management)","SOC (Security Operations Center) e MDR (Managed Detection Response)","IDS e IPS","EDR e XDR"], c:0, e:"SIEM = SIM + SEM. SIM: armazenamento e análise de dados de segurança. SEM: monitoramento de eventos em tempo real e correlação."},
-    {q:"Qual componente do SIEM identifica padrões que individualmente não seriam suspeitos, mas juntos indicam ataque?", o:["Dashboards","Sensors","Alerts","Correlation"], c:3, e:"Correlation: analisa dados de múltiplas fontes e compara comportamento malicioso conhecido. Um login falhado não é suspeito, mas 1000 em 5 minutos + acesso a arquivo sensível é."},
-    {q:"Por que correlação de eventos é considerada trabalho inadequado para humanos?", o:["Requer conhecimento técnico especializado","Envolve analisar e relacionar enormes volumes de dados de múltiplas fontes simultaneamente","Não pode ser automatizado","Requer acesso a dados altamente confidenciais"], c:1, e:"Correlação é trabalho tedioso — humanos são ineficientes em analisar grandes volumes de dados de múltiplas fontes em tempo real. É função do SIEM/automação."},
-    {q:"O que são Trends no SIEM e para que servem?", o:["Relatórios executivos mensais de segurança","Padrões de atividade que estabelecem baselines para identificar comportamento fora do normal","Alertas de segurança de alto nível","Configurações de sensibilidade dos sensores"], c:1, e:"Trends: padrões de atividade descobertos e reportados ao SIEM. Base para estabelecer baselines que ajudam analistas a decidir se atividade é normal ou anômala."},
-    {q:"Como Playbooks e Runbooks contribuem para conformidade com GDPR e NIST?", o:["Automatizam completamente o compliance","Fornecem evidência de processos padronizados e auditáveis de resposta a incidentes","Substituem completamente auditorias externas","Apenas reduzem custos de compliance"], c:1, e:"Playbooks e Runbooks ajudam a atender GDPR, NIST e outros frameworks fornecendo evidência de processos consistentes, padronizados e auditáveis."},
-    {q:"Qual componente do SIEM permite customizar quais dados são enviados, evitando sobrecarga de informações?", o:["Dashboards customizáveis","Correlation rules","Sensitivity (sensibilidade dos sensores)","Vulnerability Scan Output"], c:2, e:"Sensitivity: nível definido quando sensores são implantados. Permite customizar quais dados são enviados ao SIEM conforme as necessidades específicas da organização."},
-    {q:"Um SIEM envia alertas às 3h sem ninguém monitorando. O que indica essa situação?", o:["O SIEM está funcionando corretamente","A sensibilidade dos sensores está muito alta","Falta de monitoramento 24h, que é best practice","O threshold de alertas está muito baixo"], c:2, e:"Best practice é monitoramento 24 horas. Alertas gerados sem resposta imediata podem indicar incidentes que progridem sem ser tratados."},
-    {q:"O que é um 'caso de segurança' criado pelo SOAR?", o:["Registro criminal de um atacante identificado","Registro unificado que agrupa alertas, dados e ações relacionados a um incidente","Relatório de auditoria de conformidade anual","Template de playbook para novos tipos de incidente"], c:1, e:"SOAR cria casos de segurança únicos que centralizam todos os alertas, dados e ações relacionados a um incidente específico, facilitando análise coordenada."},
-    {q:"Um analista precisa que TODOS os analistas respondam a phishing da mesma forma. Qual documento deve criar?", o:["Runbook de detecção automatizada de phishing","Política de segurança de email","Playbook de resposta a phishing","Dashboard de monitoramento de email"], c:2, e:"Playbook: documento checklist que especifica como responder a uma ameaça específica (phishing), com passos na ordem correta para garantir abordagem consistente."},
+        function nextCard() {
+            currentCard = (currentCard + 1) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
 
-    // BLOCO D: Logs e Metadata (10)
-    {q:"Por que a sincronização de tempo (NTP) é crítica para logs em investigações forenses?", o:["Para reduzir volume de logs gerados","Para garantir que timestamps de diferentes fontes sejam comparáveis e formem timeline coerente","Para melhorar performance dos sistemas de logging","Para conformidade com GDPR apenas"], c:1, e:"Timestamps inconsistentes entre sistemas impedem correlação de eventos em diferentes fontes. UTC como timezone neutro é recomendado para ambientes multi-localização."},
-    {q:"Quais são os três principais arquivos de log do Windows?", o:["System, Network, Security","Application, Security, System","Application, Network, Audit","Error, Warning, Information"], c:1, e:"Application (processos de aplicação), Security (eventos de auditoria — login, acesso) e System (processos kernel e serviços do SO)."},
-    {q:"Um investigador precisa de registros de logins falhados no Windows. Qual log consultar?", o:["Application log","System log","Security log","Endpoint log"], c:2, e:"Security log: eventos de auditoria incluindo login falhado, acesso a arquivo negado, mudanças de política. É o log mais importante para investigações de segurança no Windows."},
-    {q:"O que é Journald e como difere do Syslog no Linux?", o:["Journald é texto simples; Syslog é binário","Journald é sistema de logging binário unificado; Syslog redireciona mensagens para arquivos texto","São equivalentes em distribuições diferentes","Journald é apenas no Red Hat; Syslog apenas no Debian"], c:1, e:"Journald: formato binário, logging unificado, leitura via journalctl. Syslog: redireciona mensagens para arquivos texto. Journald pode exportar para syslog."},
-    {q:"O que é o PRI code em uma mensagem Syslog?", o:["Identificador único da mensagem","Valor calculado a partir de facility e severity level","Endereço IP do host de origem","Timestamp da mensagem"], c:1, e:"PRI code = facility × 8 + severity level. Indica a origem (facility) e urgência (severity) da mensagem Syslog."},
-    {q:"Partes do header de email podem ser spoofed. O que garante identificar o remetente real?", o:["O campo 'From' no header visível","O assunto do email","X-headers adicionados por dispositivos de segurança com IP e conta real de origem","O campo 'Reply-To'"], c:2, e:"X-headers adicionados por dispositivos de segurança (gateways de email) fornecem a conta de email de origem real e endereço IP real, não o spoofed."},
-    {q:"Qual é a diferença entre EPP, EDR e XDR em escopo de monitoramento?", o:["Diferem apenas em preço e vendor","EPP: proteção tradicional; EDR: resposta avançada no endpoint; XDR: correlação de múltiplas fontes","EPP monitora rede; EDR monitora endpoints; XDR monitora cloud","São sinônimos de gerações diferentes de antivírus"], c:1, e:"EPP: proteção endpoint tradicional (AV). EDR: detecção e resposta avançada no endpoint. XDR: correlaciona dados de múltiplas fontes (endpoint, rede, cloud, email)."},
-    {q:"Por que IPS/IDS logs devem ser configurados para logar apenas regras de alta sensibilidade?", o:["Para economizar espaço em disco apenas","Porque pacotes únicos disparam múltiplas regras, gerando volume incontrolável de eventos","Para reduzir falsos positivos artificialmente","Para conformidade com PCI-DSS"], c:1, e:"IPS/IDS pode gerar volume muito alto. Um pacote único pode disparar múltiplas regras. Logar apenas alta sensibilidade/impacto torna os logs gerenciáveis."},
-    {q:"O que é Mobile Metadata e o que pode revelar em investigações?", o:["Configurações de segurança do dispositivo móvel","Dados de dispositivos móveis que podem identificar pessoas, lugares, tempos e dados deletados","Logs de aplicativos instalados apenas","Informações de conta do provedor telecom"], c:1, e:"Mobile Metadata produzido por tablets, laptops, smartphones. Inclui timestamps, geolocation de fotos, histórico de apps. Pode identificar pessoas, locais e até recuperar dados deletados."},
-    {q:"O que são Network Logs e o que registram?", o:["Apenas logs de tráfego de entrada","Registros gerados por appliances de rede (operação/status + tráfego/acesso)","Apenas logs de firewall","Apenas eventos de autenticação de rede"], c:1, e:"Network Logs: gerados por roteadores, firewalls, switches, APs. Registram operação e status (system log) + comportamento de tráfego e acesso (traffic e access logs)."},
+        function prevCard() {
+            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
 
-    // BLOCO E: Data Analyzers (6)
-    {q:"O NetFlow opera em quais camadas do modelo OSI?", o:["Camadas 1 a 3","Camadas 2 a 4","Camadas 3 a 7","Camadas 2 a 7"], c:1, e:"NetFlow opera nas camadas 2-4 (enlace, rede, transporte). sFlow opera nas camadas 2-7, incluindo aplicação. IPfix também camadas 2-4."},
-    {q:"Qual analisador de dados é mais adequado para visibilidade em nível de aplicação (camada 7)?", o:["NetFlow","IPfix","sFlow","SNMP"], c:2, e:"sFlow opera nas camadas 2-7, incluindo a camada de aplicação. NetFlow e IPfix operam apenas até a camada 4 (transporte)."},
-    {q:"Qual é a diferença de operação entre NetFlow e sFlow?", o:["NetFlow é mais rápido; sFlow é mais preciso","NetFlow pode examinar cada fluxo; sFlow só opera em modo de amostragem stateless","NetFlow é da Cisco; sFlow é da Juniper exclusivamente","NetFlow analisa UDP; sFlow analisa TCP"], c:1, e:"NetFlow pode examinar cada fluxo ou amostrar em intervalos. sFlow é APENAS amostragem stateless — não pode examinar cada pacote individualmente."},
-    {q:"Por que o IPfix foi desenvolvido?", o:["Para substituir completamente o NetFlow","Para fornecer protocolo padronizado de fluxos, eliminando dependência de Syslog e SNMP separados","Para adicionar criptografia ao NetFlow","Para análise de tráfego exclusivamente em tempo real"], c:1, e:"IPfix endereça a necessidade de protocolo padronizado para fluxos internos, integrando dados que normalmente iriam para Syslog ou SNMP, eliminando serviços adicionais."},
-    {q:"Como os dados do IPfix chegam ao collector?", o:["Diretamente do dispositivo ao collector","Formatados pelo dispositivo → exporter → collector","Via agentes instalados nos dispositivos","Via SNMP traps para servidor centralizado"], c:1, e:"IPfix: dados são formatados pelo dispositivo de rede, enviados a um exporter, depois encaminhados ao collector para armazenamento e análise."},
-    {q:"Em qual equipamento o NetFlow está disponível como feature nativa?", o:["Firewalls Palo Alto","Switches HP/Aruba","Roteadores Cisco","Access Points Cisco"], c:2, e:"NetFlow é feature nativa em roteadores Cisco. Pode ser configurado para examinar cada fluxo ou amostrar sessões em intervalos específicos."},
+        function toggleMaster() {
+            const cardIndex = filteredCards[currentCard];
+            if (mastered.has(cardIndex)) mastered.delete(cardIndex);
+            else mastered.add(cardIndex);
+            
+            // ========== SALVAR PROGRESSO ==========
+            saveProgress();
+            
+            updateCard();
+        }
 
-    // BLOCO F: Investigação Forense Digital (12)
-    {q:"O que é Due Process em contexto de forense digital?", o:["Prazo para conduzir investigação forense","Procedimento para coletar evidências digitais","Salvaguardas procedurais que garantem fairness e que condenações sigam aplicação justa das leis","Protocolo para preservar dados voláteis primeiro"], c:2, e:"Due Process (common law US/UK): requer condenação apenas seguindo aplicação justa das leis. Na forense, significa ter salvaguardas procedurais para garantir fairness."},
-    {q:"O que é Legal Hold e quando é acionado?", o:["Bloqueio técnico de sistemas durante investigação","Obrigação de preservar informações relevantes, suspendendo deleção rotineira, quando há litígio","Autorização judicial para acesso a dados privados","Procedimento de isolamento de rede durante IR"], c:1, e:"Legal Hold: empresa deve suspender deleção/destruição rotineira de registros eletrônicos ou em papel quando relevantes a caso judicial. Definido por reguladores ou aviso de litígio."},
-    {q:"Por que evidências devem ser colocadas em tamper-evident bags antiestáticas?", o:["Para facilitar transporte e catalogação","Tamper-evident detecta adulteração; antiestática previne dano por ESD às mídias digitais","Para conformidade com normas ISO de forense","Para facilitar inventário do laboratório"], c:1, e:"Tamper-evident: qualquer abertura ou adulteração é visível, protegendo integridade. Antiestática: previne dano por ESD (Electrostatic Discharge) a HDDs, chips e outros componentes."},
-    {q:"O que deve ser registrado na Chain of Custody?", o:["Apenas quem coletou a evidência inicialmente","Onde/quando/quem coletou + todos que manusearam + onde foi armazenada + métodos e ferramentas","Apenas o hash da evidência para verificação","Apenas ferramentas forenses utilizadas"], c:1, e:"Chain of Custody documenta todo o ciclo: coleta (onde/quando/quem), cada manuseio subsequente, local de armazenamento, métodos e ferramentas. Toda pessoa na cadeia registra suas ações."},
-    {q:"Por que a defesa pode ter achados forenses descartados em corte?", o:["Se ferramentas usadas forem antigas","Se investigador não tiver certificação forense específica","Se houver desvio de comportamento ético/profissional ou falha na integridade da evidência","Se análise demorar mais de 30 dias"], c:2, e:"Princípios éticos forenses são críticos. Análise com viés, métodos não repetíveis ou manipulação de evidência sem justificativa sólida pode resultar em descarte dos achados."},
-    {q:"O que é Semantic Search em E-Discovery?", o:["Busca por metadados de arquivos","Busca que combina keywords quando correspondem a contexto particular, além da busca literal","Busca criptografada de documentos confidenciais","Busca por similaridade de hash de arquivos"], c:1, e:"Semantic Search vai além de keywords literais — identifica documentos relacionados conceptualmente ao contexto. Ex: busca por 'aquisição' encontra também 'compra', 'fusão'."},
-    {q:"O que é ESI (Electronically Stored Information)?", o:["Formato de criptografia de evidências","Informações eletrônicas que devem ser searchable em processos judiciais modernos","Padrão ISO para armazenamento forense","Sistema de inventário de evidências digitais"], c:1, e:"ESI: requisito moderno em processos judiciais para que informações eletrônicas sejam searchable. Casos recentes exigem ESI ao invés de apenas registros em papel."},
-    {q:"O que é o requisito de 'Disclosure' em E-Discovery?", o:["Divulgação pública de vulnerabilidades encontradas","A mesma evidência deve estar disponível tanto para o autor quanto para o réu","Relatório de disclosure a reguladores","Notificação de brechas de dados a clientes"], c:1, e:"Disclosure: parte fundamental do procedimento judicial. Mesma evidência disponível para plaintiff (autor) e defendant (réu). E-discovery pode cumprir este requisito eficientemente."},
-    {q:"Por que análise forense deve ser 'repetível por terceiros'?", o:["Para reduzir custos com peritos","Para que defesa ou terceiros verifiquem independentemente os resultados e metodologia","Para cumprir ISO 27001","Para acelerar processo judicial"], c:1, e:"Metodologia repetível: permite que a defesa, outros peritos ou o tribunal reproduzam a análise e cheguem às mesmas conclusões, validando a integridade do processo."},
-    {q:"Quais dados podem ser encontrados em um System Memory Dump?", o:["Apenas processos em execução","Processos, file systems temporários, registry, conexões de rede e chaves criptográficas","Apenas dados do usuário logado","Apenas logs de sistema recentes"], c:1, e:"Memory Dump captura: processos em execução, file systems temporários, dados de registry, conexões de rede, chaves criptográficas em uso, senhas em memória, dados de apps abertas."},
-    {q:"Por que System Memory (RAM) é classificada como evidência mais volátil?", o:["Porque é facilmente corrompida por vírus","Porque os dados são perdidos quando o sistema é desligado","Porque o conteúdo muda continuamente durante operação","Porque requer hardware especializado para acessar"], c:1, e:"RAM é volátil: dados são mantidos apenas enquanto o sistema está ligado. Ao desligar ou reiniciar, todos os dados da RAM são perdidos permanentemente."},
-    {q:"Na Ordem de Volatilidade, o que deve ser coletado PRIMEIRO?", o:["Logs em disco","Dados de rede capturados","Registradores e cache da CPU","Arquivos temporários em swap"], c:2, e:"Ordem de volatilidade (mais → menos): 1) Registradores/cache CPU, 2) RAM, 3) Swap/arquivos temporários, 4) Dados de rede, 5) Disco, 6) Logs remotos, 7) Mídia de arquivo."},
+        function shuffleCards() {
+            for (let i = filteredCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+            }
+            currentCard = 0;
+            flipped = false;
+            updateCard();
+        }
 
-    // BLOCO G: Aquisição (8)
-    {q:"O que é um Write Blocker e quando é obrigatório?", o:["Software que bloqueia escrita de logs durante análise","Dispositivo que previne modificação de dados/metadata no disco durante aquisição forense","Ferramenta para bloquear atualizações durante IR","Hardware para prevenir acesso não autorizado a servidores"], c:1, e:"Write Blocker é obrigatório para obter imagem forensicamente sólida. Filtra comandos de escrita no nível de driver e SO, garantindo que a evidência não seja alterada."},
-    {q:"Por que gravação em vídeo do processo de aquisição forense é recomendada?", o:["Para treinamento da equipe forense","Para estabelecer provenance — timeline gravada mostra como evidência foi coletada sem adulteração","Para conformidade com regulamentações de privacidade","Para reduzir tempo de análise posterior"], c:1, e:"Gravação em vídeo estabelece provenance (proveniência): evidência de que o processo foi conduzido corretamente e que a evidência é autêntica e não adulterada."},
-    {q:"Qual é a diferença entre Live e Static Acquisition?", o:["Live é mais precisa; Static é mais rápida","Live captura sistema em execução (dados voláteis + permanentes); Static captura sistema desligado (apenas permanentes)","Live é usada em servidores; Static em workstations","Live compromete integridade; Static é aceita em corte"], c:1, e:"Live Acquisition: sistema ligado — captura voláteis (RAM) e permanentes. Static Acquisition: sistema desligado — apenas dados permanentes. Com tempo, ambas podem ser realizadas."},
-    {q:"Por que ferramentas de captura de memória devem estar pré-instaladas?", o:["Para reduzir o tempo de resposta ao incidente","Porque requerem driver em kernel mode que não pode ser instalado sem alterar o sistema e potencialmente destruir evidências","Para garantir compatibilidade com hardware","Por requisitos de licenciamento específicos"], c:1, e:"Captura de memória requer driver em kernel mode. Instalar durante incidente modifica o sistema, potencialmente sobrescrevendo evidências voláteis que estão sendo capturadas."},
-    {q:"O que é Forensic Imaging?", o:["Fotografar equipamentos apreendidos","Criação de cópia bit-a-bit do dispositivo preservando dados, espaço não alocado e arquivos deletados","Análise visual de telas comprometidas","Backup de segurança de sistemas críticos"], c:1, e:"Forensic Imaging: cópia bit-a-bit que preserva TUDO — arquivos ativos, deletados, espaço não alocado, metadata, slack space. Permite análise sem alterar o original."},
-    {q:"Qual é a importância de calcular hash de evidências forenses?", o:["Criptografar evidências para proteger confidencialidade","Verificar que cópia forense é idêntica ao original, provando que não foi alterada durante aquisição","Comprimir dados para armazenamento eficiente","Indexar evidências para busca rápida"], c:1, e:"Hash verification: calcular MD5/SHA-256 do original e da cópia. Se idênticos, prova que a cópia é íntegra e não foi modificada — essencial para admissibilidade em corte."},
-    {q:"O que diferencia aquisição de disco de aquisição de memória quanto à volatilidade?", o:["Disco é mais volátil pois pode ser sobrescrito","Memória (RAM) é volátil (perde dados ao desligar); disco é não volátil (persiste sem energia)","Ambos são igualmente voláteis","SSD é mais volátil; HDD é não volátil"], c:1, e:"Volatilidade: RAM perde dados ao remover energia (altíssima volatilidade). Disco (HDD/SSD) persiste dados sem energia (não volátil). Daí a Ordem de Volatilidade priorizar RAM."},
-    {q:"O que é provenance (proveniência) em forense digital?", o:["País de origem de um ataque cibernético","Evidência de que dados coletados são cópia verdadeira do estado no momento do evento, sem adulteração","Cadeia de custódia simplificada","Registro de proprietários anteriores de equipamentos"], c:1, e:"Provenance: prova de autenticidade da evidência. Estabelecida por documentação rigorosa, gravação em vídeo e hash verification — demonstra que a evidência é o que afirma ser."},
+        function filterCards(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'all') {
+                filteredCards = [...Array(cards.length).keys()];
+            } else if (type === 'mastered') {
+                filteredCards = Array.from(mastered);
+            } else {
+                filteredCards = [...Array(cards.length).keys()].filter(i => !mastered.has(i));
+            }
+            
+            currentCard = 0;
+            flipped = false;
+            updateCard();
+        }
 
-    // BLOCO H: Redundância e HA (14)
-    {q:"Em Load Balancing Active/Active, o que acontece durante failover de um node?", o:["Sistema para até o node ser restaurado","O outro node assume todo tráfego, podendo haver degradação temporária de performance","Um node passivo assume sem impacto na performance","Tráfego é redirecionado para Cold Site"], c:1, e:"Active/Active: ambos nodes processam. Em failover, node remanescente assume workload total — performance degrada pois a capacidade do node falhado é perdida."},
-    {q:"Qual é a vantagem do Active/Passive Clustering sobre Active/Active?", o:["Menor custo total de hardware","Melhor utilização de recursos disponíveis","Performance não afetada durante failover","Maior capacidade de processamento"], c:2, e:"Active/Passive: node passivo assume sem degradar — o workload continua no mesmo nível. Desvantagem: custo maior pois hardware passivo não é utilizado no dia a dia."},
-    {q:"O que é Virtual IP (VIP) e qual problema resolve?", o:["IP para acesso a máquinas virtuais","IP compartilhado entre instâncias de cluster, permitindo failover transparente para clientes","IP virtual para ambientes de teste","Endereço IP para VPNs site-to-site"], c:1, e:"VIP: IP não atribuído a endpoint fixo, compartilhado entre nodes do cluster. Clientes sempre acessam o mesmo IP — o failover é transparente, sem necessidade de reconexão."},
-    {q:"O que é Geographic Dispersal e qual ameaça mitiga?", o:["Distribuição de usuários em múltiplas filiais","Múltiplos datacenters físicos para mitigar downtime por desastres regionais","Dispersão de largura de banda entre ISPs","Segmentação geográfica de redes corporativas"], c:1, e:"Geographic Dispersal: múltiplas localizações físicas para dados e serviços. Mitiga downtime por desastres que afetam uma localização específica (incêndio, inundação, terremoto)."},
-    {q:"Qual é a sequência correta de proteção de energia em um datacenter?", o:["Generator → UPS → PDU","UPS (curto prazo) → Generator (médio/longo prazo) → PDU (distribuição)","PDU → UPS → Generator","Generator → PDU → UPS"], c:1, e:"UPS: cobre os primeiros minutos/horas (baterias). Generator: cobre horas a dias (24-48h). PDU: distribui a energia pelos racks independentemente da fonte."},
-    {q:"O que permite Dual Supply em appliances de rede?", o:["Dois processadores para redundância computacional","Duas fontes de alimentação independentes, permitindo hot-swap se uma falhar","Dois links de rede para redundância de conectividade","Dois discos espelhados para redundância de dados"], c:1, e:"Dual Supply: duas PSUs independentes. Se uma falhar, a outra mantém o equipamento funcionando. Hot-swappable = troca sem desligar o servidor."},
-    {q:"Qual é o protocolo usado em Virtual IP para detectar falhas e fazer failover automático?", o:["HSRP (Hot Standby Router Protocol)","VRRP (Virtual Router Redundancy Protocol)","CARP (Common Address Redundancy Protocol)","STP (Spanning Tree Protocol)"], c:2, e:"CARP (Common Address Redundancy Protocol): protocolo de redundância que implementa heartbeat entre nodes. Permite failover automático quando node ativo não responde."},
-    {q:"O que diferencia Clustering de Load Balancing no contexto de alta disponibilidade?", o:["Clustering é mais caro; LB é mais eficiente","Clustering provê redundância para BDs e file servers; LB gerencia requisições de clientes (web)","Clustering é para hardware; LB é para software","Clustering requer mais servidores; LB é mais simples"], c:1, e:"Load Balancing: distribui requisições de clientes (geralmente web). Clustering: redundância e HA para sistemas críticos como bancos de dados e servidores de arquivo."},
-    {q:"Em Application Clustering, como a continuidade de sessão do usuário é mantida após failover?", o:["O usuário precisa fazer login novamente","Servidores do cluster compartilham informações de sessão entre si","Apenas cookies do navegador reestabelecem sessão","O load balancer mantém a sessão ativa sozinho"], c:1, e:"Application Clustering: servidores comunicam informações de sessão entre si. Se um falha, outro já tem o estado da sessão (cookies, login) e pode continuar transparentemente."},
-    {q:"O que é Multipath em armazenamento e qual ameaça mitiga?", o:["Múltiplas rotas de rede para servidores remotos","Múltiplos caminhos físicos entre CPU e storage para tolerar falha de um caminho","Múltiplos backups do mesmo dado em caminhos diferentes","Roteamento dinâmico para balancear tráfego de storage"], c:1, e:"Multipath: múltiplos caminhos físicos (cabos, HBAs, switches) entre CPU e armazenamento. Se um caminho falhar, outros assumem sem interrupção do serviço."},
-    {q:"Qual opção de energia fornece shutdown gracioso durante queda, mas por tempo limitado?", o:["Generator","Dual Supply","UPS (Uninterrupted Power Supply)","Managed PDU"], c:2, e:"UPS: banco de baterias para shutdown gracioso. Fornece energia por minutos a horas (dependendo da capacidade), tempo suficiente para o generator assumir ou para desligamento seguro."},
-    {q:"Em Active/Active Clustering, o que acontece com a performance durante failover?", o:["Performance não é afetada pois há redundância total","Performance melhora pois recursos se concentram","Performance degrada pois um node assume o workload total sozinho","Sistema entra em modo de manutenção automático"], c:2, e:"Active/Active: em falha, workload do node falhado é deslocado para o remanescente. Neste momento, o node remanescente processa o dobro da carga — performance degrada."},
-    {q:"O que é Power Scheduling?", o:["Agendamento de manutenção de geradores","Configuração de redundância ativa que redireciona energia quando fonte principal falha","Balanceamento de carga elétrica entre datacenters","Monitoramento de consumo energético em tempo real"], c:1, e:"Power Scheduling: configuração de redundância ativa que envia energia para redes quando a facilidade de energia cai, prevenindo perda total durante eventos catastróficos."},
-    {q:"Qual é a função da Managed PDU em um datacenter?", o:["Backup de energia de curto prazo (como UPS)","Geração de energia em emergências (como generator)","Distribuição de energia em rack com monitoramento e gerenciamento remoto","Proteção contra surtos elétricos"], c:2, e:"Managed PDU (Power Distribution Unit): unidade montada em rack que distribui energia em grande escala, com capacidade de monitoramento de consumo e controle remoto por tomada."},
+        function loadQuiz() {
+            const container = document.getElementById('questions');
+            quiz.forEach((q, qi) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                q.o.forEach((opt, oi) => {
+                    const odiv = document.createElement('div');
+                    odiv.className = 'option';
+                    odiv.textContent = opt;
+                    odiv.onclick = () => selectOpt(qi, oi);
+                    odiv.id = `q${qi}o${oi}`;
+                    div.appendChild(odiv);
+                });
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp${qi}`;
+                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                div.appendChild(exp);
+                container.appendChild(div);
+            });
+        }
 
-    // BLOCO I: Backups e Continuidade (14)
-    {q:"Qual tipo de backup copia APENAS dados modificados desde o último backup de qualquer tipo?", o:["Full Backup","Incremental Backup","Differential Backup","Snapshot"], c:1, e:"Incremental: copia apenas o que mudou desde o último backup (full ou incremental). Menor tempo de backup, maior tempo de restauração (full + todos incrementais em sequência)."},
-    {q:"Para restaurar usando Differential Backup, quantos conjuntos são necessários?", o:["Apenas o último differential","Full + todos os differentials","Full + apenas o último differential","Apenas o último full backup"], c:2, e:"Differential: copia tudo desde o último full. Restauração = full + último differential (apenas 2 conjuntos). Mais rápido que incremental, mais lento de backup que incremental."},
-    {q:"A Regra 3-2-1 de backup especifica:", o:["3 backups completos, 2 locais, 1 na nuvem","3 cópias dos dados, em 2 tipos de mídia, com 1 cópia offsite","3 incrementais, 2 diferenciais, 1 completo","3 sites de recuperação, 2 ativos, 1 passivo"], c:1, e:"Regra 3-2-1: 3 cópias (original + 2 cópias), 2 tipos de mídia diferentes (ex: HDD + fita), 1 cópia offsite. Garante sobrevivência a qualquer desastre local."},
-    {q:"O que é RPO (Recovery Point Objective)?", o:["Tempo máximo para restaurar um sistema após falha","Quantidade máxima de dados (em tempo) que pode ser perdida em desastre","Objetivo de disponibilidade do sistema (uptime %)","Tempo para testar planos de recuperação"], c:1, e:"RPO: quantidade máxima de dados (medida em tempo) que pode ser perdida. RPO de 1h = backups a cada hora. Define a frequência ideal de backups."},
-    {q:"O que é RTO (Recovery Time Objective)?", o:["Frequência ideal de realização de backups","Quantidade máxima de dados que pode ser perdida em falha","Tempo máximo aceitável de downtime para restaurar um sistema","Tempo médio entre falhas de hardware"], c:2, e:"RTO: tempo máximo de downtime tolerável após falha. RTO de 4h = sistema deve estar restaurado em no máximo 4 horas. Determina o tipo de site de recuperação necessário."},
-    {q:"Qual tipo de RAID oferece apenas performance SEM tolerância a falhas?", o:["RAID 1","RAID 5","RAID 0","RAID 6"], c:2, e:"RAID 0 (Striping): divide dados entre discos para alta performance, mas SEM paridade ou espelhamento. Falha de 1 disco perde todos os dados."},
-    {q:"Uma organização precisa de RAID que tolere falha de DOIS discos simultâneos. Qual usar?", o:["RAID 5","RAID 1","RAID 10","RAID 6"], c:3, e:"RAID 6: striping com paridade dupla. Tolera falha de 2 discos simultâneos. Requer mínimo 4 discos. Mais robusto que RAID 5 para ambientes críticos."},
-    {q:"O que é um Snapshot e qual sua vantagem em recuperação?", o:["Backup incremental automático agendado","Cópia point-in-time que permite reversão rápida sem restauração completa","Imagem forense de uma VM","Backup diferencial em ambiente cloud"], c:1, e:"Snapshot: cópia point-in-time do estado de um sistema. Muito usado em VMs. Permite reverter rapidamente para estado anterior — segundos a minutos, sem restauração completa."},
-    {q:"Qual site de recuperação pode assumir operações em minutos a horas?", o:["Cold Site","Warm Site","Hot Site","Cloud Site"], c:2, e:"Hot Site: totalmente equipado e operacional. Assume em minutos a horas. Custo mais elevado mas RTO mínimo. Warm Site: horas a dias. Cold Site: dias a semanas."},
-    {q:"O que é MTBF e para que serve?", o:["Tempo para reparar — mede eficiência de manutenção","Tempo médio entre falhas — mede confiabilidade de equipamentos","Tempo para restaurar backups","Tempo médio entre incidentes de segurança"], c:1, e:"MTBF (Mean Time Between Failures): tempo médio entre falhas. Métrica de confiabilidade — quanto maior o MTBF, mais confiável o equipamento."},
-    {q:"Por que backups simples são insuficientes em ambientes enterprise?", o:["Por limitações de velocidade de rede apenas","Por falta de escalabilidade, performance, granularidade e recursos de compliance/segurança","Por incompatibilidade com sistemas modernos","Por alto custo de armazenamento exclusivamente"], c:1, e:"Backups simples falham em: escalabilidade (não acompanha crescimento), performance (afeta aplicações durante execução), granularidade (sem customização), compliance (sem criptografia, controles)."},
-    {q:"O que é um Tabletop Exercise em planejamento de continuidade?", o:["Teste completo de failover interrompendo produção","Simulação onde equipes discutem respostas a cenários hipotéticos sem interromper operações","Exercício cronometrado de backup e restauração","Avaliação de riscos em reunião executiva"], c:1, e:"Tabletop Exercise: simulação discussiva onde equipes respondem a cenários hipotéticos. Testa planos, identifica lacunas e treina respondedores sem risco de interromper operações reais."},
-    {q:"Qual RAID combina performance de striping com redundância de mirroring?", o:["RAID 5","RAID 6","RAID 10 (1+0)","RAID 0+5"], c:2, e:"RAID 10: combina RAID 1 (mirroring) e RAID 0 (striping). Alta performance E tolerância a falhas. Custo: 50% de capacidade utilizável. Mínimo 4 discos."},
-    {q:"Qual é a diferença entre BCP e DRP?", o:["São sinônimos para o mesmo plano","BCP abrange continuidade operacional completa; DRP foca em restaurar sistemas de TI","BCP é para desastres naturais; DRP para ataques cibernéticos","BCP é preventivo; DRP é apenas reativo"], c:1, e:"BCP (Business Continuity Plan): plano abrangente para continuidade de todo o negócio. DRP (Disaster Recovery Plan): subconjunto técnico do BCP focado em restaurar infraestrutura de TI."},
+        function selectOpt(qi, oi) {
+            if (checked) return;
+            quiz[qi].o.forEach((_, i) => {
+                const el = document.getElementById(`q${qi}o${i}`);
+                el.classList.remove('selected');
+            });
+            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
+            answers[qi] = oi;
+        }
 
-    // BLOCO J: Conceitos Avançados (8)
-    {q:"O que é Threat Hunting e como difere de detecção automatizada?", o:["São o mesmo processo com nomenclaturas diferentes","Threat Hunting é busca proativa por humanos; detecção automatizada responde a assinaturas conhecidas","Threat Hunting usa IA avançada; detecção usa regras manuais","Threat Hunting é reativo; detecção automática é proativa"], c:1, e:"Threat Hunting: busca proativa por analistas humanos por ameaças não detectadas por ferramentas automáticas. Complementa a detecção automática que é baseada em assinaturas conhecidas."},
-    {q:"O que são IoCs (Indicators of Compromise)?", o:["Vulnerabilidades identificadas em varreduras","Artefatos observáveis como hashes, IPs maliciosos, domínios suspeitos indicando comprometimento","Alertas gerados pelo SIEM em tempo real","Relatórios de auditoria de segurança anual"], c:1, e:"IoCs: evidências observáveis de comprometimento. Exemplos: hash de malware conhecido, IP de C2, domínio DGA, padrão de tráfego anômalo, entrada de registry suspeita."},
-    {q:"O que é DFIR (Digital Forensics and Incident Response)?", o:["Framework de certificação para analistas de segurança","Disciplina que combina forense digital com IR, usando forense para investigar comprometimentos","Ferramenta específica de análise de memória","Protocolo de comunicação durante incidentes graves"], c:1, e:"DFIR: combina Digital Forensics (coleta e análise de evidências) com Incident Response (resposta coordenada). A forense suporta o IR com evidências; o IR usa técnicas forenses para investigar."},
-    {q:"Um investigador descobre que arquivo de log foi deletado. Que técnica forense pode recuperá-lo?", o:["Análise de memória RAM do servidor","Análise de espaço não alocado em imagem forense do disco","Apenas análise de tráfego de rede capturado","Consulta ao servidor syslog remoto como única opção"], c:1, e:"Espaço não alocado em imagem forense: quando arquivo é deletado, o espaço é marcado como disponível mas dados geralmente permanecem até serem sobrescritos. Ferramentas forenses recuperam esses dados."},
-    {q:"Para que serve hash verification em forense e qual algoritmo é recomendado?", o:["MD5 — mais rápido e amplamente suportado em corte","SHA-1 — padrão legal na maioria dos países","SHA-256 — mais seguro contra colisões, mais recomendado atualmente","CRC32 — padrão forense internacional"], c:2, e:"SHA-256 é recomendado atualmente por ser resistente a colisões. MD5 e SHA-1 são considerados fracos criptograficamente. Hash verifica que evidência não foi alterada."},
-    {q:"O que é Steganography em contexto de forense digital?", o:["Criptografia de evidências para proteger investigação","Técnica de ocultar dados dentro de arquivos comuns usada por atacantes para exfiltrar dados","Método de compressão de imagens forenses","Técnica de análise de imagens de disco bit a bit"], c:1, e:"Steganography: ocultar dados dentro de arquivos comuns (imagens, áudio, texto). Atacantes usam para comunicação C2 oculta ou exfiltração de dados. Detecção forense analisa anomalias em arquivos."},
-    {q:"Um analista forense encontra entradas de registry suspeitas, arquivos temporários e histórico de browser. O que são esses itens?", o:["Indicadores de sistema necessitando manutenção rotineira","Evidências (artefatos) de atividade que devem ser analisados no contexto do incidente","Indicadores de funcionamento normal do sistema","Alertas de que o antivírus precisa atualização"], c:1, e:"Artefatos forenses: qualquer item deixado por atividade (legítima ou maliciosa). Entradas de registry, temp files e histórico de browser são artefatos que reconstituem atividade de usuário ou atacante."},
-    {q:"O que é a diferença entre Tabletop Exercise e Live Exercise em IR?", o:["Apenas diferem em quem participa","Tabletop é discussivo sem interromper operações; Live Exercise testa com interrupção controlada real","Tabletop é para gestores; Live para técnicos","São equivalentes com diferentes nomenclaturas"], c:1, e:"Tabletop: equipes discutem respostas sem impacto operacional. Live Exercise: teste real com interrupção controlada de sistemas para verificar efetividade dos planos e capacidade de recuperação."},
-];
+        function checkAnswers() {
+            checked = true;
+            let correct = 0;
+            quiz.forEach((q, qi) => {
+                const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                q.o.forEach((_, oi) => {
+                    const el = document.getElementById(`q${qi}o${oi}`);
+                    if (correctAnswer.includes(oi)) {
+                        el.classList.add('correct');
+                    } else if (answers[qi] === oi) {
+                        el.classList.add('incorrect');
+                    }
+                });
+                document.getElementById(`exp${qi}`).style.display = 'block';
+                if (correctAnswer.includes(answers[qi])) correct++;
+            });
+            
+            const pct = Math.round((correct / quiz.length) * 100);
+            document.getElementById('score-circle').textContent = `${pct}%`;
+            document.getElementById('score-text').textContent = `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            document.getElementById('results-modal').classList.add('show');
+        }
 
-// ========== ESTADO ==========
-let currentCard = 0, flipped = false;
-let mastered = new Set();
-let sessionCards = [], currentFilter = 'all', filteredPool = [];
-let quizSession = [], answers = {}, checked = false;
+        function resetQuiz() {
+            checked = false;
+            answers = {};
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('results-modal').classList.remove('show');
+            loadQuiz();
+        }
 
-// ========== INIT ==========
-function init() {
-    loadProgress();
-    document.getElementById('total-cards-stat').textContent = allCards.length;
-    buildFilteredPool();
-    newSession();
-}
-
-function loadProgress() {
-    try {
-        const saved = localStorage.getItem('cap9v2_mastered');
-        if (saved) mastered = new Set(JSON.parse(saved));
-    } catch(e) {}
-}
-
-function saveProgress() {
-    try {
-        localStorage.setItem('cap9v2_mastered', JSON.stringify([...mastered]));
-    } catch(e) {}
-}
-
-// ========== FLASHCARDS ==========
-function buildFilteredPool() {
-    if (currentFilter === 'all') {
-        filteredPool = [...Array(allCards.length).keys()];
-    } else if (currentFilter === 'mastered') {
-        filteredPool = Array.from(mastered);
-    } else {
-        filteredPool = [...Array(allCards.length).keys()].filter(i => !mastered.has(i));
-    }
-}
-
-function newSession() {
-    buildFilteredPool();
-    if (filteredPool.length === 0) { sessionCards = []; updateCardDisplay(); return; }
-    const shuffled = [...filteredPool].sort(() => Math.random() - 0.5);
-    sessionCards = shuffled.slice(0, Math.min(15, shuffled.length));
-    currentCard = 0;
-    flipped = false;
-    updateCardDisplay();
-}
-
-function updateCardDisplay() {
-    if (sessionCards.length === 0) {
-        document.getElementById('card-text').textContent = 'Nenhum card neste filtro.';
-        document.getElementById('card-counter').textContent = 'Sem cards';
-        document.getElementById('side-indicator').textContent = 'FRENTE';
-        document.getElementById('category-badge').textContent = '';
-        return;
-    }
-    const card = allCards[sessionCards[currentCard]];
-    document.getElementById('card-text').textContent = flipped ? card.b : card.f;
-    document.getElementById('card-counter').textContent = `Card ${currentCard + 1} de ${sessionCards.length}`;
-    document.getElementById('side-indicator').textContent = flipped ? 'VERSO' : 'FRENTE';
-    document.getElementById('category-badge').textContent = card.cat || '';
-    const btn = document.getElementById('btn-master');
-    const isMastered = mastered.has(sessionCards[currentCard]);
-    btn.textContent = isMastered ? '✅ Dominado' : '⭐ Marcar Dominado';
-    btn.className = 'btn btn-master' + (isMastered ? ' mastered' : '');
-    const progress = allCards.length > 0 ? (mastered.size / allCards.length) * 100 : 0;
-    document.getElementById('progress-fill').style.width = progress + '%';
-    document.getElementById('mastery-stat').textContent = `✅ ${Math.round(progress)}% Dominado`;
-    document.getElementById('mastered-count').textContent = `${mastered.size} dominados`;
-}
-
-function flipCard() { flipped = !flipped; updateCardDisplay(); }
-
-function nextCard() {
-    if (sessionCards.length === 0) return;
-    currentCard = (currentCard + 1) % sessionCards.length;
-    flipped = false;
-    updateCardDisplay();
-}
-
-function prevCard() {
-    if (sessionCards.length === 0) return;
-    currentCard = (currentCard - 1 + sessionCards.length) % sessionCards.length;
-    flipped = false;
-    updateCardDisplay();
-}
-
-function toggleMaster() {
-    if (sessionCards.length === 0) return;
-    const idx = sessionCards[currentCard];
-    if (mastered.has(idx)) { mastered.delete(idx); } else { mastered.add(idx); }
-    saveProgress();
-    updateCardDisplay();
-}
-
-function filterCards(type, evt) {
-    currentFilter = type;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    if (evt && evt.target) evt.target.classList.add('active');
-    newSession();
-}
-
-// ========== TABS ==========
-function showTab(n) {
-    document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === n));
-    document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
-    if (n === 2 && quizSession.length === 0) startQuizSession();
-}
-
-// ========== QUIZ ==========
-function startQuizSession() {
-    answers = {};
-    checked = false;
-    const shuffled = [...Array(allQuiz.length).keys()].sort(() => Math.random() - 0.5);
-    quizSession = shuffled.slice(0, 15);
-    loadQuiz();
-}
-
-function loadQuiz() {
-    const container = document.getElementById('questions');
-    container.innerHTML = '';
-    quizSession.forEach((qi, pos) => {
-        const q = allQuiz[qi];
-        const div = document.createElement('div');
-        div.className = 'question';
-        div.innerHTML = `<h3>${pos + 1}. ${q.q}</h3>`;
-        q.o.forEach((opt, oi) => {
-            const odiv = document.createElement('div');
-            odiv.className = 'option';
-            odiv.textContent = opt;
-            odiv.onclick = () => selectOpt(pos, oi);
-            odiv.id = `q${pos}o${oi}`;
-            div.appendChild(odiv);
-        });
-        const exp = document.createElement('div');
-        exp.className = 'explanation';
-        exp.id = `exp${pos}`;
-        exp.innerHTML = `<strong>✓ Explicação:</strong> ${q.e}`;
-        div.appendChild(exp);
-        container.appendChild(div);
-    });
-}
-
-function selectOpt(pos, oi) {
-    if (checked) return;
-    const q = allQuiz[quizSession[pos]];
-    q.o.forEach((_, i) => {
-        const el = document.getElementById(`q${pos}o${i}`);
-        if (el) el.classList.remove('selected');
-    });
-    const el = document.getElementById(`q${pos}o${oi}`);
-    if (el) el.classList.add('selected');
-    answers[pos] = oi;
-}
-
-function checkAnswers() {
-    checked = true;
-    let correct = 0;
-    quizSession.forEach((qi, pos) => {
-        const q = allQuiz[qi];
-        const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
-        q.o.forEach((_, oi) => {
-            const el = document.getElementById(`q${pos}o${oi}`);
-            if (!el) return;
-            if (correctAnswer.includes(oi)) el.classList.add('correct');
-            else if (answers[pos] === oi) el.classList.add('incorrect');
-        });
-        const expEl = document.getElementById(`exp${pos}`);
-        if (expEl) expEl.style.display = 'block';
-        if (correctAnswer.includes(answers[pos])) correct++;
-    });
-    const pct = Math.round((correct / quizSession.length) * 100);
-    document.getElementById('score-circle').textContent = `${pct}%`;
-    let emoji, title, msg;
-    if (pct >= 80) {
-        emoji = '🎉'; title = 'APROVADO!';
-        msg = `${correct}/${quizSession.length} corretas — Excelente! Você atingiu o threshold de 80%.`;
-    } else if (pct >= 60) {
-        emoji = '⚠️'; title = 'Quase lá!';
-        msg = `${correct}/${quizSession.length} corretas — Você precisa de 80% para passar. Continue praticando!`;
-    } else {
-        emoji = '📚'; title = 'Precisa estudar mais';
-        msg = `${correct}/${quizSession.length} corretas — Revise o material e tente novamente!`;
-    }
-    document.getElementById('result-emoji').textContent = emoji;
-    document.getElementById('result-title').textContent = title;
-    document.getElementById('score-text').textContent = msg;
-    document.getElementById('results-modal').classList.add('show');
-}
-
-function newQuizSession() {
-    document.getElementById('results-modal').classList.remove('show');
-    startQuizSession();
-    window.scrollTo({ top: document.getElementById('tab2').offsetTop - 100, behavior: 'smooth' });
-}
-
-function closeModal() {
-    document.getElementById('results-modal').classList.remove('show');
-}
-
-function scrollToExplanations() {
-    document.getElementById('results-modal').classList.remove('show');
-    setTimeout(() => {
-        const firstExp = document.getElementById('exp0');
-        if (firstExp) firstExp.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 200);
-}
-
-// ========== START ==========
-init();
-</script>
+        updateCard();
+    </script>
 </body>
 </html>
