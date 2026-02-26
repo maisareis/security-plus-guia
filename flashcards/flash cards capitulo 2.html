@@ -442,9 +442,9 @@
     <div class="container">
         <div class="header">
             <h1>⚠️ Security+ Capítulo 2</h1>
-            <p>Ameaças e Vulnerabilidades (Threats & Vulnerabilities) — 50 Cards | 49 Questões</p>
+            <p>Ameaças e Vulnerabilidades (Threats & Vulnerabilities) — 60 Cards | 49 Questões</p>
             <div class="stats-bar">
-                <div class="stat-card">📚 50 Flashcards</div>
+                <div class="stat-card">📚 60 Flashcards</div>
                 <div class="stat-card">❓ 49 Questões</div>
                 <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
             </div>
@@ -462,7 +462,7 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
                         <div>
                             <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 20</div>
-                            <div id="mastered-count">0 dominados — sessão aleatória de 20</div>
+                            <div id="mastered-count">0 dominados — sessão aleatória de 15</div>
                         </div>
                         <div class="filter-buttons">
                             <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
@@ -498,20 +498,31 @@
                 <div class="info-box">
                     <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
                     <ul style="margin-top: 10px;">
-                        <li><strong>Tipos de Atores:</strong> Nation-state (APT), Crime Organizado (financeiro), Hacktivists (político), Insider (interno)</li>
+                        <li><strong>Tipos de Atores:</strong> Nation-state (APT), Crime Organizado (financeiro), Hacktivists (político), Insider (interno), Unskilled (script kiddie)</li>
+                        <li><strong>3 tipos de insider:</strong> Permanente (funcionários), Temporário (contratados), Ex-insider (ex-funcionários com queixas)</li>
                         <li><strong>Cyber Kill Chain:</strong> 7 fases do ataque - Reconhecimento → Weaponization → Delivery → Exploitation → Installation → C2 → Ações</li>
+                        <li><strong>MITRE ATT&CK:</strong> Base de conhecimento global de táticas e técnicas de adversários</li>
                         <li><strong>Phishing vs Spear Phishing vs Whaling:</strong> Massa vs Direcionado vs Executivos</li>
                         <li><strong>Ransomware:</strong> Criptografa dados e exige pagamento - BACKUP é a melhor defesa!</li>
+                        <li><strong>Fileless Malware:</strong> Executa na memória, usa "live off the land" (PowerShell, WMI)</li>
                     </ul>
                 </div>
 
                 <h2>1️⃣ Atores de Ameaças (Threat Actors)</h2>
                 <ul>
-                    <li><strong>Nation-state (Estados Nação):</strong> Governos, recursos ilimitados, APT (Advanced Persistent Threat), espionagem</li>
-                    <li><strong>Organized Crime (Crime Organizado):</strong> Motivação financeira, ransomware, fraudes</li>
+                    <li><strong>Nation-state (Estados Nação):</strong> Governos, recursos ilimitados, APT (Advanced Persistent Threat), espionagem, disinformation</li>
+                    <li><strong>Organized Crime (Crime Organizado):</strong> Motivação financeira, ransomware, fraudes, extorsão</li>
                     <li><strong>Hacktivists:</strong> Motivação política/social, ataques DDoS, desfiguração de sites</li>
-                    <li><strong>Insider Threat (Ameaça Interna):</strong> Funcionários, acesso legítimo, vingança ou ganho financeiro</li>
-                    <li><strong>Script Kiddies:</strong> Baixa habilidade técnica, usam ferramentas prontas, motivação: diversão</li>
+                    <li><strong>Insider Threat (Ameaça Interna):</strong> Funcionários (permanentes), contratados (temporários), ex-funcionários (ex-insiders)</li>
+                    <li><strong>Unskilled Attacker (Script Kiddie):</strong> Baixa habilidade técnica, usa ferramentas prontas, motivação: diversão ou atenção</li>
+                </ul>
+
+                <h3>Motivações dos Atores</h3>
+                <ul>
+                    <li><strong>Chaotic (Caótica):</strong> Vandalismo, causar caos, ganhar crédito pelo hack</li>
+                    <li><strong>Financial (Financeira):</strong> Blackmail (chantagem), Extortion (extorsão), Fraud (fraude), venda de dados</li>
+                    <li><strong>Political (Política):</strong> Hacktivismo, whistleblower, espionagem, desinformação</li>
+                    <li><strong>Revenge (Vingança):</strong> Funcionário ou ex-funcionário com queixa</li>
                 </ul>
 
                 <h2>2️⃣ Cyber Kill Chain</h2>
@@ -525,10 +536,13 @@
                     <li><strong>Actions on Objectives:</strong> Roubar dados, destruir sistemas, espionar</li>
                 </ol>
 
-                <h2>3️⃣ Engenharia Social</h2>
+                <h2>3️⃣ MITRE ATT&CK Framework</h2>
+                <p>Base de conhecimento global de táticas e técnicas de adversários, baseada em observações do mundo real. Organizado em matrizes (Enterprise, Mobile, ICS). Complementa a Cyber Kill Chain com uma visão não-linear das técnicas de ataque.</p>
+
+                <h2>4️⃣ Engenharia Social</h2>
                 <h3>Técnicas:</h3>
                 <ul>
-                    <li><strong>Phishing:</strong> Email malicioso fingindo ser legítimo</li>
+                    <li><strong>Phishing:</strong> Email malicioso fingindo ser legítimo (massa)</li>
                     <li><strong>Spear Phishing:</strong> Phishing direcionado a pessoa ou organização específica</li>
                     <li><strong>Whaling:</strong> Phishing para executivos e VIPs</li>
                     <li><strong>Vishing (Voice Phishing):</strong> Golpe por telefone</li>
@@ -542,9 +556,10 @@
                     <li><strong>Watering Hole:</strong> Comprometer site frequentado pelo alvo</li>
                     <li><strong>Pharming:</strong> Redirecionar DNS para site falso</li>
                     <li><strong>Typosquatting (ou URL Hijacking):</strong> Registrar domínios com erros de digitação</li>
+                    <li><strong>Deep Fakes:</strong> Mídia gerada por IA que imita voz ou aparência de alguém</li>
                 </ul>
 
-                <h2>4️⃣ Malware</h2>
+                <h2>5️⃣ Malware</h2>
                 <div class="malware-grid">
                     <div class="malware-card"><strong>Vírus</strong><p>Infecta arquivos, precisa ser executado, se replica</p></div>
                     <div class="malware-card"><strong>Worm</strong><p>Auto-replicante, não precisa de arquivo hospedeiro</p></div>
@@ -557,10 +572,12 @@
                     <div class="malware-card"><strong>RAT</strong><p>Remote Access Trojan - permite controle remoto completo</p></div>
                     <div class="malware-card"><strong>Logic Bomb</strong><p>Dispara sob condições específicas (data, evento)</p></div>
                     <div class="malware-card"><strong>Backdoor</strong><p>Acesso não autorizado que bypassa autenticação</p></div>
-                    <div class="malware-card"><strong>Fileless Malware</strong><p>Executa na memória, não grava em disco</p></div>
+                    <div class="malware-card"><strong>Fileless Malware</strong><p>Executa na memória, não grava em disco. Usa "live off the land" (PowerShell, WMI)</p></div>
+                    <div class="malware-card"><strong>PUPs/PUAs</strong><p>Potentially Unwanted Programs - instalados sem consentimento ativo (bundling)</p></div>
+                    <div class="malware-card"><strong>Cryptojacking</strong><p>Sequestra recursos da máquina para mineração de criptomoeda</p></div>
                 </div>
 
-                <h2>5️⃣ Proteções e Detecção</h2>
+                <h2>6️⃣ Proteções e Detecção</h2>
                 <ul>
                     <li><strong>Signature-based:</strong> Compara com banco de assinaturas conhecidas</li>
                     <li><strong>Heuristic:</strong> Analisa comportamento suspeito, detecta variações</li>
@@ -568,17 +585,21 @@
                     <li><strong>Sandboxing:</strong> Executa arquivo suspeito em ambiente isolado</li>
                     <li><strong>Application Whitelisting:</strong> Permite apenas aplicativos aprovados</li>
                     <li><strong>EDR (Endpoint Detection & Response):</strong> Monitoramento avançado de endpoints</li>
+                    <li><strong>Ações do antivírus:</strong> Repair (reparar), Quarantine (quarentena), Delete (deletar)</li>
                 </ul>
 
                 <div class="golden-rule">
                     <strong>🎯 DICAS FINAIS PARA PROVA:</strong>
                     <ul style="margin-top: 10px;">
                         <li>Insider Threat é o <strong>mais difícil de detectar</strong></li>
+                        <li>3 tipos de insider: permanente, temporário, ex-insider</li>
                         <li>Phishing (massa) vs Spear Phishing (direcionado) vs Whaling (executivos)</li>
                         <li>Ransomware = BACKUP é a melhor defesa</li>
                         <li>Rootkit de firmware sobrevive formatação</li>
-                        <li>Fileless malware usa PowerShell/WMI</li>
+                        <li>Fileless malware usa PowerShell/WMI ("live off the land")</li>
                         <li>Watering Hole compromete sites frequentados pelo alvo</li>
+                        <li>MITRE ATT&CK complementa a Cyber Kill Chain</li>
+                        <li>Blackmail (chantagem) vs Extortion (extorsão) vs Fraud (fraude)</li>
                     </ul>
                 </div>
             </div>
@@ -588,7 +609,7 @@
             <div class="quiz-area">
                 <div class="quiz-header">
                     <h2 id="quiz-title">Quiz — 15 Questões Aleatórias</h2>
-                    <p>Passing Score: 70% (14/20 corretas)</p>
+                    <p>Passing Score: 80% (12/15 corretas)</p>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
@@ -618,9 +639,9 @@
             return shuffled.slice(0, Math.min(n, arr.length));
         }
 
-        // ========== CARDS DO CAPÍTULO 2 - 50 CARDS COMPLETOS ==========
+        // ========== CARDS DO CAPÍTULO 2 - 60 CARDS ==========
         const cards = [
-    // === BLOCO 1: ATORES DE AMEAÇAS (1-12) ===
+    // === BLOCO 1: ATORES DE AMEAÇAS (1-15) ===
     {f: "Quais são os 4 atributos usados para criar perfil de um ator de ameaça (threat actor)?",
      b: "Localização (interno/externo), capacidade/sofisticação, recursos/financiamento e motivação."},
     {f: "Qual a diferença entre ator de ameaça externo e interno (insider)?",
@@ -628,7 +649,7 @@
     {f: "O que caracteriza um ator de ameaça com capacidade baixa (low capability / unskilled attacker)?",
      b: "Usa ferramentas de ataque prontas (commodity tools) sem entender como funcionam; não cria exploits próprios. Também chamado de script kiddie."},
     {f: "O que é um APT (Advanced Persistent Threat)?",
-     b: "Ator — geralmente estado-nação — com capacidade de manter acesso contínuo e prolongado à rede usando múltiplas ferramentas e técnicas."},
+     b: "Ator — geralmente estado-nação — com capacidade de manter acesso contínuo e prolongado à rede usando múltiplas ferramentas e técnicas. O termo foi cunhado para descrever o comportamento de grupos como os identificados nos relatórios da Mandiant."},
     {f: "Qual a principal motivação de grupos hacktivistas como Anonymous e LulzSec?",
      b: "Promover agenda política usando armas cibernéticas: exfiltração de dados, interrupção de serviço e desfiguração de websites (defacement)."},
     {f: "O que são campanhas de false flag (bandeira falsa) usadas por estados-nação?",
@@ -636,7 +657,7 @@
     {f: "Qual a diferença entre chantagem (blackmail) e extorsão (extortion) como motivação financeira?",
      b: "Blackmail: pagamento para prevenir divulgação de informações. Extortion: pagamento para prevenir ou parar um ataque em curso (ex: ransomware)."},
     {f: "Quais são os 3 tipos de insiders (ameaças internas)?",
-     b: "Permanentes (funcionários), temporários (contratados/convidados) e ex-insiders (ex-funcionários demitidos com queixas)."},
+     b: "Permanentes (funcionários), temporários (contratados/convidados) e ex-insiders (ex-funcionários demitidos com queixas). Cada tipo tem diferentes níveis de acesso e risco."},
     {f: "O que é Shadow IT e por que representa risco de segurança?",
      b: "Hardware/software adquirido por usuários sem aprovação de TI; cria superfície de ataque não monitorada, exacerbada por cloud e dispositivos móveis."},
     {f: "Como a exfiltração de dados (data exfiltration) afeta a tríade CIA?",
@@ -645,8 +666,14 @@
      b: "Empresa que tenta roubar segredos industriais ou estratégicos de um concorrente; frequentemente facilitada por funcionários que mudaram de empresa."},
     {f: "O que é um MSP (Managed Services Provider) e qual o risco de segurança associado?",
      b: "Empresa que gerencia recursos de TI de terceiros. Risco: funcionários do MSP são fontes potenciais de ameaça interna e difíceis de monitorar."},
+    {f: "O que é fraud (fraude) em cibersegurança?",
+     b: "Falsificação de registros. Pode ser interna (desvio de fundos) ou externa (manipulação de ações, esquemas de pirâmide)."},
+    {f: "O que é o MITRE ATT&CK Framework?",
+     b: "Base de conhecimento global de táticas e técnicas de adversários, baseada em observações do mundo real. Organizado em matrizes (Enterprise, Mobile, ICS). Complementa a Cyber Kill Chain com uma visão não-linear das técnicas de ataque."},
+    {f: "Qual a diferença entre Cyber Kill Chain e MITRE ATT&CK?",
+     b: "Cyber Kill Chain é linear (7 fases). MITRE ATT&CK é não-linear, organizado em táticas (ex: Persistência, Movimento Lateral) e técnicas, permitindo mapear comportamentos complexos."},
 
-    // === BLOCO 2: SUPERFÍCIES E VETORES DE ATAQUE (13-23) ===
+    // === BLOCO 2: SUPERFÍCIES E VETORES DE ATAQUE (16-26) ===
     {f: "O que é superfície de ataque (attack surface)?",
      b: "Todos os pontos onde um ator malicioso pode tentar explorar uma vulnerabilidade para interagir com rede, app, computador ou usuário."},
     {f: "Qual a diferença entre vetor de ameaça (threat vector) e vetor de ataque (attack vector)?",
@@ -670,7 +697,7 @@
     {f: "Quais são as 5 metodologias de defesa em profundidade?",
      b: "Camadas (layering), princípio do menor privilégio (least privilege), variedade (variety), aleatoriedade (randomness) e simplicidade (simplicity)."},
 
-    // === BLOCO 3: ENGENHARIA SOCIAL (24-35) ===
+    // === BLOCO 3: ENGENHARIA SOCIAL (27-41) ===
     {f: "Quais são as 3 fases do processo de engenharia social (social engineering)?",
      b: "1. Pesquisa (research/footprinting). 2. Desenvolvimento (development — criar relacionamento). 3. Exploração (exploitation — obter acesso/informação)."},
     {f: "O que é pretexting?",
@@ -695,8 +722,10 @@
      b: "Autoridade e medo (authority/fear), urgência (urgency) e escassez (scarcity) — além de simpatia (likeability), prova social (social proof) e obrigação moral."},
     {f: "O que é um deep fake e qual o risco para segurança corporativa?",
      b: "Mídia gerada por IA que imita aparência ou voz de uma pessoa — usada para criar pretexts convincentes em ataques de BEC e campanhas de desinformação."},
+    {f: "O que é a fase de Saída (Exit) no processo de engenharia social?",
+     b: "Finalizar a operação sem levantar suspeitas, apagar rastros digitais e não deixar evidências."},
 
-    // === BLOCO 4: MALWARE (36-50) ===
+    // === BLOCO 4: MALWARE (42-60) ===
     {f: "Qual a diferença entre vírus (virus) e worm no modo de propagação?",
      b: "Vírus precisa de ação do usuário para executar e infectar. Worm pode executar sozinho explorando vulnerabilidade em processo, sem interação humana."},
     {f: "O que é um vírus polimórfico (polymorphic virus)?",
@@ -726,7 +755,15 @@
     {f: "Quais são as 3 ações de um antivírus ao detectar malware?",
      b: "Reparar (repair) — possível para vírus em arquivos válidos. Quarentena (quarantine) — move para pasta segura. Deletar (delete) — para Trojans, worms, spyware."},
     {f: "O que é spyware e quais são seus 3 níveis de monitoramento?",
-     b: "Malware que monitora atividade local, captura screenshots e ativa microfone/webcam. Níveis: tracking cookies (menos invasivo), adware (reconfigura navegador), spyware (monitoramento total + redirecionamento DNS)."}
+     b: "Malware que monitora atividade local, captura screenshots e ativa microfone/webcam. Níveis: tracking cookies (menos invasivo), adware (reconfigura navegador), spyware (monitoramento total + redirecionamento DNS)."},
+    {f: "O que são PUPs/PUAs (Potentially Unwanted Programs/Applications)?",
+     b: "Software instalado sem consentimento ativo junto com outro software (bundling). Também chamado de 'grayware' ou 'bloatware'. Não é automaticamente malicioso, mas pode incluir adware e tracking."},
+    {f: "O que significa 'live off the land' em ataques de malware?",
+     b: "Técnica onde o malware usa ferramentas legítimas do sistema operacional (PowerShell, WMI, PsExec) para executar ações maliciosas, sem usar executáveis próprios, dificultando a detecção."},
+    {f: "O que são os 3 tipos de insiders (ameaças internas)?",
+     b: "Permanentes (funcionários), temporários (contratados/convidados) e ex-insiders (ex-funcionários demitidos com queixas). Cada tipo tem diferentes níveis de acesso e risco."},
+    {f: "O que é Shadow IT e por que representa risco de segurança?",
+     b: "Hardware/software adquirido por usuários sem aprovação de TI, criando superfície de ataque não monitorada, exacerbada por cloud e dispositivos móveis."}
 ];
 
         const quiz = [
@@ -784,7 +821,7 @@
     {q: "O que é um exploit zero-click?",
      o: ["Exploit que não deixa rastros nos logs do sistema", "Exploit que dispara apenas ao receber um anexo ou visualizar imagem, sem abertura deliberada", "Ataque que usa zero vulnerabilidades conhecidas", "Malware que não precisa de conexão à internet"],
      c: 1,
-     e: "Zero-click exploits são acionados simplesmente recebendo um anexo ou visualizando uma imagem — mais poderosos que exploits que requerem abertura deliberada pelo usuário."},
+     e: "Zero-click exploits são acionados simplesmente recebendo um anexo ou visualizando uma imagem — mais poderoso que exploits que requerem abertura deliberada pelo usuário."},
     {q: "Que vetor de ameaça é explorado quando um atacante conecta dispositivo não autorizado a porta física de rede?",
      o: ["Acesso à nuvem (cloud access)", "Rede sem fio (wireless)", "Rede cabeada (wired network)", "Bluetooth"],
      c: 2,
@@ -859,10 +896,10 @@
      o: ["Primeira fase de pesquisa do alvo", "Fase de criar relacionamento com o alvo", "Finalizar a operação sem levantar suspeitas, apagar rastros digitais e não deixar evidências", "Exfiltrar os dados coletados para servidor remoto"],
      c: 2,
      e: "A fase de Exit visa finalizar a operação sem alertar o alvo: apagar pegadas digitais, não deixar itens ou informações para trás. Uma estratégia de saída suave é o objetivo final."},
-    {q: "Qual informação aparentemente inócua pode ajudar um atacante a realizar pretexting eficaz?",
-     o: ["Apenas senhas e tokens de acesso", "Listas de funcionários, títulos de trabalho, números de telefone, faturas e ordens de compra", "Endereços IP internos e configurações de firewall", "Hashes de senhas do Active Directory"],
+    {q: "O que é um deep fake e qual o risco para segurança corporativa?",
+     o: ["Software de criptografia avançada", "Mídia gerada por IA que imita voz ou aparência de alguém; usado para BEC e desinformação", "Técnica de phishing via deep web", "Malware que se esconde em arquivos de mídia"],
      c: 1,
-     e: "Informações aparentemente inócuas como listas de funcionários, títulos, telefones e documentos financeiros ajudam a criar pretexts convincentes e penetrar a organização via engenharia social."},
+     e: "Deep fakes usam IA para criar mídia falsa convincente. Em segurança corporativa, podem ser usados para fingir ser executivos em chamadas de vídeo ou áudio, aumentando a credibilidade de ataques de BEC."},
 
     // === MALWARE (33-50) ===
     {q: "Qual a diferença entre vírus e worm no modo de propagação?",
@@ -932,9 +969,18 @@
     {q: "O que é um worm de computador e qual seu principal efeito colateral?",
      o: ["Vírus que se replica apenas por e-mail", "Malware memory-resident que replica sobre recursos de rede sem interação do usuário; principal efeito: consumir banda rapidamente", "Trojan disfarçado de protetor de tela", "Rootkit que se instala no setor de boot"],
      c: 1,
-     e: "Worm replica exploits sobre rede sem intervenção do usuário. Efeito primário: consumir banda rapidamente. Pode travar SO/aplicação servidor (DoS) e carregar payload para qualquer ação maliciosa. Ex: Code Red."}
+     e: "Worm replica exploits sobre rede sem intervenção do usuário. Efeito primário: consumir banda rapidamente. Pode travar SO/aplicação servidor (DoS) e carregar payload para qualquer ação maliciosa. Ex: Code Red."},
+    {q: "O que são os 3 tipos de insiders (ameaças internas)?",
+     o: ["Funcionários antigos e novos", "Permanentes, temporários e ex-insiders", "Contratados, estagiários e terceirizados", "Internos, externos e parceiros"],
+     c: 1,
+     e: "Insiders podem ser permanentes (funcionários), temporários (contratados/convidados) ou ex-insiders (ex-funcionários demitidos com queixas). Cada tipo tem diferentes níveis de acesso e risco."},
+    {q: "O que é Shadow IT?",
+     o: ["TI que trabalha no período noturno", "Hardware/software adquirido sem aprovação de TI, criando superfície de ataque não monitorada", "Ataque que usa sombras para se esconder", "Departamento de TI terceirizado"],
+     c: 1,
+     e: "Shadow IT são dispositivos e serviços adquiridos por usuários sem processo de compras e análise de segurança, criando uma superfície de ataque não monitorada."}
 ];
 
+        // ========== VARIÁVEIS DE ESTADO ==========
         let currentCard = 0;
         let flipped = false;
         let mastered = new Set();
@@ -991,8 +1037,16 @@
         }
 
         function flipCard() { flipped = !flipped; updateCard(); }
-        function nextCard() { currentCard = (currentCard + 1) % filteredCards.length; flipped = false; updateCard(); }
-        function prevCard() { currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length; flipped = false; updateCard(); }
+        function nextCard() {
+            currentCard = (currentCard + 1) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
+        function prevCard() {
+            currentCard = (currentCard - 1 + filteredCards.length) % filteredCards.length;
+            flipped = false;
+            updateCard();
+        }
         
         function toggleMaster() {
             const cardIndex = filteredCards[currentCard];
