@@ -6,23 +6,17 @@
     <title>Security+ Cap 12 - Risk Management Processes</title>
     <style>
         /* ===== RESET CSS ===== */
-        /* Remove todas as margens e paddings padrão do navegador */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Gradiente laranja - tema do capítulo 12 (Risk Management) */
             background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
             min-height: 100vh;
             padding: 20px;
         }
         
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; /* Centraliza horizontalmente */
-        }
+        .container { max-width: 1200px; margin: 0 auto; }
         
-        /* ===== CABEÇALHO ===== */
         .header {
             text-align: center;
             color: white;
@@ -36,7 +30,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
         
-        /* Barra de estatísticas */
         .stats-bar {
             display: flex;
             gap: 20px;
@@ -49,12 +42,11 @@
             background: rgba(255,255,255,0.2);
             padding: 15px 25px;
             border-radius: 12px;
-            backdrop-filter: blur(10px); /* Efeito vidro fosco */
+            backdrop-filter: blur(10px);
             color: white;
             font-weight: bold;
         }
         
-        /* ===== ABAS (TABS) ===== */
         .tabs {
             display: flex;
             gap: 12px;
@@ -85,11 +77,7 @@
             color: white;
         }
         
-        /* Controle de visibilidade das abas */
-        .content { 
-            display: none;
-            animation: fadeIn 0.4s;
-        }
+        .content { display: none; animation: fadeIn 0.4s; }
         .content.active { display: block; }
         
         @keyframes fadeIn {
@@ -97,7 +85,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* ===== FLASHCARDS ===== */
         .flashcard-area { max-width: 900px; margin: 0 auto; }
         
         .card-info {
@@ -109,7 +96,6 @@
             backdrop-filter: blur(10px);
         }
         
-        /* Barra de progresso */
         .progress-bar {
             width: 100%;
             height: 8px;
@@ -125,7 +111,6 @@
             transition: width 0.3s ease;
         }
         
-        /* O flashcard */
         .flashcard {
             background: white;
             border-radius: 20px;
@@ -170,7 +155,6 @@
             font-style: italic;
         }
         
-        /* ===== CONTROLES ===== */
         .controls {
             display: flex;
             gap: 15px;
@@ -220,7 +204,36 @@
             color: white;
         }
         
-        /* ===== QUIZ ===== */
+        .btn-primary {
+            background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .filter-btn.active {
+            background: white;
+            color: #ff7e5f;
+        }
+
         .quiz-area { max-width: 1000px; margin: 0 auto; }
         
         .quiz-header {
@@ -289,7 +302,6 @@
             line-height: 1.6;
         }
         
-        /* ===== MODAL DE RESULTADOS ===== */
         .results-modal {
             position: fixed;
             top: 0;
@@ -340,29 +352,22 @@
             font-size: 1.1rem;
         }
         
-        /* ===== BOTÕES DE FILTRO ===== */
-        .filter-buttons {
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1rem;
+        }
+        
+        .modal-buttons {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
-            flex-wrap: wrap;
+            margin-top: 20px;
         }
         
-        .filter-btn {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.3);
-            border: 2px solid white;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-        
-        .filter-btn.active {
-            background: white;
-            color: #ff7e5f;
-        }
+        .result-emoji { font-size: 3.5rem; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -370,10 +375,10 @@
         <!-- ===== CABEÇALHO ===== -->
         <div class="header">
             <h1>⚖️ Security+ Capítulo 12</h1>
-            <p>Risk Management Processes - 20 Cards | 10 Questões</p>
+            <p>Risk Management Processes - 30 Cards | 25 Questões</p>
             <div class="stats-bar">
-                <div class="stat-card">📚 20 Flashcards</div>
-                <div class="stat-card">❓ 10 Questões</div>
+                <div class="stat-card">📚 30 Flashcards</div>
+                <div class="stat-card">❓ 25 Questões</div>
                 <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
             </div>
         </div>
@@ -391,13 +396,13 @@
                 <div class="card-info">
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
                         <div>
-                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 20</div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 30</div>
                             <div id="mastered-count">0 dominados</div>
                         </div>
                         <div class="filter-buttons">
-                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
-                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
-                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                            <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered', event)">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered', event)">Dominados</button>
                         </div>
                     </div>
                     <div class="progress-bar">
@@ -415,6 +420,7 @@
                     <button class="btn btn-nav" onclick="prevCard()">‹</button>
                     <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
                     <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn" style="background:#10b981;color:white;" onclick="newSession()">🎲 Nova Sessão (15)</button>
                     <button class="btn btn-nav" onclick="nextCard()">›</button>
                 </div>
             </div>
@@ -429,12 +435,17 @@
                 <div style="background: #fff5f0; border-left: 5px solid #ff7e5f; padding: 20px; margin: 20px 0; border-radius: 8px;">
                     <strong>🎯 CONCEITOS MAIS IMPORTANTES PARA PROVA:</strong>
                     <ul style="margin-top: 10px; margin-left: 20px;">
-                        <li><strong>Inherent Risk:</strong> Risco natural (sem controles)</li>
-                        <li><strong>Residual Risk:</strong> Risco remanescente (após controles)</li>
-                        <li><strong>Risk Appetite:</strong> Quanto risco a organização aceita (estratégico)</li>
-                        <li><strong>Risk Tolerance:</strong> Variação aceitável (operacional)</li>
+                        <li><strong>Inherent Risk (Risco Inerente):</strong> Risco natural (sem controles)</li>
+                        <li><strong>Residual Risk (Risco Residual):</strong> Risco remanescente (após controles)</li>
+                        <li><strong>Risk Appetite (Apetite ao Risco):</strong> Quanto risco a organização aceita (estratégico)</li>
+                        <li><strong>Risk Tolerance (Tolerância ao Risco):</strong> Variação aceitável (operacional)</li>
+                        <li><strong>Risk Exception (Exceção de Risco):</strong> Risco não mitigado no prazo, aprovado temporariamente</li>
+                        <li><strong>Risk Exemption (Isenção de Risco):</strong> Risco aceito permanentemente por decisão estratégica</li>
                         <li><strong>ALE = SLE × ARO:</strong> Fórmula de risco quantitativo</li>
-                        <li><strong>Due Diligence:</strong> Antes do contrato | <strong>Due Care:</strong> Depois do contrato</li>
+                        <li><strong>SLE = AV × EF</strong></li>
+                        <li><strong>Due Diligence (Diligência Prévia):</strong> Antes do contrato | <strong>Due Care (Cuidado Devido):</strong> Depois do contrato</li>
+                        <li><strong>KRI (Key Risk Indicator):</strong> Indicador preditivo de risco</li>
+                        <li><strong>Risk Register:</strong> Documento com riscos, proprietários e mitigações</li>
                     </ul>
                 </div>
 
@@ -442,10 +453,10 @@
 
                 <table style="width:100%; border-collapse:collapse; margin:20px 0;">
                     <tr><th style="background:#ff7e5f; color:white;">Conceito</th><th style="background:#ff7e5f; color:white;">Descrição</th></tr>
-                    <tr><td><strong>Inherent Risk</strong></td><td>Risco natural sem controles implementados. É o baseline de risco antes de qualquer mitigação.</td></tr>
-                    <tr><td><strong>Residual Risk</strong></td><td>Risco que permanece após a implementação de controles. Fórmula: Inherent Risk - Controles = Residual Risk.</td></tr>
-                    <tr><td><strong>Risk Appetite</strong></td><td>Quantidade total de risco que a organização está disposta a aceitar. É uma decisão estratégica da alta gestão.</td></tr>
-                    <tr><td><strong>Risk Tolerance</strong></td><td>Variação aceitável no apetite de risco. Nível operacional. Ex: "Podemos tolerar ±10% de variação no orçamento".</td></tr>
+                    <tr><td><strong>Inherent Risk (Risco Inerente)</strong></td><td>Risco natural sem controles implementados. É o baseline de risco antes de qualquer mitigação.</td></tr>
+                    <tr><td><strong>Residual Risk (Risco Residual)</strong></td><td>Risco que permanece após a implementação de controles. Fórmula: Inherent Risk - Controles = Residual Risk.</td></tr>
+                    <tr><td><strong>Risk Appetite (Apetite ao Risco)</strong></td><td>Quantidade total de risco que a organização está disposta a aceitar. É uma decisão estratégica da alta gestão.</td></tr>
+                    <tr><td><strong>Risk Tolerance (Tolerância ao Risco)</strong></td><td>Variação aceitável no apetite de risco em nível operacional. Ex: "Podemos tolerar ±10% de variação no orçamento".</td></tr>
                 </table>
 
                 <h2 style="color: #feb47b; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ Análise Quantitativa de Riscos</h2>
@@ -457,7 +468,7 @@
                         <li><strong>ALE = SLE × ARO</strong> (Perda anual esperada)</li>
                         <li><strong>SLE = AV × EF</strong> (Perda por ocorrência)</li>
                         <li><strong>ARO</strong> = Frequência anual do risco</li>
-                        <li><strong>EF</strong> = % do ativo perdido no ataque</li>
+                        <li><strong>EF (Exposure Factor)</strong> = % do ativo perdido no ataque</li>
                     </ul>
                 </div>
 
@@ -478,7 +489,34 @@
                     </ul>
                 </div>
 
-                <h2 style="color: #feb47b; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Business Continuity Planning</h2>
+                <h2 style="color: #feb47b; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Risk Response (Respostas a Risco)</h2>
+
+                <div style="display: flex; gap: 20px; margin: 30px 0; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 200px; background: #f3f4f6; padding: 20px; border-radius: 10px; border-left: 5px solid #ff7e5f;">
+                        <strong>Mitigar (Mitigate)</strong>
+                        <p>Reduzir a probabilidade ou impacto do risco. Ex: implementar controles, firewalls, backups.</p>
+                    </div>
+                    <div style="flex: 1; min-width: 200px; background: #f3f4f6; padding: 20px; border-radius: 10px; border-left: 5px solid #ff7e5f;">
+                        <strong>Transferir (Transfer)</strong>
+                        <p>Compartilhar ou transferir o risco para terceiros. Ex: seguro cibernético, outsourcing.</p>
+                    </div>
+                    <div style="flex: 1; min-width: 200px; background: #f3f4f6; padding: 20px; border-radius: 10px; border-left: 5px solid #ff7e5f;">
+                        <strong>Aceitar (Accept)</strong>
+                        <p>Aceitar o risco sem controles adicionais. Ex: risco baixo com custo de mitigação alto.</p>
+                    </div>
+                    <div style="flex: 1; min-width: 200px; background: #f3f4f6; padding: 20px; border-radius: 10px; border-left: 5px solid #ff7e5f;">
+                        <strong>Evitar (Avoid)</strong>
+                        <p>Eliminar a atividade que causa o risco. Ex: descontinuar um serviço vulnerável.</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #ff7e5f; margin-top: 20px; margin-bottom: 10px;">Risk Exception (Exceção de Risco)</h3>
+                <p>Situação onde um risco não pode ser mitigado no prazo esperado devido a limitações financeiras, técnicas ou operacionais. Deve ser formalmente aprovado por stakeholders e revisado periodicamente.</p>
+
+                <h3 style="color: #ff7e5f; margin-top: 20px; margin-bottom: 10px;">Risk Exemption (Isenção de Risco)</h3>
+                <p>Condição onde um risco pode permanecer sem mitigação, geralmente por decisão estratégica (custo da mitigação supera o dano potencial). Deve ser formalmente documentado e aprovado.</p>
+
+                <h2 style="color: #feb47b; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">4️⃣ Business Continuity Planning</h2>
 
                 <h3 style="color: #ff7e5f; margin-top: 20px; margin-bottom: 10px;">BIA (Business Impact Analysis)</h3>
                 <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
@@ -492,6 +530,8 @@
                     <tr><td><strong>RTO (Recovery Time Objective)</strong></td><td>Tempo máximo que um processo pode ficar offline após um desastre. Define a velocidade de recuperação necessária.</td></tr>
                     <tr><td><strong>RPO (Recovery Point Objective)</strong></td><td>Quantidade máxima de dados que pode ser perdida. Define a frequência de backups necessária.</td></tr>
                     <tr><td><strong>MTD (Maximum Tolerable Downtime)</strong></td><td>Tempo máximo que a organização pode operar sem o processo crítico antes de sofrer danos irreparáveis.</td></tr>
+                    <tr><td><strong>MTBF (Mean Time Between Failures)</strong></td><td>Tempo médio entre falhas — mede confiabilidade.</td></tr>
+                    <tr><td><strong>MTTR (Mean Time to Repair)</strong></td><td>Tempo médio para reparar após falha — mede eficiência de recuperação.</td></tr>
                 </table>
 
                 <!-- Destaque com relação entre métricas -->
@@ -504,13 +544,13 @@
                     </ul>
                 </div>
 
-                <h2 style="color: #feb47b; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">4️⃣ Vendor Management (Gestão de Terceiros)</h2>
+                <h2 style="color: #feb47b; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">5️⃣ Vendor Management (Gestão de Terceiros)</h2>
 
                 <table style="width:100%; border-collapse:collapse; margin:20px 0;">
                     <tr><th style="background:#ff7e5f; color:white;">Conceito</th><th style="background:#ff7e5f; color:white;">Descrição</th></tr>
                     <tr><td><strong>Vendor Management</strong></td><td>Gestão de riscos relacionados a fornecedores e terceiros. Inclui due diligence, contratos, monitoramento e auditorias.</td></tr>
-                    <tr><td><strong>Due Diligence</strong></td><td>Avaliação pré-contrato do fornecedor. Inclui background check, controles de segurança, saúde financeira.</td></tr>
-                    <tr><td><strong>Due Care</strong></td><td>Ações contínuas após o contrato. Monitoramento, auditorias, verificação de conformidade. Responsabilidade contínua.</td></tr>
+                    <tr><td><strong>Due Diligence (Diligência Prévia)</strong></td><td>Avaliação pré-contrato do fornecedor. Inclui background check, controles de segurança, saúde financeira.</td></tr>
+                    <tr><td><strong>Due Care (Cuidado Devido)</strong></td><td>Ações contínuas após o contrato. Monitoramento, auditorias, verificação de conformidade. Responsabilidade contínua.</td></tr>
                     <tr><td><strong>SLA (Service Level Agreement)</strong></td><td>Contrato que define níveis de serviço: uptime, tempo de resposta, penalidades por descumprimento.</td></tr>
                     <tr><td><strong>Right-to-Audit</strong></td><td>Cláusula contratual que permite à organização auditar o fornecedor para verificar conformidade com requisitos de segurança.</td></tr>
                 </table>
@@ -523,7 +563,24 @@
                     <li><strong>Vendor lock-in</strong> (dependência excessiva de um fornecedor)</li>
                 </ul>
 
-                <h2 style="color: #feb47b; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">5️⃣ Audits and Assessments</h2>
+                <h2 style="color: #feb47b; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">6️⃣ Risk Assessment e Heat Maps</h2>
+
+                <h3 style="color: #ff7e5f; margin-top: 20px; margin-bottom: 10px;">Qualitativo vs Quantitativo</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Qualitativo:</strong> usa categorias (Alto/Médio/Baixo), mais simples, subjetivo</li>
+                    <li><strong>Quantitativo:</strong> usa números (ALE, SLE, ARO), mais preciso, complexo</li>
+                </ul>
+
+                <h3 style="color: #ff7e5f; margin-top: 20px; margin-bottom: 10px;">Heat Map (Mapa de Calor)</h3>
+                <p>Matriz visual que mostra impacto vs probabilidade de riscos. Cores: vermelho (alto), amarelo (médio), verde (baixo). Ajuda a priorizar riscos mais críticos.</p>
+
+                <h3 style="color: #ff7e5f; margin-top: 20px; margin-bottom: 10px;">Risk Register (Registro de Riscos)</h3>
+                <p>Documento que consolida resultados de avaliações de risco, incluindo: descrição dos riscos, impacto, probabilidade, proprietário (risk owner), contramedidas e status.</p>
+
+                <h3 style="color: #ff7e5f; margin-top: 20px; margin-bottom: 10px;">Key Risk Indicator (KRI)</h3>
+                <p>Indicador preditivo usado para monitorar e antecipar riscos potenciais. Fornece alerta precoce de exposição crescente a riscos.</p>
+
+                <h2 style="color: #feb47b; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">7️⃣ Audits and Assessments</h2>
 
                 <h3 style="color: #ff7e5f; margin-top: 20px; margin-bottom: 10px;">Tipos de Auditoria por Realização</h3>
                 <table style="width:100%; border-collapse:collapse; margin:20px 0;">
@@ -550,13 +607,16 @@
                 <div style="background: #fff5f0; border-left: 5px solid #ff7e5f; padding: 20px; margin: 30px 0; border-radius: 8px;">
                     <h3 style="color: #ff7e5f; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
                     <ul style="margin-left: 20px; line-height: 1.8;">
-                        <li><strong>Inherent Risk:</strong> sem controles | <strong>Residual Risk:</strong> após controles</li>
-                        <li><strong>Risk Appetite:</strong> quanto quer aceitar | <strong>Risk Tolerance:</strong> variação permitida</li>
+                        <li><strong>Inherent Risk (Risco Inerente):</strong> sem controles | <strong>Residual Risk (Risco Residual):</strong> após controles</li>
+                        <li><strong>Risk Appetite (Apetite ao Risco):</strong> quanto quer aceitar | <strong>Risk Tolerance (Tolerância ao Risco):</strong> variação permitida</li>
+                        <li><strong>Risk Exception (Exceção de Risco):</strong> temporário, aprovado | <strong>Risk Exemption (Isenção de Risco):</strong> permanente, estratégico</li>
                         <li><strong>ALE = SLE × ARO</strong> (decorar!)</li>
                         <li><strong>SLE = AV × EF</strong></li>
                         <li><strong>RTO:</strong> tempo offline | <strong>RPO:</strong> dados perdidos</li>
                         <li><strong>MTD</strong> > RTO (sempre)</li>
                         <li><strong>Due Diligence:</strong> antes | <strong>Due Care:</strong> depois</li>
+                        <li><strong>KRI (Key Risk Indicator):</strong> indicador preditivo</li>
+                        <li><strong>Risk Register:</strong> documento com riscos e proprietários</li>
                         <li><strong>SLA:</strong> contrato de nível de serviço</li>
                         <li><strong>Internal Audit:</strong> interno | <strong>External Audit:</strong> externo</li>
                     </ul>
@@ -568,7 +628,11 @@
         <div id="tab2" class="content">
             <div class="quiz-area">
                 <div class="quiz-header">
-                    <h2>Quiz - 10 Questões</h2>
+                    <h2>Quiz - 15 Questões Aleatórias</h2>
+                    <p>Passing Score: 80% (12/15 corretas) | Pool: 25 questões</p>
+                </div>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button class="btn btn-primary" onclick="newQuizSession()">🔄 Nova Sessão</button>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
@@ -581,21 +645,20 @@
     <!-- ===== MODAL DE RESULTADOS ===== -->
     <div class="results-modal" id="results-modal">
         <div class="results-content">
-            <h2>Resultado</h2>
+            <div class="result-emoji" id="result-emoji">🎉</div>
+            <h2 id="result-title">Resultado</h2>
             <div class="score-circle" id="score-circle">0%</div>
             <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="newQuizSession()">🔄 Nova Sessão</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Fechar</button>
+            </div>
+            <button class="btn" style="background:#7c3aed;color:white;margin-top:12px;width:100%;" onclick="scrollToExplanations()">📖 Ver Explicações</button>
         </div>
     </div>
 
     <script>
-        // ========== CARDS DO CAPÍTULO 12 ==========
-        /**
-         * ARRAY cards: armazena TODOS os flashcards do capítulo
-         * Cada card tem:
-         * - f: frente (a pergunta/conceito)
-         * - b: verso (a resposta/definição)
-         */
+        // ========== CARDS DO CAPÍTULO 12 (com traduções) ==========
         const cards = [
             {f: "O que é Inherent Risk (Risco Inerente)?", 
              b: "Risco natural de uma atividade sem nenhum controle implementado. É o baseline de risco antes de qualquer medida de mitigação."},
@@ -603,10 +666,10 @@
             {f: "O que é Residual Risk (Risco Residual)?", 
              b: "Risco que permanece após a implementação de controles de segurança. Fórmula: Inherent Risk - Controles = Residual Risk."},
              
-            {f: "O que é Risk Appetite (Apetite de Risco)?", 
+            {f: "O que é Risk Appetite (Apetite ao Risco)?", 
              b: "Quantidade total de risco que uma organização está disposta a aceitar em busca de seus objetivos. É uma decisão estratégica da alta gestão."},
              
-            {f: "O que é Risk Tolerance (Tolerância a Risco)?", 
+            {f: "O que é Risk Tolerance (Tolerância ao Risco)?", 
              b: "Variação aceitável no apetite de risco em nível operacional. Ex: 'Podemos tolerar ±10% de variação no orçamento'."},
              
             {f: "O que é Risk Assessment (Avaliação de Risco)?", 
@@ -639,10 +702,10 @@
             {f: "O que é Vendor Management (Gestão de Fornecedores)?", 
              b: "Gestão de riscos relacionados a fornecedores e terceiros. Inclui due diligence pré-contrato, contratos, monitoramento contínuo e auditorias."},
              
-            {f: "O que é Due Diligence em gestão de fornecedores?", 
+            {f: "O que é Due Diligence (Diligência Prévia) em gestão de fornecedores?", 
              b: "Avaliação pré-contrato do fornecedor. Inclui verificação de antecedentes, análise de controles de segurança, saúde financeira e reputação."},
              
-            {f: "O que é Due Care em gestão de fornecedores?", 
+            {f: "O que é Due Care (Cuidado Devido) em gestão de fornecedores?", 
              b: "Ações contínuas após a assinatura do contrato. Inclui monitoramento, auditorias periódicas e verificação de conformidade. É uma responsabilidade contínua."},
              
             {f: "O que é SLA (Service Level Agreement)?", 
@@ -655,21 +718,52 @@
              b: "Auditoria realizada por equipe interna da organização, independente dos departamentos auditados. Reporta diretamente ao conselho (board)."},
              
             {f: "O que é External Audit (Auditoria Externa)?", 
-             b: "Auditoria realizada por firma externa independente. Tem mais credibilidade e é frequentemente exigida para certificações como ISO, SOC e PCI DSS."}
+             b: "Auditoria realizada por firma externa independente. Tem mais credibilidade e é frequentemente exigida para certificações como ISO, SOC e PCI DSS."},
+             
+            {f: "O que é Risk Exception (Exceção de Risco)?",
+             b: "Situação onde um risco não pode ser mitigado usando práticas padrão ou no prazo esperado, devido a limitações financeiras, técnicas ou operacionais. Deve ser aprovado por stakeholders e revisado periodicamente."},
+             
+            {f: "O que é Risk Exemption (Isenção de Risco)?",
+             b: "Condição onde um risco pode permanecer sem mitigação, geralmente por decisão estratégica (custo da mitigação supera o dano potencial). Deve ser formalmente documentado e aprovado."},
+             
+            {f: "O que é um Key Risk Indicator - KRI (Indicador-chave de Risco)?",
+             b: "Métrica preditiva que organizações usam para monitorar e antecipar riscos potenciais. Fornece alerta precoce de exposição crescente a riscos."},
+             
+            {f: "O que é um Risk Register (Registro de Riscos)?",
+             b: "Documento que consolida resultados de avaliações de risco, incluindo: descrição dos riscos, impacto, probabilidade, proprietário (risk owner), contramedidas e status."},
+             
+            {f: "O que é um Risk Owner (Proprietário do Risco)?",
+             b: "Indivíduo responsável por gerenciar um risco particular, incluindo identificação, avaliação, implementação de mitigações, monitoramento e ações corretivas."},
+             
+            {f: "O que é um Heat Map (Mapa de Calor) em gestão de riscos?",
+             b: "Matriz visual que mostra impacto vs probabilidade de riscos. Cores: vermelho (alto), amarelo (médio), verde (baixo). Ajuda a priorizar riscos mais críticos."},
+             
+            {f: "O que é MTBF (Mean Time Between Failures)?",
+             b: "Tempo médio entre falhas — mede confiabilidade de equipamentos. Quanto maior, melhor."},
+             
+            {f: "O que é MTTR (Mean Time to Repair)?",
+             b: "Tempo médio para reparo — mede eficiência de recuperação. Impacta diretamente o RTO."},
+             
+            {f: "Quais são as quatro estratégias de resposta a risco?",
+             b: "Mitigar (reduzir), Transferir (compartilhar), Aceitar (tolerar) e Evitar (eliminar a atividade)."},
+             
+            {f: "O que é Risk Threshold (Limiar de Risco)?",
+             b: "Limites ou níveis de risco que uma organização está disposta a tolerar. Define as fronteiras dentro das quais os riscos são considerados aceitáveis e gerenciáveis."}
         ];
 
-        // ========== QUIZ DO CAPÍTULO 12 (10 QUESTÕES) ==========
-        const quiz = [
+        // ========== QUIZ DO CAPÍTULO 12 (25 QUESTÕES com traduções) ==========
+        const allQuiz = [
+            // Questões existentes (10)
             {q: "Risco natural sem controles implementados:", 
-             o: ["Residual Risk", "Inherent Risk", "Mitigated Risk", "Accepted Risk"], 
+             o: ["Residual Risk (Risco Residual)", "Inherent Risk (Risco Inerente)", "Mitigated Risk", "Accepted Risk"], 
              c: 1},
              
             {q: "Risco que permanece após a implementação de controles:", 
-             o: ["Inherent Risk", "Residual Risk", "Avoided Risk", "Transferred Risk"], 
+             o: ["Inherent Risk (Risco Inerente)", "Residual Risk (Risco Residual)", "Avoided Risk", "Transferred Risk"], 
              c: 1},
              
             {q: "Quantidade total de risco que a organização está disposta a aceitar:", 
-             o: ["Risk Tolerance", "Risk Appetite", "Risk Threshold", "Risk Capacity"], 
+             o: ["Risk Tolerance (Tolerância ao Risco)", "Risk Appetite (Apetite ao Risco)", "Risk Threshold", "Risk Capacity"], 
              c: 1},
              
             {q: "Fórmula para calcular perda anual esperada (ALE):", 
@@ -693,23 +787,100 @@
              c: 1},
              
             {q: "Avaliação pré-contrato do fornecedor (antes da contratação):", 
-             o: ["Due Care", "Due Diligence", "Right-to-Audit", "SLA"], 
+             o: ["Due Care (Cuidado Devido)", "Due Diligence (Diligência Prévia)", "Right-to-Audit", "SLA"], 
              c: 1},
              
             {q: "Ações contínuas após o contrato (monitoramento pós-contrato):", 
-             o: ["Due Diligence", "Due Care", "SLA", "Vendor Audit"], 
-             c: 1}
+             o: ["Due Diligence (Diligência Prévia)", "Due Care (Cuidado Devido)", "SLA", "Vendor Audit"], 
+             c: 1},
+             
+            // NOVAS QUESTÕES (15)
+            {q: "O que é risk exception (exceção de risco)?",
+             o: ["Risco que a organização decide aceitar permanentemente", "Situação onde um risco não pode ser mitigado no prazo esperado, exigindo aprovação formal", "Risco transferido para seguradora", "Risco eliminado completamente"],
+             c: 1,
+             e: "Risk exception (exceção de risco): situação onde um risco não pode ser mitigado usando práticas padrão ou no prazo esperado, devido a limitações financeiras, técnicas ou operacionais. Deve ser aprovado por stakeholders e revisado periodicamente."},
+             
+            {q: "O que é risk exemption (isenção de risco)?",
+             o: ["Risco aceito permanentemente por decisão estratégica", "Risco mitigado por controles compensatórios", "Risco transferido para terceiros", "Risco identificado mas não analisado"],
+             c: 0,
+             e: "Risk exemption (isenção de risco): condição onde um risco pode permanecer sem mitigação, geralmente por decisão estratégica (custo da mitigação supera o dano potencial). Deve ser formalmente documentado e aprovado."},
+             
+            {q: "Qual é a diferença entre risco inerente (inherent risk) e risco residual (residual risk)?",
+             o: ["Inerente é após controles; Residual é antes", "Inerente é antes dos controles; Residual é após controles", "São sinônimos", "Inerente é qualitativo; Residual é quantitativo"],
+             c: 1,
+             e: "Inherent risk (risco inerente): risco antes de qualquer mitigação. Residual risk (risco residual): risco que permanece após a implementação de controles."},
+             
+            {q: "O que é um Key Risk Indicator - KRI (Indicador-chave de Risco)?",
+             o: ["Métrica que indica conformidade com políticas", "Medida do valor de um ativo", "Indicador preditivo usado para monitorar e prever riscos potenciais", "Cálculo de perda anual esperada"],
+             c: 2,
+             e: "KRI (Key Risk Indicator): métrica preditiva que organizações usam para monitorar e antecipar riscos potenciais. Fornece alerta precoce de exposição crescente a riscos."},
+             
+            {q: "Qual das seguintes NÃO é uma estratégia de resposta a risco?",
+             o: ["Mitigar (mitigate)", "Transferir (transfer)", "Aceitar (accept)", "Ignorar (ignore)"],
+             c: 3,
+             e: "As quatro estratégias principais de resposta a risco são: Mitigar (reduzir), Transferir (compartilhar), Aceitar (tolerar) e Evitar (eliminar a atividade). Ignorar não é uma estratégia válida."},
+             
+            {q: "O que é um heat map (mapa de calor) em gestão de riscos?",
+             o: ["Gráfico de temperatura dos servidores", "Matriz visual que mostra impacto vs probabilidade de riscos", "Mapa de localização de ativos críticos", "Diagrama de rede com cores por criticidade"],
+             c: 1,
+             e: "Heat map (mapa de calor) é uma matriz de impacto/probabilidade que usa cores para visualizar riscos: vermelho (alto), amarelo (médio), verde (baixo). Ajuda a priorizar riscos mais críticos."},
+             
+            {q: "O que é um risk register (registro de riscos)?",
+             o: ["Lista de equipamentos de rede", "Documento que registra riscos identificados, severidade, proprietário e estratégias de mitigação", "Inventário de ativos de TI", "Plano de continuidade de negócios"],
+             c: 1,
+             e: "Risk register (registro de riscos): documento que consolida resultados de avaliações de risco, incluindo descrição dos riscos, impacto, probabilidade, proprietário (risk owner), contramedidas e status."},
+             
+            {q: "O que é risk threshold (limiar de risco)?",
+             o: ["Limiar que define o nível aceitável de risco", "Valor máximo de seguro contratado", "Orçamento anual para segurança", "Número máximo de incidentes por mês"],
+             c: 0,
+             e: "Risk threshold (limiar de risco): limites ou níveis de risco que uma organização está disposta a tolerar. Define as fronteiras dentro das quais os riscos são considerados aceitáveis e gerenciáveis."},
+             
+            {q: "O que é um risk owner (proprietário do risco)?",
+             o: ["Empresa de seguros contratada", "Indivíduo responsável por gerenciar um risco específico", "Fornecedor que assume o risco", "Sistema que monitora riscos automaticamente"],
+             c: 1,
+             e: "Risk owner (proprietário do risco): indivíduo responsável por gerenciar um risco particular, incluindo identificação, avaliação, implementação de mitigações, monitoramento e ações corretivas."},
+             
+            {q: "O que é análise de risco qualitativa?",
+             o: ["Usa números e cálculos matemáticos", "Usa categorias como Alto, Médio, Baixo", "Calcula ALE e SLE", "Baseia-se apenas em dados históricos"],
+             c: 1,
+             e: "Análise qualitativa usa categorias subjetivas (Alto/Médio/Baixo) para classificar riscos. É mais simples e rápida, mas menos precisa que a análise quantitativa."},
+             
+            {q: "O que é análise de risco quantitativa?",
+             o: ["Usa categorias como Alto, Médio, Baixo", "Baseia-se na opinião de especialistas", "Usa números e cálculos (ALE, SLE, ARO)", "É mais subjetiva que a qualitativa"],
+             c: 2,
+             e: "Análise quantitativa usa valores numéricos e cálculos (ALE, SLE, ARO) para medir riscos. É mais precisa, porém mais complexa e demorada."},
+             
+            {q: "O que significa MTBF (Mean Time Between Failures)?",
+             o: ["Tempo médio para reparo", "Tempo médio entre falhas", "Tempo máximo de inatividade", "Objetivo de tempo de recuperação"],
+             c: 1,
+             e: "MTBF (Mean Time Between Failures): tempo médio entre falhas. Mede a confiabilidade de um equipamento. Quanto maior, melhor."},
+             
+            {q: "O que significa MTTR (Mean Time to Repair)?",
+             o: ["Tempo médio entre falhas", "Tempo médio para reparo", "Objetivo de ponto de recuperação", "Tempo máximo de inatividade"],
+             c: 1,
+             e: "MTTR (Mean Time to Repair): tempo médio para reparo. Mede a eficiência da equipe de manutenção. Quanto menor, melhor."},
+             
+            {q: "O que é um risco de supply chain (cadeia de suprimentos)?",
+             o: ["Risco de fornecedores entregarem produtos com defeito", "Risco de comprometimento através de vulnerabilidades em fornecedores ou parceiros", "Risco de greve de transportadores", "Risco de aumento de preços de matéria-prima"],
+             c: 1,
+             e: "Risco de supply chain: atacante infiltra o alvo através de vulnerabilidades em fornecedores, vendedores ou parceiros da cadeia de suprimentos, em vez de atacá-lo diretamente."},
+             
+            {q: "O que é um contrato SLA (Service Level Agreement)?",
+             o: ["Acordo de confidencialidade", "Contrato que define níveis de serviço (uptime, tempo de resposta)", "Contrato de parceria comercial", "Memorando de entendimento"],
+             c: 1,
+             e: "SLA (Service Level Agreement): acordo de nível de serviço que define os níveis de serviço esperados do fornecedor: uptime, tempo de resposta, suporte, e penalidades por descumprimento."}
         ];
 
         // ========== VARIÁVEIS DE ESTADO ==========
         
-        let currentCard = 0;        // POSIÇÃO no array filteredCards
-        let flipped = false;        // false = frente, true = verso
-        let mastered = new Set();   // Índices originais dos cards dominados
-        let answers = {};           // Respostas do quiz
-        let checked = false;        // Quiz já foi verificado?
-        let filteredCards = [...Array(cards.length).keys()]; // Índices na ordem atual
-        let currentFilter = 'all';  // Filtro atual
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
+        let sessionQuiz = [];
 
         // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
         
@@ -724,7 +895,7 @@
             localStorage.setItem('security_plus_cap12_mastered', JSON.stringify([...mastered]));
         }
 
-        loadProgress(); // Carrega progresso ao iniciar
+        loadProgress();
 
         // ========== FUNÇÕES DAS ABAS ==========
         
@@ -737,13 +908,18 @@
                 b.classList.toggle('active', i === n);
             });
             
-            if (n === 2 && !document.getElementById('questions').innerHTML) {
-                loadQuiz();
+            if (n === 2 && sessionQuiz.length === 0) {
+                newQuizSession();
             }
         }
 
         // ========== FUNÇÕES DOS FLASHCARDS ==========
         
+        function getSession(arr, n) {
+            const shuffled = [...arr].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, Math.min(n, arr.length));
+        }
+
         function updateCard() {
             if (filteredCards.length === 0) {
                 document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
@@ -806,8 +982,6 @@
             updateCard();
         }
 
-        // ========== FUNÇÃO DE EMBARALHAR ==========
-        
         function shuffleCards() {
             for (let i = filteredCards.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -818,9 +992,7 @@
             updateCard();
         }
 
-        // ========== FUNÇÕES DE FILTRO ==========
-        
-        function filterCards(type) {
+        function filterCards(type, event) {
             currentFilter = type;
             
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
@@ -839,75 +1011,130 @@
             updateCard();
         }
 
+        function newSession() {
+            filteredCards = getSession([...Array(cards.length).keys()], 15);
+            currentCard = 0; flipped = false;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.filter-btn')[0].classList.add('active');
+            updateCard();
+        }
+
         // ========== FUNÇÕES DO QUIZ ==========
         
+        function newQuizSession() {
+            answers = {};
+            checked = false;
+            document.getElementById('results-modal').classList.remove('show');
+            
+            // Embaralha e pega 15 questões aleatórias do pool de 25
+            const shuffled = [...Array(allQuiz.length).keys()].sort(() => Math.random() - 0.5);
+            sessionQuiz = shuffled.slice(0, 15);
+            loadQuiz();
+        }
+
         function loadQuiz() {
             const container = document.getElementById('questions');
-            quiz.forEach((q, qi) => {
+            container.innerHTML = '';
+            
+            sessionQuiz.forEach((qi, pos) => {
+                const q = allQuiz[qi];
                 const div = document.createElement('div');
                 div.className = 'question';
-                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                div.innerHTML = `<h3>${pos + 1}. ${q.q}</h3>`;
+                
                 q.o.forEach((opt, oi) => {
                     const odiv = document.createElement('div');
                     odiv.className = 'option';
                     odiv.textContent = opt;
-                    odiv.onclick = () => selectOpt(qi, oi);
-                    odiv.id = `q${qi}o${oi}`;
+                    odiv.onclick = () => selectOpt(pos, oi);
+                    odiv.id = `q${pos}o${oi}`;
                     div.appendChild(odiv);
                 });
+                
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
-                exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                exp.id = `exp${pos}`;
+                exp.innerHTML = q.e ? `<strong>✓ Explicação:</strong> ${q.e}` : `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
                 div.appendChild(exp);
+                
                 container.appendChild(div);
             });
         }
 
-        function selectOpt(qi, oi) {
+        function selectOpt(pos, oi) {
             if (checked) return;
-            quiz[qi].o.forEach((_, i) => {
-                const el = document.getElementById(`q${qi}o${i}`);
-                el.classList.remove('selected');
+            
+            allQuiz[sessionQuiz[pos]].o.forEach((_, i) => {
+                const el = document.getElementById(`q${pos}o${i}`);
+                if (el) el.classList.remove('selected');
             });
-            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
-            answers[qi] = oi;
+            
+            const el = document.getElementById(`q${pos}o${oi}`);
+            if (el) el.classList.add('selected');
+            
+            answers[pos] = oi;
         }
 
         function checkAnswers() {
             checked = true;
             let correct = 0;
-            quiz.forEach((q, qi) => {
+            
+            sessionQuiz.forEach((qi, pos) => {
+                const q = allQuiz[qi];
                 const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                
                 q.o.forEach((_, oi) => {
-                    const el = document.getElementById(`q${qi}o${oi}`);
+                    const el = document.getElementById(`q${pos}o${oi}`);
+                    if (!el) return;
+                    
                     if (correctAnswer.includes(oi)) {
                         el.classList.add('correct');
-                    } else if (answers[qi] === oi) {
+                    } else if (answers[pos] === oi) {
                         el.classList.add('incorrect');
                     }
                 });
-                document.getElementById(`exp${qi}`).style.display = 'block';
-                if (correctAnswer.includes(answers[qi])) correct++;
+                
+                const expEl = document.getElementById(`exp${pos}`);
+                if (expEl) expEl.style.display = 'block';
+                
+                if (correctAnswer.includes(answers[pos])) correct++;
             });
             
-            const pct = Math.round((correct / quiz.length) * 100);
+            const pct = Math.round((correct / sessionQuiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = 
-                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            
+            let emoji, title, msg;
+            if (pct >= 80) {
+                emoji = '🎉'; title = 'APROVADO!';
+                msg = `${correct}/${sessionQuiz.length} corretas — Excelente! Você atingiu o threshold de 80%.`;
+            } else if (pct >= 60) {
+                emoji = '⚠️'; title = 'Quase lá!';
+                msg = `${correct}/${sessionQuiz.length} corretas — Você precisa de 80% para passar. Continue praticando!`;
+            } else {
+                emoji = '📚'; title = 'Precisa estudar mais';
+                msg = `${correct}/${sessionQuiz.length} corretas — Revise o material e tente novamente!`;
+            }
+            
+            document.getElementById('result-emoji').textContent = emoji;
+            document.getElementById('result-title').textContent = title;
+            document.getElementById('score-text').textContent = msg;
             document.getElementById('results-modal').classList.add('show');
         }
 
-        function resetQuiz() {
-            checked = false;
-            answers = {};
-            document.getElementById('questions').innerHTML = '';
+        function closeModal() {
             document.getElementById('results-modal').classList.remove('show');
-            loadQuiz();
+        }
+
+        function scrollToExplanations() {
+            document.getElementById('results-modal').classList.remove('show');
+            setTimeout(() => {
+                const firstExp = document.getElementById('exp0');
+                if (firstExp) firstExp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 200);
         }
 
         // ========== INICIALIZAÇÃO ==========
-        updateCard();
+        newSession();
     </script>
 </body>
 </html>

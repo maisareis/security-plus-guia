@@ -6,23 +6,17 @@
     <title>Security+ Cap 11 - Security Governance Concepts</title>
     <style>
         /* ===== RESET CSS ===== */
-        /* Remove todas as margens e paddings padrão do navegador */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Gradiente verde - tema do capítulo 11 (Security Governance) */
             background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
             min-height: 100vh;
             padding: 20px;
         }
         
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; /* Centraliza horizontalmente */
-        }
+        .container { max-width: 1200px; margin: 0 auto; }
         
-        /* ===== CABEÇALHO ===== */
         .header {
             text-align: center;
             color: white;
@@ -36,7 +30,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
         
-        /* Barra de estatísticas */
         .stats-bar {
             display: flex;
             gap: 20px;
@@ -49,12 +42,11 @@
             background: rgba(255,255,255,0.2);
             padding: 15px 25px;
             border-radius: 12px;
-            backdrop-filter: blur(10px); /* Efeito vidro fosco */
+            backdrop-filter: blur(10px);
             color: white;
             font-weight: bold;
         }
         
-        /* ===== ABAS (TABS) ===== */
         .tabs {
             display: flex;
             gap: 12px;
@@ -85,11 +77,7 @@
             color: white;
         }
         
-        /* Controle de visibilidade das abas */
-        .content { 
-            display: none;
-            animation: fadeIn 0.4s;
-        }
+        .content { display: none; animation: fadeIn 0.4s; }
         .content.active { display: block; }
         
         @keyframes fadeIn {
@@ -97,7 +85,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* ===== FLASHCARDS ===== */
         .flashcard-area { max-width: 900px; margin: 0 auto; }
         
         .card-info {
@@ -109,7 +96,6 @@
             backdrop-filter: blur(10px);
         }
         
-        /* Barra de progresso */
         .progress-bar {
             width: 100%;
             height: 8px;
@@ -125,7 +111,6 @@
             transition: width 0.3s ease;
         }
         
-        /* O flashcard */
         .flashcard {
             background: white;
             border-radius: 20px;
@@ -170,7 +155,6 @@
             font-style: italic;
         }
         
-        /* ===== CONTROLES ===== */
         .controls {
             display: flex;
             gap: 15px;
@@ -220,7 +204,36 @@
             color: white;
         }
         
-        /* ===== QUIZ ===== */
+        .btn-primary {
+            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .filter-btn.active {
+            background: white;
+            color: #0ba360;
+        }
+
         .quiz-area { max-width: 1000px; margin: 0 auto; }
         
         .quiz-header {
@@ -289,7 +302,6 @@
             line-height: 1.6;
         }
         
-        /* ===== MODAL DE RESULTADOS ===== */
         .results-modal {
             position: fixed;
             top: 0;
@@ -340,29 +352,22 @@
             font-size: 1.1rem;
         }
         
-        /* ===== BOTÕES DE FILTRO ===== */
-        .filter-buttons {
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1rem;
+        }
+        
+        .modal-buttons {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
-            flex-wrap: wrap;
+            margin-top: 20px;
         }
         
-        .filter-btn {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.3);
-            border: 2px solid white;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-        
-        .filter-btn.active {
-            background: white;
-            color: #0ba360;
-        }
+        .result-emoji { font-size: 3.5rem; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -370,10 +375,10 @@
         <!-- ===== CABEÇALHO ===== -->
         <div class="header">
             <h1>🏛️ Security+ Capítulo 11</h1>
-            <p>Security Governance Concepts - 15 Cards | 8 Questões</p>
+            <p>Security Governance Concepts - 27 Cards | 25 Questões</p>
             <div class="stats-bar">
-                <div class="stat-card">📚 15 Flashcards</div>
-                <div class="stat-card">❓ 8 Questões</div>
+                <div class="stat-card">📚 27 Flashcards</div>
+                <div class="stat-card">❓ 25 Questões</div>
                 <div class="stat-card" id="mastery-stat">✅ 0% Dominado</div>
             </div>
         </div>
@@ -391,13 +396,13 @@
                 <div class="card-info">
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
                         <div>
-                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 15</div>
+                            <div id="card-counter" style="font-size: 1.2rem; margin-bottom: 5px;">Card 1 de 27</div>
                             <div id="mastered-count">0 dominados</div>
                         </div>
                         <div class="filter-buttons">
-                            <button class="filter-btn active" onclick="filterCards('all')">Todos</button>
-                            <button class="filter-btn" onclick="filterCards('unmastered')">Não Dominados</button>
-                            <button class="filter-btn" onclick="filterCards('mastered')">Dominados</button>
+                            <button class="filter-btn active" onclick="filterCards('all', event)">Todos</button>
+                            <button class="filter-btn" onclick="filterCards('unmastered', event)">Não Dominados</button>
+                            <button class="filter-btn" onclick="filterCards('mastered', event)">Dominados</button>
                         </div>
                     </div>
                     <div class="progress-bar">
@@ -415,6 +420,7 @@
                     <button class="btn btn-nav" onclick="prevCard()">‹</button>
                     <button class="btn btn-master" id="master-btn" onclick="toggleMaster()">Marcar Dominado</button>
                     <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Embaralhar</button>
+                    <button class="btn" style="background:#10b981;color:white;" onclick="newSession()">🎲 Nova Sessão (15)</button>
                     <button class="btn btn-nav" onclick="nextCard()">›</button>
                 </div>
             </div>
@@ -433,50 +439,94 @@
                         <li><strong>Standard (Padrão):</strong> Requisitos obrigatórios ("o que fazer")</li>
                         <li><strong>Procedure (Procedimento):</strong> Passo a passo ("como fazer")</li>
                         <li><strong>Guideline (Diretriz):</strong> Recomendações não obrigatórias</li>
+                        <li><strong>Governança centralizada vs descentralizada vs híbrida</strong></li>
+                        <li><strong>Papéis de dados:</strong> Owner, Controller, Processor, Custodian</li>
                         <li><strong>Change Management:</strong> Request → Approval → Test → Implement → Document</li>
                         <li><strong>CAB (Change Advisory Board):</strong> Comitê que aprova mudanças</li>
+                        <li><strong>Automation vs Orchestration:</strong> Tarefa única vs workflow completo</li>
+                        <li><strong>Playbook vs Runbook:</strong> Checklist vs automação por condições</li>
+                        <li><strong>Technical debt (dívida técnica):</strong> Risco de automação mal implementada</li>
+                        <li><strong>Operator fatigue (fadiga do operador):</strong> Reduzida por automação</li>
                     </ul>
                 </div>
 
-                <h2 style="color: #3cba92; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">1️⃣ Policies, Standards, and Procedures</h2>
+                <h2 style="color: #3cba92; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">1️⃣ Governance (Governança)</h2>
+
+                <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Modelos de Governança</h3>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px; margin: 30px 0;">
+                    <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; border-left: 5px solid #0ba360;">
+                        <strong style="color: #0ba360; font-size: 1.2rem;">📌 Centralizada</strong>
+                        <p>Decisões concentradas em um grupo/departamento. Promove consistência e padronização.</p>
+                    </div>
+                    <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; border-left: 5px solid #0ba360;">
+                        <strong style="color: #0ba360; font-size: 1.2rem;">📌 Descentralizada</strong>
+                        <p>Decisões distribuídas por unidades organizacionais. Permite adaptabilidade às necessidades locais.</p>
+                    </div>
+                    <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; border-left: 5px solid #0ba360;">
+                        <strong style="color: #0ba360; font-size: 1.2rem;">📌 Híbrida</strong>
+                        <p>Combina centralização de políticas com implementação descentralizada.</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Papéis na Governança de Dados</h3>
+                <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                    <tr><th style="background:#0ba360; color:white;">Papel</th><th style="background:#0ba360; color:white;">Responsabilidade</th></tr>
+                    <tr><td><strong>Owner (Proprietário)</strong></td><td>Define classificação, nível de acesso e segurança dos dados.</td></tr>
+                    <tr><td><strong>Controller (Controlador)</strong></td><td>Determina propósitos e meios de processamento (GDPR).</td></tr>
+                    <tr><td><strong>Processor (Processador)</strong></td><td>Processa dados em nome do controller (ex: cloud provider).</td></tr>
+                    <tr><td><strong>Custodian/Steward (Custódio)</strong></td><td>Implementa regras de negócio (TI).</td></tr>
+                </table>
+
+                <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Governance Board vs Committee</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Board (Conselho):</strong> Composto por executivos, autoridade final, define direção estratégica.</li>
+                    <li><strong>Committee (Comitê):</strong> Especialistas que analisam questões específicas e fornecem recomendações ao board.</li>
+                </ul>
+
+                <h2 style="color: #3cba92; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ Policies, Standards, and Procedures</h2>
 
                 <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Hierarquia de Documentos de Segurança</h3>
                 
-                <!-- Cards explicativos da hierarquia de documentos -->
                 <div style="display: flex; flex-direction: column; gap: 10px; margin: 30px 0;">
                     <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; border-left: 5px solid #0ba360;">
                         <strong style="color: #0ba360; font-size: 1.2rem;">📜 Policy (Política)</strong>
-                        <p>Documento de alto nível, aprovado pela alta gestão. Define objetivos de segurança, responsabilidades e requisitos gerais. Ex: Política de Senhas, Política de Uso Aceitável.</p>
+                        <p>Documento de alto nível, aprovado pela alta gestão. Define objetivos de segurança, responsabilidades e requisitos gerais.</p>
                         <p><em>Nível: Estratégico (POR QUE fazer)</em></p>
                     </div>
                     <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; border-left: 5px solid #0ba360;">
                         <strong style="color: #0ba360; font-size: 1.2rem;">📏 Standard (Padrão)</strong>
-                        <p>Requisitos específicos e obrigatórios. Ex: "Senhas devem ter 12+ caracteres", "Usar AES-256 para criptografia".</p>
+                        <p>Requisitos específicos e obrigatórios. Ex: "Senhas devem ter 12+ caracteres".</p>
                         <p><em>Nível: Tático (O QUE fazer)</em></p>
                     </div>
                     <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; border-left: 5px solid #0ba360;">
                         <strong style="color: #0ba360; font-size: 1.2rem;">📋 Procedure (Procedimento)</strong>
-                        <p>Passo a passo detalhado para executar uma tarefa. Ex: "Como provisionar um novo usuário no Active Directory".</p>
+                        <p>Passo a passo detalhado para executar uma tarefa.</p>
                         <p><em>Nível: Operacional (COMO fazer)</em></p>
                     </div>
                     <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; border-left: 5px solid #0ba360;">
                         <strong style="color: #0ba360; font-size: 1.2rem;">💡 Guideline (Diretriz)</strong>
-                        <p>Recomendações e melhores práticas, não obrigatórias. Ex: "Recomenda-se usar um gerenciador de senhas".</p>
+                        <p>Recomendações e melhores práticas, não obrigatórias.</p>
                     </div>
                 </div>
 
                 <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Tipos Específicos de Políticas</h3>
                 <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
                     <li><strong>AUP (Acceptable Use Policy):</strong> Define uso aceitável de recursos corporativos (email, internet, dispositivos). Tem força legal.</li>
-                    <li><strong>Data Classification Policy:</strong> Define categorias de dados: Public (público), Internal (interno), Confidential (confidencial), Restricted (restrito).</li>
+                    <li><strong>Information Security Policies:</strong> Regras para proteção de informações.</li>
+                    <li><strong>Business Continuity & COOP:</strong> Planos para manter operações durante desastres.</li>
+                    <li><strong>Disaster Recovery:</strong> Passos para recuperar sistemas após desastre.</li>
+                    <li><strong>Incident Response:</strong> Processos para lidar com incidentes de segurança.</li>
+                    <li><strong>SDLC (Software Development Life Cycle):</strong> Governa desenvolvimento de software.</li>
+                    <li><strong>Change Management:</strong> Processo formal para gerenciar mudanças.</li>
                 </ul>
 
-                <h2 style="color: #3cba92; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">2️⃣ Change Management</h2>
+                <h2 style="color: #3cba92; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Change Management</h2>
 
                 <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Processo de Mudança</h3>
                 <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0;">
                     <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #0ba360;">
-                        <strong>1. Request</strong><br>Solicitação formal
+                        <strong>1. Request</strong><br>Solicitação formal (RFC)
                     </div>
                     <div style="flex: 1; min-width: 150px; background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #0ba360;">
                         <strong>2. Approval</strong><br>Análise pelo CAB
@@ -512,11 +562,26 @@
                     <strong>⚠️ REGRA DE OURO:</strong> Toda mudança deve ter um plano de rollback (backout plan) e ser testada antes da implementação em produção.
                 </div>
 
-                <h2 style="color: #3cba92; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">3️⃣ Automation and Orchestration</h2>
+                <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Stakeholders vs Owners</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Owners (Proprietários):</strong> Responsáveis por implementar a mudança.</li>
+                    <li><strong>Stakeholders (Partes Interessadas):</strong> Indivíduos ou grupos impactados pela mudança (funcionários, clientes, parceiros).</li>
+                </ul>
+
+                <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Legacy Systems (Sistemas Legados)</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li>Tecnologia obsoleta → incompatibilidade com sistemas novos</li>
+                    <li>Documentação pobre ou inexistente</li>
+                    <li>Falta de suporte do vendor</li>
+                    <li>Customizações complexas</li>
+                    <li>Alto risco de impacto em operações críticas</li>
+                </ul>
+
+                <h2 style="color: #3cba92; margin-top: 35px; margin-bottom: 15px; font-size: 1.8rem;">4️⃣ Automation and Orchestration</h2>
 
                 <div style="display: flex; gap: 20px; margin: 30px 0; flex-wrap: wrap;">
                     <div style="flex: 1; min-width: 250px; background: #dbeafe; padding: 20px; border-radius: 10px;">
-                        <h3 style="color:#3b82f6; margin-top:0;">⚙️ Automation</h3>
+                        <h3 style="color:#3b82f6; margin-top:0;">⚙️ Automation (Automação)</h3>
                         <p>Execução automática de tarefas individuais</p>
                         <ul>
                             <li>Scripts (Python, PowerShell, Bash)</li>
@@ -526,7 +591,7 @@
                         </ul>
                     </div>
                     <div style="flex: 1; min-width: 250px; background: #fef3c7; padding: 20px; border-radius: 10px;">
-                        <h3 style="color:#f59e0b; margin-top:0;">🔄 Orchestration</h3>
+                        <h3 style="color:#f59e0b; margin-top:0;">🔄 Orchestration (Orquestração)</h3>
                         <p>Coordenação de múltiplas automações em um workflow</p>
                         <ul>
                             <li>Integra sistemas diferentes</li>
@@ -543,7 +608,8 @@
                     <tr><td><strong>CI/CD</strong></td><td>Continuous Integration/Continuous Deployment. Automatiza build, teste e deploy. Essencial em DevOps.</td></tr>
                     <tr><td><strong>IaC (Infrastructure as Code)</strong></td><td>Gerencia infraestrutura via código (Terraform, CloudFormation). Versionamento, repetibilidade.</td></tr>
                     <tr><td><strong>SOAR</strong></td><td>Security Orchestration, Automation and Response. Plataforma para automatizar resposta a incidentes com playbooks.</td></tr>
-                    <tr><td><strong>Scripting</strong></td><td>Linguagens: Python (geral), PowerShell (Windows), Bash (Linux). Base da automação.</td></tr>
+                    <tr><td><strong>Playbook</strong></td><td>Checklist ordenado para ameaça específica (foco em padronização).</td></tr>
+                    <tr><td><strong>Runbook</strong></td><td>Protocolos automatizados por condições (foco em automação).</td></tr>
                 </table>
 
                 <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Benefícios da Automação</h3>
@@ -555,18 +621,30 @@
                     <li><strong>Auditabilidade:</strong> Logs e registros automáticos</li>
                 </ul>
 
+                <h3 style="color: #0ba360; margin-top: 20px; margin-bottom: 10px;">Riscos da Automação</h3>
+                <ul style="margin-left: 25px; margin-bottom: 15px; line-height: 1.8;">
+                    <li><strong>Complexidade:</strong> Pode adicionar complexidade se mal planejada</li>
+                    <li><strong>Custo inicial:</strong> Ferramentas, integração, treinamento</li>
+                    <li><strong>Single point of failure:</strong> Sistema crítico pode falhar</li>
+                    <li><strong>Technical debt (dívida técnica):</strong> Código mal documentado, integrações frágeis</li>
+                    <li><strong>Operator fatigue (fadiga do operador):</strong> Reduzida pela automação, mas requer monitoramento</li>
+                </ul>
+
                 <!-- Dicas finais para a prova -->
                 <div style="background: #d1fae5; border-left: 5px solid #0ba360; padding: 20px; margin: 30px 0; border-radius: 8px;">
                     <h3 style="color: #0ba360; margin-bottom: 10px;">🎯 DICAS FINAIS PARA PROVA:</h3>
                     <ul style="margin-left: 20px; line-height: 1.8;">
                         <li><strong>Policy:</strong> Alto nível (POR QUE) | <strong>Standard:</strong> Obrigatório (O QUE) | <strong>Procedure:</strong> Passo a passo (COMO)</li>
                         <li><strong>Guideline:</strong> Recomendação, não obrigatório</li>
+                        <li><strong>Governança centralizada:</strong> decisões concentradas | <strong>descentralizada:</strong> decisões distribuídas</li>
+                        <li><strong>Data Owner:</strong> classifica dados | <strong>Controller:</strong> define processamento | <strong>Processor:</strong> executa | <strong>Custodian:</strong> implementa</li>
                         <li><strong>Change Management:</strong> Request → Approval → Test → Implement → Document</li>
                         <li><strong>CAB:</strong> Comitê que aprova mudanças</li>
                         <li><strong>Emergency Change:</strong> Crítica, processo acelerado</li>
                         <li><strong>Automation:</strong> Tarefa única | <strong>Orchestration:</strong> Workflow completo</li>
                         <li><strong>SOAR:</strong> Orquestração de segurança</li>
                         <li><strong>IaC:</strong> Infraestrutura como código (Terraform)</li>
+                        <li><strong>Technical debt (dívida técnica):</strong> código mal documentado, integrações frágeis</li>
                     </ul>
                 </div>
             </div>
@@ -576,7 +654,11 @@
         <div id="tab2" class="content">
             <div class="quiz-area">
                 <div class="quiz-header">
-                    <h2>Quiz - 8 Questões</h2>
+                    <h2>Quiz - 15 Questões Aleatórias</h2>
+                    <p>Passing Score: 80% (12/15 corretas) | Pool: 25 questões</p>
+                </div>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button class="btn btn-primary" onclick="newQuizSession()">🔄 Nova Sessão</button>
                 </div>
                 <div id="questions"></div>
                 <div style="text-align: center; margin-top: 30px;">
@@ -589,21 +671,20 @@
     <!-- ===== MODAL DE RESULTADOS ===== -->
     <div class="results-modal" id="results-modal">
         <div class="results-content">
-            <h2>Resultado</h2>
+            <div class="result-emoji" id="result-emoji">🎉</div>
+            <h2 id="result-title">Resultado</h2>
             <div class="score-circle" id="score-circle">0%</div>
             <p id="score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
-            <button class="btn btn-primary" onclick="resetQuiz()">Refazer Quiz</button>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="newQuizSession()">🔄 Nova Sessão</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Fechar</button>
+            </div>
+            <button class="btn" style="background:#7c3aed;color:white;margin-top:12px;width:100%;" onclick="scrollToExplanations()">📖 Ver Explicações</button>
         </div>
     </div>
 
     <script>
-        // ========== CARDS DO CAPÍTULO 11 ==========
-        /**
-         * ARRAY cards: armazena TODOS os flashcards do capítulo
-         * Cada card tem:
-         * - f: frente (a pergunta/conceito)
-         * - b: verso (a resposta/definição)
-         */
+        // ========== CARDS DO CAPÍTULO 11 (com traduções) ==========
         const cards = [
             {f: "O que é uma Security Policy (Política de Segurança)?", 
              b: "Documento de alto nível, aprovado pela alta gestão, que define objetivos de segurança, responsabilidades e requisitos gerais. Ex: Política de Senhas, Política de Uso Aceitável."},
@@ -623,7 +704,7 @@
             {f: "O que é uma Data Classification Policy?", 
              b: "Política que define categorias de dados baseadas em sensibilidade. Ex: Public (público), Internal (interno), Confidential (confidencial), Restricted (restrito). Cada categoria tem controles específicos."},
              
-            {f: "O que é Change Management?", 
+            {f: "O que é Change Management (Gerenciamento de Mudanças)?", 
              b: "Processo formal para gerenciar mudanças em sistemas de produção: Request (solicitação) → Approval (aprovação) → Test (teste) → Implement (implementação) → Document (documentação). Previne interrupções e incidentes."},
              
             {f: "O que é CAB (Change Advisory Board)?", 
@@ -648,53 +729,212 @@
              b: "Gerenciamento de infraestrutura através de código (Terraform, CloudFormation). Permite versionamento, repetibilidade e consistência."},
              
             {f: "O que é SOAR (Security Orchestration, Automation and Response)?", 
-             b: "Plataforma que integra ferramentas de segurança e automatiza resposta a incidentes usando playbooks. Combina orquestração, automação e gerenciamento de casos."}
+             b: "Plataforma que integra ferramentas de segurança e automatiza resposta a incidentes usando playbooks. Combina orquestração, automação e gerenciamento de casos."},
+             
+            {f: "O que é governança centralizada vs descentralizada?", 
+             b: "Centralizada: decisões concentradas em um grupo/departamento. Descentralizada: decisões distribuídas por unidades organizacionais, permitindo adaptabilidade."},
+             
+            {f: "O que é governança híbrida?", 
+             b: "Combina centralização de políticas com implementação descentralizada. Equilibra padronização e flexibilidade."},
+             
+            {f: "O que é um Governance Board (Conselho de Governança)?", 
+             b: "Composto por executivos, tem autoridade final e define direção estratégica da organização."},
+             
+            {f: "O que é um Committee (Comitê) em governança?", 
+             b: "Grupo de especialistas que analisa questões específicas (segurança, risco, compliance) e fornece recomendações ao board."},
+             
+            {f: "Qual o papel do Data Owner (Proprietário dos Dados)?", 
+             b: "Diretor/VP responsável por classificar dados, decidir quem tem acesso e qual nível de segurança deve ser aplicado."},
+             
+            {f: "Qual o papel do Data Controller (Controlador de Dados)?", 
+             b: "Define os propósitos, condições e meios de processamento de dados pessoais (GDPR). Pode ser pessoa, autoridade ou organização."},
+             
+            {f: "Qual o papel do Data Processor (Processador de Dados)?", 
+             b: "Processa dados pessoais em nome do controller. Ex: provedores cloud, fornecedores."},
+             
+            {f: "Qual o papel do Data Custodian/Steward (Custódio de Dados)?", 
+             b: "Implementa regras de negócio, geralmente TI. Responsável por custódia, transporte e armazenamento seguro."},
+             
+            {f: "O que é due diligence (diligência prévia)?", 
+             b: "Avaliação prévia (antes de contratar). Verifica antecedentes, controles de segurança, saúde financeira."},
+             
+            {f: "O que é due care (cuidado devido)?", 
+             b: "Ações contínuas após o contrato (monitoramento, auditorias). Responsabilidade contínua."},
+             
+            {f: "O que é technical debt (dívida técnica) em automação?", 
+             b: "Dívida acumulada quando automação é implementada às pressas: código mal documentado, integrações frágeis, manutenção negligenciada. Leva a instabilidade."},
+             
+            {f: "O que é operator fatigue (fadiga do operador)?", 
+             b: "Exaustão mental de profissionais de segurança devido ao trabalho contínuo e de alta intensidade. Automação ajuda a reduzir."}
         ];
 
-        // ========== QUIZ DO CAPÍTULO 11 (8 QUESTÕES) ==========
-        const quiz = [
+        // ========== QUIZ DO CAPÍTULO 11 (25 QUESTÕES com traduções) ==========
+        const allQuiz = [
+            // Questões originais (8)
             {q: "Documento de segurança de alto nível, aprovado pela diretoria:", 
-             o: ["Procedure", "Standard", "Policy", "Guideline"], 
+             o: ["Procedure", "Standard", "Policy (Política)", "Guideline"], 
              c: 2},
              
             {q: "Passo a passo detalhado para executar uma tarefa:", 
-             o: ["Policy", "Standard", "Guideline", "Procedure"], 
+             o: ["Policy (Política)", "Standard (Padrão)", "Guideline (Diretriz)", "Procedure (Procedimento)"], 
              c: 3},
              
             {q: "Processo formal para mudanças em produção:", 
-             o: ["Risk Management", "Change Management", "Incident Response", "Vendor Management"], 
+             o: ["Risk Management", "Change Management (Gerenciamento de Mudanças)", "Incident Response", "Vendor Management"], 
              c: 1},
              
             {q: "Comitê que analisa e aprova mudanças propostas:", 
-             o: ["SOC", "CAB", "NOC", "CISO"], 
+             o: ["SOC", "CAB (Change Advisory Board)", "NOC", "CISO"], 
              c: 1},
              
             {q: "Mudança crítica não planejada (ex: patch urgente):", 
-             o: ["Standard Change", "Normal Change", "Emergency Change", "Routine Change"], 
+             o: ["Standard Change", "Normal Change", "Emergency Change (Mudança de Emergência)", "Routine Change"], 
              c: 2},
              
             {q: "Execução automática de tarefas individuais (ex: script):", 
-             o: ["Orchestration", "Automation", "SOAR", "Integration"], 
+             o: ["Orchestration (Orquestração)", "Automation (Automação)", "SOAR", "Integration"], 
              c: 1},
              
             {q: "Coordenação de múltiplas automações em workflow completo:", 
-             o: ["Automation", "Orchestration", "Scripting", "CI/CD"], 
+             o: ["Automation (Automação)", "Orchestration (Orquestração)", "Scripting", "CI/CD"], 
              c: 1},
              
             {q: "Gerenciamento de infraestrutura através de código (Terraform):", 
-             o: ["SOAR", "CI/CD", "IaC", "DevOps"], 
-             c: 2}
+             o: ["SOAR", "CI/CD", "IaC (Infrastructure as Code)", "DevOps"], 
+             c: 2},
+             
+            // NOVAS QUESTÕES (17)
+            {q: "O que é risk exception (exceção de risco)?",
+             o: ["Risco que a organização decide aceitar permanentemente", "Situação onde um risco não pode ser mitigado no prazo esperado, exigindo aprovação formal", "Risco transferido para seguradora", "Risco eliminado completamente"],
+             c: 1,
+             e: "Risk exception (exceção de risco): situação onde um risco não pode ser mitigado usando práticas padrão ou no prazo esperado, devido a limitações financeiras, técnicas ou operacionais. Deve ser aprovado por stakeholders e revisado periodicamente."},
+             
+            {q: "O que é risk exemption (isenção de risco)?",
+             o: ["Risco aceito permanentemente por decisão estratégica", "Risco mitigado por controles compensatórios", "Risco transferido para terceiros", "Risco identificado mas não analisado"],
+             c: 0,
+             e: "Risk exemption (isenção de risco): condição onde um risco pode permanecer sem mitigação, geralmente por decisão estratégica (custo da mitigação supera o dano potencial). Deve ser formalmente documentado e aprovado."},
+             
+            {q: "Qual é a diferença entre risco inerente (inherent risk) e risco residual (residual risk)?",
+             o: ["Inerente é após controles; Residual é antes", "Inerente é antes dos controles; Residual é após controles", "São sinônimos", "Inerente é qualitativo; Residual é quantitativo"],
+             c: 1,
+             e: "Inherent risk (risco inerente): risco antes de qualquer mitigação. Residual risk (risco residual): risco que permanece após a implementação de controles."},
+             
+            {q: "O que é um Key Risk Indicator - KRI (Indicador-chave de Risco)?",
+             o: ["Métrica que indica conformidade com políticas", "Medida do valor de um ativo", "Indicador preditivo usado para monitorar e prever riscos potenciais", "Cálculo de perda anual esperada"],
+             c: 2,
+             e: "KRI (Key Risk Indicator): métrica preditiva que organizações usam para monitorar e antecipar riscos potenciais. Fornece alerta precoce de exposição crescente a riscos."},
+             
+            {q: "O que significa risk appetite (apetite ao risco)?",
+             o: ["Nível de risco que a organização está disposta a aceitar", "Quantidade de risco transferida para seguradora", "Tolerância específica para um único sistema", "Limite de perda anual"],
+             c: 0,
+             e: "Risk appetite (apetite ao risco): nível de risco que uma organização está disposta a aceitar em busca de seus objetivos. É uma decisão estratégica de alto nível, diferente de risk tolerance (tolerância ao risco - variação operacional aceitável)."},
+             
+            {q: "Qual modelo de governança concentra decisões em um único grupo/departamento?",
+             o: ["Centralizada", "Descentralizada", "Híbrida", "Distribuída"],
+             c: 0,
+             e: "Centralizada: decisões concentradas em um grupo/departamento, promovendo consistência e padronização em toda a organização."},
+             
+            {q: "Qual modelo de governança distribui decisões para diferentes unidades organizacionais?",
+             o: ["Centralizada", "Descentralizada", "Híbrida", "Federal"],
+             c: 1,
+             e: "Descentralizada: decisões distribuídas para diferentes grupos/departamentos, permitindo adaptabilidade às necessidades locais."},
+             
+            {q: "Qual é a diferença entre Governance Board (Conselho) e Committee (Comitê)?",
+             o: ["Board define estratégia; Committee executa tarefas operacionais", "Board tem autoridade final; Committee dá suporte técnico e recomendações", "Board é temporário; Committee é permanente", "São termos sinônimos"],
+             c: 1,
+             e: "Governance Board (executivos) tem autoridade final e define direção estratégica. Committees (especialistas) analisam questões específicas e fornecem recomendações ao board."},
+             
+            {q: "Qual papel de governança de dados é responsável pela classificação e nível de acesso dos dados?",
+             o: ["Controller (Controlador)", "Processor (Processador)", "Owner (Proprietário)", "Custodian (Custódio)"],
+             c: 2,
+             e: "Owner (proprietário) - geralmente diretor/VP - é responsável por classificar dados, decidir quem tem acesso e qual nível de segurança deve ser aplicado."},
+             
+            {q: "Qual papel de governança de dados, definido pelo GDPR, determina os propósitos e meios de processamento de dados pessoais?",
+             o: ["Owner (Proprietário)", "Processor (Processador)", "Custodian (Custódio)", "Controller (Controlador)"],
+             c: 3,
+             e: "Controller (controlador) define os propósitos, condições e meios de processamento de dados pessoais. Pode ser uma pessoa, autoridade pública ou organização."},
+             
+            {q: "Qual papel de governança de dados processa informações em nome do controller?",
+             o: ["Owner (Proprietário)", "Controller (Controlador)", "Custodian (Custódio)", "Processor (Processador)"],
+             c: 3,
+             e: "Processor (processador) processa dados pessoais em nome do controller. Exemplos: provedores de serviços cloud, fornecedores e parceiros de negócio."},
+             
+            {q: "Qual papel de governança de dados implementa as regras de negócio e é tipicamente representado pelo departamento de TI?",
+             o: ["Owner (Proprietário)", "Controller (Controlador)", "Processor (Processador)", "Custodian/Steward (Custódio)"],
+             c: 3,
+             e: "Custodian (ou data steward) é responsável pela custódia, transporte e armazenamento seguro dos dados, implementando as regras definidas pelo owner e controller."},
+             
+            {q: "O que é due diligence (diligência prévia) em gestão de fornecedores?",
+             o: ["Monitoramento contínuo após o contrato", "Avaliação pré-contrato do fornecedor", "Cláusula de auditoria no contrato", "Plano de continuidade de negócios"],
+             c: 1,
+             e: "Due diligence (diligência prévia): avaliação pré-contrato do fornecedor. Inclui verificação de antecedentes, análise de controles de segurança, saúde financeira e reputação."},
+             
+            {q: "O que é due care (cuidado devido) em gestão de fornecedores?",
+             o: ["Avaliação pré-contrato", "Ações contínuas após a assinatura do contrato (monitoramento, auditorias)", "Cláusula de confidencialidade", "Acordo de nível de serviço"],
+             c: 1,
+             e: "Due care (cuidado devido): ações contínuas após a assinatura do contrato. Inclui monitoramento, auditorias periódicas e verificação de conformidade."},
+             
+            {q: "O que é technical debt (dívida técnica) em automação?",
+             o: ["Investimento em novas tecnologias", "Código mal documentado, integrações frágeis e manutenção negligenciada", "Orçamento anual de TI", "Número de sistemas legados"],
+             c: 1,
+             e: "Technical debt (dívida técnica): dívida acumulada quando automação é implementada às pressas - código mal documentado, integrações frágeis, manutenção negligenciada. Leva a instabilidade e aumento de custos."},
+             
+            {q: "O que é operator fatigue (fadiga do operador) em segurança?",
+             o: ["Cansaço físico do hardware", "Exaustão mental devido ao trabalho contínuo e de alta intensidade", "Falta de operadores treinados", "Sobrecarga de sistemas"],
+             c: 1,
+             e: "Operator fatigue (fadiga do operador): exaustão mental de profissionais de segurança devido ao trabalho contínuo e de alta intensidade. Automação e orquestração ajudam a reduzir tarefas repetitivas."},
+             
+            {q: "Qual documento define o nível de serviço esperado de um fornecedor?",
+             o: ["NDA", "SLA (Service Level Agreement)", "MOU", "BPA"],
+             c: 1,
+             e: "SLA (Service Level Agreement): acordo de nível de serviço que define os níveis de serviço esperados: uptime, tempo de resposta, suporte, e penalidades por descumprimento."},
+             
+            {q: "O que é um playbook em resposta a incidentes?",
+             o: ["Protocolo automatizado por condições", "Checklist ordenado para ameaça específica", "Ferramenta de automação", "Sistema de monitoramento"],
+             c: 1,
+             e: "Playbook: checklist ordenado para ameaça específica (foco em padronização). Runbook: protocolos automatizados por condições (foco em automação)."},
+             
+            {q: "O que é um runbook em resposta a incidentes?",
+             o: ["Checklist ordenado para ameaça específica", "Protocolos automatizados por condições", "Relatório de incidentes", "Política de segurança"],
+             c: 1,
+             e: "Runbook: protocolos automatizados por condições (foco em automação). Playbook: checklist ordenado para ameaça específica (foco em padronização)."},
+             
+            {q: "O que são stakeholders (partes interessadas) em change management?",
+             o: ["Responsáveis por implementar a mudança", "Indivíduos ou grupos impactados pela mudança", "Apenas a alta gestão", "Fornecedores externos"],
+             c: 1,
+             e: "Stakeholders: indivíduos ou grupos impactados pela mudança (funcionários, clientes, parceiros). Engajar stakeholders aumenta aceitação da mudança."},
+             
+            {q: "Quais são os desafios de legacy systems (sistemas legados) em change management?",
+             o: ["Alta performance e documentação completa", "Tecnologia obsoleta, documentação pobre, falta de suporte", "Baixo custo de manutenção", "Fácil integração com sistemas modernos"],
+             c: 1,
+             e: "Desafios de legacy systems: tecnologia obsoleta (incompatível com novos sistemas), documentação pobre ou inexistente, falta de suporte do vendor, customizações complexas, alto risco de impacto."},
+             
+            {q: "O que é um CAB (Change Advisory Board)?",
+             o: ["Comitê que aprova mudanças de hardware apenas", "Comitê responsável por analisar e aprovar mudanças propostas", "Sistema de automação de mudanças", "Ferramenta de monitoramento"],
+             c: 1,
+             e: "CAB (Change Advisory Board): comitê responsável por analisar e aprovar mudanças propostas. Inclui stakeholders de TI, segurança, áreas de negócio e gestão."},
+             
+            {q: "O que é version control (controle de versão) em change management?",
+             o: ["Controle de acesso a sistemas", "Rastreamento e controle de mudanças em documentos, código ou dados", "Backup de configurações", "Monitoramento de versões de software"],
+             c: 1,
+             e: "Version control: rastreamento e controle de mudanças em documentos, código ou dados. Mantém histórico, garante que apenas mudanças aprovadas são implementadas e permite reverter versões anteriores."},
+             
+            {q: "O que é um standard (padrão) interno de segurança?",
+             o: ["Recomendação não obrigatória", "Requisito obrigatório e detalhado para implementação", "Passo a passo de procedimentos", "Política de alto nível"],
+             c: 1,
+             e: "Standard (padrão): requisito obrigatório e detalhado para implementação. Exemplos: padrões de senha, controle de acesso, segurança física, criptografia."}
         ];
 
         // ========== VARIÁVEIS DE ESTADO ==========
         
-        let currentCard = 0;        // POSIÇÃO no array filteredCards
-        let flipped = false;        // false = frente, true = verso
-        let mastered = new Set();   // Índices originais dos cards dominados
-        let answers = {};           // Respostas do quiz
-        let checked = false;        // Quiz já foi verificado?
-        let filteredCards = [...Array(cards.length).keys()]; // Índices na ordem atual
-        let currentFilter = 'all';  // Filtro atual
+        let currentCard = 0;
+        let flipped = false;
+        let mastered = new Set();
+        let answers = {};
+        let checked = false;
+        let filteredCards = [...Array(cards.length).keys()];
+        let currentFilter = 'all';
+        let sessionQuiz = [];
 
         // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
         
@@ -709,7 +949,7 @@
             localStorage.setItem('security_plus_cap11_mastered', JSON.stringify([...mastered]));
         }
 
-        loadProgress(); // Carrega progresso ao iniciar
+        loadProgress();
 
         // ========== FUNÇÕES DAS ABAS ==========
         
@@ -722,13 +962,18 @@
                 b.classList.toggle('active', i === n);
             });
             
-            if (n === 2 && !document.getElementById('questions').innerHTML) {
-                loadQuiz();
+            if (n === 2 && sessionQuiz.length === 0) {
+                newQuizSession();
             }
         }
 
         // ========== FUNÇÕES DOS FLASHCARDS ==========
         
+        function getSession(arr, n) {
+            const shuffled = [...arr].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, Math.min(n, arr.length));
+        }
+
         function updateCard() {
             if (filteredCards.length === 0) {
                 document.getElementById('card-text').textContent = 'Nenhum card nesta categoria';
@@ -791,8 +1036,6 @@
             updateCard();
         }
 
-        // ========== FUNÇÃO DE EMBARALHAR ==========
-        
         function shuffleCards() {
             for (let i = filteredCards.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -803,9 +1046,7 @@
             updateCard();
         }
 
-        // ========== FUNÇÕES DE FILTRO ==========
-        
-        function filterCards(type) {
+        function filterCards(type, event) {
             currentFilter = type;
             
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
@@ -824,75 +1065,130 @@
             updateCard();
         }
 
+        function newSession() {
+            filteredCards = getSession([...Array(cards.length).keys()], 15);
+            currentCard = 0; flipped = false;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.filter-btn')[0].classList.add('active');
+            updateCard();
+        }
+
         // ========== FUNÇÕES DO QUIZ ==========
         
+        function newQuizSession() {
+            answers = {};
+            checked = false;
+            document.getElementById('results-modal').classList.remove('show');
+            
+            // Embaralha e pega 15 questões aleatórias do pool de 25
+            const shuffled = [...Array(allQuiz.length).keys()].sort(() => Math.random() - 0.5);
+            sessionQuiz = shuffled.slice(0, 15);
+            loadQuiz();
+        }
+
         function loadQuiz() {
             const container = document.getElementById('questions');
-            quiz.forEach((q, qi) => {
+            container.innerHTML = '';
+            
+            sessionQuiz.forEach((qi, pos) => {
+                const q = allQuiz[qi];
                 const div = document.createElement('div');
                 div.className = 'question';
-                div.innerHTML = `<h3>${qi + 1}. ${q.q}</h3>`;
+                div.innerHTML = `<h3>${pos + 1}. ${q.q}</h3>`;
+                
                 q.o.forEach((opt, oi) => {
                     const odiv = document.createElement('div');
                     odiv.className = 'option';
                     odiv.textContent = opt;
-                    odiv.onclick = () => selectOpt(qi, oi);
-                    odiv.id = `q${qi}o${oi}`;
+                    odiv.onclick = () => selectOpt(pos, oi);
+                    odiv.id = `q${pos}o${oi}`;
                     div.appendChild(odiv);
                 });
+                
                 const exp = document.createElement('div');
                 exp.className = 'explanation';
-                exp.id = `exp${qi}`;
-                exp.innerHTML = `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
+                exp.id = `exp${pos}`;
+                exp.innerHTML = q.e ? `<strong>✓ Explicação:</strong> ${q.e}` : `<strong>✓ Resposta correta:</strong> ${q.o[q.c]}`;
                 div.appendChild(exp);
+                
                 container.appendChild(div);
             });
         }
 
-        function selectOpt(qi, oi) {
+        function selectOpt(pos, oi) {
             if (checked) return;
-            quiz[qi].o.forEach((_, i) => {
-                const el = document.getElementById(`q${qi}o${i}`);
-                el.classList.remove('selected');
+            
+            allQuiz[sessionQuiz[pos]].o.forEach((_, i) => {
+                const el = document.getElementById(`q${pos}o${i}`);
+                if (el) el.classList.remove('selected');
             });
-            document.getElementById(`q${qi}o${oi}`).classList.add('selected');
-            answers[qi] = oi;
+            
+            const el = document.getElementById(`q${pos}o${oi}`);
+            if (el) el.classList.add('selected');
+            
+            answers[pos] = oi;
         }
 
         function checkAnswers() {
             checked = true;
             let correct = 0;
-            quiz.forEach((q, qi) => {
+            
+            sessionQuiz.forEach((qi, pos) => {
+                const q = allQuiz[qi];
                 const correctAnswer = Array.isArray(q.c) ? q.c : [q.c];
+                
                 q.o.forEach((_, oi) => {
-                    const el = document.getElementById(`q${qi}o${oi}`);
+                    const el = document.getElementById(`q${pos}o${oi}`);
+                    if (!el) return;
+                    
                     if (correctAnswer.includes(oi)) {
                         el.classList.add('correct');
-                    } else if (answers[qi] === oi) {
+                    } else if (answers[pos] === oi) {
                         el.classList.add('incorrect');
                     }
                 });
-                document.getElementById(`exp${qi}`).style.display = 'block';
-                if (correctAnswer.includes(answers[qi])) correct++;
+                
+                const expEl = document.getElementById(`exp${pos}`);
+                if (expEl) expEl.style.display = 'block';
+                
+                if (correctAnswer.includes(answers[pos])) correct++;
             });
             
-            const pct = Math.round((correct / quiz.length) * 100);
+            const pct = Math.round((correct / sessionQuiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
-            document.getElementById('score-text').textContent = 
-                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+            
+            let emoji, title, msg;
+            if (pct >= 80) {
+                emoji = '🎉'; title = 'APROVADO!';
+                msg = `${correct}/${sessionQuiz.length} corretas — Excelente! Você atingiu o threshold de 80%.`;
+            } else if (pct >= 60) {
+                emoji = '⚠️'; title = 'Quase lá!';
+                msg = `${correct}/${sessionQuiz.length} corretas — Você precisa de 80% para passar. Continue praticando!`;
+            } else {
+                emoji = '📚'; title = 'Precisa estudar mais';
+                msg = `${correct}/${sessionQuiz.length} corretas — Revise o material e tente novamente!`;
+            }
+            
+            document.getElementById('result-emoji').textContent = emoji;
+            document.getElementById('result-title').textContent = title;
+            document.getElementById('score-text').textContent = msg;
             document.getElementById('results-modal').classList.add('show');
         }
 
-        function resetQuiz() {
-            checked = false;
-            answers = {};
-            document.getElementById('questions').innerHTML = '';
+        function closeModal() {
             document.getElementById('results-modal').classList.remove('show');
-            loadQuiz();
+        }
+
+        function scrollToExplanations() {
+            document.getElementById('results-modal').classList.remove('show');
+            setTimeout(() => {
+                const firstExp = document.getElementById('exp0');
+                if (firstExp) firstExp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 200);
         }
 
         // ========== INICIALIZAÇÃO ==========
-        updateCard();
+        newSession();
     </script>
 </body>
 </html>
