@@ -679,7 +679,7 @@
             const pct = Math.round((correct / quiz.length) * 100);
             document.getElementById('score-circle').textContent = `${pct}%`;
             document.getElementById('score-text').textContent = 
-                `${correct}/${quiz.length} corretas - ${pct >= 70 ? 'APROVADO! ✓' : 'Precisa 70% para passar'}`;
+                `${correct}/${quiz.length} corretas - ${pct >= 80 ? 'APROVADO! ✓' : 'Precisa 80% para passar'}`;
             document.getElementById('results-modal').classList.add('show');
         }
 
